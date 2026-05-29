@@ -12,7 +12,7 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-async function analyzeFaceFeatures(base64: string): Promise<string> {
+async function analyzeFaceFeatures(base64: string, role: "mom" | "dad"): Promise<string> {
   const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
   const mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
   const mediaType = (mimeMatch?.[1] ?? "image/jpeg") as
@@ -20,6 +20,8 @@ async function analyzeFaceFeatures(base64: string): Promise<string> {
     | "image/png"
     | "image/webp"
     | "image/gif";
+
+  const roleText = role === "mom" ? "mother's" : "father's";
 
   const response = await anthropic.messages.create({
     model: "claude-opus-4-5",
@@ -36,7 +38,8 @@ async function analyzeFaceFeatures(base64: string): Promise<string> {
             type: "text",
             text: `이 사람의 얼굴 특징을 아기 얼굴 생성 프롬프트에 쓸 수 있도록 영어로 짧게 묘사해줘.
 눈 모양, 코 모양, 얼굴형, 눈썹 특징만 5가지 이내로.
-예시: "father's narrow eyes, high nose bridge, square jawline, thick eyebrows"
+앞에 "${roleText}"를 붙여서 출력해줘.
+예시: "${roleText} narrow eyes, high nose bridge, soft jawline"
 다른 설명 없이 특징 묘사만 출력해줘.`,
           },
         ],
@@ -76,59 +79,102 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "엄마 사진이 필요합니다." }, { status: 400 });
     }
 
-    console.log("📤 업로드 & 얼굴 분석 중...");
-    const [momUrl, dadFeatures] = await Promise.all([
-      uploadBase64ToReplicate(image1),
-      image2 ? analyzeFaceFeatures(image2) : Promise.resolve(""),
-    ]);
-
-    console.log("👨 아빠 특징:", dadFeatures);
-
     const isBoy = gender === "boy";
-    const dadPart = dadFeatures ? `, inheriting ${dadFeatures} from father` : "";
 
-    const prompt = isBoy
-      ? `a cute 3 year old Korean male baby boy toddler [img]${dadPart}, very short hair, round face, chubby cheeks, boyish appearance, masculine toddler, son, male child, photorealistic, professional portrait, warm studio lighting`
-      : `a cute 3 year old Korean female baby girl toddler [img]${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, girly, photorealistic, professional portrait, warm studio lighting`;
+    console.log("📤 업로드 & 얼굴 분석 중...");
 
-    const negativePrompt = isBoy
-      ? "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, pigtails, dress, pink, girly, woman"
-      : "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, man";
-
-    // 아들일 때: style_strength_ratio 낮춤(얼굴 참조 줄임), guidance_scale 높임(프롬프트 강화)
-    const styleStrength = isBoy ? 5 : 15;
-    const guidanceScale = isBoy ? 9 : 5;
-
-    console.log("📝 프롬프트:", prompt);
-    console.log("🎨 모델 실행 중...");
-
-    const output = await replicate.run(
-      "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
-      {
-        input: {
-          input_image: momUrl,
-          prompt,
-          negative_prompt: negativePrompt,
-          style_name: "Photographic (Default)",
-          num_outputs: 1,
-          guidance_scale: guidanceScale,
-          num_inference_steps: 20,
-          style_strength_ratio: styleStrength,
-        },
+    if (isBoy) {
+      // 아들: 아빠 사진 베이스 + 엄마 특징 텍스트
+      if (!image2) {
+        return NextResponse.json({ error: "아들 예측에는 아빠 사진이 필요합니다." }, { status: 400 });
       }
-    );
 
-    const urls = (output as any[])
-      .map((item) => {
-        if (typeof item === "string") return item;
-        if (typeof item?.url === "function") return item.url().href;
-        if (item?.url) return item.url.href || String(item.url);
-        return null;
-      })
-      .filter(Boolean);
+      const [dadUrl, momFeatures] = await Promise.all([
+        uploadBase64ToReplicate(image2), // 아빠 사진 업로드
+        analyzeFaceFeatures(image1, "mom"), // 엄마 특징 추출
+      ]);
 
-    console.log("✅ 완료:", urls);
-    return NextResponse.json({ output: urls });
+      console.log("👩 엄마 특징:", momFeatures);
+
+      const momPart = momFeatures ? `, inheriting ${momFeatures}` : "";
+      const prompt = `a cute 3 year old Korean baby boy toddler [img]${momPart}, very short hair, chubby cheeks, big round eyes, small nose, soft baby skin, boyish, male child, photorealistic, professional portrait, warm studio lighting`;
+      const negativePrompt = "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, dress, girly, woman";
+
+      console.log("📝 프롬프트:", prompt);
+      console.log("🎨 모델 실행 중 (아들 - 아빠 베이스)...");
+
+      const output = await replicate.run(
+        "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
+        {
+          input: {
+            input_image: dadUrl,
+            prompt,
+            negative_prompt: negativePrompt,
+            style_name: "Photographic (Default)",
+            num_outputs: 1,
+            guidance_scale: 7,
+            num_inference_steps: 20,
+            style_strength_ratio: 15,
+          },
+        }
+      );
+
+      const urls = (output as any[])
+        .map((item) => {
+          if (typeof item === "string") return item;
+          if (typeof item?.url === "function") return item.url().href;
+          if (item?.url) return item.url.href || String(item.url);
+          return null;
+        })
+        .filter(Boolean);
+
+      console.log("✅ 완료:", urls);
+      return NextResponse.json({ output: urls });
+
+    } else {
+      // 딸: 엄마 사진 베이스 + 아빠 특징 텍스트
+      const [momUrl, dadFeatures] = await Promise.all([
+        uploadBase64ToReplicate(image1), // 엄마 사진 업로드
+        image2 ? analyzeFaceFeatures(image2, "dad") : Promise.resolve(""), // 아빠 특징 추출
+      ]);
+
+      console.log("👨 아빠 특징:", dadFeatures);
+
+      const dadPart = dadFeatures ? `, inheriting ${dadFeatures}` : "";
+      const prompt = `a cute 3 year old Korean baby girl toddler [img]${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, feminine, girly, photorealistic, professional portrait, warm studio lighting`;
+      const negativePrompt = "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, man";
+
+      console.log("📝 프롬프트:", prompt);
+      console.log("🎨 모델 실행 중 (딸 - 엄마 베이스)...");
+
+      const output = await replicate.run(
+        "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
+        {
+          input: {
+            input_image: momUrl,
+            prompt,
+            negative_prompt: negativePrompt,
+            style_name: "Photographic (Default)",
+            num_outputs: 1,
+            guidance_scale: 5,
+            num_inference_steps: 20,
+            style_strength_ratio: 15,
+          },
+        }
+      );
+
+      const urls = (output as any[])
+        .map((item) => {
+          if (typeof item === "string") return item;
+          if (typeof item?.url === "function") return item.url().href;
+          if (item?.url) return item.url.href || String(item.url);
+          return null;
+        })
+        .filter(Boolean);
+
+      console.log("✅ 완료:", urls);
+      return NextResponse.json({ output: urls });
+    }
 
   } catch (error: any) {
     console.error("❌ 오류:", error);
