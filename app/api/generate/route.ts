@@ -87,10 +87,16 @@ export async function POST(request: NextRequest) {
 
     const dadPart = dadFeatures ? `, inheriting ${dadFeatures} from father` : "";
 
-    // 성별에 따라 프롬프트 변경
-    const genderPrompt = gender === "boy"
-      ? "a cute 3 year old Korean baby boy toddler [img]"
-      : "a cute 3 year old Korean baby girl toddler [img]";
+    // 성별에 따라 프롬프트 & 네거티브 프롬프트 변경
+    const isBoy = gender === "boy";
+
+    const genderPrompt = isBoy
+      ? "a cute 3 year old Korean baby boy toddler [img], short hair, masculine baby features, boyish"
+      : "a cute 3 year old Korean baby girl toddler [img], feminine baby features, girly";
+
+    const negativePrompt = isBoy
+      ? "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, girly"
+      : "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, boyish";
 
     const prompt = `${genderPrompt}${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, photorealistic, professional portrait, warm studio lighting`;
 
@@ -103,7 +109,7 @@ export async function POST(request: NextRequest) {
         input: {
           input_image: momUrl,
           prompt,
-          negative_prompt: "adult, old, deformed, blurry, cartoon, ugly, low quality",
+          negative_prompt: negativePrompt,
           style_name: "Photographic (Default)",
           num_outputs: 1,
           guidance_scale: 5,
