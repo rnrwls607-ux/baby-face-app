@@ -115,6 +115,7 @@ export default function Home() {
         </button>
       </div>
 
+      {/* 사진 업로드 */}
       <div className="flex gap-8 mb-8">
         <div className="flex flex-col items-center">
           <label className="text-pink-500 font-semibold mb-2">👩 엄마 사진</label>
@@ -143,6 +144,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 예측 버튼 */}
       <button
         onClick={handleSubmit}
         className="bg-pink-500 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-pink-600 transition"
@@ -151,6 +153,7 @@ export default function Home() {
         {loading ? "예측 중... 🍼" : "아기 얼굴 예측하기 ✨"}
       </button>
 
+      {/* 진행 단계 */}
       {loading && step && (
         <div className="mt-6 flex flex-col items-center gap-2">
           <div className="flex gap-1">
@@ -170,14 +173,27 @@ export default function Home() {
         </div>
       )}
 
+      {/* 에러 */}
       {error && <p className="mt-4 text-red-500 font-semibold">⚠️ {error}</p>}
 
+      {/* 결과 */}
       {result && (
         <div className="mt-8 flex flex-col items-center">
           <h2 className="text-2xl font-bold text-pink-600 mb-4">
             {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
           </h2>
           <img src={result} className="w-64 h-64 object-cover rounded-2xl shadow-lg" />
+
+          {/* 다운로드 버튼 */}
+          
+            href={result}
+            download="우리아기얼굴.png"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 bg-white border-2 border-pink-400 text-pink-500 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition"
+          >
+            📥 사진 저장하기
+          </a>
         </div>
       )}
     </main>
