@@ -81,23 +81,21 @@ export default function Home() {
       img.src = base64;
     });
 
-  const handleDownload = async () => {
-    const result = results[selected];
-    try {
-      const response = await fetch(result);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "우리아기얼굴.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    } catch {
-      window.open(result, "_blank");
-    }
-  };
+ const handleDownload = async () => {
+  const result = results[selected];
+  try {
+    // 서버 프록시를 통해 다운로드
+    const proxyUrl = `/api/download?url=${encodeURIComponent(result)}`;
+    const a = document.createElement("a");
+    a.href = proxyUrl;
+    a.download = "우리아기얼굴.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch {
+    window.open(result, "_blank");
+  }
+};
 
   const handleShare = async () => {
     const result = results[selected];
