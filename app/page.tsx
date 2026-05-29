@@ -1,11 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
+import { useState } from "react";
 
 export default function Home() {
   const [image1, setImage1] = useState<string>("");
@@ -15,45 +9,6 @@ export default function Home() {
   const [error, setError] = useState<string>("");
   const [step, setStep] = useState<string>("");
   const [gender, setGender] = useState<"girl" | "boy">("girl");
-
-  // 카카오 SDK 초기화
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js";
-    script.async = true;
-    script.onload = () => {
-      if (window.Kakao && !window.Kakao.isInitialized()) {
-        window.Kakao.init("fb8c103dd1a3cd4aa1bafe02f29b468d");
-      }
-    };
-    document.head.appendChild(script);
-  }, []);
-
-  // 카카오 공유
-  const handleKakaoShare = () => {
-    if (!window.Kakao) return;
-    window.Kakao.Share.sendDefault({
-      objectType: "feed",
-      content: {
-        title: "우리 아기 얼굴은? 👶",
-        description: `AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요! 직접 해보세요!`,
-        imageUrl: result,
-        link: {
-          mobileWebUrl: "https://baby-face-app-seven.vercel.app",
-          webUrl: "https://baby-face-app-seven.vercel.app",
-        },
-      },
-      buttons: [
-        {
-          title: "나도 해보기",
-          link: {
-            mobileWebUrl: "https://baby-face-app-seven.vercel.app",
-            webUrl: "https://baby-face-app-seven.vercel.app",
-          },
-        },
-      ],
-    });
-  };
 
   const toBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -98,6 +53,14 @@ export default function Home() {
     } catch {
       window.open(result, "_blank");
     }
+  };
+
+  // 카카오톡 링크 공유 (도메인 등록 불필요)
+  const handleKakaoShare = () => {
+    const text = `AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요! 👶 우리 아기 얼굴도 예측해보세요!`;
+    const url = "https://baby-face-app-seven.vercel.app";
+    const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/easylink?app_key=fb8c103dd1a3cd4aa1bafe02f29b468d&ka=sdk/1.0&lcba=&appver=1.0&themeColor=%23F0F0F0&url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
+    window.open(kakaoUrl, "_blank", "width=500,height=600");
   };
 
   const handleSubmit = async () => {
@@ -245,17 +208,13 @@ export default function Home() {
             {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
           </h2>
           <img src={result} className="w-64 h-64 object-cover rounded-2xl shadow-lg" />
-
           <div className="flex gap-3">
-            {/* 다운로드 버튼 */}
             <button
               onClick={handleDownload}
               className="bg-white border-2 border-pink-400 text-pink-500 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition"
             >
               📥 저장하기
             </button>
-
-            {/* 카카오 공유 버튼 */}
             <button
               onClick={handleKakaoShare}
               className="bg-yellow-400 text-black px-6 py-2 rounded-full font-semibold hover:bg-yellow-500 transition"
