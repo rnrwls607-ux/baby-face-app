@@ -84,11 +84,14 @@ export default function Home() {
  const handleDownload = async () => {
   const result = results[selected];
   try {
-    // 서버 프록시를 통해 다운로드
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}${String(now.getSeconds()).padStart(2,"0")}`;
+    const filename = `우리아기얼굴_${timestamp}.png`;
+
     const proxyUrl = `/api/download?url=${encodeURIComponent(result)}`;
     const a = document.createElement("a");
     a.href = proxyUrl;
-    a.download = "우리아기얼굴.png";
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
