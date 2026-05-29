@@ -55,12 +55,20 @@ export default function Home() {
     }
   };
 
-  // 카카오톡 링크 공유 (도메인 등록 불필요)
   const handleKakaoShare = () => {
-    const text = `AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요! 👶 우리 아기 얼굴도 예측해보세요!`;
-    const url = "https://baby-face-app-seven.vercel.app";
-    const kakaoUrl = `https://sharer.kakao.com/talk/friends/picker/easylink?app_key=fb8c103dd1a3cd4aa1bafe02f29b468d&ka=sdk/1.0&lcba=&appver=1.0&themeColor=%23F0F0F0&url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`;
-    window.open(kakaoUrl, "_blank", "width=500,height=600");
+    const text = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\n우리 아기 얼굴도 예측해보세요 👇\nhttps://baby-face-app-seven.vercel.app`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: "우리 아기 얼굴은? 👶",
+        text: text,
+        url: "https://baby-face-app-seven.vercel.app",
+      });
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("링크가 복사됐어요! 카카오톡에 붙여넣기 하세요 💕");
+      });
+    }
   };
 
   const handleSubmit = async () => {
