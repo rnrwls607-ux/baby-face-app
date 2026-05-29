@@ -5,22 +5,30 @@ export async function GET(request: NextRequest) {
   const imageUrl = searchParams.get("url");
 
   if (!imageUrl) {
-    return NextResponse.json({ error: "URL이 필요합니다." }, { status: 400 });
+    return new NextResponse("URL이 필요합니다.", { status: 400 });
   }
 
   try {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-    const buffer = await blob.arrayBuffer();
+    const response = await fetch(imageUrl, {
+      headers: { "Accept": "image/*" },
+    });
+
+    if (!response.ok) {
+      return new NextResponse("이미지를 가져올 수 없습니다.", { status: 500 });
+    }
+
+    const buffer = await response.arrayBuffer();
 
     return new NextResponse(buffer, {
+      status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Content-Disposition": 'attachment; filename="우리아기얼굴.png"',
+        "Content-Disposition": "attachment",
         "Cache-Control": "no-cache",
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error) {
-    return NextResponse.json({ error: "이미지 다운로드 실패" }, { status: 500 });
+    return new NextResponse("다운로드 실패", { status: 500 });
   }
 }
