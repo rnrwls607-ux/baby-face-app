@@ -33,6 +33,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="아기얼굴" />
+        <meta property="kakao:app_key" content="fb8c103dd1a3cd4aa1bafe02f29b468d" />
       </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
