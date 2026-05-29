@@ -8,6 +8,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const [step, setStep] = useState<string>("");
+  const [gender, setGender] = useState<"girl" | "boy">("girl");
 
   const toBase64 = (file: File): Promise<string> =>
     new Promise((resolve, reject) => {
@@ -17,7 +18,6 @@ export default function Home() {
       reader.onerror = reject;
     });
 
-  // 이미지 압축 (최대 512px, 용량 대폭 감소)
   const compressImage = (base64: string): Promise<string> =>
     new Promise((resolve) => {
       const img = new Image();
@@ -58,7 +58,7 @@ export default function Home() {
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image1: compressed, image2 }),
+        body: JSON.stringify({ image1: compressed, image2, gender }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -90,6 +90,30 @@ export default function Home() {
     <main className="min-h-screen bg-pink-50 flex flex-col items-center justify-center p-8">
       <h1 className="text-4xl font-bold text-pink-600 mb-2">👶 우리 아기 얼굴은?</h1>
       <p className="text-gray-500 mb-8">엄마 아빠 사진을 올리면 AI가 아기 얼굴을 예측해드려요!</p>
+
+      {/* 성별 선택 */}
+      <div className="flex gap-4 mb-8">
+        <button
+          onClick={() => setGender("girl")}
+          className={`px-6 py-3 rounded-full text-lg font-bold transition ${
+            gender === "girl"
+              ? "bg-pink-500 text-white shadow-lg scale-105"
+              : "bg-white text-pink-400 border-2 border-pink-300"
+          }`}
+        >
+          👧 딸
+        </button>
+        <button
+          onClick={() => setGender("boy")}
+          className={`px-6 py-3 rounded-full text-lg font-bold transition ${
+            gender === "boy"
+              ? "bg-blue-500 text-white shadow-lg scale-105"
+              : "bg-white text-blue-400 border-2 border-blue-300"
+          }`}
+        >
+          👦 아들
+        </button>
+      </div>
 
       <div className="flex gap-8 mb-8">
         <div className="flex flex-col items-center">
@@ -127,20 +151,17 @@ export default function Home() {
         {loading ? "예측 중... 🍼" : "아기 얼굴 예측하기 ✨"}
       </button>
 
-      {/* 진행 단계 표시 */}
       {loading && step && (
         <div className="mt-6 flex flex-col items-center gap-2">
           <div className="flex gap-1">
-            {["🗜️ 압축", "📤 전송", "🎨 생성"].map((s, i) => (
+            {["압축", "전송", "생성"].map((s, i) => (
               <span
                 key={i}
                 className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                  step.includes(["압축", "전송", "생성"][i])
-                    ? "bg-pink-500 text-white"
-                    : "bg-pink-100 text-pink-300"
+                  step.includes(s) ? "bg-pink-500 text-white" : "bg-pink-100 text-pink-300"
                 }`}
               >
-                {s}
+                {["🗜️ 압축", "📤 전송", "🎨 생성"][i]}
               </span>
             ))}
           </div>
@@ -149,13 +170,13 @@ export default function Home() {
         </div>
       )}
 
-      {error && (
-        <p className="mt-4 text-red-500 font-semibold">⚠️ {error}</p>
-      )}
+      {error && <p className="mt-4 text-red-500 font-semibold">⚠️ {error}</p>}
 
       {result && (
         <div className="mt-8 flex flex-col items-center">
-          <h2 className="text-2xl font-bold text-pink-600 mb-4">우리 아기 얼굴 🎉</h2>
+          <h2 className="text-2xl font-bold text-pink-600 mb-4">
+            {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
+          </h2>
           <img src={result} className="w-64 h-64 object-cover rounded-2xl shadow-lg" />
         </div>
       )}

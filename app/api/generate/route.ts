@@ -15,7 +15,6 @@ const anthropic = new Anthropic({
 async function analyzeFaceFeatures(base64: string): Promise<string> {
   const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
 
-  // PNG / JPG / WEBP 자동 감지
   const mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
   const mediaType = (mimeMatch?.[1] ?? "image/jpeg") as
     | "image/jpeg"
@@ -72,7 +71,7 @@ async function uploadBase64ToReplicate(base64: string): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    const { image1, image2 } = await request.json();
+    const { image1, image2, gender } = await request.json();
 
     if (!image1) {
       return NextResponse.json({ error: "엄마 사진이 필요합니다." }, { status: 400 });
@@ -87,7 +86,13 @@ export async function POST(request: NextRequest) {
     console.log("👨 아빠 특징:", dadFeatures);
 
     const dadPart = dadFeatures ? `, inheriting ${dadFeatures} from father` : "";
-    const prompt = `a cute 3 year old Korean toddler [img]${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, photorealistic, professional portrait, warm studio lighting`;
+
+    // 성별에 따라 프롬프트 변경
+    const genderPrompt = gender === "boy"
+      ? "a cute 3 year old Korean baby boy toddler [img]"
+      : "a cute 3 year old Korean baby girl toddler [img]";
+
+    const prompt = `${genderPrompt}${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, photorealistic, professional portrait, warm studio lighting`;
 
     console.log("📝 프롬프트:", prompt);
     console.log("🎨 모델 실행 중...");
