@@ -55,37 +55,38 @@ export default function Home() {
     }
   };
 
-  // 결과 사진 + 링크 함께 공유
-  const handleKakaoShare = async () => {
+  // 사진 + 텍스트 네이티브 공유
+  const handleShare = async () => {
     try {
-      // 결과 이미지를 blob으로 변환
       const response = await fetch(result);
       const blob = await response.blob();
       const file = new File([blob], "우리아기얼굴.png", { type: "image/png" });
 
       const shareText = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\n우리 아기 얼굴도 예측해보세요 👇\nhttps://baby-face-app-seven.vercel.app`;
 
-      // 이미지 파일 공유 가능 여부 확인
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        // 사진 파일 + 텍스트 공유 (카카오톡, 인스타, 문자 등)
         await navigator.share({
           title: "우리 아기 얼굴은? 👶",
           text: shareText,
           files: [file],
         });
       } else if (navigator.share) {
-        // 파일 공유 불가 시 텍스트+링크만 공유
+        // 파일 공유 불가시 링크만
         await navigator.share({
           title: "우리 아기 얼굴은? 👶",
           text: shareText,
           url: "https://baby-face-app-seven.vercel.app",
         });
       } else {
-        // PC: 클립보드 복사
         await navigator.clipboard.writeText(shareText);
         alert("링크가 복사됐어요! 카카오톡에 붙여넣기 하세요 💕");
       }
-    } catch (err) {
-      console.error("공유 실패:", err);
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        // 공유 취소가 아닌 에러면 다운로드로 대체
+        handleDownload();
+      }
     }
   };
 
@@ -166,10 +167,8 @@ export default function Home() {
         </button>
       </div>
 
-      {/* 사진 업로드 - 직관적인 큰 버튼 */}
+      {/* 사진 업로드 */}
       <div className="flex flex-col gap-4 mb-6 w-full max-w-sm">
-
-        {/* 엄마 사진 */}
         <label className="cursor-pointer">
           <div className={`w-full rounded-2xl border-2 border-dashed p-4 flex items-center gap-4 transition ${
             image1 ? "border-pink-400 bg-pink-50" : "border-pink-300 bg-white"
@@ -197,7 +196,6 @@ export default function Home() {
           />
         </label>
 
-        {/* 아빠 사진 */}
         <label className="cursor-pointer">
           <div className={`w-full rounded-2xl border-2 border-dashed p-4 flex items-center gap-4 transition ${
             image2 ? "border-blue-400 bg-blue-50" : "border-blue-300 bg-white"
@@ -273,10 +271,10 @@ export default function Home() {
               📥 저장하기
             </button>
             <button
-              onClick={handleKakaoShare}
+              onClick={handleShare}
               className="flex-1 bg-yellow-400 text-black py-3 rounded-2xl font-bold hover:bg-yellow-500 transition"
             >
-              💬 공유하기
+              📤 공유하기
             </button>
           </div>
         </div>
