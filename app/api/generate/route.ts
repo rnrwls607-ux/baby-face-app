@@ -14,7 +14,6 @@ const anthropic = new Anthropic({
 
 async function analyzeFaceFeatures(base64: string): Promise<string> {
   const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
-
   const mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
   const mediaType = (mimeMatch?.[1] ?? "image/jpeg") as
     | "image/jpeg"
@@ -85,20 +84,20 @@ export async function POST(request: NextRequest) {
 
     console.log("👨 아빠 특징:", dadFeatures);
 
+    const isBoy = gender === "boy";
     const dadPart = dadFeatures ? `, inheriting ${dadFeatures} from father` : "";
 
-    // 성별에 따라 프롬프트 & 네거티브 프롬프트 변경
-    const isBoy = gender === "boy";
-
-    const genderPrompt = isBoy
-      ? "a cute 3 year old Korean baby boy toddler [img], short hair, masculine baby features, boyish"
-      : "a cute 3 year old Korean baby girl toddler [img], feminine baby features, girly";
+    const prompt = isBoy
+      ? `a cute 3 year old Korean male baby boy toddler [img]${dadPart}, very short hair, round face, chubby cheeks, boyish appearance, masculine toddler, son, male child, photorealistic, professional portrait, warm studio lighting`
+      : `a cute 3 year old Korean female baby girl toddler [img]${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, girly, photorealistic, professional portrait, warm studio lighting`;
 
     const negativePrompt = isBoy
-      ? "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, girly"
-      : "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, boyish";
+      ? "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, pigtails, dress, pink, girly, woman"
+      : "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, man";
 
-    const prompt = `${genderPrompt}${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, photorealistic, professional portrait, warm studio lighting`;
+    // 아들일 때: style_strength_ratio 낮춤(얼굴 참조 줄임), guidance_scale 높임(프롬프트 강화)
+    const styleStrength = isBoy ? 5 : 15;
+    const guidanceScale = isBoy ? 9 : 5;
 
     console.log("📝 프롬프트:", prompt);
     console.log("🎨 모델 실행 중...");
@@ -112,9 +111,9 @@ export async function POST(request: NextRequest) {
           negative_prompt: negativePrompt,
           style_name: "Photographic (Default)",
           num_outputs: 1,
-          guidance_scale: 5,
+          guidance_scale: guidanceScale,
           num_inference_steps: 20,
-          style_strength_ratio: 15,
+          style_strength_ratio: styleStrength,
         },
       }
     );
