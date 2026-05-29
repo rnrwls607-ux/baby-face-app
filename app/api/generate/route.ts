@@ -36,11 +36,7 @@ async function analyzeFaceFeatures(base64: string, role: "mom" | "dad"): Promise
           },
           {
             type: "text",
-            text: `이 사람의 얼굴 특징을 아기 얼굴 생성 프롬프트에 쓸 수 있도록 영어로 짧게 묘사해줘.
-눈 모양, 코 모양, 얼굴형, 눈썹 특징만 5가지 이내로.
-앞에 "${roleText}"를 붙여서 출력해줘.
-예시: "${roleText} narrow eyes, high nose bridge, soft jawline"
-다른 설명 없이 특징 묘사만 출력해줘.`,
+            text: `이 사람의 얼굴 특징을 아기 얼굴 생성 프롬프트에 쓸 수 있도록 영어로 짧게 묘사해줘. 눈 모양, 코 모양, 얼굴형, 눈썹 특징만 5가지 이내로. 앞에 "${roleText}"를 붙여서 출력해줘. 다른 설명 없이 특징 묘사만 출력해줘.`,
           },
         ],
       },
@@ -81,27 +77,19 @@ export async function POST(request: NextRequest) {
 
     const isBoy = gender === "boy";
 
-    console.log("📤 업로드 & 얼굴 분석 중...");
-
     if (isBoy) {
-      // 아들: 아빠 사진 베이스 + 엄마 특징 텍스트
       if (!image2) {
         return NextResponse.json({ error: "아들 예측에는 아빠 사진이 필요합니다." }, { status: 400 });
       }
 
       const [dadUrl, momFeatures] = await Promise.all([
-        uploadBase64ToReplicate(image2), // 아빠 사진 업로드
-        analyzeFaceFeatures(image1, "mom"), // 엄마 특징 추출
+        uploadBase64ToReplicate(image2),
+        analyzeFaceFeatures(image1, "mom"),
       ]);
-
-      console.log("👩 엄마 특징:", momFeatures);
 
       const momPart = momFeatures ? `, inheriting ${momFeatures}` : "";
       const prompt = `a cute 3 year old Korean baby boy toddler [img]${momPart}, very short hair, chubby cheeks, big round eyes, small nose, soft baby skin, boyish, male child, photorealistic, professional portrait, warm studio lighting`;
       const negativePrompt = "adult, old, deformed, blurry, cartoon, ugly, low quality, girl, female, feminine, long hair, dress, girly, woman";
-
-      console.log("📝 프롬프트:", prompt);
-      console.log("🎨 모델 실행 중 (아들 - 아빠 베이스)...");
 
       const output = await replicate.run(
         "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
@@ -111,7 +99,7 @@ export async function POST(request: NextRequest) {
             prompt,
             negative_prompt: negativePrompt,
             style_name: "Photographic (Default)",
-            num_outputs: 1,
+            num_outputs: 3,
             guidance_scale: 7,
             num_inference_steps: 20,
             style_strength_ratio: 15,
@@ -128,24 +116,17 @@ export async function POST(request: NextRequest) {
         })
         .filter(Boolean);
 
-      console.log("✅ 완료:", urls);
       return NextResponse.json({ output: urls });
 
     } else {
-      // 딸: 엄마 사진 베이스 + 아빠 특징 텍스트
       const [momUrl, dadFeatures] = await Promise.all([
-        uploadBase64ToReplicate(image1), // 엄마 사진 업로드
-        image2 ? analyzeFaceFeatures(image2, "dad") : Promise.resolve(""), // 아빠 특징 추출
+        uploadBase64ToReplicate(image1),
+        image2 ? analyzeFaceFeatures(image2, "dad") : Promise.resolve(""),
       ]);
-
-      console.log("👨 아빠 특징:", dadFeatures);
 
       const dadPart = dadFeatures ? `, inheriting ${dadFeatures}` : "";
       const prompt = `a cute 3 year old Korean baby girl toddler [img]${dadPart}, chubby cheeks, big round eyes, small nose, soft baby skin, feminine, girly, photorealistic, professional portrait, warm studio lighting`;
       const negativePrompt = "adult, old, deformed, blurry, cartoon, ugly, low quality, boy, male, masculine, short hair, man";
-
-      console.log("📝 프롬프트:", prompt);
-      console.log("🎨 모델 실행 중 (딸 - 엄마 베이스)...");
 
       const output = await replicate.run(
         "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
@@ -155,7 +136,7 @@ export async function POST(request: NextRequest) {
             prompt,
             negative_prompt: negativePrompt,
             style_name: "Photographic (Default)",
-            num_outputs: 1,
+            num_outputs: 3,
             guidance_scale: 5,
             num_inference_steps: 20,
             style_strength_ratio: 15,
@@ -172,12 +153,11 @@ export async function POST(request: NextRequest) {
         })
         .filter(Boolean);
 
-      console.log("✅ 완료:", urls);
       return NextResponse.json({ output: urls });
     }
 
   } catch (error: any) {
-    console.error("❌ 오류:", error);
+    console.error("오류:", error);
     return NextResponse.json(
       { error: error.message || "오류가 발생했습니다." },
       { status: 500 }
