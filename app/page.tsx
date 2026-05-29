@@ -38,6 +38,24 @@ export default function Home() {
       img.src = base64;
     });
 
+  // 이미지 다운로드 함수
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(result);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "우리아기얼굴.png";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      window.open(result, "_blank");
+    }
+  };
+
   const handleSubmit = async () => {
     if (!image1 || !image2) {
       setError("엄마와 아빠 사진을 모두 올려주세요!");
@@ -178,22 +196,17 @@ export default function Home() {
 
       {/* 결과 */}
       {result && (
-        <div className="mt-8 flex flex-col items-center">
-          <h2 className="text-2xl font-bold text-pink-600 mb-4">
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <h2 className="text-2xl font-bold text-pink-600">
             {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
           </h2>
           <img src={result} className="w-64 h-64 object-cover rounded-2xl shadow-lg" />
-
-          {/* 다운로드 버튼 */}
-          
-            href={result}
-            download="우리아기얼굴.png"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 bg-white border-2 border-pink-400 text-pink-500 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition"
+          <button
+            onClick={handleDownload}
+            className="bg-white border-2 border-pink-400 text-pink-500 px-6 py-2 rounded-full font-semibold hover:bg-pink-50 transition"
           >
             📥 사진 저장하기
-          </a>
+          </button>
         </div>
       )}
     </main>
