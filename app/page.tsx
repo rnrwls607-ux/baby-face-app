@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
 
 const LOADING_MESSAGES = [
   "👶 아기 얼굴 윤곽 그리는 중...",
@@ -13,8 +12,20 @@ const LOADING_MESSAGES = [
   "🍼 거의 다 됐어요!",
 ];
 
+const FREE_LIMIT = 3;
+
+type KakaoUser = {
+  id: string;
+  nickname: string;
+  profileImage: string | null;
+  email: string | null;
+};
+
 export default function Home() {
-  const { data: session } = useSession();
+  const [user, setUser] = useState<KakaoUser | null>(null);
+  const [userLoading, setUserLoading] = useState(true);
+  const [usageCount, setUsageCount] = useState(0);
+  const [limitReached, setLimitReached] = useState(false);
   const [image1, setImage1] = useState<string>("");
   const [image2, setImage2] = useState<string>("");
   const [results, setResults] = useState<string[]>([]);
@@ -27,10 +38,23 @@ export default function Home() {
   const [elapsed, setElapsed] = useState<number>(0);
 
   useEffect(() => {
-    if (!loading) {
-      setElapsed(0);
-      return;
-    }
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((data) => { if (data.loggedIn) setUser(data.user); })
+      .catch(() => {})
+      .finally(() => setUserLoading(false));
+
+    fetch("/api/usage")
+      .then((r) => r.json())
+      .then((data) => {
+        setUsageCount(data.count);
+        setLimitReached(data.limitReached);
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!loading) { setElapsed(0); return; }
     setLoadingMsg(LOADING_MESSAGES[0]);
     let idx = 0;
     const msgInterval = setInterval(() => {
@@ -40,10 +64,7 @@ export default function Home() {
     const timeInterval = setInterval(() => {
       setElapsed((prev) => prev + 1);
     }, 1000);
-    return () => {
-      clearInterval(msgInterval);
-      clearInterval(timeInterval);
-    };
+    return () => { clearInterval(msgInterval); clearInterval(timeInterval); };
   }, [loading]);
 
   const toBase64 = (file: File): Promise<string> =>
@@ -74,14 +95,16 @@ export default function Home() {
       img.src = base64;
     });
 
+  const handleLogin = () => { window.location.href = "/api/auth/kakao"; };
+  const handleLogout = () => { window.location.href = "/api/auth/logout"; };
+
   const handleDownload = async () => {
     const result = results[selected];
     try {
       const now = new Date();
       const timestamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}${String(now.getSeconds()).padStart(2,"0")}`;
-      const proxyUrl = `/api/download?url=${encodeURIComponent(result)}`;
       const a = document.createElement("a");
-      a.href = proxyUrl;
+      a.href = `/api/download?url=${encodeURIComponent(result)}`;
       a.download = `우리아기얼굴_${timestamp}.png`;
       document.body.appendChild(a);
       a.click();
@@ -112,14 +135,10 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
-    if (!session) {
-      signIn("kakao");
-      return;
-    }
-    if (!image1 || !image2) {
-      setError("엄마와 아빠 사진을 모두 올려주세요!");
-      return;
-    }
+    if (!user) { handleLogin(); return; }
+    if (limitReached) return;
+    if (!image1 || !image2) { setError("엄마와 아빠 사진을 모두 올려주세요!"); return; }
+
     setLoading(true);
     setError("");
     setResults([]);
@@ -143,6 +162,12 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
+
+      const usageRes = await fetch("/api/usage", { method: "POST" });
+      const usageData = await usageRes.json();
+      setUsageCount(usageData.count);
+      setLimitReached(usageData.limitReached);
+
       setResults(data.output);
       setStep("");
     } catch (err: any) {
@@ -161,55 +186,103 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-pink-50 flex flex-col items-center p-6 pt-10">
 
-      {/* 헤더 + 로그인 */}
       <div className="w-full max-w-sm flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold text-pink-600">👶 우리 아기 얼굴은?</h1>
-        {session ? (
+        {userLoading ? (
+          <div className="w-20 h-8 bg-gray-200 rounded-full animate-pulse" />
+        ) : user ? (
           <div className="flex items-center gap-2">
-            <img src={session.user?.image ?? ""} className="w-8 h-8 rounded-full" />
-            <button onClick={() => signOut()}
-              className="text-xs text-gray-400 hover:text-gray-600">
+            {user.profileImage && (
+              <img src={user.profileImage} className="w-8 h-8 rounded-full" />
+            )}
+            <span className="text-xs text-gray-600 max-w-[60px] truncate">{user.nickname}</span>
+            <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-gray-600">
               로그아웃
             </button>
           </div>
         ) : (
-          <button onClick={() => signIn("kakao")}
+          <button onClick={handleLogin}
             className="bg-yellow-400 text-black text-sm px-3 py-1.5 rounded-full font-bold hover:bg-yellow-500 transition">
             카카오 로그인
           </button>
         )}
       </div>
 
-      <p className="text-gray-500 mb-6 text-center text-sm">엄마 아빠 사진을 올리면 AI가 아기 얼굴을 예측해드려요!</p>
+      <p className="text-gray-500 mb-4 text-center text-sm">
+        엄마 아빠 사진을 올리면 AI가 아기 얼굴을 예측해드려요!
+      </p>
 
-      {/* 로그인 안내 */}
-      {!session && (
+      {user && (
+        <div className={`w-full max-w-sm rounded-2xl p-3 mb-4 text-center ${
+          limitReached ? "bg-red-50 border border-red-200" : "bg-white border border-pink-200"
+        }`}>
+          {limitReached ? (
+            <p className="text-red-500 font-bold text-sm">
+              🔒 무료 {FREE_LIMIT}회를 모두 사용했어요!
+            </p>
+          ) : (
+            <p className="text-pink-600 text-sm">
+              ✨ 무료 이용{" "}
+              <span className="font-bold">{FREE_LIMIT - usageCount}회</span> 남았어요
+              <span className="text-gray-400 text-xs ml-1">({usageCount}/{FREE_LIMIT})</span>
+            </p>
+          )}
+        </div>
+      )}
+
+      {!userLoading && !user && (
         <div className="w-full max-w-sm bg-yellow-50 border border-yellow-200 rounded-2xl p-4 mb-6 text-center">
           <p className="text-yellow-700 font-bold mb-2">💛 카카오 로그인 후 이용 가능해요!</p>
-          <button onClick={() => signIn("kakao")}
+          <button onClick={handleLogin}
             className="bg-yellow-400 text-black px-6 py-2 rounded-full font-bold hover:bg-yellow-500 transition">
             카카오로 시작하기
           </button>
         </div>
       )}
 
-      {/* 성별 선택 */}
+      {limitReached && (
+        <div className="w-full max-w-sm bg-gradient-to-b from-pink-50 to-purple-50 border-2 border-pink-300 rounded-2xl p-6 mb-6 text-center">
+          <div className="text-5xl mb-3">👶💎</div>
+          <h2 className="text-xl font-bold text-pink-600 mb-2">무료 체험이 끝났어요!</h2>
+          <p className="text-gray-500 text-sm mb-4">
+            계속 이용하시려면 프리미엄으로 업그레이드하세요
+          </p>
+          <div className="bg-white rounded-2xl p-4 mb-4 text-left">
+            <p className="font-bold text-gray-700 mb-2">💎 프리미엄 혜택</p>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>✅ 무제한 아기 얼굴 예측</li>
+              <li>✅ 고화질 결과 이미지</li>
+              <li>✅ 결과 저장 및 공유</li>
+            </ul>
+          </div>
+          <button
+            onClick={() => alert("결제 시스템 준비 중이에요! 곧 오픈할게요 💕")}
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 rounded-2xl font-bold text-lg hover:opacity-90 transition">
+            💎 프리미엄 시작하기
+          </button>
+          <p className="text-gray-400 text-xs mt-2">월 990원 · 언제든 해지 가능</p>
+        </div>
+      )}
+
       <div className="flex gap-4 mb-6 w-full max-w-sm">
         <button onClick={() => setGender("girl")}
           className={`flex-1 py-3 rounded-2xl text-lg font-bold transition ${
-            gender === "girl" ? "bg-pink-500 text-white shadow-lg" : "bg-white text-pink-400 border-2 border-pink-300"
+            gender === "girl"
+              ? "bg-pink-500 text-white shadow-lg"
+              : "bg-white text-pink-400 border-2 border-pink-300"
           }`}>
           👧 딸
         </button>
         <button onClick={() => setGender("boy")}
           className={`flex-1 py-3 rounded-2xl text-lg font-bold transition ${
-            gender === "boy" ? "bg-blue-500 text-white shadow-lg" : "bg-white text-blue-400 border-2 border-blue-300"
+            gender === "boy"
+              ? "bg-blue-500 text-white shadow-lg"
+              : "bg-white text-blue-400 border-2 border-blue-300"
           }`}>
           👦 아들
         </button>
       </div>
 
-      {/* 사진 업로드 */}
       <div className="flex flex-col gap-4 mb-6 w-full max-w-sm">
         <label className="cursor-pointer">
           <div className={`w-full rounded-2xl border-2 border-dashed p-4 flex items-center gap-4 transition ${
@@ -218,11 +291,15 @@ export default function Home() {
             {image1 ? (
               <img src={image1} className="w-16 h-16 object-cover rounded-full flex-shrink-0" />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0 text-3xl">👩</div>
+              <div className="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0 text-3xl">
+                👩
+              </div>
             )}
             <div>
               <p className="text-pink-600 font-bold text-base">엄마 사진</p>
-              <p className="text-gray-400 text-sm">{image1 ? "✅ 사진 선택됨" : "탭해서 사진 선택하기"}</p>
+              <p className="text-gray-400 text-sm">
+                {image1 ? "✅ 사진 선택됨" : "탭해서 사진 선택하기"}
+              </p>
             </div>
             <div className="ml-auto text-pink-400 text-2xl">{image1 ? "✓" : "+"}</div>
           </div>
@@ -239,11 +316,15 @@ export default function Home() {
             {image2 ? (
               <img src={image2} className="w-16 h-16 object-cover rounded-full flex-shrink-0" />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-3xl">👨</div>
+              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 text-3xl">
+                👨
+              </div>
             )}
             <div>
               <p className="text-blue-600 font-bold text-base">아빠 사진</p>
-              <p className="text-gray-400 text-sm">{image2 ? "✅ 사진 선택됨" : "탭해서 사진 선택하기"}</p>
+              <p className="text-gray-400 text-sm">
+                {image2 ? "✅ 사진 선택됨" : "탭해서 사진 선택하기"}
+              </p>
             </div>
             <div className="ml-auto text-blue-400 text-2xl">{image2 ? "✓" : "+"}</div>
           </div>
@@ -254,14 +335,22 @@ export default function Home() {
         </label>
       </div>
 
-      {/* 예측 버튼 */}
       <button onClick={handleSubmit}
-        className="w-full max-w-sm bg-pink-500 text-white py-4 rounded-2xl text-lg font-bold hover:bg-pink-600 transition disabled:opacity-50"
-        disabled={loading}>
-        {loading ? "예측 중... 🍼" : session ? "아기 얼굴 예측하기 ✨" : "카카오 로그인 후 시작하기"}
+        className={`w-full max-w-sm py-4 rounded-2xl text-lg font-bold transition disabled:opacity-50 ${
+          limitReached
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-pink-500 text-white hover:bg-pink-600"
+        }`}
+        disabled={loading || limitReached}>
+        {loading
+          ? "예측 중... 🍼"
+          : limitReached
+          ? "🔒 무료 횟수 초과"
+          : user
+          ? "아기 얼굴 예측하기 ✨"
+          : "카카오 로그인 후 시작하기"}
       </button>
 
-      {/* 로딩 */}
       {loading && (
         <div className="mt-8 w-full max-w-sm flex flex-col items-center gap-4">
           <div className="text-6xl animate-bounce">👶</div>
@@ -271,9 +360,11 @@ export default function Home() {
           <div className="flex gap-2 w-full">
             {["압축", "전송", "생성"].map((s, i) => (
               <div key={i} className={`flex-1 py-2 rounded-xl text-xs font-bold text-center transition ${
-                step === s ? "bg-pink-500 text-white" :
-                ["압축","전송","생성"].indexOf(step) > i ? "bg-pink-200 text-pink-600" :
-                "bg-gray-100 text-gray-400"
+                step === s
+                  ? "bg-pink-500 text-white"
+                  : ["압축", "전송", "생성"].indexOf(step) > i
+                  ? "bg-pink-200 text-pink-600"
+                  : "bg-gray-100 text-gray-400"
               }`}>
                 {["🗜️ 압축", "📤 전송", "🎨 생성"][i]}
               </div>
@@ -281,15 +372,17 @@ export default function Home() {
           </div>
           <p className="text-gray-400 text-sm">⏱️ {elapsed}초 경과 · 보통 40~60초 걸려요</p>
           <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3 w-full">
-            <p className="text-yellow-700 text-xs text-center">💡 AI가 엄마 아빠 얼굴을 열심히 분석하고 있어요!</p>
+            <p className="text-yellow-700 text-xs text-center">
+              💡 AI가 엄마 아빠 얼굴을 열심히 분석하고 있어요!
+            </p>
           </div>
         </div>
       )}
 
-      {/* 에러 */}
-      {error && <p className="mt-4 text-red-500 font-semibold text-center">⚠️ {error}</p>}
+      {error && (
+        <p className="mt-4 text-red-500 font-semibold text-center">⚠️ {error}</p>
+      )}
 
-      {/* 결과 */}
       {results.length > 0 && (
         <div className="mt-8 flex flex-col items-center gap-4 w-full max-w-sm">
           <h2 className="text-2xl font-bold text-pink-600 text-center">
@@ -322,7 +415,8 @@ export default function Home() {
               📤 공유하기
             </button>
           </div>
-          <button onClick={() => { setResults([]); setImage1(""); setImage2(""); setSelected(0); }}
+          <button
+            onClick={() => { setResults([]); setImage1(""); setImage2(""); setSelected(0); }}
             className="w-full bg-gray-100 text-gray-500 py-3 rounded-2xl font-bold hover:bg-gray-200 transition">
             🔄 다시 만들기
           </button>

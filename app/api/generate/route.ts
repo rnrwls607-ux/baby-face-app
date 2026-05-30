@@ -71,107 +71,81 @@ async function uploadBase64ToReplicate(base64: string): Promise<string> {
   return data.urls?.get ?? data.url;
 }
 
+function extractUrl(item: unknown): string | null {
+  if (typeof item === "string") return item;
+  if (item && typeof item === "object") {
+    const obj = item as Record<string, unknown>;
+    if (typeof obj.url === "function") return (obj.url() as { href: string }).href;
+    if (obj.url) return String(obj.url);
+  }
+  return null;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { image1, image2, gender } = await request.json();
 
-    if (!image1) {
-      return NextResponse.json({ error: "엄마 사진이 필요합니다." }, { status: 400 });
+    if (!image1 || !image2) {
+      return NextResponse.json({ error: "엄마와 아빠 사진이 모두 필요합니다." }, { status: 400 });
     }
 
     const isBoy = gender === "boy";
 
-    if (isBoy) {
-      if (!image2) {
-        return NextResponse.json({ error: "아들 예측에는 아빠 사진이 필요합니다." }, { status: 400 });
-      }
+    // 아들: 아빠 사진 identity + 엄마 특징 프롬프트
+    // 딸: 엄마 사진 identity + 아빠 특징 프롬프트
+    const identityBase64 = isBoy ? image2 : image1;
+    const otherBase64 = isBoy ? image1 : image2;
+    const otherRole = isBoy ? "mom" : "dad";
 
-      const [dadUrl, momFeatures] = await Promise.all([
-        uploadBase64ToReplicate(image2),
-        analyzeFaceFeatures(image1, "mom"),
-      ]);
+    const [identityUrl, otherFeatures] = await Promise.all([
+      uploadBase64ToReplicate(identityBase64),
+      analyzeFaceFeatures(otherBase64, otherRole),
+    ]);
 
-      console.log("👩 엄마 특징:", momFeatures);
+    console.log(`👶 ${isBoy ? "아들(아빠 identity)" : "딸(엄마 identity)"}`);
+    console.log(`🧬 반영된 ${isBoy ? "엄마" : "아빠"} 특징:`, otherFeatures);
 
-      const momPart = momFeatures ? `, inheriting ${momFeatures}` : "";
+    const otherPart = otherFeatures ? `, also inheriting ${otherFeatures}` : "";
 
-      const prompt = `a cute Korean baby boy toddler [img]${momPart}, 2-3 years old, extremely chubby round cheeks, small upturned nose, large innocent eyes, very short neat hair, baby fat on face, smooth flawless baby skin, rosy cheeks, plump lips, round head shape, photorealistic, 8k, soft natural lighting, neutral background, professional baby portrait photography, Canon 85mm lens`;
+    const prompt = isBoy
+      ? `portrait photo of a cute Korean baby boy toddler, 2-3 years old, chubby round cheeks, small upturned nose, large innocent eyes, very short neat hair, baby fat on face, smooth flawless baby skin, rosy cheeks, plump lips, round head shape${otherPart}, photorealistic, 8k, soft natural lighting, neutral white background, professional baby portrait photography`
+      : `portrait photo of a cute Korean baby girl toddler, 2-3 years old, chubby round cheeks, small button nose, large sparkling innocent eyes, wispy soft hair, baby fat on face, smooth flawless baby skin, rosy cheeks, plump lips, round head shape${otherPart}, photorealistic, 8k, soft natural lighting, neutral white background, professional baby portrait photography`;
 
-      const negativePrompt = "adult, teenager, old person, aged, wrinkles, deformed, blurry, cartoon, anime, ugly, low quality, girl, female, feminine, long hair, dress, girly, woman, makeup, earrings, jewelry, text, watermark, multiple faces, scary, horror";
+    const negativePrompt = isBoy
+      ? "adult, teenager, old, wrinkles, ugly, blurry, cartoon, anime, low quality, girl, female, woman, makeup, text, watermark, multiple faces, scary, deformed, bad anatomy"
+      : "adult, teenager, old, wrinkles, ugly, blurry, cartoon, anime, low quality, boy, male, man, text, watermark, multiple faces, scary, deformed, bad anatomy";
 
-      const output = await replicate.run(
-        "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
-        {
+    // 3장 병렬 생성 (버전 해시 없이 최신 버전 자동 사용)
+    const runs = await Promise.all(
+      [0, 1, 2].map(() =>
+        replicate.run("bytedance/flux-pulid", {
           input: {
-            input_image: dadUrl,
+            main_face_image: identityUrl,
             prompt,
             negative_prompt: negativePrompt,
-            style_name: "Photographic (Default)",
-            num_outputs: 3,
-            guidance_scale: 7,
-            num_inference_steps: 30,
-            style_strength_ratio: 15,
+            num_steps: 20,
+            start_step: 0,
+            guidance: 4,
+            true_cfg: 1,
+            id_weight: 1.0,
+            width: 768,
+            height: 768,
           },
-        }
-      );
-
-      const urls = (output as any[])
-        .map((item) => {
-          if (typeof item === "string") return item;
-          if (typeof item?.url === "function") return item.url().href;
-          if (item?.url) return item.url.href || String(item.url);
-          return null;
         })
-        .filter(Boolean);
+      )
+    );
 
-      return NextResponse.json({ output: urls });
+    const urls = runs.map(extractUrl).filter(Boolean) as string[];
 
-    } else {
-      const [momUrl, dadFeatures] = await Promise.all([
-        uploadBase64ToReplicate(image1),
-        image2 ? analyzeFaceFeatures(image2, "dad") : Promise.resolve(""),
-      ]);
+    if (!urls.length) throw new Error("이미지를 받지 못했습니다.");
 
-      console.log("👨 아빠 특징:", dadFeatures);
+    return NextResponse.json({ output: urls });
 
-      const dadPart = dadFeatures ? `, inheriting ${dadFeatures}` : "";
-
-      const prompt = `a cute Korean baby girl toddler [img]${dadPart}, 2-3 years old, extremely chubby round cheeks, small button nose, large innocent sparkling eyes, wispy soft hair, baby fat on face, smooth flawless baby skin, rosy cheeks, plump lips, round head shape, photorealistic, 8k, soft natural lighting, neutral background, professional baby portrait photography, Canon 85mm lens`;
-
-      const negativePrompt = "adult, teenager, old person, aged, wrinkles, deformed, blurry, cartoon, anime, ugly, low quality, boy, male, masculine, short hair, man, makeup, heavy eyeshadow, text, watermark, multiple faces, scary, horror";
-
-      const output = await replicate.run(
-        "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4",
-        {
-          input: {
-            input_image: momUrl,
-            prompt,
-            negative_prompt: negativePrompt,
-            style_name: "Photographic (Default)",
-            num_outputs: 3,
-            guidance_scale: 5,
-            num_inference_steps: 30,
-            style_strength_ratio: 15,
-          },
-        }
-      );
-
-      const urls = (output as any[])
-        .map((item) => {
-          if (typeof item === "string") return item;
-          if (typeof item?.url === "function") return item.url().href;
-          if (item?.url) return item.url.href || String(item.url);
-          return null;
-        })
-        .filter(Boolean);
-
-      return NextResponse.json({ output: urls });
-    }
-
-  } catch (error: any) {
-    console.error("오류:", error);
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.error("오류:", err);
     return NextResponse.json(
-      { error: error.message || "오류가 발생했습니다." },
+      { error: err.message || "오류가 발생했습니다." },
       { status: 500 }
     );
   }
