@@ -109,22 +109,22 @@ export async function POST(request: NextRequest) {
     const otherPart = otherFeatures ? ", also inheriting " + otherFeatures : "";
 
     const prompt = isBoy
-      ? "portrait photo of a cute Korean baby boy toddler, 2-3 years old, chubby round cheeks, small upturned nose, large innocent eyes, short neat hair, baby fat on face, smooth flawless skin, rosy cheeks, plump lips, round head shape" + otherPart + ", photorealistic, 8k, soft natural lighting, white background, professional baby portrait"
-      : "portrait photo of a cute Korean baby girl toddler, 2-3 years old, chubby round cheeks, small button nose, large sparkling eyes, wispy soft hair, baby fat on face, smooth flawless skin, rosy cheeks, plump lips, round head shape" + otherPart + ", photorealistic, 8k, soft natural lighting, white background, professional baby portrait";
+      ? "RAW photo of a real Korean baby boy, 18 months old, taken with Canon EOS R5 85mm f/1.8 lens, natural soft window light, genuine skin texture with baby softness, realistic eye proportions, chubby cheeks with natural baby fat, fine wispy dark hair, slightly parted lips, real human infant" + otherPart + ", shallow depth of field, studio white background, hyperrealistic, photographic"
+      : "RAW photo of a real Korean baby girl, 18 months old, taken with Canon EOS R5 85mm f/1.8 lens, natural soft window light, genuine skin texture with baby softness, realistic eye proportions, chubby cheeks with natural baby fat, fine wispy dark hair, rosy cheeks, real human infant" + otherPart + ", shallow depth of field, studio white background, hyperrealistic, photographic";
 
     const negative = isBoy
-      ? "adult, teenager, old, wrinkles, ugly, blurry, cartoon, anime, low quality, girl, woman, makeup, text, watermark, multiple faces, deformed"
-      : "adult, teenager, old, wrinkles, ugly, blurry, cartoon, anime, low quality, boy, man, text, watermark, multiple faces, deformed";
+      ? "cartoon, anime, 3d render, illustration, CGI, digital art, painting, drawing, unrealistic, fake, doll, plastic skin, oversized eyes, anime eyes, manga, stylized, art, sculpture, toy, figurine, adult, teenager, text, watermark, multiple faces, deformed, blurry, low quality, ugly"
+      : "cartoon, anime, 3d render, illustration, CGI, digital art, painting, drawing, unrealistic, fake, doll, plastic skin, oversized eyes, anime eyes, manga, stylized, art, sculpture, toy, figurine, adult, teenager, text, watermark, multiple faces, deformed, blurry, low quality, ugly";
 
     const input = {
       main_face_image: identityUrl,
       prompt: prompt,
       negative_prompt: negative,
-      num_steps: 20,
+      num_steps: 30,
       start_step: 0,
-      guidance: 4,
+      guidance: 5,
       true_cfg: 1,
-      id_weight: 1.0,
+      id_weight: 0.8,
       width: 768,
       height: 768,
     };
@@ -133,13 +133,26 @@ export async function POST(request: NextRequest) {
     const results = [];
     for (let i = 0; i < 3; i++) {
       const out = await runOne(input);
-      results.push(out);
+      // 실제 반환값 구조 확인용 로그
+      console.log("[DEBUG] run output type:", typeof out);
+      console.log("[DEBUG] run output:", JSON.stringify(out, null, 2));
+      if (Array.isArray(out)) {
+        // 배열로 반환되는 경우 각 항목을 추가
+        for (const item of out) {
+          const url = extractUrl(item);
+          if (url) results.push(url);
+        }
+      } else {
+        const url = extractUrl(out);
+        if (url) results.push(url);
+      }
     }
 
-    const urls = results.map(extractUrl).filter(Boolean);
+    const urls = results.filter(Boolean);
+    console.log("[DEBUG] final urls:", urls);
     if (!urls.length) throw new Error("이미지를 받지 못했습니다.");
 
-    return NextResponse.json({ output: urls });
+    return NextResponse.json({ output: urls as string[] });
 
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
