@@ -109,12 +109,10 @@ export async function POST(request: NextRequest) {
     const otherPart = otherFeatures ? ", also inheriting " + otherFeatures : "";
 
     const prompt = isBoy
-      ? "RAW photo of a real Korean baby boy, 18 months old, taken with Canon EOS R5 85mm f/1.8 lens, natural soft window light, genuine skin texture with baby softness, realistic eye proportions, chubby cheeks with natural baby fat, fine wispy dark hair, slightly parted lips, real human infant" + otherPart + ", shallow depth of field, studio white background, hyperrealistic, photographic"
-      : "RAW photo of a real Korean baby girl, 18 months old, taken with Canon EOS R5 85mm f/1.8 lens, natural soft window light, genuine skin texture with baby softness, realistic eye proportions, chubby cheeks with natural baby fat, fine wispy dark hair, rosy cheeks, real human infant" + otherPart + ", shallow depth of field, studio white background, hyperrealistic, photographic";
+      ? "a real photograph of a cute Korean baby boy toddler, 12-18 months old, chubby cheeks, natural baby skin with slight rosiness, proportional realistic eyes, tiny nose, wispy dark hair, baby fat, genuine infant features, soft studio lighting, clean white background, photorealistic, high detail, real baby portrait" + otherPart
+      : "a real photograph of a cute Korean baby girl toddler, 12-18 months old, chubby cheeks, natural baby skin with slight rosiness, proportional realistic eyes, tiny nose, wispy dark hair, baby fat, genuine infant features, soft studio lighting, clean white background, photorealistic, high detail, real baby portrait" + otherPart;
 
-    const negative = isBoy
-      ? "cartoon, anime, 3d render, illustration, CGI, digital art, painting, drawing, unrealistic, fake, doll, plastic skin, oversized eyes, anime eyes, manga, stylized, art, sculpture, toy, figurine, adult, teenager, text, watermark, multiple faces, deformed, blurry, low quality, ugly"
-      : "cartoon, anime, 3d render, illustration, CGI, digital art, painting, drawing, unrealistic, fake, doll, plastic skin, oversized eyes, anime eyes, manga, stylized, art, sculpture, toy, figurine, adult, teenager, text, watermark, multiple faces, deformed, blurry, low quality, ugly";
+    const negative = "cartoon, anime, 3d render, CGI, illustration, painting, digital art, toy, doll, plastic, oversized anime eyes, manga, stylized, unrealistic, sketch, adult, teenager, text, watermark, blurry, distorted, multiple people, deformed, bad anatomy";
 
     const input = {
       main_face_image: identityUrl,
@@ -122,16 +120,16 @@ export async function POST(request: NextRequest) {
       negative_prompt: negative,
       num_steps: 20,
       start_step: 0,
-      guidance: 5,
+      guidance: 4.5,
       true_cfg: 1,
-      id_weight: 0.8,
-      width: 768,
-      height: 768,
+      id_weight: 0.85,
+      width: 896,
+      height: 896,
     };
 
-    // 1장 생성 (Vercel Hobby 60초 제한 대응, 추후 Pro 업그레이드 시 3장으로 변경)
+    // 3장 순차 생성 (이미지 압축으로 속도 개선, 3장 복원)
     const results = [];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 3; i++) {
       const out = await runOne(input);
       // 실제 반환값 구조 확인용 로그
       console.log("[DEBUG] run output type:", typeof out);
