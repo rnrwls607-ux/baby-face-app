@@ -129,9 +129,9 @@ export async function POST(request: NextRequest) {
       height: 768,
     };
 
-    // 3장 순차 생성 (burst=1 rate limit 대응)
+    // 1장 생성 (Vercel Hobby 60초 제한 대응, 추후 Pro 업그레이드 시 3장으로 변경)
     const results = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
       const out = await runOne(input);
       // 실제 반환값 구조 확인용 로그
       console.log("[DEBUG] run output type:", typeof out);
