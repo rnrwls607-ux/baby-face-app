@@ -164,10 +164,17 @@ export default function Home() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
 
-      const usageRes = await fetch("/api/usage", { method: "POST" });
-      const usageData = await usageRes.json();
-      setUsageCount(usageData.count);
-      setLimitReached(usageData.limitReached);
+      // 사용 횟수 기록 (실패해도 결과는 보여줌)
+      try {
+        const usageRes = await fetch("/api/usage", { method: "POST" });
+        if (usageRes.ok) {
+          const usageData = await usageRes.json();
+          setUsageCount(usageData.count);
+          setLimitReached(usageData.limitReached);
+        }
+      } catch {
+        // usage 기록 실패해도 결과 표시는 정상 진행
+      }
 
       setResults(data.output);
       setStep("");
