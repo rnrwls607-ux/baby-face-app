@@ -7,7 +7,9 @@ export const maxDuration = 60;
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-const redis = new Redis({ url: process.env.KV_REST_API_URL!, token: process.env.KV_REST_API_TOKEN! });
+const redis = process.env.KV_REST_API_URL
+  ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN! })
+  : null;
 
 // FLUX PuLID — 무료 사용자 (1장씩 순차)
 const FLUX_MODEL = "bytedance/flux-pulid:8baa7ef2255075b46f4d91cd238c21d31181b3e6a864463f967960bb0112525b";
@@ -133,10 +135,7 @@ async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean):
 
   const input = {
     prompt,
-    reference_images: [
-      { uri: momUrl, tag: "mom" },
-      { uri: dadUrl, tag: "dad" },
-    ],
+    reference_images: [momUrl, dadUrl],
     ratio: "1:1",
     seed: Math.floor(Math.random() * 999999),
   };
@@ -166,7 +165,7 @@ export async function POST(request: NextRequest) {
 
     // 유료 여부 확인 (bonus uses > 0 이면 프리미엄)
     const userId = getUserId(request);
-    const bonusUses = userId ? ((await redis.get<number>("bonus:" + userId)) ?? 0) : 0;
+    const bonusUses = userId && redis ? ((await redis.get<number>("bonus:" + userId)) ?? 0) : 0;
     const isPremium = bonusUses > 0;
 
     console.log(`[Generate] userId=${userId}, bonusUses=${bonusUses}, isPremium=${isPremium}`);
