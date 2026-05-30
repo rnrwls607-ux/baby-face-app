@@ -99,6 +99,7 @@ export default function Home() {
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
   const [results, setResults] = useState<string[]>([]);
+  const [isPremiumResult, setIsPremiumResult] = useState(false);
   const [selected, setSelected] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -208,6 +209,7 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
+      setIsPremiumResult(!!data.isPremium);
       try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
     } catch (e: unknown) {
@@ -512,9 +514,16 @@ export default function Home() {
         {/* 결과 */}
         {results.length > 0 && (
           <div style={{ marginTop: 24 }} className="fade-up">
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>
-              {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
-            </p>
+            <div style={{ textAlign: "center", marginBottom: 16 }}>
+              <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: "0 0 6px" }}>
+                {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
+              </p>
+              {isPremiumResult && (
+                <span style={{ fontSize: 11, background: "#FF4B7C", color: "#fff", padding: "3px 10px", borderRadius: 20, fontWeight: 700 }}>
+                  ✦ Gen-4 Premium · 엄마+아빠 동시 반영
+                </span>
+              )}
+            </div>
             <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", marginBottom: 12 }}>
               <img src={results[selected]} style={{ width: "100%", display: "block" }} alt="AI 아기 얼굴" />
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 12, padding: "4px 10px", borderRadius: 20, fontWeight: 600 }}>
