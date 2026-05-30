@@ -149,12 +149,13 @@ export default function Home() {
 
     try {
       setStep("압축");
-      const compressed = await compressImage(image1);
+      const compressed1 = await compressImage(image1);
+      const compressed2 = await compressImage(image2);
       setStep("전송");
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image1: compressed, image2, gender }),
+        body: JSON.stringify({ image1: compressed1, image2: compressed2, gender }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
