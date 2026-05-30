@@ -1,11 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
 
 const FREE_LIMIT = 3;
 
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
+
+function getUserId(request: NextRequest): string | null {
+  const cookie = request.cookies.get("kakao_user");
+  if (!cookie) return null;
+  try {
+    const user = JSON.parse(cookie.value);
+    return user.id ? String(user.id) : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
-  const usageCookie = request.cookies.get("usage_count");
-  const count = usageCookie ? parseInt(usageCookie.value) : 0;
-  
+  const userId = getUserId(request);
+
+  if (!userId) {
+    return NextResponse.json({
+      count: 0,
+      remaining: FREE_LIMIT,
+      limitReached: false,
+      freeLimit: FREE_LIMIT,
+    });
+  }
+
+  const count = (await redis.get<number>("usage:" + userId)) ?? 0;
+
   return NextResponse.json({
     count,
     remaining: Math.max(0, FREE_LIMIT - count),
@@ -15,24 +42,22 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const usageCookie = request.cookies.get("usage_count");
-  const currentCount = usageCookie ? parseInt(usageCookie.value) : 0;
-  const newCount = currentCount + 1;
+  const userId = getUserId(request);
 
-  const response = NextResponse.json({
+  if (!userId) {
+    return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
+  }
+
+  const current = (await redis.get<number>("usage:" + userId)) ?? 0;
+  const newCount = current + 1;
+
+  // 30일 만료 설정
+  await redis.set("usage:" + userId, newCount, { ex: 60 * 60 * 24 * 30 });
+
+  return NextResponse.json({
     count: newCount,
     remaining: Math.max(0, FREE_LIMIT - newCount),
     limitReached: newCount >= FREE_LIMIT,
     freeLimit: FREE_LIMIT,
   });
-
-  response.cookies.set("usage_count", String(newCount), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30, // 30일
-    path: "/",
-  });
-
-  return response;
 }
