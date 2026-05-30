@@ -109,20 +109,20 @@ export async function POST(request: NextRequest) {
     const otherPart = otherFeatures ? ", also inheriting " + otherFeatures : "";
 
     const prompt = isBoy
-      ? "a real photograph of a cute Korean baby boy toddler, 12-18 months old, chubby cheeks, natural baby skin with slight rosiness, proportional realistic eyes, tiny nose, wispy dark hair, baby fat, genuine infant features, soft studio lighting, clean white background, photorealistic, high detail, real baby portrait" + otherPart
-      : "a real photograph of a cute Korean baby girl toddler, 12-18 months old, chubby cheeks, natural baby skin with slight rosiness, proportional realistic eyes, tiny nose, wispy dark hair, baby fat, genuine infant features, soft studio lighting, clean white background, photorealistic, high detail, real baby portrait" + otherPart;
+      ? "professional studio portrait photo of a real Korean baby boy, exactly 1 year old infant, extremely chubby round baby cheeks, large round baby head, very short wispy hair, tiny baby nose, smooth plump baby skin, baby fat all over face, genuine toddler proportions, round eyes with natural size, sitting upright, white studio background, Canon 85mm f/2 shallow depth of field, photorealistic DSLR photo, 8K resolution" + otherPart
+      : "professional studio portrait photo of a real Korean baby girl, exactly 1 year old infant, extremely chubby round baby cheeks, large round baby head, very short wispy hair, tiny baby nose, smooth plump baby skin, baby fat all over face, genuine toddler proportions, round eyes with natural size, sitting upright, white studio background, Canon 85mm f/2 shallow depth of field, photorealistic DSLR photo, 8K resolution" + otherPart;
 
-    const negative = "cartoon, anime, 3d render, CGI, illustration, painting, digital art, toy, doll, plastic, oversized anime eyes, manga, stylized, unrealistic, sketch, adult, teenager, text, watermark, blurry, distorted, multiple people, deformed, bad anatomy";
+    const negative = "cartoon, anime, 3d render, CGI, illustration, painting, digital art, toy, doll, plastic skin, oversized eyes, manga, stylized, unrealistic, sketch, child, kid, school age, teenager, adult, old, earrings, jewelry, makeup, text, watermark, blurry, distorted face, multiple people, deformed, bad anatomy, extra fingers, low quality";
 
     const input = {
       main_face_image: identityUrl,
       prompt: prompt,
       negative_prompt: negative,
       num_steps: 20,
-      start_step: 0,
-      guidance: 4.5,
+      start_step: 4,
+      guidance: 4,
       true_cfg: 1,
-      id_weight: 0.85,
+      id_weight: 0.65,
       width: 896,
       height: 896,
     };
