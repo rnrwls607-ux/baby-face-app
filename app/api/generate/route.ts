@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
     // 3장 병렬 생성 (버전 해시 없이 최신 버전 자동 사용)
     const runs = await Promise.all(
       [0, 1, 2].map(() =>
-        replicate.run("bytedance/flux-pulid", {
+        replicate.run("bytedance/flux-pulid:8baa7ef2255075b46f4d91cd238c21d31181b3e6a864463f967960bb0112525b", {
           input: {
             main_face_image: identityUrl,
             prompt,
