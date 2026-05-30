@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       main_face_image: identityUrl,
       prompt: prompt,
       negative_prompt: negative,
-      num_steps: 30,
+      num_steps: 20,
       start_step: 0,
       guidance: 5,
       true_cfg: 1,
