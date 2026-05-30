@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -13,6 +13,14 @@ const LOADING_MESSAGES = [
 ];
 
 const FREE_LIMIT = 3;
+const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
+
+const PRODUCTS = [
+  { id: "3uses",  name: "3회 이용권",  price: 3900,  uses: 3,  tag: "인기" },
+  { id: "10uses", name: "10회 이용권", price: 9900,  uses: 10, tag: "베스트" },
+  { id: "30uses", name: "30회 이용권", price: 19900, uses: 30, tag: "최저가" },
+];
+
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
 type Tab = "home" | "ticket" | "coupon" | "history";
 
@@ -100,6 +108,8 @@ export default function Home() {
   const [elapsed, setElapsed] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [showMakeScreen, setShowMakeScreen] = useState(false);
+  const [showPaymentSheet, setShowPaymentSheet] = useState(false);
+  const [payingProduct, setPayingProduct] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.json()).then(d => { if (d.loggedIn) setUser(d.user); }).catch(() => {}).finally(() => setUserLoading(false));
@@ -131,6 +141,35 @@ export default function Home() {
 
   const handleLogin = () => { window.location.href = "/api/auth/kakao"; };
   const handleLogout = () => { window.location.href = "/api/auth/logout"; };
+
+  const handlePayment = useCallback(async (productId: string) => {
+    if (!user) { handleLogin(); return; }
+    const product = PRODUCTS.find(p => p.id === productId);
+    if (!product) return;
+
+    setPayingProduct(productId);
+    try {
+      const { loadTossPayments } = await import("@tosspayments/payment-sdk");
+      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
+      const orderId = "order_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+
+      await tossPayments.requestPayment("카드", {
+        amount: product.price,
+        orderId,
+        orderName: "babyface " + product.name,
+        customerName: user.nickname,
+        successUrl: window.location.origin + "/payment/success?productId=" + productId,
+        failUrl: window.location.origin + "/payment/fail",
+      });
+    } catch (e: unknown) {
+      const err = e as { code?: string; message?: string };
+      if (err?.code !== "USER_CANCEL") {
+        alert("결제 중 오류가 발생했어요: " + (err?.message || ""));
+      }
+    } finally {
+      setPayingProduct(null);
+    }
+  }, [user]);
 
   const handleDownload = async () => {
     const url = results[selected];
@@ -264,7 +303,7 @@ export default function Home() {
             </p>
           </div>
           {limitReached ? (
-            <button onClick={() => alert("결제 시스템 준비 중이에요! 곧 오픈할게요 💕")}
+            <button onClick={() => setShowPaymentSheet(true)}
               style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
               이용권 구매
             </button>
@@ -380,7 +419,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <button onClick={() => alert("결제 시스템 준비 중이에요! 곧 오픈할게요 💕")}
+            <button onClick={() => setShowPaymentSheet(true)}
               style={{ width: "100%", background: "#111", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
               이용권 구매하기
             </button>
@@ -570,6 +609,47 @@ export default function Home() {
     );
   };
 
+  // ─── 이용권 구매 바텀시트 ─────────────────────────────────────
+  const PaymentSheet = () => (
+    <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
+      onClick={e => { if (e.target === e.currentTarget) setShowPaymentSheet(false); }}>
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
+      <div style={{ position: "relative", background: "#fff", borderRadius: "24px 24px 0 0", padding: "24px 20px 40px", maxWidth: 480, width: "100%", margin: "0 auto" }}>
+        <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
+        <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>이용권 구매</p>
+        <p style={{ fontSize: 13, color: "#999", margin: "0 0 20px" }}>구매한 이용권은 1년간 유효해요</p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {PRODUCTS.map(product => (
+            <button key={product.id}
+              onClick={() => { setShowPaymentSheet(false); handlePayment(product.id); }}
+              disabled={payingProduct === product.id}
+              style={{ width: "100%", background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, padding: "16px", display: "flex", alignItems: "center", cursor: "pointer", textAlign: "left", transition: "all .2s" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontSize: 11, background: product.tag === "베스트" ? "#FF4B7C" : "#111", color: "#fff", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
+                    {product.tag}
+                  </span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>{product.name}</span>
+                </div>
+                <p style={{ fontSize: 12, color: "#999", margin: 0 }}>회당 {Math.round(product.price / product.uses).toLocaleString()}원</p>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <p style={{ fontSize: 17, fontWeight: 900, color: "#111", margin: 0 }}>
+                  {product.price.toLocaleString()}원
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <p style={{ fontSize: 11, color: "#ccc", textAlign: "center", margin: "16px 0 0" }}>
+          결제는 토스페이먼츠를 통해 안전하게 처리됩니다
+        </p>
+      </div>
+    </div>
+  );
+
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", position: "relative", minHeight: "100vh", background: "#fff" }}>
       {!showMakeScreen && <Header />}
@@ -577,6 +657,7 @@ export default function Home() {
         {renderContent()}
       </main>
       <BottomNav />
+      {showPaymentSheet && <PaymentSheet />}
     </div>
   );
 }
