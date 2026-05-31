@@ -11,7 +11,7 @@ const redis = process.env.KV_REST_API_URL
   ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN! })
   : null;
 
-// FLUX PuLID — 무료 사용자 (1장씩 순차)
+// FLUX PuLID — 무료 사용자
 const FLUX_MODEL = "bytedance/flux-pulid:8baa7ef2255075b46f4d91cd238c21d31181b3e6a864463f967960bb0112525b";
 
 // Runway Gen-4 Image — 유료 사용자 (엄마+아빠 동시 2장 참조)
@@ -95,7 +95,7 @@ async function runWithRetry(model: string, input: any): Promise<any> {
   throw new Error("Max retries exceeded");
 }
 
-// ── FLUX PuLID 생성 (무료) ────────────────────────────────────
+// ── FLUX PuLID 생성 (무료) — 1장만 생성 ────────────────────────
 async function generateWithFlux(identityUrl: string, otherFeatures: string, isBoy: boolean): Promise<string[]> {
   const otherPart = otherFeatures ? ", also inheriting " + otherFeatures : "";
   const prompt = isBoy
@@ -117,20 +117,16 @@ async function generateWithFlux(identityUrl: string, otherFeatures: string, isBo
     height: 896,
   };
 
-  const results: string[] = [];
-  for (let i = 0; i < 3; i++) {
-    const out = await runWithRetry(FLUX_MODEL, input);
-    const url = extractUrl(Array.isArray(out) ? out[0] : out);
-    if (url) results.push(url);
-  }
-  return results;
+  // ✅ 1장만 생성 (타임아웃 방지)
+  const out = await runWithRetry(FLUX_MODEL, input);
+  const url = extractUrl(Array.isArray(out) ? out[0] : out);
+  return url ? [url] : [];
 }
 
-// ── Runway Gen-4 생성 (유료) ──────────────────────────────────
+// ── Runway Gen-4 생성 (유료) — 1장만 생성 ──────────────────────
 async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean): Promise<string[]> {
   const babyGender = isBoy ? "baby boy" : "baby girl";
 
-  // Gen-4는 [태그] 방식으로 참조 이미지를 프롬프트에 연결
   const prompt = `professional studio portrait photo of a real cute Korean ${babyGender} toddler aged 12-18 months, inheriting facial features from [mom] and [dad], extremely chubby round baby cheeks, plump baby skin, wispy short hair, natural proportional eyes, tiny nose, baby fat on face, genuine infant features, soft studio lighting, white background, photorealistic DSLR photo, 8K resolution, high detail`;
 
   const input = {
@@ -142,14 +138,11 @@ async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean):
 
   console.log("[Gen-4] Starting generation with 2 reference images");
 
-  const results: string[] = [];
-  for (let i = 0; i < 3; i++) {
-    const out = await runWithRetry(GEN4_MODEL, { ...input, seed: Math.floor(Math.random() * 999999) });
-    console.log("[Gen-4] Output:", typeof out, JSON.stringify(out)?.slice(0, 200));
-    const url = extractUrl(Array.isArray(out) ? out[0] : out);
-    if (url) results.push(url);
-  }
-  return results;
+  // ✅ 1장만 생성 (타임아웃 방지)
+  const out = await runWithRetry(GEN4_MODEL, input);
+  console.log("[Gen-4] Output:", typeof out, JSON.stringify(out)?.slice(0, 200));
+  const url = extractUrl(Array.isArray(out) ? out[0] : out);
+  return url ? [url] : [];
 }
 
 // ── 메인 POST 핸들러 ──────────────────────────────────────────
@@ -199,7 +192,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       output: urls,
-      isPremium,  // 클라이언트에서 "프리미엄 결과" 표시용
+      isPremium,
     });
 
   } catch (error: unknown) {

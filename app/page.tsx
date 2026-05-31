@@ -95,6 +95,8 @@ export default function Home() {
   const [user, setUser] = useState<KakaoUser | null>(null);
   const [userLoading, setUserLoading] = useState(true);
   const [usageCount, setUsageCount] = useState(0);
+  // ✅ 추가: remaining (bonus 포함한 실제 잔여 횟수)
+  const [usageRemaining, setUsageRemaining] = useState(FREE_LIMIT);
   const [limitReached, setLimitReached] = useState(false);
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
@@ -112,10 +114,32 @@ export default function Home() {
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
   const [payingProduct, setPayingProduct] = useState<string | null>(null);
 
+  // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
+  const fetchUsage = useCallback(() => {
+    fetch("/api/usage")
+      .then(r => r.json())
+      .then(d => {
+        setUsageCount(d.count ?? 0);
+        setLimitReached(d.limitReached ?? false);
+        setUsageRemaining(d.remaining ?? FREE_LIMIT);
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.json()).then(d => { if (d.loggedIn) setUser(d.user); }).catch(() => {}).finally(() => setUserLoading(false));
-    fetch("/api/usage").then(r => r.json()).then(d => { setUsageCount(d.count); setLimitReached(d.limitReached); }).catch(() => {});
-  }, []);
+    fetchUsage();
+  }, [fetchUsage]);
+
+  // ✅ 결제 완료 후 홈 복귀 시 usage 재조회 (?refreshed=1 감지)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("refreshed") === "1") {
+      fetchUsage();
+      // URL에서 파라미터 제거 (뒤로가기 시 재실행 방지)
+      window.history.replaceState({}, "", "/");
+    }
+  }, [fetchUsage]);
 
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
@@ -210,7 +234,7 @@ export default function Home() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setIsPremiumResult(!!data.isPremium);
-      try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); } } catch { /* ignore */ }
+      try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
     } catch (e: unknown) {
       clearTimeout(tid); setStep("");
@@ -301,7 +325,8 @@ export default function Home() {
           <div>
             <p style={{ fontSize: 11, color: limitReached ? "#FF4B7C" : "#888", margin: 0, marginBottom: 2 }}>무료 체험 현황</p>
             <p style={{ fontSize: 14, fontWeight: 700, color: limitReached ? "#FF4B7C" : "#111", margin: 0 }}>
-              {limitReached ? "이용권이 필요해요" : `${FREE_LIMIT - usageCount}회 남았어요`}
+              {/* ✅ usageRemaining 사용 (bonus 포함된 실제 잔여) */}
+              {limitReached ? "이용권이 필요해요" : `${usageRemaining}회 남았어요`}
             </p>
           </div>
           {limitReached ? (
@@ -588,7 +613,8 @@ export default function Home() {
     if (activeTab === "home" && showMakeScreen) return <MakeScreen />;
     if (activeTab === "home") return <HomeMain />;
     if (activeTab === "ticket") return (
-      <EmptyPage tabs={[`보유 ${Math.max(0, FREE_LIMIT - usageCount)}`, "지난 이용권"]} emptyTitle="보유한 이용권이 없어요" emptyIcon="🎟️" />
+      // ✅ usageRemaining 사용 (bonus 포함된 실제 잔여 횟수)
+      <EmptyPage tabs={[`보유 ${usageRemaining}회`, "지난 이용권"]} emptyTitle="보유한 이용권이 없어요" emptyIcon="🎟️" />
     );
     if (activeTab === "coupon") return (
       <EmptyPage tabs={["내 쿠폰 0", "사용/만료 쿠폰"]} emptyTitle="보유한 쿠폰이 없어요" emptyIcon="🎫"

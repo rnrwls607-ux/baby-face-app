@@ -3,10 +3,13 @@ import { Redis } from "@upstash/redis";
 
 const FREE_LIMIT = 3;
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
+// ✅ null-safe 초기화 (generate/route.ts와 동일한 방식)
+const redis = process.env.KV_REST_API_URL
+  ? new Redis({
+      url: process.env.KV_REST_API_URL,
+      token: process.env.KV_REST_API_TOKEN!,
+    })
+  : null;
 
 function getUserId(request: NextRequest): string | null {
   const cookie = request.cookies.get("kakao_user");
@@ -20,8 +23,8 @@ function getUserId(request: NextRequest): string | null {
 export async function GET(request: NextRequest) {
   const userId = getUserId(request);
 
-  if (!userId) {
-    return NextResponse.json({ count: 0, remaining: FREE_LIMIT, limitReached: false, freeLimit: FREE_LIMIT, bonusUses: 0 });
+  if (!userId || !redis) {
+    return NextResponse.json({ count: 0, remaining: FREE_LIMIT, limitReached: false, freeLimit: FREE_LIMIT, bonusUses: 0, totalLimit: FREE_LIMIT });
   }
 
   const [used, bonus] = await Promise.all([
@@ -47,6 +50,10 @@ export async function POST(request: NextRequest) {
 
   if (!userId) {
     return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
+  }
+
+  if (!redis) {
+    return NextResponse.json({ error: "서버 설정 오류입니다." }, { status: 500 });
   }
 
   const [current, bonus] = await Promise.all([
