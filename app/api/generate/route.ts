@@ -127,18 +127,20 @@ async function generateWithFlux(identityUrl: string, otherFeatures: string, isBo
 async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean): Promise<string[]> {
   const babyGender = isBoy ? "baby boy" : "baby girl";
 
-  const prompt = `professional studio portrait photo of a real cute Korean ${babyGender} toddler aged 12-18 months, inheriting facial features from [mom] and [dad], extremely chubby round baby cheeks, plump baby skin, wispy short hair, natural proportional eyes, tiny nose, baby fat on face, genuine infant features, soft studio lighting, white background, photorealistic DSLR photo, 8K resolution, high detail`;
+  // 참조 이미지 = 누구의 얼굴인가 / 프롬프트 = 어떤 장면인가
+  // Gen-4는 prompt 안에서 @태그로 각 참조 사진을 불러야 얼굴이 반영됨
+  const prompt = `A candid lifestyle photograph of an adorable Korean ${babyGender}, around 12 months old, whose facial features are a natural blend of @mom and @dad. The baby is sitting on a soft cream play mat in a cozy, sunlit living room, gentle natural window light, softly blurred warm home background, chubby cheeks, looking toward the camera. Photorealistic candid photo.`;
 
   const input = {
     prompt,
     reference_images: [momUrl, dadUrl],
-    ratio: "1:1",
+    reference_tags: ["mom", "dad"],   // ✅ 각 사진에 이름표 (이게 빠져 있었음)
+    aspect_ratio: "1:1",              // ✅ 올바른 파라미터명 (ratio → aspect_ratio)
     seed: Math.floor(Math.random() * 999999),
   };
 
-  console.log("[Gen-4] Starting generation with 2 reference images");
+  console.log("[Gen-4] Starting generation with 2 tagged reference images");
 
-  // ✅ 1장만 생성 (타임아웃 방지)
   const out = await runWithRetry(GEN4_MODEL, input);
   console.log("[Gen-4] Output:", typeof out, JSON.stringify(out)?.slice(0, 200));
   const url = extractUrl(Array.isArray(out) ? out[0] : out);
