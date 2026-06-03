@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
+import { getProduct } from "../../../lib/products";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL!,
   token: process.env.KV_REST_API_TOKEN!,
 });
-
-// 상품 정의
-const PRODUCTS: { [key: string]: { uses: number; name: string } } = {
-  "3uses":  { uses: 3,  name: "3회 이용권" },
-  "10uses": { uses: 10, name: "10회 이용권" },
-  "30uses": { uses: 30, name: "무제한 이용권 (30회)" },
-};
 
 function getUserId(request: NextRequest): string | null {
   const cookie = request.cookies.get("kakao_user");
@@ -33,6 +27,16 @@ export async function POST(request: NextRequest) {
     const userId = getUserId(request);
     if (!userId) {
       return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
+    }
+
+    // ── 보안 검증: 상품이 유효하고, 낸 금액 == 상품 가격인지 확인 ──
+    const product = getProduct(productId);
+    if (!product) {
+      return NextResponse.json({ error: "알 수 없는 상품입니다." }, { status: 400 });
+    }
+    if (Number(amount) !== product.price) {
+      console.error("금액 불일치:", { productId, amount, expected: product.price });
+      return NextResponse.json({ error: "결제 금액이 상품 가격과 일치하지 않습니다." }, { status: 400 });
     }
 
     // 토스페이먼츠 결제 확인
@@ -58,7 +62,6 @@ export async function POST(request: NextRequest) {
     console.log("결제 완료:", payment.orderId, payment.amount);
 
     // 구매 횟수 Redis에 추가
-    const product = PRODUCTS[productId] || { uses: 3, name: "이용권" };
     const bonusKey = "bonus:" + userId;
     const current = (await redis.get<number>(bonusKey)) ?? 0;
     await redis.set(bonusKey, current + product.uses, { ex: 60 * 60 * 24 * 365 }); // 1년
