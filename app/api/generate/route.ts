@@ -2,6 +2,7 @@ import Replicate from "replicate";
 import Anthropic from "@anthropic-ai/sdk";
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { getPreset } from "../../lib/presets";
 
 export const maxDuration = 60;
 
@@ -97,12 +98,9 @@ async function runWithRetry(model: string, input: any): Promise<any> {
 
 // ── FLUX PuLID 생성 (무료) — 1장만 생성 ────────────────────────
 async function generateWithFlux(identityUrl: string, otherFeatures: string, isBoy: boolean): Promise<string[]> {
-  const otherPart = otherFeatures ? ", also inheriting " + otherFeatures : "";
-  const prompt = isBoy
-    ? "professional studio portrait photo of a real Korean baby boy, exactly 1 year old infant, extremely chubby round baby cheeks, large round baby head, very short wispy hair, tiny baby nose, smooth plump baby skin, baby fat, genuine toddler proportions, white studio background, photorealistic DSLR photo" + otherPart
-    : "professional studio portrait photo of a real Korean baby girl, exactly 1 year old infant, extremely chubby round baby cheeks, large round baby head, very short wispy hair, tiny baby nose, smooth plump baby skin, baby fat, genuine toddler proportions, white studio background, photorealistic DSLR photo" + otherPart;
-
-  const negative = "cartoon, anime, 3d render, CGI, illustration, toy, doll, oversized eyes, manga, stylized, child, kid, teenager, adult, earrings, makeup, text, watermark, deformed, bad anatomy, low quality";
+  const preset = getPreset("baby");
+  const prompt = preset.buildFluxPrompt({ isBoy, otherFeatures });
+  const negative = preset.fluxNegativePrompt;
 
   const input = {
     main_face_image: identityUrl,
@@ -125,17 +123,14 @@ async function generateWithFlux(identityUrl: string, otherFeatures: string, isBo
 
 // ── Runway Gen-4 생성 (유료) — 1장만 생성 ──────────────────────
 async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean): Promise<string[]> {
-  const babyGender = isBoy ? "baby boy" : "baby girl";
-
-  // 참조 이미지 = 누구의 얼굴인가 / 프롬프트 = 어떤 장면인가
-  // Gen-4는 prompt 안에서 @태그로 각 참조 사진을 불러야 얼굴이 반영됨
-  const prompt = `A candid lifestyle photograph of an adorable Korean ${babyGender}, around 12 months old, whose facial features are a natural blend of @mom and @dad. The baby is sitting on a soft cream play mat in a cozy, sunlit living room, gentle natural window light, softly blurred warm home background, chubby cheeks, looking toward the camera. Photorealistic candid photo.`;
+  const preset = getPreset("baby");
+  const prompt = preset.buildGen4Prompt({ isBoy });
 
   const input = {
     prompt,
     reference_images: [momUrl, dadUrl],
-    reference_tags: ["mom", "dad"],   // ✅ 각 사진에 이름표 (이게 빠져 있었음)
-    aspect_ratio: "1:1",              // ✅ 올바른 파라미터명 (ratio → aspect_ratio)
+    reference_tags: ["mom", "dad"],
+    aspect_ratio: "1:1",
     seed: Math.floor(Math.random() * 999999),
   };
 
