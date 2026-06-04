@@ -5,8 +5,8 @@ export const maxDuration = 60;
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
 
-// ── base64 사진을 Replicate에 업로드 ─────────────────────────
-async function uploadToReplicate(base64: string): Promise<string> {
+// ── base64 사진을 Replicate에 업로드 (일시적 서버오류면 재시도) ──
+async function uploadToReplicate(base64: string, attempt = 0): Promise<string> {
   const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
   const buffer = Buffer.from(base64Data, "base64");
   const blob = new Blob([buffer], { type: "image/jpeg" });
@@ -17,7 +17,14 @@ async function uploadToReplicate(base64: string): Promise<string> {
     headers: { Authorization: "Token " + process.env.REPLICATE_API_TOKEN },
     body: formData,
   });
-  if (!res.ok) throw new Error("Upload failed: " + (await res.text()));
+  if (!res.ok) {
+    // 일시적 서버 오류(5xx)면 1.5초 쉬고 최대 2번 더 재시도
+    if (res.status >= 500 && attempt < 2) {
+      await new Promise(r => setTimeout(r, 1500));
+      return uploadToReplicate(base64, attempt + 1);
+    }
+    throw new Error("Upload failed: " + (await res.text()));
+  }
   const data = await res.json();
   return data.urls?.get ?? data.url;
 }
@@ -85,4 +92,4 @@ export async function POST(request: NextRequest) {
     console.error("ID Photo Error:", err?.message || err);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
-}
+}   
