@@ -1,200 +1,105 @@
-import Replicate from "replicate";
-import Anthropic from "@anthropic-ai/sdk";
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
-import { getPreset } from "../../lib/presets";
 
+export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN });
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const redis = process.env.KV_REST_API_URL
   ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN! })
   : null;
 
-// FLUX PuLID — 무료 사용자
-const FLUX_MODEL = "bytedance/flux-pulid:8baa7ef2255075b46f4d91cd238c21d31181b3e6a864463f967960bb0112525b";
+// 🔑 모델 (무료=Nano Banana 2, 유료=Pro). 바꾸려면 이 두 줄만.
+const MODEL_FREE = "gemini-3.1-flash-image"; // Nano Banana 2
+const MODEL_PAID = "gemini-3-pro-image";     // Nano Banana Pro
 
-// Runway Gen-4 Image — 유료 사용자 (엄마+아빠 동시 2장 참조)
-const GEN4_MODEL = "runwayml/gen4-image";
-
-// ── 유저 ID 쿠키 파싱 ──────────────────────────────────────────
+// ── 유저 ID 쿠키 파싱 ──
 function getUserId(request: NextRequest): string | null {
   const cookie = request.cookies.get("kakao_user");
   if (!cookie) return null;
   try { return String(JSON.parse(cookie.value).id) || null; } catch { return null; }
 }
 
-// ── Claude 얼굴 특징 분석 ──────────────────────────────────────
-async function analyzeFaceFeatures(base64: string, role: string): Promise<string> {
-  const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
-  const mimeMatch = base64.match(/^data:(image\/\w+);base64,/);
-  const mediaType = (mimeMatch?.[1] ?? "image/jpeg") as "image/jpeg" | "image/png" | "image/webp" | "image/gif";
-
-  const response = await anthropic.messages.create({
-    model: "claude-opus-4-5",
-    max_tokens: 200,
-    messages: [{
-      role: "user",
-      content: [
-        { type: "image", source: { type: "base64", media_type: mediaType, data: base64Data } },
-        { type: "text", text: "Describe this person's key heritable facial features in English for baby face generation. List up to 4 features (eye shape, nose, face shape, lips). Start with '" + role + "'. Output only the description." },
-      ],
-    }],
-  });
-  const first = response.content[0];
-  return first.type === "text" ? first.text.trim() : "";
+// data URL → { mimeType, data }
+function parseImage(input: string): { mimeType: string; data: string } {
+  const m = input.match(/^data:(.+?);base64,(.*)$/);
+  if (m) return { mimeType: m[1], data: m[2] };
+  return { mimeType: "image/jpeg", data: input };
 }
 
-// ── Replicate 파일 업로드 ─────────────────────────────────────
-async function uploadToReplicate(base64: string): Promise<string> {
-  const base64Data = base64.includes(",") ? base64.split(",")[1] : base64;
-  const buffer = Buffer.from(base64Data, "base64");
-  const blob = new Blob([buffer], { type: "image/jpeg" });
-  const formData = new FormData();
-  formData.append("content", blob, "photo.jpg");
+// 🔑 아기 얼굴 생성 — 엄마+아빠 사진을 둘 다 Gemini에 넣어 섞음 (일시적 5xx면 재시도)
+async function generateBaby(
+  momDataUrl: string, dadDataUrl: string, isBoy: boolean, model: string, attempt = 0
+): Promise<string> {
+  const mom = parseImage(momDataUrl);
+  const dad = parseImage(dadDataUrl);
+  const childWord = isBoy ? "son (a baby boy)" : "daughter (a baby girl)";
+  const prompt = `Image 1 is the mother. Image 2 is the father. Generate a single photorealistic portrait of their future child — a ${childWord}, around 2 to 3 years old. The child's face MUST be a natural, believable genetic blend of BOTH parents: mix the eye shape and eye color, nose, mouth, eyebrows, and overall face shape from the mother (image 1) and the father (image 2). Korean toddler. Soft natural daylight, candid lifestyle photo in a bright cozy sunlit room, shallow depth of field, warm cheerful mood. An adorable, healthy, realistic toddler with natural baby skin and proportions. Photorealistic, high detail, NOT a cartoon, NOT an illustration, no text. Output one single image of the child.`;
 
-  const res = await fetch("https://api.replicate.com/v1/files", {
-    method: "POST",
-    headers: { Authorization: "Token " + process.env.REPLICATE_API_TOKEN },
-    body: formData,
-  });
-  if (!res.ok) throw new Error("Upload failed: " + (await res.text()));
-  const data = await res.json();
-  return data.urls?.get ?? data.url;
-}
-
-// ── URL 추출 ──────────────────────────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function extractUrl(item: any): string | null {
-  if (typeof item === "string") return item;
-  if (item && typeof item.url === "function") return item.url().href;
-  if (item && item.url) return String(item.url);
-  return null;
-}
-
-// ── 429 재시도 래퍼 ───────────────────────────────────────────
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function runWithRetry(model: string, input: any): Promise<any> {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      return await replicate.run(model as `${string}/${string}`, { input });
-    } catch (err: unknown) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const e = err as any;
-      const msg: string = e?.message ?? "";
-      if (msg.includes("429") || e?.status === 429) {
-        const m = msg.match(/retry_after[^0-9]*(\d+)/);
-        const wait = m ? parseInt(m[1]) * 1000 : 12000;
-        console.log("429 rate limit, waiting " + wait + "ms");
-        await new Promise(r => setTimeout(r, wait));
-      } else {
-        throw err;
-      }
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{
+          parts: [
+            { text: prompt },
+            { inline_data: { mime_type: mom.mimeType, data: mom.data } },
+            { inline_data: { mime_type: dad.mimeType, data: dad.data } },
+          ],
+        }],
+      }),
     }
+  );
+
+  if (!res.ok) {
+    if (res.status >= 500 && attempt < 2) {
+      await new Promise((r) => setTimeout(r, 1500));
+      return generateBaby(momDataUrl, dadDataUrl, isBoy, model, attempt + 1);
+    }
+    throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
   }
-  throw new Error("Max retries exceeded");
+
+  const data = await res.json();
+  const respParts = data?.candidates?.[0]?.content?.parts || [];
+  const imgParts = respParts.filter(
+    (p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) =>
+      p?.inlineData?.data || p?.inline_data?.data
+  );
+  const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
+  const chosen = (finalParts.length ? finalParts : imgParts).pop();
+  const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
+  if (!b64) {
+    const txt = respParts.find((p: { text?: string }) => p.text)?.text;
+    throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
+  }
+  return `data:image/png;base64,${b64}`;
 }
 
-// ── FLUX PuLID 생성 (무료) — 1장만 생성 ────────────────────────
-async function generateWithFlux(identityUrl: string, otherFeatures: string, isBoy: boolean): Promise<string[]> {
-  const preset = getPreset("baby");
-  const prompt = preset.buildFluxPrompt({ isBoy, otherFeatures });
-  const negative = preset.fluxNegativePrompt;
-
-  const input = {
-    main_face_image: identityUrl,
-    prompt,
-    negative_prompt: negative,
-    num_steps: 20,
-    start_step: 4,
-    guidance: 4,
-    true_cfg: 1,
-    id_weight: 0.65,
-    width: 896,
-    height: 896,
-  };
-
-  // ✅ 1장만 생성 (타임아웃 방지)
-  const out = await runWithRetry(FLUX_MODEL, input);
-  const url = extractUrl(Array.isArray(out) ? out[0] : out);
-  return url ? [url] : [];
-}
-
-// ── Runway Gen-4 생성 (유료) — 1장만 생성 ──────────────────────
-async function generateWithGen4(momUrl: string, dadUrl: string, isBoy: boolean): Promise<string[]> {
-  const preset = getPreset("baby");
-  const prompt = preset.buildGen4Prompt({ isBoy });
-
-  const input = {
-    prompt,
-    reference_images: [momUrl, dadUrl],
-    reference_tags: ["mom", "dad"],
-    aspect_ratio: "1:1",
-    seed: Math.floor(Math.random() * 999999),
-  };
-
-  console.log("[Gen-4] Starting generation with 2 tagged reference images");
-
-  const out = await runWithRetry(GEN4_MODEL, input);
-  console.log("[Gen-4] Output:", typeof out, JSON.stringify(out)?.slice(0, 200));
-  const url = extractUrl(Array.isArray(out) ? out[0] : out);
-  return url ? [url] : [];
-}
-
-// ── 메인 POST 핸들러 ──────────────────────────────────────────
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({ error: "서버 설정 오류(GEMINI_API_KEY 없음)" }, { status: 500 });
+    }
     const { image1, image2, gender } = await request.json();
-
     if (!image1 || !image2) {
       return NextResponse.json({ error: "엄마와 아빠 사진이 모두 필요합니다." }, { status: 400 });
     }
-
     const isBoy = gender === "boy";
 
-    // 유료 여부 확인 (bonus uses > 0 이면 프리미엄)
+    // 유료 여부 (bonus uses > 0 이면 프리미엄)
     const userId = getUserId(request);
     const bonusUses = userId && redis ? ((await redis.get<number>("bonus:" + userId)) ?? 0) : 0;
     const isPremium = bonusUses > 0;
+    const model = isPremium ? MODEL_PAID : MODEL_FREE;
+    console.log(`[Generate] userId=${userId}, isPremium=${isPremium}, model=${model}`);
 
-    console.log(`[Generate] userId=${userId}, bonusUses=${bonusUses}, isPremium=${isPremium}`);
+    // image1 = 엄마, image2 = 아빠
+    const url = await generateBaby(image1, image2, isBoy, model);
 
-    let urls: string[];
-
-    if (isPremium) {
-      // ── 유료: Gen-4 (엄마+아빠 동시 참조) ─────────────────
-      console.log("[Gen-4] Premium user — uploading both photos");
-      const [momUrl, dadUrl] = await Promise.all([
-        uploadToReplicate(image1),
-        uploadToReplicate(image2),
-      ]);
-      urls = await generateWithGen4(momUrl, dadUrl, isBoy);
-    } else {
-      // ── 무료: FLUX PuLID (identity 1장 + 반대편 특징 텍스트) ─
-      console.log("[FLUX] Free user — single identity flow");
-      const identityBase64 = isBoy ? image2 : image1;
-      const otherBase64   = isBoy ? image1 : image2;
-      const otherRole     = isBoy ? "mother's" : "father's";
-
-      const [identityUrl, otherFeatures] = await Promise.all([
-        uploadToReplicate(identityBase64),
-        analyzeFaceFeatures(otherBase64, otherRole),
-      ]);
-      console.log("Other features:", otherFeatures);
-      urls = await generateWithFlux(identityUrl, otherFeatures, isBoy);
-    }
-
-    if (!urls.length) throw new Error("이미지를 받지 못했습니다.");
-
-    return NextResponse.json({
-      output: urls,
-      isPremium,
-    });
-
+    return NextResponse.json({ output: [url], isPremium });
   } catch (error: unknown) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const err = error as any;
+    const err = error as { message?: string };
     console.error("Generate Error:", err?.message || err);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
