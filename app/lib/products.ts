@@ -1,7 +1,7 @@
 // ────────────────────────────────────────────────────────────
 // 이용권 상품 정의 (단일 출처)
-// 구매 화면과 결제 확인 서버가 "둘 다 이 파일"을 보게 해서
-// 가격이 어긋나거나 악용되는 걸 막습니다.
+// 메인 화면 결제창 + 결제 확인 서버가 "둘 다 이 파일"을 봅니다.
+// 가격을 바꾸려면 여기만 고치면 돼요.
 // ────────────────────────────────────────────────────────────
 
 export interface Product {
@@ -9,12 +9,13 @@ export interface Product {
   name: string;  // 표시 이름
   uses: number;  // 충전되는 이용 횟수
   price: number; // 가격(원)
+  tag?: string;  // 결제창 라벨 (인기/베스트/최저가 등)
 }
 
 export const PRODUCTS: Record<string, Product> = {
-  "3uses":  { id: "3uses",  name: "3회 이용권",  uses: 3,  price: 2900 },
-  "10uses": { id: "10uses", name: "10회 이용권", uses: 10, price: 6900 },
-  "30uses": { id: "30uses", name: "30회 이용권", uses: 30, price: 14900 },
+  "3uses":  { id: "3uses",  name: "3회 이용권",  uses: 3,  price: 2900,  tag: "인기" },
+  "10uses": { id: "10uses", name: "10회 이용권", uses: 10, price: 6900,  tag: "베스트" },
+  "30uses": { id: "30uses", name: "30회 이용권", uses: 30, price: 14900, tag: "최저가" },
 };
 
 // 화면에 순서대로 보여줄 목록

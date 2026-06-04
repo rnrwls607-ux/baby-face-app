@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -14,12 +15,6 @@ const LOADING_MESSAGES = [
 
 const FREE_LIMIT = 3;
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
-
-const PRODUCTS = [
-  { id: "3uses",  name: "3회 이용권",  price: 3900,  uses: 3,  tag: "인기" },
-  { id: "10uses", name: "10회 이용권", price: 9900,  uses: 10, tag: "베스트" },
-  { id: "30uses", name: "30회 이용권", price: 19900, uses: 30, tag: "최저가" },
-];
 
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
 type Tab = "home" | "ticket" | "coupon" | "history";
