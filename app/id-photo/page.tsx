@@ -68,7 +68,7 @@ export default function IdPhotoPage() {
   const handleDownload = () => {
     const url = results[selected];
     const a = document.createElement("a");
-    a.href = `/api/download?url=${encodeURIComponent(url)}`;
+    a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`;
     a.download = "id_photo.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
