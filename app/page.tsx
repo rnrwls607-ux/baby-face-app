@@ -381,25 +381,31 @@ export default function Home() {
         </button>
       </div>
 
-      {/* 섹션: 곧 출시 */}
+    {/* 섹션: 다양한 AI 사진 */}
       <div style={{ margin: "28px 0 0" }}>
         <div style={{ padding: "0 20px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 14 }}>
           <div>
-            <p style={{ fontSize: 12, color: "#999", margin: "0 0 3px" }}>곧 만날 수 있어요</p>
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>이런 것도 만들어드릴게요 ✨</p>
+            <p style={{ fontSize: 12, color: "#999", margin: "0 0 3px" }}>이런 것도 만들어드려요</p>
+            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>다양한 AI 사진 ✨</p>
           </div>
         </div>
         <div style={{ display: "flex", gap: 12, overflowX: "auto", padding: "0 20px 4px", scrollbarWidth: "none" }} className="hide-scrollbar">
           {[
-            { emoji: "📸", title: "AI 증명사진", sub: "스튜디오급 증명사진", color: "#E8F4FF" },
-            { emoji: "🐶", title: "반려동물 사진", sub: "우리 강아지 AI 사진", color: "#FFF4E8" },
-            { emoji: "👨‍👩‍👧", title: "가족사진", sub: "AI 가족 합성사진", color: "#F0FFE8" },
-            { emoji: "💑", title: "커플 사진", sub: "여행·데이트 합성", color: "#FFE8F4" },
+            { emoji: "📸", title: "AI 증명사진", sub: "스튜디오급 증명사진", color: "#E8F4FF", href: "/id-photo" },
+            { emoji: "🐶", title: "반려동물 사진", sub: "우리 강아지 AI 사진", color: "#FFF4E8", href: "" },
+            { emoji: "👨‍👩‍👧", title: "가족사진", sub: "AI 가족 합성사진", color: "#F0FFE8", href: "" },
+            { emoji: "💑", title: "커플 사진", sub: "여행·데이트 합성", color: "#FFE8F4", href: "" },
           ].map((item, i) => (
-            <div key={i} style={{ flexShrink: 0, width: 148, background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, overflow: "hidden" }}>
+            <div key={i}
+              onClick={() => { if (item.href) window.location.href = item.href; }}
+              style={{ flexShrink: 0, width: 148, background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, overflow: "hidden", cursor: item.href ? "pointer" : "default" }}>
               <div style={{ background: item.color, height: 100, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>{item.emoji}</div>
               <div style={{ padding: "10px 12px 12px" }}>
-                <span style={{ fontSize: 10, color: "#aaa", border: "1px solid #eee", padding: "2px 6px", borderRadius: 4 }}>준비중</span>
+                {item.href ? (
+                  <span style={{ fontSize: 10, background: "#FF4B7C", color: "#fff", padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>이용 가능</span>
+                ) : (
+                  <span style={{ fontSize: 10, color: "#aaa", border: "1px solid #eee", padding: "2px 6px", borderRadius: 4 }}>준비중</span>
+                )}
                 <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: "5px 0 2px" }}>{item.title}</p>
                 <p style={{ fontSize: 11, color: "#aaa", margin: 0 }}>{item.sub}</p>
               </div>
