@@ -42,7 +42,7 @@ function extractUrl(item: any): string | null {
 // 🔑 모델 격리 지점 — 나중에 Nano Banana 등으로 바꿀 땐 이 함수 안만 교체!
 //    바깥(POST 핸들러·업로드·검증)은 그대로 둬도 됩니다.
 // ════════════════════════════════════════════════════════════
-const PHOTOMAKER_MODEL = "tencentarc/photomaker";
+const PHOTOMAKER_MODEL = "tencentarc/photomaker:ddfc2b08d209f9fa8c1eca692712918bd449f695dabb4a958da31802a9570fe4";
 
 async function generateIdPhotos(imageUrls: string[], gender: "man" | "woman"): Promise<string[]> {
   // 트리거 단어 'img'는 클래스 단어(man/woman) 바로 뒤에 와야 함 (PhotoMaker 규칙)
