@@ -196,6 +196,22 @@ export default function Home() {
     }
   }, [fetchUsage]);
 
+  // 뒤로가기 안정화: 열린 화면(상세/만들기/사진보기/결제)이 있으면
+  // 뒤로가기 시 앱을 나가지 않고 그 화면만 닫기
+  const overlayOpen = Boolean(detail || showMakeScreen || historyView || showPaymentSheet);
+  useEffect(() => {
+    if (!overlayOpen) return;
+    window.history.pushState(null, "");
+    const onPop = () => {
+      setShowPaymentSheet(false);
+      setHistoryView(null);
+      setDetail(null);
+      setShowMakeScreen(false);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [overlayOpen]);
+
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
     setLoadingMsg(LOADING_MESSAGES[0]);

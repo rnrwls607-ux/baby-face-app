@@ -28,37 +28,44 @@ function parseImage(input: string): { mimeType: string; data: string } {
 
 // 🔑 아기 얼굴 생성 — 엄마+아빠 사진을 둘 다 Gemini에 넣어 섞음 (일시적 5xx면 재시도)
 async function generateBaby(
-  momDataUrl: string, dadDataUrl: string, isBoy: boolean, model: string, attempt = 0
+  momDataUrl: string, dadDataUrl: string, isBoy: boolean, model: string
 ): Promise<string> {
   const mom = parseImage(momDataUrl);
   const dad = parseImage(dadDataUrl);
   const childWord = isBoy ? "son (a baby boy)" : "daughter (a baby girl)";
   const prompt = `Image 1 is the mother. Image 2 is the father. Generate a single photorealistic portrait of their future child — a ${childWord}, around 2 to 3 years old. The child's face MUST be a natural, believable genetic blend of BOTH parents: mix the eye shape and eye color, nose, mouth, eyebrows, and overall face shape from the mother (image 1) and the father (image 2). Korean toddler. Soft natural daylight, candid lifestyle photo in a bright cozy sunlit room, shallow depth of field, warm cheerful mood. An adorable, healthy, realistic toddler with natural baby skin and proportions. Photorealistic, high detail, NOT a cartoon, NOT an illustration, no text. Output one single image of the child.`;
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-    {
-      method: "POST",
-      headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{
-          parts: [
-            { text: prompt },
-            { inline_data: { mime_type: mom.mimeType, data: mom.data } },
-            { inline_data: { mime_type: dad.mimeType, data: dad.data } },
-          ],
-        }],
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    if (res.status >= 500 && attempt < 2) {
-      await new Promise((r) => setTimeout(r, 1500));
-      return generateBaby(momDataUrl, dadDataUrl, isBoy, model, attempt + 1);
-    }
-    throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 50000); // 50초 넘으면 중단
+  const t0 = Date.now();
+  let res: Response;
+  try {
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        method: "POST",
+        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{
+            parts: [
+              { text: prompt },
+              { inline_data: { mime_type: mom.mimeType, data: mom.data } },
+              { inline_data: { mime_type: dad.mimeType, data: dad.data } },
+            ],
+          }],
+        }),
+        signal: ctrl.signal,
+      }
+    );
+  } catch (e: unknown) {
+    clearTimeout(timer);
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 50초를 넘겨 중단했어요. 다시 시도해주세요.");
+    throw e;
   }
+  clearTimeout(timer);
+  console.log(`[baby] model=${model} status=${res.status} ${Date.now() - t0}ms`);
+
+  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
