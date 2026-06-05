@@ -127,6 +127,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
   {
     id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진 ✨", layout: "scroll",
     items: [
+      { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel" },
       { id: "pet", title: "반려동물 사진", subtitle: "우리 아이 AI 화보", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "" },
       { id: "family", title: "가족사진", subtitle: "온 가족 AI 합성", emoji: "👨‍👩‍👧", accent: "#E7F7EA", badge: "", tags: ["가족"], go: "" },
       { id: "lifeshot", title: "인생샷 필터", subtitle: "감성 보정 한 장", emoji: "📸", accent: "#EFEAFF", badge: "", tags: ["인생샷"], go: "" },
@@ -196,21 +197,7 @@ export default function Home() {
     }
   }, [fetchUsage]);
 
-  // 뒤로가기 안정화: 열린 화면(상세/만들기/사진보기/결제)이 있으면
-  // 뒤로가기 시 앱을 나가지 않고 그 화면만 닫기
-  const overlayOpen = Boolean(detail || showMakeScreen || historyView || showPaymentSheet);
-  useEffect(() => {
-    if (!overlayOpen) return;
-    window.history.pushState(null, "");
-    const onPop = () => {
-      setShowPaymentSheet(false);
-      setHistoryView(null);
-      setDetail(null);
-      setShowMakeScreen(false);
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, [overlayOpen]);
+  
 
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
@@ -796,7 +783,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               {detail.start === "soon" ? (
                 <button disabled style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
               ) : (
-                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } }} style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>프로필 만들기</button>
+                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } else if (detail.start === "voxel") { window.location.href = "/voxel"; } }} style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>프로필 만들기</button>
               )}
             </div>
           </div>

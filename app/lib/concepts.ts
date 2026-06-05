@@ -1,4 +1,3 @@
-// 컨셉 정의 (한 곳에서 관리 → 나중에 새 컨셉은 여기에 추가만)
 export type ConceptExample = { emoji: string; accent: string };
 export type Concept = {
   key: string;
@@ -8,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "soon"; // 프로필 만들기 누르면 어디로
+  start: "baby" | "idphoto" | "voxel" | "soon";
 };
 
 export const CONCEPTS: Record<string, Concept> = {
@@ -40,6 +39,20 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "idphoto",
   },
+  voxel: {
+    key: "voxel",
+    title: "복셀 아트",
+    subtitle: "사진을 3D 블록 세상으로",
+    emoji: "🧊",
+    accent: "#E1ECFF",
+    description: "사진 한 장을 작은 큐브로 쌓은 3D 블록(복셀) 스타일로 바꿔드려요. 마인크래프트 같은 입체 블록 느낌이에요.",
+    examples: [
+      { emoji: "🧊", accent: "#E1ECFF" },
+      { emoji: "🟦", accent: "#E7F7EA" },
+      { emoji: "🎮", accent: "#EFEAFF" },
+    ],
+    start: "voxel",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -56,9 +69,9 @@ export const CONCEPTS: Record<string, Concept> = {
   },
 };
 
-// 카드의 go 값 → 컨셉
 export function conceptForGo(go: string): Concept {
   if (go === "baby") return CONCEPTS.baby;
   if (go === "idphoto") return CONCEPTS.idphoto;
+  if (go === "voxel") return CONCEPTS.voxel;
   return CONCEPTS.soon;
 }
