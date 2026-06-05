@@ -235,7 +235,7 @@ export default function Home() {
       await tossPayments.requestPayment("카드", {
         amount: product.price,
         orderId,
-        orderName: "babyface " + product.name,
+        orderName: "MOSPIC " + product.name,
         customerName: user.nickname,
         successUrl: window.location.origin + "/payment/success?productId=" + productId,
         failUrl: window.location.origin + "/payment/fail",
@@ -255,7 +255,7 @@ export default function Home() {
     try {
       const now = new Date();
       const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}`;
-      const a = document.createElement("a"); a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`; a.download = `babyface_${ts}.png`;
+      const a = document.createElement("a"); a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`; a.download = `mospic_${ts}.png`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     } catch { window.open(url, "_blank"); }
   };
@@ -309,7 +309,7 @@ export default function Home() {
           </button>
         ) : (
           <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ fontSize: 18, fontWeight: 900, letterSpacing: -1, color: "#111" }}>babyface</span>
+            <span style={{ fontSize: 19, fontWeight: 900, letterSpacing: 0.5, color: "#111" }}>MOSPIC</span>
             <span style={{ fontSize: 10, background: "#FF4B7C", color: "#fff", padding: "1px 5px", borderRadius: 4, fontWeight: 700, marginLeft: 2 }}>AI</span>
           </div>
         )}
