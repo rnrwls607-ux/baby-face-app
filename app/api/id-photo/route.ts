@@ -110,6 +110,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const images: string[] = body?.images || [];
     const gender: string = body?.gender || "woman";
+    const background: string = body?.background || "white";
+    const clothing: string = body?.clothing || "black_suit";
+    const hair: string = body?.hair || "keep";
     if (!images.length) {
       return NextResponse.json({ error: "사진을 한 장 이상 올려주세요." }, { status: 400 });
     }
