@@ -255,7 +255,7 @@ export default function Home() {
     try {
       const now = new Date();
       const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}`;
-      const a = document.createElement("a"); a.href = `/api/download?url=${encodeURIComponent(url)}`; a.download = `babyface_${ts}.png`;
+      const a = document.createElement("a"); a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`; a.download = `babyface_${ts}.png`;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     } catch { window.open(url, "_blank"); }
   };
