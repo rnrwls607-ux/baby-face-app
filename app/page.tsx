@@ -84,7 +84,62 @@ const Icon = {
     </svg>
   ),
 };
+// ── 홈 디자인 토큰 (색·둥글기를 여기서 통제) ──
+const HOME = {
+  accent: "#FF4B7C",
+  text: "#191919",
+  sub: "#9B9B9B",
+  tagBg: "#EFF0FA",
+  tagText: "#8C8CA6",
+  radius: 18,
+};
 
+// 카드 한 장의 데이터 형태
+type HomeCardItem = { id: string; title: string; subtitle: string; emoji: string; accent: string; badge: string; tags: string[]; go: string };
+
+// ── 홈 카탈로그 (여기에 객체 추가 = 카드 추가) ──
+// go: "baby"=아기 만들기 화면 / "idphoto"=증명사진(/id-photo) / ""=준비중
+const HOME_PILLS = [
+  { label: "전체", dot: false },
+  { label: "필터", dot: true },
+  { label: "반려동물", dot: true },
+  { label: "인생샷", dot: true },
+  { label: "증명사진", dot: false },
+];
+
+const HOME_HERO = [
+  { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby" },
+  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto" },
+  { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby" },
+];
+
+const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
+  {
+    id: "popular", heading: "지금 제일 인기 있는", title: "인기 AI 사진 🔥", layout: "scroll",
+    items: [
+      { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby" },
+      { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto" },
+      { id: "couple", title: "커플 사진", subtitle: "여행·데이트 합성", emoji: "💑", accent: "#FFE9D6", badge: "", tags: ["인생샷"], go: "" },
+    ],
+  },
+  {
+    id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진 ✨", layout: "scroll",
+    items: [
+      { id: "pet", title: "반려동물 사진", subtitle: "우리 아이 AI 화보", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "" },
+      { id: "family", title: "가족사진", subtitle: "온 가족 AI 합성", emoji: "👨‍👩‍👧", accent: "#E7F7EA", badge: "", tags: ["가족"], go: "" },
+      { id: "lifeshot", title: "인생샷 필터", subtitle: "감성 보정 한 장", emoji: "📸", accent: "#EFEAFF", badge: "", tags: ["인생샷"], go: "" },
+    ],
+  },
+  {
+    id: "idstyle", heading: "", title: "이런 스타일은 어때요?", layout: "grid",
+    items: [
+      { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto" },
+      { id: "s2", title: "긴머리 블랙 정장", subtitle: "부드러운 인상을 주는", emoji: "💁", accent: "#FFE0EC", badge: "", tags: [], go: "idphoto" },
+      { id: "s3", title: "블랙 셋업", subtitle: "기본을 충실히 담아낸", emoji: "🕴️", accent: "#ECEEF1", badge: "", tags: [], go: "idphoto" },
+      { id: "s4", title: "네이비 셔츠", subtitle: "은은하면서도 깊이감 있는", emoji: "👔", accent: "#E1ECFF", badge: "", tags: [], go: "idphoto" },
+    ],
+  },
+];
 // ─────────────────────────────────────────────────────────────
 export default function Home() {
   const [user, setUser] = useState<KakaoUser | null>(null);
@@ -297,126 +352,108 @@ export default function Home() {
     </div>
   );
 
-  // ─── 홈 메인 ─────────────────────────────────────────────────
-  const HomeMain = () => (
-    <div style={{ background: "#fff", minHeight: "100vh" }}>
-      {/* 히어로 배너 */}
-      <div onClick={() => setShowMakeScreen(true)}
-        style={{ margin: "16px 20px 0", borderRadius: 20, overflow: "hidden", background: "linear-gradient(135deg, #FFE4EE 0%, #F3E4FF 100%)", padding: "28px 24px", cursor: "pointer", position: "relative" }}>
-        <div style={{ position: "absolute", right: 24, top: "50%", transform: "translateY(-50%)", fontSize: 80, opacity: 0.15, lineHeight: 1 }}>👶</div>
+// ─── 홈 메인 (Mevu 스타일 카탈로그) ──────────────────────────
+  const HomeMain = () => {
+    const [pill, setPill] = useState(0);
+
+    const handleCardTap = (go: string) => {
+      if (go === "baby") { setShowMakeScreen(true); window.scrollTo({ top: 0 }); }
+      else if (go === "idphoto") { window.location.href = "/id-photo"; }
+      else { alert("곧 만나요! 🙌"); }
+    };
+
+    const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
+      <div key={item.id} onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
         <div style={{ position: "relative" }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: "#FF4B7C", background: "#fff", borderRadius: 20, padding: "3px 10px", display: "inline-block", marginBottom: 10 }}>NEW · AI 아기 예측</span>
-          <p style={{ fontSize: 22, fontWeight: 900, color: "#111", lineHeight: 1.3, margin: 0 }}>우리 아기 얼굴은<br/>어떻게 생겼을까? 👶</p>
-          <p style={{ fontSize: 13, color: "#888", margin: "8px 0 16px" }}>사진 2장으로 AI가 예측해드려요</p>
-          <div style={{ background: "#111", color: "#fff", borderRadius: 24, padding: "10px 20px", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 700 }}>
-            지금 무료로 체험하기 →
-          </div>
+          <div style={{ aspectRatio: ratio, borderRadius: HOME.radius, background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>{item.emoji}</div>
+          {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "4px 9px", borderRadius: 8 }}>{item.badge}</span>}
         </div>
+        <p style={{ margin: "11px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
+        <p style={{ margin: "0 2px", fontSize: 16, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
+        {item.tags.length > 0 && (
+          <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap", padding: "0 2px" }}>
+            {item.tags.map(t => <span key={t} style={{ fontSize: 11.5, color: HOME.tagText, background: HOME.tagBg, padding: "4px 10px", borderRadius: 7, fontWeight: 600 }}>{t}</span>)}
+          </div>
+        )}
       </div>
+    );
 
-      {/* 무료 횟수 */}
-      {user && (
-        <div style={{ margin: "12px 20px 0", background: limitReached ? "#FFF0F3" : "#F7F7F7", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div>
-            <p style={{ fontSize: 11, color: limitReached ? "#FF4B7C" : "#888", margin: 0, marginBottom: 2 }}>무료 체험 현황</p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: limitReached ? "#FF4B7C" : "#111", margin: 0 }}>
-              {/* ✅ usageRemaining 사용 (bonus 포함된 실제 잔여) */}
-              {limitReached ? "이용권이 필요해요" : `${usageRemaining}회 남았어요`}
-            </p>
-          </div>
-          {limitReached ? (
-            <button onClick={() => setShowPaymentSheet(true)}
-              style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>
-              이용권 구매
-            </button>
-          ) : (
-            <div style={{ display: "flex", gap: 4 }}>
-              {Array.from({ length: FREE_LIMIT }).map((_, i) => (
-                <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < usageCount ? "#ddd" : "#FF4B7C" }} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* 섹션: 지금 시작하기 */}
-      <div style={{ margin: "24px 20px 0" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 14 }}>
-          <div>
-            <p style={{ fontSize: 12, color: "#999", margin: "0 0 3px" }}>AI 아기 얼굴 예측</p>
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>지금 바로 시작해보세요</p>
-          </div>
+    return (
+      <div style={{ background: "#fff", minHeight: "100vh" }}>
+        {/* 카테고리 칩 */}
+        <div className="hide-scrollbar" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "12px 20px 8px" }}>
+          {HOME_PILLS.map((p, i) => {
+            const on = pill === i;
+            return (
+              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "9px 17px", borderRadius: 22, cursor: "pointer", fontSize: 14, fontWeight: 700, border: on ? "none" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
+                {p.label}
+                {p.dot && <span style={{ position: "absolute", top: 4, right: 8, width: 7, height: 7, borderRadius: "50%", background: HOME.accent }} />}
+              </button>
+            );
+          })}
         </div>
 
-        <button onClick={() => setShowMakeScreen(true)}
-          style={{ width: "100%", background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 20, overflow: "hidden", cursor: "pointer", textAlign: "left" }}>
-          <div style={{ background: "linear-gradient(135deg, #FFF0F5 0%, #F5EEFF 100%)", height: 140, display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 48, lineHeight: 1 }}>👩</div>
-              <div style={{ fontSize: 11, color: "#FF4B7C", fontWeight: 600, marginTop: 4 }}>엄마</div>
-            </div>
-            <div style={{ fontSize: 20, color: "#ddd" }}>+</div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 48, lineHeight: 1 }}>👨</div>
-              <div style={{ fontSize: 11, color: "#6B9AFF", fontWeight: 600, marginTop: 4 }}>아빠</div>
-            </div>
-            <div style={{ fontSize: 20, color: "#ddd" }}>=</div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 48, lineHeight: 1 }}>👶</div>
-              <div style={{ fontSize: 11, color: "#888", fontWeight: 600, marginTop: 4 }}>아기</div>
-            </div>
-          </div>
-          <div style={{ padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
-                <span style={{ fontSize: 10, background: "#FF4B7C", color: "#fff", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>NEW</span>
-                <span style={{ fontSize: 10, color: "#999", border: "1px solid #eee", padding: "2px 8px", borderRadius: 4 }}>딸</span>
-                <span style={{ fontSize: 10, color: "#999", border: "1px solid #eee", padding: "2px 8px", borderRadius: 4 }}>아들</span>
-              </div>
-              <p style={{ fontSize: 15, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>엄마 아빠 닮은 아기 얼굴 예측</p>
-              <p style={{ fontSize: 12, color: "#999", margin: 0 }}>사진 2장으로 AI가 예측해드려요</p>
-            </div>
-            <div style={{ color: "#ccc", fontSize: 20 }}>›</div>
-          </div>
-        </button>
-      </div>
-
-    {/* 섹션: 다양한 AI 사진 */}
-      <div style={{ margin: "28px 0 0" }}>
-        <div style={{ padding: "0 20px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: 14 }}>
-          <div>
-            <p style={{ fontSize: 12, color: "#999", margin: "0 0 3px" }}>이런 것도 만들어드려요</p>
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: 0 }}>다양한 AI 사진 ✨</p>
-          </div>
-        </div>
-        <div style={{ display: "flex", gap: 12, overflowX: "auto", padding: "0 20px 4px", scrollbarWidth: "none" }} className="hide-scrollbar">
-          {[
-            { emoji: "📸", title: "AI 증명사진", sub: "스튜디오급 증명사진", color: "#E8F4FF", href: "/id-photo" },
-            { emoji: "🐶", title: "반려동물 사진", sub: "우리 강아지 AI 사진", color: "#FFF4E8", href: "" },
-            { emoji: "👨‍👩‍👧", title: "가족사진", sub: "AI 가족 합성사진", color: "#F0FFE8", href: "" },
-            { emoji: "💑", title: "커플 사진", sub: "여행·데이트 합성", color: "#FFE8F4", href: "" },
-          ].map((item, i) => (
-            <div key={i}
-              onClick={() => { if (item.href) window.location.href = item.href; }}
-              style={{ flexShrink: 0, width: 148, background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, overflow: "hidden", cursor: item.href ? "pointer" : "default" }}>
-              <div style={{ background: item.color, height: 100, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40 }}>{item.emoji}</div>
-              <div style={{ padding: "10px 12px 12px" }}>
-                {item.href ? (
-                  <span style={{ fontSize: 10, background: "#FF4B7C", color: "#fff", padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>이용 가능</span>
-                ) : (
-                  <span style={{ fontSize: 10, color: "#aaa", border: "1px solid #eee", padding: "2px 6px", borderRadius: 4 }}>준비중</span>
-                )}
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: "5px 0 2px" }}>{item.title}</p>
-                <p style={{ fontSize: 11, color: "#aaa", margin: 0 }}>{item.sub}</p>
+        {/* 상단 배너 (옆으로 스와이프) */}
+        <div className="hide-scrollbar" style={{ display: "flex", gap: 12, overflowX: "auto", padding: "6px 20px 4px", scrollSnapType: "x mandatory" }}>
+          {HOME_HERO.map(h => (
+            <div key={h.id} onClick={() => handleCardTap(h.go)} style={{ flexShrink: 0, width: "86%", scrollSnapAlign: "start", borderRadius: 22, height: 230, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(160deg, ${h.accent} 0%, #ffffff 130%)` }}>
+              <div style={{ position: "absolute", right: 14, bottom: 4, fontSize: 96, opacity: 0.35 }}>{h.emoji}</div>
+              <div style={{ position: "absolute", left: 22, bottom: 26 }}>
+                <p style={{ margin: 0, fontSize: 23, fontWeight: 900, color: HOME.text, letterSpacing: -0.5 }}>{h.title}</p>
+                <p style={{ margin: "6px 0 0", fontSize: 13.5, fontWeight: 500, color: "#5f5f5f" }}>{h.subtitle}</p>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
-      <div style={{ height: 100 }} />
-    </div>
-  );
+        {/* 무료 횟수 (기존 기능 유지) */}
+        {user && (
+          <div style={{ margin: "14px 20px 0", background: limitReached ? "#FFF0F3" : "#F7F7F7", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <p style={{ fontSize: 11, color: limitReached ? "#FF4B7C" : "#888", margin: "0 0 2px" }}>무료 체험 현황</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: limitReached ? "#FF4B7C" : "#111", margin: 0 }}>
+                {limitReached ? "이용권이 필요해요" : `${usageRemaining}회 남았어요`}
+              </p>
+            </div>
+            {limitReached ? (
+              <button onClick={() => setShowPaymentSheet(true)} style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>이용권 구매</button>
+            ) : (
+              <div style={{ display: "flex", gap: 4 }}>
+                {Array.from({ length: FREE_LIMIT }).map((_, i) => (<div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < usageCount ? "#ddd" : "#FF4B7C" }} />))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* 섹션들 */}
+        {HOME_SECTIONS.map(section => {
+          const isGrid = section.layout === "grid";
+          return (
+            <div key={section.id} style={{ marginTop: 30 }}>
+              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 20px", marginBottom: 14 }}>
+                <div>
+                  {section.heading ? <p style={{ margin: "0 0 4px", fontSize: 13, color: HOME.text, fontWeight: 500 }}>{section.heading}</p> : null}
+                  <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}</p>
+                </div>
+                <span style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap" }}>전체보기 ›</span>
+              </div>
+              {isGrid ? (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 20px" }}>
+                  {section.items.map(it => renderCard(it, "100%", "3 / 4"))}
+                </div>
+              ) : (
+                <div className="hide-scrollbar" style={{ display: "flex", gap: 14, overflowX: "auto", padding: "0 20px 4px" }}>
+                  {section.items.map(it => renderCard(it, 176, "4 / 5"))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        <div style={{ height: 100 }} />
+      </div>
+    );
+  };
 
   // ─── 아기 얼굴 만들기 화면 ────────────────────────────────────
   const MakeScreen = () => (
