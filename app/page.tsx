@@ -705,7 +705,7 @@ export default function Home() {
         )}
       </div>
     );
-
+  };  
   // ─── 이용권 구매 바텀시트 ─────────────────────────────────────
   const PaymentSheet = () => (
     <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
