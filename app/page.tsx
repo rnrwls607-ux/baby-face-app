@@ -367,11 +367,6 @@ export default function Home() {
  // 카드 탭 → 상세 페이지 열기
 const handleCardTap = (go: string) => setDetail(conceptForGo(go));
 
-  const startConcept = (c: Concept) => {
-    setDetail(null);
-    if (c.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); }
-    else if (c.start === "idphoto") { window.location.href = "/id-photo"; }
-  };
 
     const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
       <div key={item.id} onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
@@ -785,7 +780,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               {detail.start === "soon" ? (
                 <button disabled style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
               ) : (
-                <button onClick={() => startConcept(detail)} style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>프로필 만들기</button>
+                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } }} style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>프로필 만들기</button>
               )}
             </div>
           </div>
