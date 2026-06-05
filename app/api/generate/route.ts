@@ -10,7 +10,7 @@ const redis = process.env.KV_REST_API_URL
 
 // 🔑 모델 (무료=Nano Banana 2, 유료=Pro). 바꾸려면 이 두 줄만.
 const MODEL_FREE = "gemini-3.1-flash-image"; // Nano Banana 2
-const MODEL_PAID = "gemini-3-pro-image";     // Nano Banana Pro
+const MODEL_PAID = "gemini-3.1-flash-image"; // (테스트) 빠른 모델
 
 // ── 유저 ID 쿠키 파싱 ──
 function getUserId(request: NextRequest): string | null {
