@@ -365,9 +365,8 @@ export default function Home() {
     const [pill, setPill] = useState(0);
 
  // 카드 탭 → 상세 페이지 열기
-  const handleCardTap = (go: string) => setDetail(conceptForGo(go));
+const handleCardTap = (go: string) => setDetail(conceptForGo(go));
 
-  // 상세의 "프로필 만들기" → 실제 생성 흐름으로
   const startConcept = (c: Concept) => {
     setDetail(null);
     if (c.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); }
