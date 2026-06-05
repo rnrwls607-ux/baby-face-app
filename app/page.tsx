@@ -202,7 +202,7 @@ export default function Home() {
     const t = setInterval(() => setElapsed(p => p + 1), 1000);
     return () => { clearInterval(m); clearInterval(t); };
   }, [loading]);
- useEffect(() => { if (activeTab === "history") setHistory(getHistory()); }, [activeTab]);
+ useEffect(() => { if (activeTab === "history") getHistory().then(setHistory); }, [activeTab]);
 
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej; });
 
@@ -291,7 +291,7 @@ export default function Home() {
       try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
       await addToHistory(data.output, "아기 얼굴");
-      alert("[디버그] 히스토리 저장됨: " + getHistory().length + "개");
+      getHistory().then(setHistory);
     } catch (e: unknown) {
       clearTimeout(tid); setStep("");
       const err = e as {name?:string;message?:string};
@@ -669,7 +669,7 @@ export default function Home() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #F0F0F0", padding: "0 16px" }}>
           <span style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "#111", borderBottom: "2px solid #111" }}>이미지 {history.length}</span>
           {history.length > 0 && (
-            <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory(); setHistory([]); } }}
+            <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory().then(() => setHistory([])); } }}
               style={{ background: "none", border: "none", color: "#bbb", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
           )}
         </div>
