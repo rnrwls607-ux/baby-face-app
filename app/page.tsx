@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, clearHistory, type HistoryItem } from "./lib/history";
+import { conceptForGo, type Concept } from "./lib/concepts";
 
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -166,6 +167,7 @@ export default function Home() {
   const [payingProduct, setPayingProduct] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
+  const [detail, setDetail] = useState<Concept | null>(null);
 
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
@@ -362,11 +364,15 @@ export default function Home() {
   const HomeMain = () => {
     const [pill, setPill] = useState(0);
 
-    const handleCardTap = (go: string) => {
-      if (go === "baby") { setShowMakeScreen(true); window.scrollTo({ top: 0 }); }
-      else if (go === "idphoto") { window.location.href = "/id-photo"; }
-      else { alert("곧 만나요! 🙌"); }
-    };
+ // 카드 탭 → 상세 페이지 열기
+  const handleCardTap = (go: string) => setDetail(conceptForGo(go));
+
+  // 상세의 "프로필 만들기" → 실제 생성 흐름으로
+  const startConcept = (c: Concept) => {
+    setDetail(null);
+    if (c.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); }
+    else if (c.start === "idphoto") { window.location.href = "/id-photo"; }
+  };
 
     const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
       <div key={item.id} onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
@@ -753,6 +759,38 @@ export default function Home() {
       {!showMakeScreen && <Header />}
       <main style={{ paddingBottom: 80 }}>
         {renderContent()}
+        {detail && (
+          <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 130, display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 16px", borderBottom: "1px solid #F2F2F2", flexShrink: 0 }}>
+              <button onClick={() => setDetail(null)} style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#111", lineHeight: 1, padding: 0 }}>←</button>
+              <span style={{ fontSize: 16, fontWeight: 800, color: "#111" }}>{detail.title}</span>
+            </div>
+
+            <div style={{ flex: 1, overflowY: "auto" }}>
+              <div style={{ aspectRatio: "16/10", margin: 16, borderRadius: 18, background: `linear-gradient(155deg, ${detail.accent} 0%, #ffffff 140%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 76 }}>{detail.emoji}</div>
+              <div style={{ padding: "0 18px 20px" }}>
+                <p style={{ fontSize: 13, color: "#FF4B7C", fontWeight: 700, margin: "4px 0 2px" }}>{detail.subtitle}</p>
+                <h2 style={{ fontSize: 22, fontWeight: 900, color: "#111", margin: "0 0 12px", lineHeight: 1.25 }}>{detail.title}</h2>
+                <p style={{ fontSize: 14.5, color: "#555", lineHeight: 1.6, margin: "0 0 24px" }}>{detail.description}</p>
+                <p style={{ fontSize: 14, fontWeight: 800, color: "#111", margin: "0 0 12px" }}>예시 결과물</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                  {detail.examples.map((ex, i) => (
+                    <div key={i} style={{ aspectRatio: "1", borderRadius: 12, background: `linear-gradient(155deg, ${ex.accent} 0%, #ffffff 140%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34 }}>{ex.emoji}</div>
+                  ))}
+                </div>
+                <p style={{ fontSize: 11.5, color: "#bbb", margin: "10px 2px 0" }}>※ 예시 이미지는 준비 중이에요. 실제 결과물로 곧 교체돼요.</p>
+              </div>
+            </div>
+
+            <div style={{ padding: 16, background: "#fff", borderTop: "1px solid #F2F2F2", flexShrink: 0 }}>
+              {detail.start === "soon" ? (
+                <button disabled style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
+              ) : (
+                <button onClick={() => startConcept(detail)} style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>프로필 만들기</button>
+              )}
+            </div>
+          </div>
+        )}
       </main>
       <BottomNav />
       {showPaymentSheet && <PaymentSheet />}
