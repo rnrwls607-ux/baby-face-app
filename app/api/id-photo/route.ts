@@ -16,46 +16,37 @@ function parseImage(input: string): { mimeType: string; data: string } {
 }
 
 // Gemini로 사진 1장 생성 → base64 PNG data URL 반환 (일시적 5xx면 재시도)
-async function generateOne(
-  prompt: string,
-  images: { mimeType: string; data: string }[],
-  attempt = 0
-): Promise<string> {
+async function generateOne(prompt: string, images: { mimeType: string; data: string }[]): Promise<string> {
   const parts: Record<string, unknown>[] = [{ text: prompt }];
-  for (const img of images) {
-    parts.push({ inline_data: { mime_type: img.mimeType, data: img.data } });
-  }
+  for (const img of images) parts.push({ inline_data: { mime_type: img.mimeType, data: img.data } });
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-    {
-      method: "POST",
-      headers: {
-        "x-goog-api-key": process.env.GEMINI_API_KEY || "",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [{ parts }],
-        generationConfig: { responseModalities: ["IMAGE"] },
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    if (res.status >= 500 && attempt < 2) {
-      await new Promise((r) => setTimeout(r, 1500));
-      return generateOne(prompt, images, attempt + 1);
-    }
-    throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 50000); // 50초 넘으면 중단
+  const t0 = Date.now();
+  let res: Response;
+  try {
+    res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ["IMAGE"] } }),
+        signal: ctrl.signal,
+      }
+    );
+  } catch (e: unknown) {
+    clearTimeout(timer);
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 50초를 넘겨 중단했어요. 다시 시도해주세요.");
+    throw e;
   }
+  clearTimeout(timer);
+  console.log(`[id-photo] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+
+  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
-  const imgParts = respParts.filter(
-    (p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) =>
-      p?.inlineData?.data || p?.inline_data?.data
-  );
-  // '생각용(thought)' 이미지는 빼고 최종 이미지를 선택
+  const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
   const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
   const chosen = (finalParts.length ? finalParts : imgParts).pop();
   const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
