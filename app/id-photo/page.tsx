@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { addToHistory } from "../lib/history";
 
 export default function IdPhotoPage() {
   const router = useRouter();
@@ -58,6 +59,7 @@ export default function IdPhotoPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResults(data.output);
+      void addToHistory(data.output, "증명사진");
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

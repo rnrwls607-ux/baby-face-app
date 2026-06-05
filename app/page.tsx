@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
+import { addToHistory, getHistory, clearHistory, type HistoryItem } from "./lib/history";
 
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -163,6 +164,8 @@ export default function Home() {
   const [showMakeScreen, setShowMakeScreen] = useState(false);
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
   const [payingProduct, setPayingProduct] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
 
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
@@ -199,6 +202,7 @@ export default function Home() {
     const t = setInterval(() => setElapsed(p => p + 1), 1000);
     return () => { clearInterval(m); clearInterval(t); };
   }, [loading]);
+ useEffect(() => { if (activeTab === "history") setHistory(getHistory()); }, [activeTab]);
 
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej; });
 
@@ -286,6 +290,7 @@ export default function Home() {
       setIsPremiumResult(!!data.isPremium);
       try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
+      void addToHistory(data.output, "아기 얼굴");
     } catch (e: unknown) {
       clearTimeout(tid); setStep("");
       const err = e as {name?:string;message?:string};
@@ -658,29 +663,48 @@ export default function Home() {
       <EmptyPage tabs={["내 쿠폰 0", "사용/만료 쿠폰"]} emptyTitle="보유한 쿠폰이 없어요" emptyIcon="🎫"
         rightBtn={<button style={{ background: "#111", color: "#fff", border: "none", borderRadius: "50%", width: 32, height: 32, fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon.Plus /></button>} />
     );
-    if (activeTab === "history") return (
+   if (activeTab === "history") return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
-        <div style={{ display: "flex", borderBottom: "1px solid #F0F0F0" }}>
-          {["이미지 0", "저장된 결과"].map((label, i) => (
-            <button key={i} style={{ flex: 1, padding: "14px 0", border: "none", background: "none", cursor: "pointer", fontSize: 14, fontWeight: i === 0 ? 700 : 400, color: i === 0 ? "#111" : "#aaa", borderBottom: `2px solid ${i === 0 ? "#111" : "transparent"}` }}>
-              {label}
-            </button>
-          ))}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #F0F0F0", padding: "0 16px" }}>
+          <span style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "#111", borderBottom: "2px solid #111" }}>이미지 {history.length}</span>
+          {history.length > 0 && (
+            <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory(); setHistory([]); } }}
+              style={{ background: "none", border: "none", color: "#bbb", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
+          )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 16, padding: 40, textAlign: "center" }}>
-          <span style={{ fontSize: 56, opacity: 0.12 }}>👶</span>
-          <div>
-            <p style={{ fontSize: 16, fontWeight: 700, color: "#222", margin: "0 0 6px" }}>아직 생성한 아기 얼굴이 없어요</p>
-            <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>아기 얼굴을 예측해보세요!</p>
+
+        {history.length === 0 ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 16, padding: 40, textAlign: "center" }}>
+            <span style={{ fontSize: 56, opacity: 0.12 }}>🖼️</span>
+            <div>
+              <p style={{ fontSize: 16, fontWeight: 700, color: "#222", margin: "0 0 6px" }}>아직 만든 사진이 없어요</p>
+              <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>사진을 만들면 여기에 모여요</p>
+            </div>
+            <button onClick={() => setActiveTab("home")} style={{ background: "#111", color: "#fff", border: "none", borderRadius: 24, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>만들러 가기</button>
           </div>
-          <button onClick={() => { setActiveTab("home"); setShowMakeScreen(true); }}
-            style={{ background: "#111", color: "#fff", border: "none", borderRadius: 24, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-            아기 얼굴 만들러가기
-          </button>
-        </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: 4 }}>
+            {history.map(item => (
+              <button key={item.id} onClick={() => setHistoryView(item)} style={{ position: "relative", padding: 0, border: "none", cursor: "pointer", background: "none" }}>
+                <img src={item.src} alt={item.concept} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block", borderRadius: 6 }} />
+                <span style={{ position: "absolute", left: 5, bottom: 5, background: "rgba(0,0,0,.55)", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 5 }}>{item.concept}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {historyView && (
+          <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
+            <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
+            <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
+              <button onClick={() => { const a = document.createElement("a"); a.href = historyView.src; a.download = `photo_${historyView.id}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }}
+                style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
+              <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
+            </div>
+          </div>
+        )}
       </div>
     );
-  };
 
   // ─── 이용권 구매 바텀시트 ─────────────────────────────────────
   const PaymentSheet = () => (
