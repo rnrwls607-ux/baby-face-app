@@ -757,4 +757,4 @@ export default function Home() {
       {showPaymentSheet && <PaymentSheet />}
     </div>
   );
-}
+  }
