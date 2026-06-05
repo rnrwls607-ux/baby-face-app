@@ -290,7 +290,8 @@ export default function Home() {
       setIsPremiumResult(!!data.isPremium);
       try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
-      void addToHistory(data.output, "아기 얼굴");
+      await addToHistory(data.output, "아기 얼굴");
+      alert("[디버그] 히스토리 저장됨: " + getHistory().length + "개");
     } catch (e: unknown) {
       clearTimeout(tid); setStep("");
       const err = e as {name?:string;message?:string};
