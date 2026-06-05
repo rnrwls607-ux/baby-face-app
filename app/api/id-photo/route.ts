@@ -58,20 +58,46 @@ async function generateOne(prompt: string, images: { mimeType: string; data: str
 }
 
 // 🔑 증명사진 생성 엔진
-async function generateIdPhotos(imageDataUrls: string[], gender: string): Promise<string[]> {
-  const images = imageDataUrls.map(parseImage);
-  const genderWord = gender === "man" ? "man" : "woman";
-  const prompt = `Using the uploaded photo(s) of the same real person, generate a professional Korean ID/passport-style headshot of this exact ${genderWord}. Front-facing, looking straight at the camera, neutral closed-mouth expression, wearing a dark navy business suit with a clean collared shirt, plain light gray seamless studio background, soft even lighting, head-and-shoulders framing, vertical portrait, sharp focus, photorealistic high-resolution photograph. Critically: keep the person's face, bone structure, eyes, nose, mouth, and overall likeness EXACTLY identical to the uploaded photo(s). Do not beautify, slim, change age, or alter their identity in any way. Output one single clean ID photo with no text.`;
+async function generateIdPhotos(
+  imageDataUrls: string[],
+  gender: string,
+  background = "white",
+  clothing = "black_suit",
+  hair = "keep"
+): Promise<string[]> {
+  const BG: Record<string, string> = {
+    white: "a clean solid white background",
+    skyblue: "a solid light sky-blue background",
+    gray: "a solid light gray background",
+    beige: "a solid soft beige background",
+  };
+  const OUTFIT: Record<string, string> = {
+    black_suit: "a formal black business suit with a white dress shirt",
+    navy_suit: "a formal navy business suit with a white dress shirt",
+    white_shirt: "a clean white collared dress shirt (no jacket)",
+  };
+  const HAIR: Record<string, string> = {
+    keep: "keep the original hairstyle",
+    neat: "tidy, neatly groomed hair",
+    forehead: "neat hair with the forehead clearly visible",
+  };
 
-  const settled = await Promise.allSettled(
-    Array.from({ length: NUM_OUTPUTS }, () => generateOne(prompt, images))
-  );
+  const images = imageDataUrls.map(parseImage);
+  const who = gender === "man" ? "man" : "woman";
+  const bgDesc = BG[background] || BG.white;
+  const outfitDesc = OUTFIT[clothing] || OUTFIT.black_suit;
+  const hairDesc = HAIR[hair] || HAIR.keep;
+
+  const prompt = `Create a professional ID/passport-style headshot of the ${who} shown in the photo(s). CRITICAL: keep the exact same face and identity as the input — same facial features, do not turn them into a different person. Front-facing, looking straight at the camera, neutral closed-mouth expression, head and upper shoulders in frame. Dress them in ${outfitDesc}. Hairstyle: ${hairDesc}. Background: ${bgDesc}. Even soft studio lighting, sharp focus, natural realistic skin, high-quality professional photo. No text, no watermark, no border.`;
+
+  const tasks = Array.from({ length: NUM_OUTPUTS }, () => generateOne(prompt, images));
+  const settled = await Promise.allSettled(tasks);
   const ok = settled
-    .filter((r) => r.status === "fulfilled")
-    .map((r) => (r as PromiseFulfilledResult<string>).value);
-  if (ok.length === 0) {
-    const firstErr = settled.find((r) => r.status === "rejected") as PromiseRejectedResult | undefined;
-    throw new Error(firstErr?.reason?.message || "생성에 실패했습니다.");
+    .filter((s): s is PromiseFulfilledResult<string> => s.status === "fulfilled")
+    .map((s) => s.value);
+  if (!ok.length) {
+    const firstErr = settled.find((s) => s.status === "rejected") as PromiseRejectedResult | undefined;
+    throw new Error(firstErr?.reason?.message || "이미지 생성에 실패했어요.");
   }
   return ok;
 }
@@ -87,7 +113,7 @@ export async function POST(req: NextRequest) {
     if (!images.length) {
       return NextResponse.json({ error: "사진을 한 장 이상 올려주세요." }, { status: 400 });
     }
-    const output = await generateIdPhotos(images, gender);
+    const output = await generateIdPhotos(images, gender, background, clothing, hair);
     return NextResponse.json({ output });
   } catch (e: unknown) {
     const err = e as { message?: string };

@@ -3,26 +3,43 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 
+const BG_OPTIONS = [
+  { key: "white", label: "흰색" },
+  { key: "skyblue", label: "하늘색" },
+  { key: "gray", label: "회색" },
+  { key: "beige", label: "베이지" },
+];
+const OUTFIT_OPTIONS = [
+  { key: "black_suit", label: "블랙 정장" },
+  { key: "navy_suit", label: "네이비 정장" },
+  { key: "white_shirt", label: "화이트 셔츠" },
+];
+const HAIR_OPTIONS = [
+  { key: "keep", label: "그대로 유지" },
+  { key: "neat", label: "단정하게" },
+  { key: "forehead", label: "이마 보이게" },
+];
+
 export default function IdPhotoPage() {
   const router = useRouter();
-  const [images, setImages] = useState<string[]>([]); // 1~3장 (슬롯별)
+  const [images, setImages] = useState<string[]>([]);
   const [gender, setGender] = useState<"woman" | "man">("woman");
+  const [bg, setBg] = useState("white");
+  const [outfit, setOutfit] = useState("black_suit");
+  const [hair, setHair] = useState("keep");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const [selected, setSelected] = useState(0);
   const [error, setError] = useState("");
   const [elapsed, setElapsed] = useState(0);
-
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
     const t = setInterval(() => setElapsed(p => p + 1), 1000);
     return () => clearInterval(t);
   }, [loading]);
-
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => {
     const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej;
   });
-
   const compress = (b64: string): Promise<string> => new Promise(res => {
     const img = new Image();
     img.onload = () => {
@@ -34,12 +51,30 @@ export default function IdPhotoPage() {
     };
     img.src = b64;
   });
-
   const handleUpload = async (file: File, index: number) => {
     const b64 = await toBase64(file);
     setImages(prev => { const next = [...prev]; next[index] = b64; return next; });
   };
-
+  const renderOptions = (
+    label: string,
+    options: { key: string; label: string }[],
+    value: string,
+    setValue: (v: string) => void
+  ) => (
+    <div style={{ marginBottom: 18 }}>
+      <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>{label}</p>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {options.map(o => (
+          <button key={o.key} onClick={() => setValue(o.key)}
+            style={{ flex: "1 1 0", minWidth: 68, padding: "10px 8px", borderRadius: 10, fontSize: 13, fontWeight: 700, cursor: "pointer",
+              border: value === o.key ? "1.5px solid #111" : "1.5px solid #EAEAEA",
+              background: value === o.key ? "#111" : "#fff", color: value === o.key ? "#fff" : "#888" }}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
   const handleSubmit = async () => {
     const valid = images.filter(Boolean);
     if (valid.length === 0) { setError("본인 사진을 한 장 이상 올려주세요."); return; }
@@ -51,7 +86,7 @@ export default function IdPhotoPage() {
       const res = await fetch("/api/id-photo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ images: compressed, gender }),
+        body: JSON.stringify({ images: compressed, gender, background: bg, clothing: outfit, hair }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -66,7 +101,6 @@ export default function IdPhotoPage() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-
   const handleDownload = () => {
     const url = results[selected];
     const a = document.createElement("a");
@@ -74,20 +108,17 @@ export default function IdPhotoPage() {
     a.download = "id_photo.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
-
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px", height: 56, borderBottom: "1px solid #f0f0f0", position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => router.push("/")} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#111", padding: "4px 8px 4px 0" }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>AI 증명사진</span>
       </div>
-
       <div style={{ padding: "20px 20px 100px" }}>
         <div style={{ background: "#F7F7F7", borderRadius: 14, padding: "14px 16px", marginBottom: 20 }}>
           <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: "0 0 4px" }}>본인 사진으로 단정한 증명사진을 만들어요</p>
-          <p style={{ fontSize: 12, color: "#999", margin: 0, lineHeight: 1.5 }}>정면·밝은 사진 1~3장을 올리면 정장·흰 배경으로 변환해요. 여러 장일수록 본인과 더 닮게 나와요.</p>
+          <p style={{ fontSize: 12, color: "#999", margin: 0, lineHeight: 1.5 }}>정면·밝은 사진 1~3장을 올리면 원하는 배경·옷·헤어로 변환해요. 여러 장일수록 본인과 더 닮게 나와요.</p>
         </div>
-
         {!results.length && (
           <>
             <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>성별</p>
@@ -102,7 +133,11 @@ export default function IdPhotoPage() {
               ))}
             </div>
 
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>본인 사진 (1~3장)</p>
+            {renderOptions("배경색", BG_OPTIONS, bg, setBg)}
+            {renderOptions("옷차림", OUTFIT_OPTIONS, outfit, setOutfit)}
+            {renderOptions("헤어", HAIR_OPTIONS, hair, setHair)}
+
+            <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10, marginTop: 4 }}>본인 사진 (1~3장)</p>
             <div style={{ display: "flex", gap: 10, marginBottom: 24 }}>
               {[0, 1, 2].map(i => (
                 <label key={i} style={{ flex: 1, aspectRatio: "1", cursor: "pointer" }}>
@@ -116,34 +151,29 @@ export default function IdPhotoPage() {
                 </label>
               ))}
             </div>
-
             <button onClick={handleSubmit} disabled={loading || images.filter(Boolean).length === 0}
               style={{ width: "100%", background: loading || images.filter(Boolean).length === 0 ? "#F0F0F0" : "#111", color: loading || images.filter(Boolean).length === 0 ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 700, cursor: loading || images.filter(Boolean).length === 0 ? "not-allowed" : "pointer" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "증명사진 만들기 ✨"}
             </button>
-
             <p style={{ fontSize: 11, color: "#bbb", textAlign: "center", marginTop: 16, lineHeight: 1.6 }}>
               ※ 본 사진은 AI 생성물로, 여권 등 공적 증명용으로는 사용할 수 없어요.
             </p>
           </>
         )}
-
         {loading && (
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>📸</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 증명사진을 만들고 있어요...</p>
           </div>
         )}
-
         {error && (
           <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
           </div>
         )}
-
         {results.length > 0 && (
           <div>
-            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>완성됐어요! 마음에 드는 걸 골라보세요 ✨</p>
+            <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
               <img src={results[selected]} alt="증명사진" style={{ width: "100%", display: "block" }} />
             </div>
