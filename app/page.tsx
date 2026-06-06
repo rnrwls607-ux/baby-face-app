@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, clearHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
-
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
   "눈 모양 만드는 중...",
@@ -14,13 +13,10 @@ const LOADING_MESSAGES = [
   "마지막 터치 중...",
   "거의 다 됐어요!",
 ];
-
 const FREE_LIMIT = 3;
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
-
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
 type Tab = "home" | "ticket" | "coupon" | "history";
-
 // ─────────────────────────────────────────────────────────────
 // 아이콘 컴포넌트
 // ─────────────────────────────────────────────────────────────
@@ -95,10 +91,8 @@ const HOME = {
   tagText: "#8C8CA6",
   radius: 18,
 };
-
-// 카드 한 장의 데이터 형태
-type HomeCardItem = { id: string; title: string; subtitle: string; emoji: string; accent: string; badge: string; tags: string[]; go: string };
-
+// 카드 한 장의 데이터 형태 (image: 실제 사진 주소. 비우면 이모지로 표시)
+type HomeCardItem = { id: string; title: string; subtitle: string; emoji: string; accent: string; badge: string; tags: string[]; go: string; image?: string };
 // ── 홈 카탈로그 (여기에 객체 추가 = 카드 추가) ──
 // go: "baby"=아기 만들기 화면 / "idphoto"=증명사진(/id-photo) / ""=준비중
 const HOME_PILLS = [
@@ -108,13 +102,11 @@ const HOME_PILLS = [
   { label: "인생샷", dot: true },
   { label: "증명사진", dot: false },
 ];
-
 const HOME_HERO = [
-  { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby" },
-  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto" },
-  { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby" },
+  { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "" },
+  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "" },
+  { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby", image: "" },
 ];
-
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
     id: "popular", heading: "지금 제일 인기 있는", title: "인기 AI 사진 🔥", layout: "scroll",
@@ -169,7 +161,6 @@ export default function Home() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
-
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
     fetch("/api/usage")
@@ -181,12 +172,10 @@ export default function Home() {
       })
       .catch(() => {});
   }, []);
-
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.json()).then(d => { if (d.loggedIn) setUser(d.user); }).catch(() => {}).finally(() => setUserLoading(false));
     fetchUsage();
   }, [fetchUsage]);
-
   // ✅ 결제 완료 후 홈 복귀 시 usage 재조회 (?refreshed=1 감지)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -197,8 +186,6 @@ export default function Home() {
     }
   }, [fetchUsage]);
 
-  
-
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
     setLoadingMsg(LOADING_MESSAGES[0]);
@@ -208,9 +195,7 @@ export default function Home() {
     return () => { clearInterval(m); clearInterval(t); };
   }, [loading]);
  useEffect(() => { if (activeTab === "history") getHistory().then(setHistory); }, [activeTab]);
-
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej; });
-
   const compress = (b64: string): Promise<string> => new Promise(res => {
     const img = new Image();
     img.onload = () => {
@@ -222,21 +207,17 @@ export default function Home() {
     };
     img.src = b64;
   });
-
   const handleLogin = () => { window.location.href = "/api/auth/kakao"; };
   const handleLogout = () => { window.location.href = "/api/auth/logout"; };
-
   const handlePayment = useCallback(async (productId: string) => {
     if (!user) { handleLogin(); return; }
     const product = PRODUCTS.find(p => p.id === productId);
     if (!product) return;
-
     setPayingProduct(productId);
     try {
       const { loadTossPayments } = await import("@tosspayments/payment-sdk");
       const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
       const orderId = "order_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
-
       await tossPayments.requestPayment("카드", {
         amount: product.price,
         orderId,
@@ -254,7 +235,6 @@ export default function Home() {
       setPayingProduct(null);
     }
   }, [user]);
-
   const handleDownload = async () => {
     const url = results[selected];
     try {
@@ -264,7 +244,6 @@ export default function Home() {
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     } catch { window.open(url, "_blank"); }
   };
-
   const handleShare = async () => {
     const url = results[selected];
     const text = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\nhttps://baby-face-app-seven.vercel.app`;
@@ -276,7 +255,6 @@ export default function Home() {
       else { await navigator.clipboard.writeText(text); alert("링크가 복사됐어요!"); }
     } catch (e: unknown) { if ((e as {name?:string})?.name !== "AbortError") handleDownload(); }
   };
-
   const handleSubmit = async () => {
     if (!user) { handleLogin(); return; }
     if (limitReached || !image1 || !image2) { if (!image1 || !image2) setError("엄마와 아빠 사진을 모두 올려주세요."); return; }
@@ -303,19 +281,18 @@ export default function Home() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-
   // ─── 공통 헤더 ───────────────────────────────────────────────
   const Header = ({ title, onBack }: { title?: string; onBack?: () => void }) => (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 20px", height: 56, background: "#fff", borderBottom: "1px solid #f0f0f0", position: "sticky", top: 0, zIndex: 30 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", height: 58, background: "#fff", position: "sticky", top: 0, zIndex: 30 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         {onBack ? (
           <button onClick={onBack} style={{ background: "none", border: "none", padding: "4px 8px 4px 0", cursor: "pointer", color: "#111", display: "flex" }}>
             <Icon.Back />
           </button>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            <span style={{ fontSize: 19, fontWeight: 900, letterSpacing: 0.5, color: "#111" }}>MOSPIC</span>
-            <span style={{ fontSize: 10, background: "#FF4B7C", color: "#fff", padding: "1px 5px", borderRadius: 4, fontWeight: 700, marginLeft: 2 }}>AI</span>
+          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+            <span style={{ position: "absolute", top: -8, right: -14, fontSize: 13 }}>✦</span>
+            <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: -1, color: "#191919", fontStyle: "italic" }}>mospic</span>
           </div>
         )}
         {title && <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{title}</span>}
@@ -329,7 +306,7 @@ export default function Home() {
               <button onClick={handleLogout} style={{ fontSize: 12, color: "#aaa", background: "none", border: "none", cursor: "pointer" }}>로그아웃</button>
             </div>
           ) : (
-            <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 20, padding: "6px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#111" }}>
+            <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 18, padding: "7px 14px", fontSize: 12, fontWeight: 800, cursor: "pointer", color: "#191919" }}>
               카카오 로그인
             </button>
           )
@@ -342,82 +319,103 @@ export default function Home() {
       </div>
     </div>
   );
-
-  // ─── 하단 탭 ─────────────────────────────────────────────────
+  // ─── 하단 탭 (Mevu 스타일: 활성 탭 캡슐로 떠오름) ──────────────
   const tabs = [
     { id: "home" as Tab, Icon: Icon.Home, label: "홈" },
     { id: "ticket" as Tab, Icon: Icon.Ticket, label: "이용권" },
     { id: "coupon" as Tab, Icon: Icon.Coupon, label: "쿠폰" },
     { id: "history" as Tab, Icon: Icon.History, label: "히스토리" },
   ];
-
   const BottomNav = () => (
-    <div style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 480, background: "#fff", borderTop: "1px solid #f0f0f0", display: "flex", zIndex: 40, paddingBottom: "env(safe-area-inset-bottom)" }}>
-      {tabs.map(({ id, Icon: I, label }) => (
-        <button key={id} onClick={() => { setActiveTab(id); setShowMakeScreen(false); }}
-          style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "10px 0", background: "none", border: "none", cursor: "pointer", color: activeTab === id ? "#111" : "#bbb", transition: "color .2s" }}>
-          <I />
-          <span style={{ fontSize: 10, fontWeight: activeTab === id ? 700 : 400 }}>{label}</span>
-        </button>
-      ))}
+    <div style={{ position: "fixed", bottom: 0, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 480, zIndex: 40, paddingBottom: "env(safe-area-inset-bottom)", pointerEvents: "none" }}>
+      <div style={{ margin: "0 14px 14px", background: "#fff", borderRadius: 30, boxShadow: "0 4px 18px rgba(0,0,0,0.08)", border: "1px solid #f3f3f3", display: "flex", padding: "8px 6px", pointerEvents: "auto" }}>
+        {tabs.map(({ id, Icon: I, label }) => {
+          const on = activeTab === id;
+          return (
+            <button key={id} onClick={() => { setActiveTab(id); setShowMakeScreen(false); }}
+              style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "4px 0", background: "none", border: "none", cursor: "pointer" }}>
+              <span style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: on ? "7px 20px" : "7px 0", borderRadius: 18, background: on ? "#191919" : "transparent", color: on ? "#fff" : "#bbb", transition: "all .2s" }}>
+                <I />
+              </span>
+              <span style={{ fontSize: 10, fontWeight: on ? 700 : 400, color: on ? "#191919" : "#bbb" }}>{label}</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
-
 // ─── 홈 메인 (Mevu 스타일 카탈로그) ──────────────────────────
   const HomeMain = () => {
     const [pill, setPill] = useState(0);
-
+    const [heroIdx, setHeroIdx] = useState(0);
+    const heroRef = useRef<HTMLDivElement>(null);
  // 카드 탭 → 상세 페이지 열기
 const handleCardTap = (go: string) => setDetail(conceptForGo(go));
-
-
+    // 히어로 스크롤 시 현재 인덱스 추적 (점 인디케이터용)
+    const onHeroScroll = () => {
+      const el = heroRef.current;
+      if (!el) return;
+      const idx = Math.round(el.scrollLeft / el.clientWidth);
+      setHeroIdx(idx);
+    };
     const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
       <div key={item.id} onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
         <div style={{ position: "relative" }}>
-          <div style={{ aspectRatio: ratio, borderRadius: HOME.radius, background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>{item.emoji}</div>
-          {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "4px 9px", borderRadius: 8 }}>{item.badge}</span>}
+          <div style={{ aspectRatio: ratio, borderRadius: HOME.radius, overflow: "hidden", background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
+            {item.image ? <img src={item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
+          </div>
+          {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
         </div>
         <p style={{ margin: "11px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
         <p style={{ margin: "0 2px", fontSize: 16, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
         {item.tags.length > 0 && (
           <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap", padding: "0 2px" }}>
-            {item.tags.map(t => <span key={t} style={{ fontSize: 11.5, color: HOME.tagText, background: HOME.tagBg, padding: "4px 10px", borderRadius: 7, fontWeight: 600 }}>{t}</span>)}
+            {item.tags.map(t => <span key={t} style={{ fontSize: 11.5, color: HOME.tagText, background: HOME.tagBg, padding: "4px 11px", borderRadius: 20, fontWeight: 600 }}>{t}</span>)}
           </div>
         )}
       </div>
     );
-
     return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
         {/* 카테고리 칩 */}
-        <div className="hide-scrollbar" style={{ display: "flex", gap: 8, overflowX: "auto", padding: "12px 20px 8px" }}>
+        <div className="hide-scrollbar" style={{ display: "flex", gap: 7, overflowX: "auto", padding: "8px 18px 10px" }}>
           {HOME_PILLS.map((p, i) => {
             const on = pill === i;
             return (
-              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "9px 17px", borderRadius: 22, cursor: "pointer", fontSize: 14, fontWeight: 700, border: on ? "none" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
+              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "9px 18px", borderRadius: 22, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: on ? "1.5px solid #191919" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
                 {p.label}
-                {p.dot && <span style={{ position: "absolute", top: 4, right: 8, width: 7, height: 7, borderRadius: "50%", background: HOME.accent }} />}
+                {p.dot && <span style={{ position: "absolute", top: 3, right: 7, width: 7, height: 7, borderRadius: "50%", background: HOME.accent }} />}
               </button>
             );
           })}
         </div>
-
-        {/* 상단 배너 (옆으로 스와이프) */}
-        <div className="hide-scrollbar" style={{ display: "flex", gap: 12, overflowX: "auto", padding: "6px 20px 4px", scrollSnapType: "x mandatory" }}>
+        {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) */}
+        <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: "0 18px" }}>
           {HOME_HERO.map(h => (
-            <div key={h.id} onClick={() => handleCardTap(h.go)} style={{ flexShrink: 0, width: "86%", scrollSnapAlign: "start", borderRadius: 22, height: 230, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(160deg, ${h.accent} 0%, #ffffff 130%)` }}>
-              <div style={{ position: "absolute", right: 14, bottom: 4, fontSize: 96, opacity: 0.35 }}>{h.emoji}</div>
-              <div style={{ position: "absolute", left: 22, bottom: 26 }}>
-                <p style={{ margin: 0, fontSize: 23, fontWeight: 900, color: HOME.text, letterSpacing: -0.5 }}>{h.title}</p>
-                <p style={{ margin: "6px 0 0", fontSize: 13.5, fontWeight: 500, color: "#5f5f5f" }}>{h.subtitle}</p>
+            <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
+              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 22, height: 240, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
+                {h.image ? (
+                  <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
+                )}
+                <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, textAlign: "center" }}>
+                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: HOME.text, letterSpacing: -0.5 }}>{h.title}</p>
+                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "#6a6a6a" }}>{h.subtitle}</p>
+                </div>
               </div>
             </div>
           ))}
         </div>
-
+        {/* 점 인디케이터 */}
+        <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
+          {HOME_HERO.map((_, i) => (
+            <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
+          ))}
+        </div>
         {/* 무료 횟수 (기존 기능 유지) */}
         {user && (
-          <div style={{ margin: "14px 20px 0", background: limitReached ? "#FFF0F3" : "#F7F7F7", borderRadius: 14, padding: "12px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ margin: "16px 18px 0", background: limitReached ? "#FFF0F3" : "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <p style={{ fontSize: 11, color: limitReached ? "#FF4B7C" : "#888", margin: "0 0 2px" }}>무료 체험 현황</p>
               <p style={{ fontSize: 14, fontWeight: 700, color: limitReached ? "#FF4B7C" : "#111", margin: 0 }}>
@@ -433,42 +431,38 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             )}
           </div>
         )}
-
         {/* 섹션들 */}
         {HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
           return (
             <div key={section.id} style={{ marginTop: 30 }}>
-              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 20px", marginBottom: 14 }}>
+              <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
                 <div>
-                  {section.heading ? <p style={{ margin: "0 0 4px", fontSize: 13, color: HOME.text, fontWeight: 500 }}>{section.heading}</p> : null}
+                  {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 13, color: HOME.text, fontWeight: 500 }}>{section.heading}</p> : null}
                   <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}</p>
                 </div>
                 <span style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap" }}>전체보기 ›</span>
               </div>
               {isGrid ? (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 20px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 18px" }}>
                   {section.items.map(it => renderCard(it, "100%", "3 / 4"))}
                 </div>
               ) : (
-                <div className="hide-scrollbar" style={{ display: "flex", gap: 14, overflowX: "auto", padding: "0 20px 4px" }}>
-                  {section.items.map(it => renderCard(it, 176, "4 / 5"))}
+                <div className="hide-scrollbar" style={{ display: "flex", gap: 13, overflowX: "auto", padding: "0 18px 4px" }}>
+                  {section.items.map(it => renderCard(it, 170, "4 / 5"))}
                 </div>
               )}
             </div>
           );
         })}
-
-        <div style={{ height: 100 }} />
+        <div style={{ height: 110 }} />
       </div>
     );
   };
-
   // ─── 아기 얼굴 만들기 화면 ────────────────────────────────────
   const MakeScreen = () => (
     <div style={{ background: "#fff", minHeight: "100vh" }}>
       <Header title="아기 얼굴 예측" onBack={() => { setShowMakeScreen(false); setResults([]); setImage1(""); setImage2(""); setError(""); }} />
-
       <div style={{ padding: "20px 20px 100px" }}>
         {/* 비로그인 */}
         {!userLoading && !user && (
@@ -479,7 +473,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </button>
           </div>
         )}
-
         {/* 결제 유도 */}
         {limitReached && (
           <div style={{ border: "1.5px solid #F0F0F0", borderRadius: 20, padding: 20, marginBottom: 20, textAlign: "center" }}>
@@ -494,31 +487,29 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               ))}
             </div>
             <button onClick={() => setShowPaymentSheet(true)}
-              style={{ width: "100%", background: "#111", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+              style={{ width: "100%", background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
               이용권 구매하기
             </button>
           </div>
         )}
-
         {/* 성별 선택 */}
         <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>아기 성별</p>
-          <div style={{ display: "flex", gap: 10, background: "#F7F7F7", borderRadius: 14, padding: 4 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10 }}>아기 성별</p>
+          <div style={{ display: "flex", gap: 8, background: "#F1F2F6", borderRadius: 14, padding: 4 }}>
             {([["girl", "👧", "딸"], ["boy", "👦", "아들"]] as const).map(([g, emoji, label]) => (
               <button key={g} onClick={() => setGender(g)}
-                style={{ flex: 1, padding: "10px 0", borderRadius: 10, border: "none", cursor: "pointer", fontWeight: 700, fontSize: 14, transition: "all .2s",
+                style={{ flex: 1, padding: "11px 0", borderRadius: 11, border: "none", cursor: "pointer", fontWeight: 800, fontSize: 14, transition: "all .2s",
                   background: gender === g ? "#fff" : "transparent",
-                  color: gender === g ? "#111" : "#aaa",
+                  color: gender === g ? "#FF4B7C" : "#8A8F99",
                   boxShadow: gender === g ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>
                 {emoji} {label}
               </button>
             ))}
           </div>
         </div>
-
         {/* 사진 업로드 */}
         <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>사진 업로드</p>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10 }}>사진 업로드</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {([
               { state: image1, setter: setImage1, emoji: "👩", label: "엄마 사진", color: "#FFF0F5", borderColor: "#FFD6E7" },
@@ -535,7 +526,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                     <p style={{ fontSize: 14, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>{label}</p>
                     <p style={{ fontSize: 12, color: "#aaa", margin: 0 }}>{state ? "사진이 선택됐어요" : "탭해서 사진 선택하기"}</p>
                   </div>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: state ? "#111" : "#F0F0F0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: state ? "#FF4B7C" : "#F0F0F0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#fff" }}>
                     {state ? <Icon.Check /> : <span style={{ color: "#999", fontSize: 18, lineHeight: 1 }}>+</span>}
                   </div>
                 </div>
@@ -545,15 +536,13 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             ))}
           </div>
         </div>
-
         {/* 생성 버튼 */}
         {!limitReached && (
           <button onClick={handleSubmit} disabled={loading || !user}
-            style={{ width: "100%", background: loading || !user ? "#F0F0F0" : "#111", color: loading || !user ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 700, cursor: loading || !user ? "not-allowed" : "pointer", transition: "all .2s" }}>
+            style={{ width: "100%", background: loading || !user ? "#F0F0F0" : "#FF4B7C", color: loading || !user ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !user ? "not-allowed" : "pointer", boxShadow: loading || !user ? "none" : "0 6px 18px rgba(255,75,124,0.32)", transition: "all .2s" }}>
             {loading ? `예측 중... (${elapsed}초)` : !user ? "로그인 후 시작하기" : "아기 얼굴 예측하기 ✨"}
           </button>
         )}
-
         {/* 로딩 */}
         {loading && (
           <div style={{ marginTop: 24, textAlign: "center" }}>
@@ -567,7 +556,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 const steps = ["압축","전송","생성"]; const idx = steps.indexOf(step);
                 const isActive = step === s; const isDone = idx > i;
                 return (
-                  <div key={s} style={{ flex: 1, padding: "8px 0", borderRadius: 10, fontSize: 12, fontWeight: 600, textAlign: "center", background: isActive ? "#111" : isDone ? "#333" : "#F0F0F0", color: isActive || isDone ? "#fff" : "#aaa", transition: "all .3s" }}>
+                  <div key={s} style={{ flex: 1, padding: "8px 0", borderRadius: 10, fontSize: 12, fontWeight: 600, textAlign: "center", background: isActive ? "#FF4B7C" : isDone ? "#FFA9C4" : "#F0F0F0", color: isActive || isDone ? "#fff" : "#aaa", transition: "all .3s" }}>
                     {["🗜️ 압축","📤 전송","🎨 생성"][i]}
                   </div>
                 );
@@ -575,14 +564,12 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </div>
           </div>
         )}
-
         {/* 에러 */}
         {error && (
           <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
           </div>
         )}
-
         {/* 결과 */}
         {results.length > 0 && (
           <div style={{ marginTop: 24 }} className="fade-up">
@@ -606,7 +593,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
                 {results.map((url, i) => (
                   <button key={i} onClick={() => setSelected(i)}
-                    style={{ flex: 1, borderRadius: 12, overflow: "hidden", border: `3px solid ${selected === i ? "#111" : "transparent"}`, cursor: "pointer", opacity: selected === i ? 1 : 0.5, padding: 0, transition: "all .2s" }}>
+                    style={{ flex: 1, borderRadius: 12, overflow: "hidden", border: `3px solid ${selected === i ? "#FF4B7C" : "transparent"}`, cursor: "pointer", opacity: selected === i ? 1 : 0.5, padding: 0, transition: "all .2s" }}>
                     <img src={url} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block" }} alt="" />
                   </button>
                 ))}
@@ -631,7 +618,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       </div>
     </div>
   );
-
   // ─── 이용권/쿠폰/히스토리 ─────────────────────────────────────
   const EmptyPage = ({ tabs: t, emptyTitle, emptyIcon, rightBtn }: { tabs: string[]; emptyTitle: string; emptyIcon: string; rightBtn?: React.ReactNode }) => {
     const [activeSubTab, setActiveSubTab] = useState(0);
@@ -642,7 +628,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           {t.map((label, i) => (
             <button key={i} onClick={() => setActiveSubTab(i)}
               style={{ flex: 1, padding: "14px 0", border: "none", background: "none", cursor: "pointer", fontSize: 14, fontWeight: activeSubTab === i ? 700 : 400, color: activeSubTab === i ? "#111" : "#aaa",
-                borderBottom: `2px solid ${activeSubTab === i ? "#111" : "transparent"}`, transition: "all .2s" }}>
+                borderBottom: `2px solid ${activeSubTab === i ? "#FF4B7C" : "transparent"}`, transition: "all .2s" }}>
               {label}
             </button>
           ))}
@@ -655,7 +641,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       </div>
     );
   };
-
   const renderContent = () => {
     if (activeTab === "home" && showMakeScreen) return <MakeScreen />;
     if (activeTab === "home") return <HomeMain />;
@@ -665,18 +650,17 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     );
     if (activeTab === "coupon") return (
       <EmptyPage tabs={["내 쿠폰 0", "사용/만료 쿠폰"]} emptyTitle="보유한 쿠폰이 없어요" emptyIcon="🎫"
-        rightBtn={<button style={{ background: "#111", color: "#fff", border: "none", borderRadius: "50%", width: 32, height: 32, fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon.Plus /></button>} />
+        rightBtn={<button style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: "50%", width: 32, height: 32, fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon.Plus /></button>} />
     );
    if (activeTab === "history") return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #F0F0F0", padding: "0 16px" }}>
-          <span style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "#111", borderBottom: "2px solid #111" }}>이미지 {history.length}</span>
+          <span style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "#111", borderBottom: "2px solid #FF4B7C" }}>이미지 {history.length}</span>
           {history.length > 0 && (
             <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory().then(() => setHistory([])); } }}
               style={{ background: "none", border: "none", color: "#bbb", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
           )}
         </div>
-
         {history.length === 0 ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 16, padding: 40, textAlign: "center" }}>
             <span style={{ fontSize: 56, opacity: 0.12 }}>🖼️</span>
@@ -684,7 +668,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <p style={{ fontSize: 16, fontWeight: 700, color: "#222", margin: "0 0 6px" }}>아직 만든 사진이 없어요</p>
               <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>사진을 만들면 여기에 모여요</p>
             </div>
-            <button onClick={() => setActiveTab("home")} style={{ background: "#111", color: "#fff", border: "none", borderRadius: 24, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>만들러 가기</button>
+            <button onClick={() => setActiveTab("home")} style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 24, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>만들러 가기</button>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: 4 }}>
@@ -696,7 +680,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             ))}
           </div>
         )}
-
         {historyView && (
           <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
@@ -709,7 +692,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         )}
       </div>
     );
-  };  
+  };
   // ─── 이용권 구매 바텀시트 ─────────────────────────────────────
   const PaymentSheet = () => (
     <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
@@ -719,7 +702,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
         <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>이용권 구매</p>
         <p style={{ fontSize: 13, color: "#999", margin: "0 0 20px" }}>구매한 이용권은 1년간 유효해요</p>
-
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {PRODUCTS.map(product => (
             <button key={product.id}
@@ -743,14 +725,12 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </button>
           ))}
         </div>
-
         <p style={{ fontSize: 11, color: "#ccc", textAlign: "center", margin: "16px 0 0" }}>
           결제는 토스페이먼츠를 통해 안전하게 처리됩니다
         </p>
       </div>
     </div>
   );
-
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", position: "relative", minHeight: "100vh", background: "#fff" }}>
       {!showMakeScreen && <Header />}
@@ -762,7 +742,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <button onClick={() => setDetail(null)} style={{ background: "none", border: "none", fontSize: 22, cursor: "pointer", color: "#111", lineHeight: 1, padding: 0 }}>←</button>
               <span style={{ fontSize: 16, fontWeight: 800, color: "#111" }}>{detail.title}</span>
             </div>
-
             <div style={{ flex: 1, overflowY: "auto" }}>
               <div style={{ aspectRatio: "16/10", margin: 16, borderRadius: 18, background: `linear-gradient(155deg, ${detail.accent} 0%, #ffffff 140%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 76 }}>{detail.emoji}</div>
               <div style={{ padding: "0 18px 20px" }}>
@@ -778,7 +757,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 <p style={{ fontSize: 11.5, color: "#bbb", margin: "10px 2px 0" }}>※ 예시 이미지는 준비 중이에요. 실제 결과물로 곧 교체돼요.</p>
               </div>
             </div>
-
             <div style={{ padding: 16, background: "#fff", borderTop: "1px solid #F2F2F2", flexShrink: 0 }}>
               {detail.start === "soon" ? (
                 <button disabled style={{ width: "100%", padding: 16, borderRadius: 14, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
