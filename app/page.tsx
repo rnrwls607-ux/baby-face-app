@@ -103,7 +103,7 @@ const HOME_PILLS = [
   { label: "증명사진", dot: false },
 ];
 const HOME_HERO = [
-{ id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "/cards/baby.jpg" },  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "" },
+{ id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" },
   { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby", image: "" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
@@ -111,14 +111,14 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     id: "popular", heading: "지금 제일 인기 있는", title: "인기 AI 사진 🔥", layout: "scroll",
     items: [
       { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.jpg" },
-      { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto" },
+      { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto", image: "/cards/idphoto-1.jpg" },
       { id: "couple", title: "커플 사진", subtitle: "여행·데이트 합성", emoji: "💑", accent: "#FFE9D6", badge: "", tags: ["인생샷"], go: "" },
     ],
   },
   {
     id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진 ✨", layout: "scroll",
     items: [
-      { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel" },
+      { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.png" },
       { id: "pet", title: "반려동물 사진", subtitle: "우리 아이 AI 화보", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "" },
       { id: "family", title: "가족사진", subtitle: "온 가족 AI 합성", emoji: "👨‍👩‍👧", accent: "#E7F7EA", badge: "", tags: ["가족"], go: "" },
       { id: "lifeshot", title: "인생샷 필터", subtitle: "감성 보정 한 장", emoji: "📸", accent: "#EFEAFF", badge: "", tags: ["인생샷"], go: "" },
@@ -127,10 +127,10 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
   {
     id: "idstyle", heading: "", title: "이런 스타일은 어때요?", layout: "grid",
     items: [
-      { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto" },
-      { id: "s2", title: "긴머리 블랙 정장", subtitle: "부드러운 인상을 주는", emoji: "💁", accent: "#FFE0EC", badge: "", tags: [], go: "idphoto" },
-      { id: "s3", title: "블랙 셋업", subtitle: "기본을 충실히 담아낸", emoji: "🕴️", accent: "#ECEEF1", badge: "", tags: [], go: "idphoto" },
-      { id: "s4", title: "네이비 셔츠", subtitle: "은은하면서도 깊이감 있는", emoji: "👔", accent: "#E1ECFF", badge: "", tags: [], go: "idphoto" },
+      { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s1.jpg" },
+      { id: "s2", title: "긴머리 블랙 정장", subtitle: "부드러운 인상을 주는", emoji: "💁", accent: "#FFE0EC", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s2.jpg" },
+      { id: "s3", title: "블랙 셋업", subtitle: "기본을 충실히 담아낸", emoji: "🕴️", accent: "#ECEEF1", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s3.jpg" },
+      { id: "s4", title: "네이비 셔츠", subtitle: "은은하면서도 깊이감 있는", emoji: "👔", accent: "#E1ECFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s4.jpg" },
     ],
   },
 ];
@@ -402,8 +402,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
   <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
 )}
                 <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: h.image ? "#fff" : HOME.text, letterSpacing: -0.5 }}>{h.title}</p>
-<p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: h.image ? "rgba(255,255,255,0.9)" : "#6a6a6a" }}>{h.subtitle}</p>
+                  
                 </div>
               </div>
             </div>
