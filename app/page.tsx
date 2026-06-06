@@ -103,7 +103,8 @@ const HOME_PILLS = [
   { label: "증명사진", dot: false },
 ];
 const HOME_HERO = [
-{ id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" },
+  { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "/cards/baby.jpg" },
+  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" },
   { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby", image: "" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
