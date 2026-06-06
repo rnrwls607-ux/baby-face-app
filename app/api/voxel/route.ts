@@ -11,16 +11,27 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-const TARGET_PROMPT: Record<string, string> = {
-  all: "Recreate the ENTIRE photo as 3D voxel art: rebuild everything out of small cubic 3D blocks (voxels). Blocky cubic geometry, clean cube edges, isometric-style 3D lighting with soft shadows, vibrant colors, like a charming blocky 3D game world. Keep the overall composition and the recognizable subject, but everything is made of cubes.",
-  person: "Convert ONLY the main person/subject into 3D voxel art made of small cubic blocks (a cute blocky voxel character with clean cube edges and soft 3D shadows), while keeping the background exactly as the original photograph.",
-  background: "Convert ONLY the background/environment into 3D voxel art made of small cubic blocks (a blocky 3D voxel world), while keeping the main person/subject exactly as the original photograph.",
-};
-
 async function generateVoxel(imageDataUrl: string, target: string): Promise<string> {
+  void target;
   const img = parseImage(imageDataUrl);
-  const targetPrompt = TARGET_PROMPT[target] || TARGET_PROMPT.all;
-  const prompt = `${targetPrompt} High detail, polished result, no text, no watermark.`;
+  const prompt = `Transform this photo into a striking scene where the BACKGROUND and environment are completely rebuilt out of large, clearly identifiable 3D cube blocks — like a blocky 3D sandbox building game.
+
+Background reconstruction:
+- Rebuild buildings, walls, structures, terrain, and scenery using big, distinct cubic blocks (stone-like, brick-like, wood-like, grass/dirt, sand, glass cubes) chosen to match the colors and materials of the original scene.
+- Keep large structures, architecture, and landscape shapes clearly recognizable.
+- Omit small noisy details (text, small signs, distant cars, random clutter) for a clean, bold block look.
+- Use large, crisp blocks with visible cube faces and stair-stepped edges; avoid tiny noisy textures.
+- Bright sunny daylight, defined blocky shadows, clear blue sky.
+
+CRITICAL — keep the person photorealistic:
+- Any person(s) in the photo MUST remain exactly as in the original photograph: real and photorealistic, NOT converted into blocks. The contrast between the real person and the blocky world is the whole point.
+
+First-person game HUD overlay (generic blocky sandbox-game style):
+- Add a centered crosshair, a bottom row item hotbar (square slots), simple health and hunger style icon bars above the hotbar, and the player's first-person arm/hand in the lower-right corner.
+- Add small coordinate-style text (e.g., "XYZ: 128 / 64 / 256") in a corner.
+- Keep the HUD generic — do not copy any specific company's exact logo or trademarked interface.
+
+High detail, bold, clean. No watermark.`;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
