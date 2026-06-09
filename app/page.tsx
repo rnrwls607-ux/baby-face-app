@@ -161,6 +161,7 @@ export default function Home() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
     fetch("/api/usage")
@@ -312,7 +313,7 @@ export default function Home() {
           )
         )}
         {!onBack && (
-          <button style={{ background: "none", border: "none", cursor: "pointer", color: "#999", display: "flex", padding: 0 }}>
+          <button onClick={() => setShowSettings(true)} style={{ background: "none", border: "none", cursor: "pointer", color: "#999", display: "flex", padding: 0 }}>
             <Icon.Settings />
           </button>
         )}
@@ -771,6 +772,72 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         )}
       </main>
       <BottomNav />
+      {showSettings && (
+        <div style={{ position: "fixed", inset: 0, background: "#F7F8FA", zIndex: 140, maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column" }}>
+          {/* 헤더 */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, background: "#fff", borderBottom: "1px solid #EFF0F3", flexShrink: 0 }}>
+            <button onClick={() => setShowSettings(false)} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
+            <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>설정</span>
+          </div>
+
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 40px" }}>
+            {/* 필수 동의 약관 */}
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>필수 동의 약관</p>
+            <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
+              <button onClick={() => alert("개인정보 처리방침은 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>개인정보 처리방침</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
+              <button onClick={() => alert("이용약관은 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>이용약관</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
+            </div>
+
+            {/* 서비스 정보 */}
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>서비스 정보</p>
+            <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
+              <button onClick={() => alert("고객센터는 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>고객센터</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>현재 버전</span>
+                <span style={{ fontSize: 13, color: "#9B9B9B" }}>1.0.0 · 최신 버전</span>
+              </div>
+            </div>
+
+            {/* 사용자 정보 */}
+            {user && (
+              <>
+                <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>계정</p>
+                <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 18px", borderBottom: "1px solid #F2F3F5" }}>
+                    {user.profileImage && <img src={user.profileImage} style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover" }} alt="" />}
+                    <div>
+                      <p style={{ fontSize: 15, fontWeight: 700, color: "#191919", margin: 0 }}>{user.nickname}</p>
+                      <p style={{ fontSize: 12, color: "#9B9B9B", margin: "2px 0 0" }}>카카오 계정 연결됨</p>
+                    </div>
+                  </div>
+                  <button onClick={() => { navigator.clipboard?.writeText(user.id); alert("사용자 ID가 복사됐어요."); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                    <span style={{ fontSize: 13, color: "#9B9B9B" }}>사용자 ID</span>
+                    <span style={{ fontSize: 12, color: "#C2C6CE", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.id} 📋</span>
+                  </button>
+                </div>
+                <button onClick={handleLogout} style={{ width: "100%", background: "#fff", color: "#FF4B7C", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+                  로그아웃
+                </button>
+              </>
+            )}
+
+            {!user && (
+              <button onClick={handleLogin} style={{ width: "100%", background: "#FEE500", color: "#191919", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+                카카오 로그인
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       {showPaymentSheet && <PaymentSheet />}
     </div>
   );
