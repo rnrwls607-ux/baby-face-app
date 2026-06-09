@@ -162,6 +162,7 @@ export default function Home() {
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
     fetch("/api/usage")
@@ -658,32 +659,70 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     );
    if (activeTab === "history") return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #F0F0F0", padding: "0 16px" }}>
-          <span style={{ padding: "14px 0", fontSize: 14, fontWeight: 700, color: "#111", borderBottom: "2px solid #FF4B7C" }}>이미지 {history.length}</span>
-          {history.length > 0 && (
-            <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory().then(() => setHistory([])); } }}
-              style={{ background: "none", border: "none", color: "#bbb", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
-          )}
+        {/* 제목 */}
+        <div style={{ padding: "18px 16px 0", textAlign: "center" }}>
+          <span style={{ fontSize: 17, fontWeight: 800, color: "#191919" }}>히스토리</span>
         </div>
-        {history.length === 0 ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 400, gap: 16, padding: 40, textAlign: "center" }}>
-            <span style={{ fontSize: 56, opacity: 0.12 }}>🖼️</span>
-            <div>
-              <p style={{ fontSize: 16, fontWeight: 700, color: "#222", margin: "0 0 6px" }}>아직 만든 사진이 없어요</p>
-              <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>사진을 만들면 여기에 모여요</p>
-            </div>
-            <button onClick={() => setActiveTab("home")} style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 24, padding: "12px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>만들러 가기</button>
-          </div>
-        ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: 4 }}>
-            {history.map(item => (
-              <button key={item.id} onClick={() => setHistoryView(item)} style={{ position: "relative", padding: 0, border: "none", cursor: "pointer", background: "none" }}>
-                <img src={item.src} alt={item.concept} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block", borderRadius: 6 }} />
-                <span style={{ position: "absolute", left: 5, bottom: 5, background: "rgba(0,0,0,.55)", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 5 }}>{item.concept}</span>
+        {/* 이미지 / 모션 탭 */}
+        <div style={{ display: "flex", borderBottom: "1px solid #F0F0F0", marginTop: 14 }}>
+          {([["image", "이미지", history.length], ["motion", "모션", 0]] as const).map(([key, label, count]) => {
+            const on = historyTab === key;
+            return (
+              <button key={key} onClick={() => setHistoryTab(key)}
+                style={{ flex: 1, padding: "14px 0", border: "none", background: "none", cursor: "pointer", fontSize: 15, fontWeight: on ? 800 : 500, color: on ? "#191919" : "#B5B9C0", borderBottom: `2px solid ${on ? "#FF4B7C" : "transparent"}`, transition: "all .2s" }}>
+                {label} <span style={{ color: on ? "#FF4B7C" : "#C2C6CE" }}>{count}</span>
               </button>
-            ))}
+            );
+          })}
+        </div>
+
+        {/* 안내 문구 */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "14px 16px 4px", color: "#9B9B9B" }}>
+          <span style={{ fontSize: 13 }}>ⓘ</span>
+          <span style={{ fontSize: 12.5 }}>앱을 삭제하면 결과물이 사라져요!</span>
+        </div>
+
+        {/* 이미지 탭 내용 */}
+        {historyTab === "image" && (
+          history.length === 0 ? (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 380, gap: 16, padding: 40, textAlign: "center" }}>
+              <span style={{ fontSize: 56, opacity: 0.12 }}>🖼️</span>
+              <div>
+                <p style={{ fontSize: 17, fontWeight: 800, color: "#191919", margin: "0 0 6px" }}>아직 만든 사진이 없어요</p>
+                <p style={{ fontSize: 13, color: "#9B9B9B", margin: 0 }}>나만의 프로필을 만들어보세요!</p>
+              </div>
+              <button onClick={() => { setActiveTab("home"); }} style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 24, padding: "13px 30px", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>만들러 가기</button>
+            </div>
+          ) : (
+            <>
+              <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 8px" }}>
+                <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory().then(() => setHistory([])); } }}
+                  style={{ background: "none", border: "none", color: "#B5B9C0", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: "0 4px 4px" }}>
+                {history.map(item => (
+                  <button key={item.id} onClick={() => setHistoryView(item)} style={{ position: "relative", padding: 0, border: "none", cursor: "pointer", background: "none" }}>
+                    <img src={item.src} alt={item.concept} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block", borderRadius: 8 }} />
+                    <span style={{ position: "absolute", left: 5, bottom: 5, background: "rgba(0,0,0,.55)", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 6 }}>{item.concept}</span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )
+        )}
+
+        {/* 모션 탭 내용 (준비중) */}
+        {historyTab === "motion" && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 380, gap: 16, padding: 40, textAlign: "center" }}>
+            <span style={{ fontSize: 56, opacity: 0.12 }}>🎬</span>
+            <div>
+              <p style={{ fontSize: 17, fontWeight: 800, color: "#191919", margin: "0 0 6px" }}>모션은 곧 만나요</p>
+              <p style={{ fontSize: 13, color: "#9B9B9B", margin: 0 }}>움직이는 프로필 기능을 준비하고 있어요</p>
+            </div>
           </div>
         )}
+
+        {/* 크게 보기 (기존 유지) */}
         {historyView && (
           <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
