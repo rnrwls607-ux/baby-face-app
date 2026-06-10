@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "soon";
 };
 
 export const CONCEPTS: Record<string, Concept> = {
@@ -53,6 +53,34 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "voxel",
   },
+  food: {
+    key: "food",
+    title: "음식 사진 보정",
+    subtitle: "메뉴판·광고용으로 변신",
+    emoji: "🍽️",
+    accent: "#FFE0EC",
+    description: "대충 찍은 음식 사진을 올리면 조명·색감·배경을 정리해 광고처럼 먹음직스러운 사진으로 바꿔드려요. 음식 자체는 그대로 유지돼요.",
+    examples: [
+      { emoji: "🍽️", accent: "#FFE0EC" },
+      { emoji: "🍜", accent: "#FFEFD6" },
+      { emoji: "🍰", accent: "#FFE9D6" },
+    ],
+    start: "food",
+  },
+  factory: {
+    key: "factory",
+    title: "공장 리모델링",
+    subtitle: "리모델링 후 모습 미리보기",
+    emoji: "🏭",
+    accent: "#E1ECFF",
+    description: "낡은 공장 내부 사진을 올리면 깨끗하게 리모델링된 모습으로 바꿔드려요. 구조와 각도는 그대로 두고 바닥·벽·조명만 새것처럼 정리해요.",
+    examples: [
+      { emoji: "🏭", accent: "#E1ECFF" },
+      { emoji: "🧱", accent: "#ECEEF1" },
+      { emoji: "💡", accent: "#FFEFD6" },
+    ],
+    start: "factory",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -73,5 +101,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "baby") return CONCEPTS.baby;
   if (go === "idphoto") return CONCEPTS.idphoto;
   if (go === "voxel") return CONCEPTS.voxel;
+  if (go === "food") return CONCEPTS.food;
+  if (go === "factory") return CONCEPTS.factory;
   return CONCEPTS.soon;
 }
