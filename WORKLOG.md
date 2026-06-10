@@ -7,6 +7,18 @@
 - 다음에 할 것:
 - 주의/메모:
 
+### 2026-06-03
+- 한 일:- 새 테마 2개 추가 (배포완료): 음식 사진 보정 / 공장 리모델링
+  - api/food/route.ts, api/factory/route.ts (voxel route 복제 + 각 프롬프트)
+  - app/food/page.tsx, app/factory/page.tsx (voxel page 복제 + 핑크 토큰)
+  - concepts.ts에 food/factory 컨셉 등록, start 타입 확장, conceptForGo 분기 추가
+  - page.tsx 상세화면 "프로필 만들기" → /food, /factory 연결
+  - 홈 "다양한 AI 사진" 섹션에 카드 2개 추가 (이미지 아직 없음=이모지)
+- 다음에 할 것: 음식/공장 결과물 생기면 public/cards/에 넣고 카드 image 연결
+- 커밋 메시지:
+- 다음에 할 것:
+- 주의/메모:
+
 ### 2026-06-09
 - 한 일:- 설정 화면 추가 (배포완료): 헤더 ⚙ 클릭 → 설정 오버레이
   - 약관/개인정보처리방침/고객센터 = 현재 "준비중" alert (URL 생기면 연결만 하면 됨)

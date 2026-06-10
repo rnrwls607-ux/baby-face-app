@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "soon";
 };
 
 export const CONCEPTS: Record<string, Concept> = {
@@ -81,6 +81,20 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "factory",
   },
+  pet: {
+    key: "pet",
+    title: "반려동물 증명사진",
+    subtitle: "정장 입은 우리 아이",
+    emoji: "🐶",
+    accent: "#FFF1E0",
+    description: "우리 강아지·고양이 사진을 올리면 작은 정장을 입은 깔끔한 증명사진으로 바꿔드려요. 신입사원 댕댕이처럼 귀엽게 나와요!",
+    examples: [
+      { emoji: "🐶", accent: "#FFF1E0" },
+      { emoji: "🐱", accent: "#FFE0EC" },
+      { emoji: "🎓", accent: "#DCEBFF" },
+    ],
+    start: "pet",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -103,5 +117,6 @@ export function conceptForGo(go: string): Concept {
   if (go === "voxel") return CONCEPTS.voxel;
   if (go === "food") return CONCEPTS.food;
   if (go === "factory") return CONCEPTS.factory;
+  if (go === "pet") return CONCEPTS.pet;
   return CONCEPTS.soon;
 }
