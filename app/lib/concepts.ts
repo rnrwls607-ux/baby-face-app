@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -103,6 +103,34 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "pet",
   },
+  product: {
+    key: "product",
+    title: "상품 사진 보정",
+    subtitle: "쇼핑몰·중고거래용 깔끔샷",
+    emoji: "📦",
+    accent: "#E7F7EA",
+    description: "대충 찍은 상품 사진을 올리면 배경을 깔끔하게 정리하고 조명·색감을 보정해 쇼핑몰 상품컷처럼 만들어드려요. 중고거래·스마트스토어에 딱이에요.",
+    examples: [
+      { emoji: "📦", accent: "#E7F7EA" },
+      { emoji: "🛍️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFEFD6" },
+    ],
+    start: "product",
+  },
+  restore: {
+    key: "restore",
+    title: "옛날 사진 복원",
+    subtitle: "빛바랜 추억을 선명하게",
+    emoji: "🖼️",
+    accent: "#FFEFD6",
+    description: "오래된 흑백·손상된 사진을 올리면 긁힘과 얼룩을 복원하고 자연스러운 색을 입혀드려요. 부모님·조부모님 사진 선물로 좋아요.",
+    examples: [
+      { emoji: "🖼️", accent: "#FFEFD6" },
+      { emoji: "📷", accent: "#E7F7EA" },
+      { emoji: "🎞️", accent: "#DCEBFF" },
+    ],
+    start: "restore",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -126,5 +154,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "food") return CONCEPTS.food;
   if (go === "factory") return CONCEPTS.factory;
   if (go === "pet") return CONCEPTS.pet;
+  if (go === "product") return CONCEPTS.product;
+  if (go === "restore") return CONCEPTS.restore;
   return CONCEPTS.soon;
 }
