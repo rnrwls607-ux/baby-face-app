@@ -57,6 +57,8 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🟦", accent: "#E7F7EA" },
       { emoji: "🎮", accent: "#EFEAFF" },
     ],
+    heroImage: "/examples/voxel-hero.jpg",
+    exampleImages: ["/examples/voxel-1.jpg", "/examples/voxel-2.jpg", "/examples/voxel-3.jpg", "/examples/voxel-4.jpg"],
     start: "voxel",
   },
   food: {
