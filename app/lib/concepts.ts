@@ -8,6 +8,10 @@ export type Concept = {
   description: string;
   examples: ConceptExample[];
   start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "soon";
+  tags?: string[];
+  resultCount?: number;
+  heroImage?: string;
+  exampleImages?: string[];
 };
 
 export const CONCEPTS: Record<string, Concept> = {
@@ -37,6 +41,8 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁", accent: "#FFE0EC" },
       { emoji: "👔", accent: "#E1ECFF" },
     ],
+    tags: ["증명사진", "이력서", "깔끔한"],
+    resultCount: 1,
     start: "idphoto",
   },
   voxel: {

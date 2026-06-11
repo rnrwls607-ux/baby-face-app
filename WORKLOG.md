@@ -14,9 +14,16 @@
   - concepts.ts에 food/factory 컨셉 등록, start 타입 확장, conceptForGo 분기 추가
   - page.tsx 상세화면 "프로필 만들기" → /food, /factory 연결
   - 홈 "다양한 AI 사진" 섹션에 카드 2개 추가 (이미지 아직 없음=이모지)
+  - 반려동물 증명사진 테마 추가 (배포완료): 정장 입은 강아지/고양이 증명사진
+  - api/pet/route.ts, app/pet/page.tsx (음식 테마 복제 + 펫 정장 프롬프트)
+  - concepts.ts에 pet 등록, page.tsx "프로필 만들기" 분기 + 기존 반려동물 카드 go:"pet" 연결
+  - IDEAS2.md 생성: 커플3/가족4/인생네컷4/반려동물심화4/연예인비주얼4 = 17개 컨셉+프롬프트
+  - 연예인 컨셉은 실존인물 X, "아이돌급 비주얼 스타일링"으로 (초상권 안전선)
+  - 커플/가족/네컷은 사진 2장+ 입력 → id-photo route 방식 참고 필요 IDEAS.md — 컨셉 19개 + 프롬프트
+IDEAS2.md — 컨셉 17개 + 프롬프트
+TEST-PHOTOS.md — 36개 테스트 사진 가이드
 - 다음에 할 것: 음식/공장 결과물 생기면 public/cards/에 넣고 카드 image 연결
 - 커밋 메시지:
-- 다음에 할 것:
 - 주의/메모:
 
 ### 2026-06-09
