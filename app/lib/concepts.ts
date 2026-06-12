@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding" |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -300,6 +300,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "idol",
   },
+  xmas: {
+    key: "xmas",
+    title: "크리스마스 화보",
+    subtitle: "따뜻한 연말 한 장",
+    emoji: "🎄",
+    accent: "#E7F7EA",
+    description: "내 사진(반려동물도 OK)을 올리면 트리와 조명이 가득한 크리스마스 스튜디오 화보로 만들어드려요. 얼굴은 그대로, 분위기만 포근하게!",
+    examples: [
+      { emoji: "🎄", accent: "#E7F7EA" },
+      { emoji: "🎁", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF1E0" },
+    ],
+    start: "xmas",
+  },
+  graduation: {
+    key: "graduation",
+    title: "AI 졸업사진",
+    subtitle: "학사모 쓴 내 모습",
+    emoji: "🎓",
+    accent: "#DCEBFF",
+    description: "사진 한 장으로 학사모와 졸업가운을 입은 졸업사진을 만들어드려요. 졸업식 못 갔어도, 미리 보고 싶어도 OK! 얼굴은 그대로예요.",
+    examples: [
+      { emoji: "🎓", accent: "#DCEBFF" },
+      { emoji: "📜", accent: "#FFF1E0" },
+      { emoji: "💐", accent: "#FFE0EC" },
+    ],
+    start: "graduation",
+  },
+  wedding: {
+    key: "wedding",
+    title: "웨딩 화보",
+    subtitle: "드레스·턱시도 입은 나",
+    emoji: "💍",
+    accent: "#FFE0EC",
+    description: "사진 한 장으로 우아한 웨딩 스튜디오 화보를 만들어드려요. 드레스 또는 턱시도, 얼굴은 그대로 — 결혼 전 미리보기로도, 재미로도 좋아요.",
+    examples: [
+      { emoji: "💍", accent: "#FFE0EC" },
+      { emoji: "👰", accent: "#EFEAFF" },
+      { emoji: "🤵", accent: "#DCEBFF" },
+    ],
+    start: "wedding",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -337,5 +379,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "menu") return CONCEPTS.menu;
   if (go === "fashion") return CONCEPTS.fashion;
   if (go === "idol") return CONCEPTS.idol;
+  if (go === "xmas") return CONCEPTS.xmas;
+  if (go === "graduation") return CONCEPTS.graduation;
+  if (go === "wedding") return CONCEPTS.wedding;
   return CONCEPTS.soon;
 }
