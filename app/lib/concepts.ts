@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding" |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -342,6 +342,34 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "wedding",
   },
+  petstudio: {
+    key: "petstudio",
+    title: "펫 스튜디오 화보",
+    subtitle: "우리 애기 화보 찍는 날",
+    emoji: "🐶",
+    accent: "#FFF1E0",
+    description: "반려동물 사진을 올리면 고급 스튜디오에서 촬영한 듯한 화보로 만들어드려요. 우리 애 생김새는 그대로, 조명과 배경만 프리미엄으로!",
+    examples: [
+      { emoji: "🐶", accent: "#FFF1E0" },
+      { emoji: "🐱", accent: "#FFE0EC" },
+      { emoji: "📸", accent: "#EFEAFF" },
+    ],
+    start: "petstudio",
+  },
+  petreceipt: {
+    key: "petreceipt",
+    title: "펫 관상 영수증",
+    subtitle: "우리 애 관상, 영수증으로",
+    emoji: "🧾",
+    accent: "#E7F7EA",
+    description: "반려동물 얼굴 사진을 올리면 AI 관상가가 복코·재물눈 같은 관상 포인트 5가지를 뽑아 귀여운 영수증으로 만들어드려요. 재미로 봐주세요!",
+    examples: [
+      { emoji: "🧾", accent: "#E7F7EA" },
+      { emoji: "🐾", accent: "#FFE0EC" },
+      { emoji: "🔮", accent: "#EFEAFF" },
+    ],
+    start: "petreceipt",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -382,5 +410,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "xmas") return CONCEPTS.xmas;
   if (go === "graduation") return CONCEPTS.graduation;
   if (go === "wedding") return CONCEPTS.wedding;
+  if (go === "petstudio") return CONCEPTS.petstudio;
+  if (go === "petreceipt") return CONCEPTS.petreceipt;
   return CONCEPTS.soon;
 }
