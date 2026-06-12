@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 60;
-const GEMINI_MODEL = "gemini-3.1-flash";
+const GEMINI_MODEL = "gemini-3.5-flash";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
