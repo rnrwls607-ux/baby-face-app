@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -370,6 +370,34 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "petreceipt",
   },
+  era: {
+    key: "era",
+    title: "시대·복장 변신",
+    subtitle: "다른 시대에 태어났다면?",
+    emoji: "🕰️",
+    accent: "#EFEAFF",
+    description: "내 사진을 올리고 시대를 고르면 그 시대의 옷·헤어·배경으로 변신시켜드려요. 조선시대부터 미래 도시까지, 얼굴은 그대로!",
+    examples: [
+      { emoji: "👘", accent: "#EFEAFF" },
+      { emoji: "🎩", accent: "#FFF1E0" },
+      { emoji: "🤖", accent: "#DCEBFF" },
+    ],
+    start: "era",
+  },
+  petcostume: {
+    key: "petcostume",
+    title: "펫 코스튬",
+    subtitle: "우리 애 옷 입혀보기",
+    emoji: "🎀",
+    accent: "#FFE0EC",
+    description: "반려동물 사진을 올리고 코스튬을 고르면 자연스럽게 입혀드려요. 임금님부터 우주비행사까지, 우리 애 생김새는 그대로!",
+    examples: [
+      { emoji: "👑", accent: "#FFE0EC" },
+      { emoji: "🎅", accent: "#E7F7EA" },
+      { emoji: "🚀", accent: "#DCEBFF" },
+    ],
+    start: "petcostume",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -412,5 +440,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "wedding") return CONCEPTS.wedding;
   if (go === "petstudio") return CONCEPTS.petstudio;
   if (go === "petreceipt") return CONCEPTS.petreceipt;
+  if (go === "era") return CONCEPTS.era;
+  if (go === "petcostume") return CONCEPTS.petcostume;
   return CONCEPTS.soon;
 }

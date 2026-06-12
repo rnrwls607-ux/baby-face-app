@@ -3,9 +3,18 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 
-export default function PetstudioPage() {
+const COSTUME_OPTIONS = [
+  { key: "royal", label: "👑 임금님·공주" },
+  { key: "hanbok", label: "👘 한복" },
+  { key: "santa", label: "🎅 산타" },
+  { key: "wizard", label: "🧙 마법사" },
+  { key: "astronaut", label: "🚀 우주비행사" },
+];
+
+export default function PetcostumePage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
+  const [costume, setCostume] = useState("royal");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -37,10 +46,10 @@ export default function PetstudioPage() {
     const tid = setTimeout(() => ctrl.abort(), 110000);
     try {
       const compressed = await compress(image);
-      const res = await fetch("/api/petstudio", {
+      const res = await fetch("/api/petcostume", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: compressed }),
+        body: JSON.stringify({ image: compressed, costume }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -48,7 +57,8 @@ export default function PetstudioPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "펫 스튜디오");
+      const costumeLabel = COSTUME_OPTIONS.find(o => o.key === costume)?.label || "펫 코스튬";
+      void addToHistory(data.output, `펫 코스튬 ${costumeLabel}`);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
@@ -58,23 +68,38 @@ export default function PetstudioPage() {
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
-    a.download = "petstudio.png";
+    a.download = "petcostume.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => router.push("/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>펫 스튜디오 화보</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>펫 코스튬</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🐶 우리 애기 화보 찍는 날</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>반려동물 사진을 올리면 고급 스튜디오에서 촬영한 듯한 화보로 만들어드려요. 우리 애 생김새는 그대로, 조명과 배경만 프리미엄으로!</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🎀 우리 애 옷 입혀보기</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>반려동물 사진을 올리고 코스튬을 고르면 자연스럽게 입혀드려요. 우리 애 생김새는 그대로, 옷만 귀엽게!</p>
         </div>
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>코스튬 고르기</p>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22 }}>
+                {COSTUME_OPTIONS.map(o => {
+                  const on = costume === o.key;
+                  return (
+                    <button key={o.key} onClick={() => setCostume(o.key)}
+                      style={{ flex: "1 1 0", minWidth: 100, padding: "11px 8px", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                        border: on ? "1.5px solid #FF4B7C" : "1.5px solid transparent",
+                        background: on ? "#FFEAF1" : "#F1F2F6", color: on ? "#FF4B7C" : "#8A8F99",
+                        transition: "all .15s ease" }}>
+                      {o.label}
+                    </button>
+                  );
+                })}
+              </div>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>반려동물 사진</p>
               <label style={{ display: "block", cursor: "pointer" }}>
                 <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
@@ -88,14 +113,14 @@ export default function PetstudioPage() {
             </div>
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "펫 화보 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : "코스튬 입히기 ✨"}
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 52 }}>🐶</div>
-            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 조명을 맞추고 있어요...</p>
+            <div style={{ fontSize: 52 }}>🎀</div>
+            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 옷을 입혀주고 있어요...</p>
           </div>
         )}
         {error && (
@@ -107,18 +132,18 @@ export default function PetstudioPage() {
           <div>
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
-              <img src={result} alt="펫 스튜디오 화보" style={{ width: "100%", display: "block" }} />
+              <img src={result} alt="펫 코스튬" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
                 style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>저장하기</button>
-              <button onClick={() => { setResult(""); setImage(""); }}
-                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
+              <button onClick={() => { setResult(""); }}
+                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다른 코스튬으로</button>
             </div>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>※ 사진은 유지돼요. &quot;다른 코스튬으로&quot;를 누르고 옷만 바꿔서 또 만들어보세요!</p>
           </div>
         )}
       </div>
     </div>
   );
 }
-    
