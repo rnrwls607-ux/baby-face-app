@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend"  |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -398,6 +398,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "petcostume",
   },
+  couple: {
+    key: "couple",
+    title: "커플 스튜디오 화보",
+    subtitle: "둘이 함께, 스튜디오 화보",
+    emoji: "💑",
+    accent: "#FFE0EC",
+    description: "두 사람의 사진을 한 장씩 올리면 함께 찍은 듯한 커플 스튜디오 화보를 만들어드려요. 따로 찍은 사진도 OK, 두 얼굴 모두 그대로예요.",
+    examples: [
+      { emoji: "💑", accent: "#FFE0EC" },
+      { emoji: "📸", accent: "#EFEAFF" },
+      { emoji: "💕", accent: "#FFF1E0" },
+    ],
+    start: "couple",
+  },
+  hanbokcouple: {
+    key: "hanbokcouple",
+    title: "웨딩 한복 커플",
+    subtitle: "한복 입고 둘이 한 장",
+    emoji: "👘",
+    accent: "#FFF1E0",
+    description: "두 사람의 사진을 한 장씩 올리면 고운 웨딩 한복을 입고 함께 찍은 전통 혼례 화보를 만들어드려요. 두 얼굴 모두 그대로예요.",
+    examples: [
+      { emoji: "👘", accent: "#FFF1E0" },
+      { emoji: "🏮", accent: "#FFE0EC" },
+      { emoji: "💒", accent: "#E7F7EA" },
+    ],
+    start: "hanbokcouple",
+  },
+  friend: {
+    key: "friend",
+    title: "우정 스냅",
+    subtitle: "베프랑 같이 찍은 한 장",
+    emoji: "👯",
+    accent: "#DCEBFF",
+    description: "둘이 따로 찍은 사진을 한 장씩 올리면 같이 찍은 듯한 우정 스냅을 만들어드려요. 멀리 있는 친구와도 한 장에!",
+    examples: [
+      { emoji: "👯", accent: "#DCEBFF" },
+      { emoji: "✌️", accent: "#FFE0EC" },
+      { emoji: "🎞️", accent: "#EFEAFF" },
+    ],
+    start: "friend",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -442,5 +484,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "petreceipt") return CONCEPTS.petreceipt;
   if (go === "era") return CONCEPTS.era;
   if (go === "petcostume") return CONCEPTS.petcostume;
+  if (go === "couple") return CONCEPTS.couple;
+  if (go === "hanbokcouple") return CONCEPTS.hanbokcouple;
+  if (go === "friend") return CONCEPTS.friend;
   return CONCEPTS.soon;
 }
