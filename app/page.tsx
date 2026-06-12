@@ -95,12 +95,31 @@ const HOME = {
 type HomeCardItem = { id: string; title: string; subtitle: string; emoji: string; accent: string; badge: string; tags: string[]; go: string; image?: string };
 // ── 홈 카탈로그 (여기에 객체 추가 = 카드 추가) ──
 // go: "baby"=아기 만들기 화면 / "idphoto"=증명사진(/id-photo) / ""=준비중
+// go → 카테고리(복수 가능). 칩 필터용. 새 컨셉 추가하면 여기 한 줄 넣기.
+const GO_CATEGORIES: Record<string, string[]> = {
+  baby: ["fun"],
+  idphoto: ["idcard"],
+  voxel: ["fun"],
+  food: ["biz"],
+  factory: ["biz"],
+  pet: ["pet", "idcard"],        // 펫 + 증명사진 둘 다
+  product: ["biz"],
+  restore: ["fun"],
+  realestate: ["biz"],
+  interior: ["biz"],
+  car: ["biz"],
+};
 const HOME_PILLS = [
-  { label: "전체", dot: false },
-  { label: "필터", dot: true },
-  { label: "반려동물", dot: true },
-  { label: "인생샷", dot: true },
-  { label: "증명사진", dot: false },
+  { label: "전체", value: "all" },
+  { label: "인기 🔥", value: "hot" },
+  { label: "증명사진", value: "idcard" },
+  { label: "비즈니스", value: "business" },
+  { label: "인생샷", value: "lifeshot" },
+  { label: "헤어·뷰티", value: "beauty" },
+  { label: "반려동물", value: "pet" },
+  { label: "가족·커플", value: "family" },
+  { label: "사장님 💼", value: "biz" },
+  { label: "재미·추억", value: "fun" },
 ];
 const HOME_HERO = [
   { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "/cards/baby.jpg" },
@@ -169,6 +188,8 @@ export default function Home() {
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAllConcepts, setShowAllConcepts] = useState(false);
+  const [allConceptsCat, setAllConceptsCat] = useState("all");
   const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
@@ -393,7 +414,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             return (
               <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "9px 18px", borderRadius: 22, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: on ? "1.5px solid #191919" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
                 {p.label}
-                {p.dot && <span style={{ position: "absolute", top: 3, right: 7, width: 7, height: 7, borderRadius: "50%", background: HOME.accent }} />}
+              
               </button>
             );
           })}
@@ -446,6 +467,14 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         {/* 섹션들 */}
         {HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
+          const cat = HOME_PILLS[pill].value;
+          // "인기"는 badge가 BEST/NEW인 카드만, 나머지는 카테고리 매칭
+          const filteredItems = cat === "all"
+            ? section.items
+            : cat === "hot"
+            ? section.items.filter(it => it.badge === "BEST" || it.badge === "NEW")
+            : section.items.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
+          if (filteredItems.length === 0) return null;
           return (
             <div key={section.id} style={{ marginTop: 30 }}>
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
@@ -453,15 +482,15 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 13, color: HOME.text, fontWeight: 500 }}>{section.heading}</p> : null}
                   <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}</p>
                 </div>
-                <span style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap" }}>전체보기 ›</span>
+                <button onClick={() => { setAllConceptsCat(HOME_PILLS[pill].value); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
               </div>
               {isGrid ? (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 18px" }}>
-                  {section.items.map(it => renderCard(it, "100%", "3 / 4"))}
+                  {filteredItems.map(it => renderCard(it, "100%", "3 / 4"))}
                 </div>
               ) : (
                 <div className="hide-scrollbar" style={{ display: "flex", gap: 13, overflowX: "auto", padding: "0 18px 4px" }}>
-                  {section.items.map(it => renderCard(it, 170, "4 / 5"))}
+                  {filteredItems.map(it => renderCard(it, 170, "4 / 5"))}
                 </div>
               )}
             </div>
@@ -947,6 +976,76 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 카카오 로그인
               </button>
             )}
+          </div>
+        </div>
+      )}
+      {showAllConcepts && (
+        <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 135, maxWidth: 480, margin: "0 auto", display: "flex", flexDirection: "column" }}>
+          {/* 헤더 */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, background: "#fff", borderBottom: "1px solid #EFF0F3", flexShrink: 0 }}>
+            <button onClick={() => setShowAllConcepts(false)} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
+            <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>전체 AI 사진</span>
+          </div>
+
+          {/* 칩 필터 */}
+          <div className="hide-scrollbar" style={{ display: "flex", gap: 7, overflowX: "auto", padding: "12px 16px", flexShrink: 0, borderBottom: "1px solid #F4F5F7" }}>
+            {HOME_PILLS.map(p => {
+              const on = allConceptsCat === p.value;
+              return (
+                <button key={p.value} onClick={() => setAllConceptsCat(p.value)} style={{ flexShrink: 0, padding: "9px 16px", borderRadius: 22, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: on ? "1.5px solid #191919" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* 컨셉 그리드 (모든 섹션 카드 합쳐서 중복 제거) */}
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 40px" }}>
+            {(() => {
+              // 모든 섹션 카드 모으기 + go 기준 중복 제거
+              const seen = new Set<string>();
+              const all: HomeCardItem[] = [];
+              for (const sec of HOME_SECTIONS) {
+                for (const it of sec.items) {
+                  const k = it.go || it.id;
+                  if (seen.has(k)) continue;
+                  seen.add(k);
+                  all.push(it);
+                }
+              }
+              const cat = allConceptsCat;
+              const list = cat === "all"
+                ? all
+                : cat === "hot"
+                ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+                : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
+
+              if (list.length === 0) {
+                return (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12 }}>
+                    <span style={{ fontSize: 48, opacity: 0.15 }}>🪄</span>
+                    <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0 }}>이 카테고리는 준비 중이에요</p>
+                  </div>
+                );
+              }
+
+              return (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                  {list.map(item => (
+                    <div key={item.id} onClick={() => { setShowAllConcepts(false); setDetail(conceptForGo(item.go)); }} style={{ cursor: "pointer" }}>
+                      <div style={{ position: "relative" }}>
+                        <div style={{ aspectRatio: "3 / 4", borderRadius: HOME.radius, overflow: "hidden", background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>
+                          {item.image ? <img src={item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
+                        </div>
+                        {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
+                      </div>
+                      <p style={{ margin: "10px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
+                      <p style={{ margin: "0 2px", fontSize: 15, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
