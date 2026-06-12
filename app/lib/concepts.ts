@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -258,6 +258,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "age",
   },
+  menu: {
+    key: "menu",
+    title: "메뉴판 비주얼",
+    subtitle: "메뉴판에 바로 쓰는 사진",
+    emoji: "📋",
+    accent: "#FFF1E0",
+    description: "대충 찍은 음식 사진을 메뉴판·배달앱·포스터에 바로 쓸 수 있는 깔끔한 비주얼로 만들어드려요. 배경 정리 + 스튜디오 조명, 음식은 그대로예요.",
+    examples: [
+      { emoji: "📋", accent: "#FFF1E0" },
+      { emoji: "🍜", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#E7F7EA" },
+    ],
+    start: "menu",
+  },
+  fashion: {
+    key: "fashion",
+    title: "패션 룩북",
+    subtitle: "오늘의 착장이 화보로",
+    emoji: "👗",
+    accent: "#EFEAFF",
+    description: "내 착장 사진을 올리면 브랜드 룩북처럼 보정해드려요. 옷·포즈·얼굴은 그대로, 배경과 조명만 화보급으로 바뀌어요.",
+    examples: [
+      { emoji: "👗", accent: "#EFEAFF" },
+      { emoji: "👟", accent: "#DCEBFF" },
+      { emoji: "📸", accent: "#FFE0EC" },
+    ],
+    start: "fashion",
+  },
+  idol: {
+    key: "idol",
+    title: "아이돌 프로필",
+    subtitle: "오늘 데뷔하는 내 프로필",
+    emoji: "🌟",
+    accent: "#FFE0EC",
+    description: "셀카 한 장으로 아이돌 데뷔 프로필을 만들어드려요. 얼굴은 그대로, 헤어·메이크업·조명만 아이돌급 스타일링으로 바뀌어요.",
+    examples: [
+      { emoji: "🌟", accent: "#FFE0EC" },
+      { emoji: "🎤", accent: "#EFEAFF" },
+      { emoji: "✨", accent: "#FFF1E0" },
+    ],
+    start: "idol",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -292,5 +334,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "illust") return CONCEPTS.illust;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
+  if (go === "menu") return CONCEPTS.menu;
+  if (go === "fashion") return CONCEPTS.fashion;
+  if (go === "idol") return CONCEPTS.idol;
   return CONCEPTS.soon;
 }
