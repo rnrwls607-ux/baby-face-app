@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 
-export default function CarPage() {
+export default function FigurePage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function CarPage() {
     const tid = setTimeout(() => ctrl.abort(), 110000);
     try {
       const compressed = await compress(image);
-      const res = await fetch("/api/car", {
+      const res = await fetch("/api/figure", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: compressed }),
@@ -48,7 +48,7 @@ export default function CarPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "중고차 사진");
+      void addToHistory(data.output, "피규어");
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
@@ -58,24 +58,24 @@ export default function CarPage() {
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
-    a.download = "car.png";
+    a.download = "figure.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => router.push("/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>중고차 사진 보정</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>미니어처 피규어</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🚗 중고차 판매용 깔끔샷</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>어수선한 배경에 찍힌 차 사진을 올리면 배경을 정리하고 조명·색감을 보정해 판매용 사진으로 만들어드려요. 차량 자체는 그대로 유지돼요.</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🧸 내 사진이 피규어 디오라마로</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>사진을 올리면 장면 전체를 정교한 미니어처 피규어 디오라마로 만들어드려요. 같은 구도 그대로, 소장하고 싶은 피규어 느낌으로!</p>
         </div>
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>차량 사진</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>변환할 사진</p>
               <label style={{ display: "block", cursor: "pointer" }}>
                 <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
                   {image
@@ -88,14 +88,14 @@ export default function CarPage() {
             </div>
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "중고차 사진 보정하기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : "피규어 만들기 ✨"}
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 52 }}>🚗</div>
-            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 차를 깔끔하게 보정하고 있어요...</p>
+            <div style={{ fontSize: 52 }}>🧸</div>
+            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 피규어를 조립하고 있어요...</p>
           </div>
         )}
         {error && (
@@ -107,7 +107,7 @@ export default function CarPage() {
           <div>
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
-              <img src={result} alt="중고차 사진" style={{ width: "100%", display: "block" }} />
+              <img src={result} alt="피규어" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
@@ -121,4 +121,3 @@ export default function CarPage() {
     </div>
   );
 }
-    

@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -174,6 +174,90 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "car",
   },
+  lifeshot: {
+    key: "lifeshot",
+    title: "인생샷 프로필",
+    subtitle: "감성 프로필 한 장",
+    emoji: "📸",
+    accent: "#EFEAFF",
+    description: "평범한 셀카를 올리면 스튜디오에서 찍은 듯한 감성 프로필로 만들어드려요. 얼굴은 그대로, 분위기만 화보처럼 바뀌어요.",
+    examples: [
+      { emoji: "📸", accent: "#EFEAFF" },
+      { emoji: "✨", accent: "#FFE0EC" },
+      { emoji: "🌸", accent: "#FFF1E0" },
+    ],
+    start: "lifeshot",
+  },
+  bizprofile: {
+    key: "bizprofile",
+    title: "명함·링크드인 프로필",
+    subtitle: "비즈니스 프로필",
+    emoji: "💼",
+    accent: "#DCEBFF",
+    description: "셀카 한 장으로 깔끔한 비즈니스 프로필을 만들어드려요. 링크드인·명함·이력서에 바로 쓸 수 있는 단정한 상반신 사진이에요.",
+    examples: [
+      { emoji: "💼", accent: "#DCEBFF" },
+      { emoji: "👔", accent: "#E1ECFF" },
+      { emoji: "✨", accent: "#E7F7EA" },
+    ],
+    start: "bizprofile",
+  },
+  hairstyle: {
+    key: "hairstyle",
+    title: "헤어 체인지",
+    subtitle: "미용실 가기 전 미리보기",
+    emoji: "💇",
+    accent: "#FFE0EC",
+    description: "내 사진을 올리면 트렌디한 새 헤어스타일로 미리 바꿔봐요. 얼굴은 그대로, 머리만 자연스럽게 바뀌어서 미용실 가기 전 실패 없이 골라요.",
+    examples: [
+      { emoji: "💇", accent: "#FFE0EC" },
+      { emoji: "💁", accent: "#EFEAFF" },
+      { emoji: "✨", accent: "#FFF1E0" },
+    ],
+    start: "hairstyle",
+  },
+  illust: {
+    key: "illust",
+    title: "AI 일러스트",
+    subtitle: "사진이 그림 한 장으로",
+    emoji: "🎨",
+    accent: "#EFEAFF",
+    description: "사진을 올리면 웹툰·애니메이션 느낌의 고급 일러스트로 그려드려요. 구도와 얼굴은 그대로, 그림체만 감성적으로 바뀌어요.",
+    examples: [
+      { emoji: "🎨", accent: "#EFEAFF" },
+      { emoji: "🖌️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF1E0" },
+    ],
+    start: "illust",
+  },
+  figure: {
+    key: "figure",
+    title: "미니어처 피규어",
+    subtitle: "내 사진이 피규어로",
+    emoji: "🧸",
+    accent: "#FFF1E0",
+    description: "사진을 올리면 장면 전체를 정교한 미니어처 피규어 디오라마로 만들어드려요. 같은 구도 그대로, 소장하고 싶은 피규어 느낌으로!",
+    examples: [
+      { emoji: "🧸", accent: "#FFF1E0" },
+      { emoji: "🏗️", accent: "#E7F7EA" },
+      { emoji: "📦", accent: "#DCEBFF" },
+    ],
+    start: "figure",
+  },
+  age: {
+    key: "age",
+    title: "노년·베이비 변환",
+    subtitle: "시간을 거슬러 보는 내 모습",
+    emoji: "⏳",
+    accent: "#E7F7EA",
+    description: "내 사진을 올리면 70대 노년의 모습 또는 2~3살 아기였을 모습으로 만들어드려요. 얼굴 특징은 그대로, 나이만 자연스럽게 바뀌어요.",
+    examples: [
+      { emoji: "👴", accent: "#E7F7EA" },
+      { emoji: "👶", accent: "#FFE0EC" },
+      { emoji: "⏳", accent: "#EFEAFF" },
+    ],
+    start: "age",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -202,5 +286,11 @@ export function conceptForGo(go: string): Concept {
   if (go === "realestate") return CONCEPTS.realestate;
   if (go === "interior") return CONCEPTS.interior;
   if (go === "car") return CONCEPTS.car;
+  if (go === "lifeshot") return CONCEPTS.lifeshot;
+  if (go === "bizprofile") return CONCEPTS.bizprofile;
+  if (go === "hairstyle") return CONCEPTS.hairstyle;
+  if (go === "illust") return CONCEPTS.illust;
+  if (go === "figure") return CONCEPTS.figure;
+  if (go === "age") return CONCEPTS.age;
   return CONCEPTS.soon;
 }

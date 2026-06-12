@@ -108,6 +108,12 @@ const GO_CATEGORIES: Record<string, string[]> = {
   realestate: ["biz"],
   interior: ["biz"],
   car: ["biz"],
+  lifeshot: ["lifeshot"],
+  bizprofile: ["business"],
+  hairstyle: ["beauty"],
+  illust: ["fun"],
+  figure: ["fun"],
+  age: ["fun"],
 };
 const HOME_PILLS = [
   { label: "전체", value: "all" },
@@ -147,6 +153,12 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "realestate", title: "부동산 매물 정리", subtitle: "매물 사진 깔끔하게", emoji: "🏠", accent: "#E1ECFF", badge: "NEW", tags: ["부동산"], go: "realestate" },
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], go: "interior" },
       { id: "car", title: "중고차 사진 보정", subtitle: "판매용 깔끔샷", emoji: "🚗", accent: "#E7F7EA", badge: "NEW", tags: ["중고차"], go: "car" },
+      { id: "lifeshot2", title: "인생샷 프로필", subtitle: "감성 프로필 한 장", emoji: "📸", accent: "#EFEAFF", badge: "NEW", tags: ["인생샷"], go: "lifeshot" },
+      { id: "bizprofile", title: "명함·링크드인 프로필", subtitle: "비즈니스 프로필", emoji: "💼", accent: "#DCEBFF", badge: "NEW", tags: ["비즈니스"], go: "bizprofile" },
+      { id: "hairstyle", title: "헤어 체인지", subtitle: "미용실 가기 전", emoji: "💇", accent: "#FFE0EC", badge: "NEW", tags: ["헤어"], go: "hairstyle" },
+      { id: "illust", title: "AI 일러스트", subtitle: "사진이 그림 한 장으로", emoji: "🎨", accent: "#EFEAFF", badge: "NEW", tags: ["일러스트"], go: "illust" },
+      { id: "figure", title: "미니어처 피규어", subtitle: "내 사진이 피규어로", emoji: "🧸", accent: "#FFF1E0", badge: "NEW", tags: ["피규어"], go: "figure" },
+      { id: "age", title: "노년·베이비 변환", subtitle: "시간을 거슬러서", emoji: "⏳", accent: "#E7F7EA", badge: "NEW", tags: ["재미"], go: "age" },
       { id: "family", title: "가족사진", subtitle: "온 가족 AI 합성", emoji: "👨‍👩‍👧", accent: "#E7F7EA", badge: "", tags: ["가족"], go: "" },
       { id: "lifeshot", title: "인생샷 필터", subtitle: "감성 보정 한 장", emoji: "📸", accent: "#EFEAFF", badge: "", tags: ["인생샷"], go: "" },
     ],
@@ -903,7 +915,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               {detail.start === "soon" ? (
                 <button disabled style={{ width: "100%", padding: "16px 0", borderRadius: 16, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
               ) : (
-                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } else if (detail.start === "voxel") { window.location.href = "/voxel"; } else if (detail.start === "food") { window.location.href = "/food"; } else if (detail.start === "factory") { window.location.href = "/factory"; } else if (detail.start === "pet") { window.location.href = "/pet"; } else if (detail.start === "product") { window.location.href = "/product"; } else if (detail.start === "restore") { window.location.href = "/restore"; } else if (detail.start === "realestate") { window.location.href = "/realestate"; } else if (detail.start === "interior") { window.location.href = "/interior"; } else if (detail.start === "car") { window.location.href = "/car"; } }} style={{ width: "100%", padding: "15px 0", borderRadius: 16, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)", display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } else if (detail.start === "voxel") { window.location.href = "/voxel"; } else if (detail.start === "food") { window.location.href = "/food"; } else if (detail.start === "factory") { window.location.href = "/factory"; } else if (detail.start === "pet") { window.location.href = "/pet"; } else if (detail.start === "product") { window.location.href = "/product"; } else if (detail.start === "restore") { window.location.href = "/restore"; } else if (detail.start === "realestate") { window.location.href = "/realestate"; } else if (detail.start === "interior") { window.location.href = "/interior"; } else if (detail.start === "car") { window.location.href = "/car"; } else if (detail.start === "lifeshot") { window.location.href = "/lifeshot"; } else if (detail.start === "bizprofile") { window.location.href = "/bizprofile"; } else if (detail.start === "hairstyle") { window.location.href = "/hairstyle"; } else if (detail.start === "illust") { window.location.href = "/illust"; } else if (detail.start === "figure") { window.location.href = "/figure"; } else if (detail.start === "age") { window.location.href = "/age"; }}} style={{ width: "100%", padding: "15px 0", borderRadius: 16, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)", display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
                   <span>프로필 만들기</span>
                   {detail.resultCount ? <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.9 }}>결과물 {detail.resultCount}장</span> : null}
                 </button>
