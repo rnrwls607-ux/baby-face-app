@@ -785,64 +785,93 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         {renderContent()}
         {detail && (
           <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 130, display: "flex", flexDirection: "column", maxWidth: 480, margin: "0 auto" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 14px", flexShrink: 0 }}>
-              <button onClick={() => setDetail(null)} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#191919", lineHeight: 1, padding: "4px 6px" }}>‹</button>
-              <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>{detail.title}</span>
+            {/* 헤더 */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", flexShrink: 0, position: "relative", zIndex: 2 }}>
+              <button onClick={() => setDetail(null)} style={{ background: "rgba(255,255,255,0.9)", border: "none", width: 38, height: 38, borderRadius: "50%", fontSize: 22, cursor: "pointer", color: "#191919", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>‹</button>
             </div>
-            <div style={{ flex: 1, overflowY: "auto" }}>
-              {/* 대표 이미지 (사진 있으면 사진, 없으면 이모지 그라데이션) */}
-              <div style={{ margin: "0 16px", borderRadius: 22, overflow: "hidden", aspectRatio: "4/5", background: `linear-gradient(155deg, ${detail.accent} 0%, #ffffff 150%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {detail.heroImage
-                  ? <img src={detail.heroImage} alt={detail.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <span style={{ fontSize: 92 }}>{detail.emoji}</span>}
-              </div>
 
-              <div style={{ padding: "20px 18px 24px" }}>
+            <div style={{ flex: 1, overflowY: "auto", marginTop: -58 }}>
+              {/* 대표 이미지 (heroImages 여러장 스와이프 > heroImage 1장 > 이모지) */}
+              {(() => {
+                const heroes = detail.heroImages && detail.heroImages.length > 0
+                  ? detail.heroImages
+                  : detail.heroImage ? [detail.heroImage] : [];
+                if (heroes.length > 0) {
+                  return (
+                    <div style={{ position: "relative" }}>
+                      <div style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", gap: 0, WebkitOverflowScrolling: "touch" }}>
+                        {heroes.map((src, i) => (
+                          <div key={i} style={{ flex: "0 0 100%", scrollSnapAlign: "start", aspectRatio: "3/4", background: "#F1F2F6" }}>
+                            <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                          </div>
+                        ))}
+                      </div>
+                      {heroes.length > 1 && (
+                        <div style={{ position: "absolute", bottom: 14, left: 0, right: 0, display: "flex", justifyContent: "center", gap: 6 }}>
+                          {heroes.map((_, i) => (
+                            <span key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: i === 0 ? "#fff" : "rgba(255,255,255,0.5)", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+                return (
+                  <div style={{ aspectRatio: "3/4", background: `linear-gradient(155deg, ${detail.accent} 0%, #ffffff 150%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: 96 }}>{detail.emoji}</span>
+                  </div>
+                );
+              })()}
+
+              <div style={{ padding: "22px 20px 28px" }}>
                 {/* 태그 칩 */}
                 {detail.tags && detail.tags.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 14 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginBottom: 16 }}>
                     {detail.tags.map((t, i) => (
-                      <span key={i} style={{ fontSize: 12.5, fontWeight: 600, color: i === 0 ? "#191919" : "#8A8F98", background: i === 0 ? "#F1F2F6" : "#F7F8FA", padding: "7px 14px", borderRadius: 20 }}>{i === 0 ? t : `#${t}`}</span>
+                      <span key={i} style={{ fontSize: 12.5, fontWeight: 600, color: i === 0 ? "#191919" : "#9298A2", background: i === 0 ? "#F0F1F4" : "#F7F8FA", padding: "7px 14px", borderRadius: 20 }}>{t}</span>
                     ))}
                   </div>
                 )}
 
                 {/* 부제 + 큰 제목 */}
-                <p style={{ fontSize: 14, color: "#9B9B9B", fontWeight: 600, margin: "0 0 4px" }}>{detail.subtitle}</p>
-                <h2 style={{ fontSize: 25, fontWeight: 900, color: "#191919", margin: "0 0 16px", lineHeight: 1.25 }}>{detail.title}</h2>
+                <p style={{ fontSize: 14, color: "#FF4B7C", fontWeight: 700, margin: "0 0 6px" }}>{detail.subtitle}</p>
+                <h2 style={{ fontSize: 27, fontWeight: 900, color: "#191919", margin: "0 0 18px", lineHeight: 1.22, letterSpacing: "-0.5px" }}>{detail.title}</h2>
 
                 {/* 설명 */}
-                <p style={{ fontSize: 15, color: "#555", lineHeight: 1.65, margin: "0 0 28px" }}>{detail.description}</p>
+                <p style={{ fontSize: 15, color: "#5A5F66", lineHeight: 1.7, margin: "0 0 30px" }}>{detail.description}</p>
 
                 {/* 예시 결과물 */}
-                <p style={{ fontSize: 15, fontWeight: 800, color: "#191919", margin: "0 0 12px" }}>이런 느낌으로 만들어드려요</p>
                 {detail.exampleImages && detail.exampleImages.length > 0 ? (
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-                    {detail.exampleImages.map((src, i) => (
-                      <div key={i} style={{ aspectRatio: "4/5", borderRadius: 14, overflow: "hidden", background: "#F1F2F6" }}>
-                        <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
                   <>
-                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
-                      {detail.examples.map((ex, i) => (
-                        <div key={i} style={{ aspectRatio: "1", borderRadius: 14, background: `linear-gradient(155deg, ${ex.accent} 0%, #ffffff 140%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34 }}>{ex.emoji}</div>
+                    <p style={{ fontSize: 15.5, fontWeight: 800, color: "#191919", margin: "0 0 14px" }}>이런 느낌으로 만들어드려요</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                      {detail.exampleImages.map((src, i) => (
+                        <div key={i} style={{ aspectRatio: "4/5", borderRadius: 16, overflow: "hidden", background: "#F1F2F6" }}>
+                          <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        </div>
                       ))}
                     </div>
-                    <p style={{ fontSize: 11.5, color: "#C2C6CE", margin: "10px 2px 0" }}>※ 예시 이미지는 준비 중이에요. 실제 결과물로 곧 교체돼요.</p>
+                  </>
+                ) : (
+                  <>
+                    <p style={{ fontSize: 15.5, fontWeight: 800, color: "#191919", margin: "0 0 14px" }}>이런 느낌으로 만들어드려요</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+                      {detail.examples.map((ex, i) => (
+                        <div key={i} style={{ aspectRatio: "1", borderRadius: 16, background: `linear-gradient(155deg, ${ex.accent} 0%, #ffffff 140%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 34 }}>{ex.emoji}</div>
+                      ))}
+                    </div>
+                    <p style={{ fontSize: 11.5, color: "#C2C6CE", margin: "12px 2px 0" }}>※ 예시 이미지는 준비 중이에요. 실제 결과물로 곧 교체돼요.</p>
                   </>
                 )}
               </div>
             </div>
 
             {/* 고정 버튼 */}
-            <div style={{ padding: "12px 16px 20px", background: "#fff", boxShadow: "0 -4px 20px rgba(0,0,0,0.05)", flexShrink: 0 }}>
+            <div style={{ padding: "12px 16px 22px", background: "#fff", boxShadow: "0 -4px 20px rgba(0,0,0,0.05)", flexShrink: 0 }}>
               {detail.start === "soon" ? (
                 <button disabled style={{ width: "100%", padding: "16px 0", borderRadius: 16, border: "none", background: "#EEE", color: "#999", fontSize: 16, fontWeight: 800 }}>곧 만나요</button>
               ) : (
-                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } else if (detail.start === "voxel") { window.location.href = "/voxel"; } else if (detail.start === "food") { window.location.href = "/food"; } else if (detail.start === "factory") { window.location.href = "/factory"; } else if (detail.start === "pet") { window.location.href = "/pet"; }else if (detail.start === "product") { window.location.href = "/product"; }else if (detail.start === "restore") { window.location.href = "/restore"; } }} style={{ width: "100%", padding: "15px 0", borderRadius: 16, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)", display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
+                <button onClick={() => { setDetail(null); if (detail.start === "baby") { setActiveTab("home"); setShowMakeScreen(true); } else if (detail.start === "idphoto") { window.location.href = "/id-photo"; } else if (detail.start === "voxel") { window.location.href = "/voxel"; } else if (detail.start === "food") { window.location.href = "/food"; } else if (detail.start === "factory") { window.location.href = "/factory"; } else if (detail.start === "pet") { window.location.href = "/pet"; } else if (detail.start === "product") { window.location.href = "/product"; } else if (detail.start === "restore") { window.location.href = "/restore"; } }} style={{ width: "100%", padding: "15px 0", borderRadius: 16, border: "none", background: "#FF4B7C", color: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)", display: "flex", flexDirection: "column", gap: 2, alignItems: "center" }}>
                   <span>프로필 만들기</span>
                   {detail.resultCount ? <span style={{ fontSize: 12, fontWeight: 600, opacity: 0.9 }}>결과물 {detail.resultCount}장</span> : null}
                 </button>

@@ -7,7 +7,7 @@
 - 다음에 할 것:
 - 주의/메모:
 
-### 2026-06-03
+### 2026-06-11
 - 한 일:- 컨셉 상세페이지 Mevu풍 업그레이드 (배포완료)
   - concepts.ts에 tags/resultCount/heroImage/exampleImages 선택 필드 추가
   - 상세페이지: 태그칩, 세로(4:5) 대표이미지, "이런 느낌으로 만들어드려요", 버튼에 결과물 N장
@@ -16,6 +16,10 @@
   - public/examples/voxel-hero.jpg + voxel-1~4.jpg
   - concepts.ts voxel에 heroImage/exampleImages 추가 → 상세페이지 사진 자동전환 확인
   - (교훈: 윈도우 확장자 숨김으로 .jpg.jpg 중복됐던 것 → 확장자 표시 설정함)
+  - 새 테마 2개 추가 (배포완료): 상품 사진 보정 / 옛날 사진 복원
+  - api/product, api/restore + app/product, app/restore (food 테마 복제 + 각 프롬프트)
+  - concepts.ts 등록(product/restore), page.tsx 분기 + 홈 카드 추가
+  - 작동 컨셉 누적: 아기/증명/복셀/음식/공장/펫/상품/복원 (8개)
 - 커밋 메시지:
 - 다음에 할 것:
 - 주의/메모:

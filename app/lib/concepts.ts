@@ -11,6 +11,7 @@ export type Concept = {
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
+  heroImages?: string[];
   exampleImages?: string[];
 };
 
