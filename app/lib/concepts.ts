@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend"  |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet"  |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -440,6 +440,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "friend",
   },
+  family: {
+    key: "family",
+    title: "가족 스튜디오 화보",
+    subtitle: "온 가족이 한 장에",
+    emoji: "👨‍👩‍👧‍👦",
+    accent: "#E7F7EA",
+    description: "가족 한 명당 사진 한 장씩(2~4장) 올리면 다 같이 찍은 듯한 가족 스튜디오 화보를 만들어드려요. 멀리 사는 가족과도 한 장에!",
+    examples: [
+      { emoji: "👨‍👩‍👧‍👦", accent: "#E7F7EA" },
+      { emoji: "📸", accent: "#FFE0EC" },
+      { emoji: "🏡", accent: "#FFF1E0" },
+    ],
+    start: "family",
+  },
+  familyhanbok: {
+    key: "familyhanbok",
+    title: "한복 명절 가족사진",
+    subtitle: "명절에 꺼내 쓰는 한 장",
+    emoji: "🏮",
+    accent: "#FFF1E0",
+    description: "가족 사진(한 명당 한 장, 2~4장)을 올리면 다 같이 한복을 입고 찍은 명절 가족사진을 만들어드려요. 새해 인사·명절 안부용으로 딱!",
+    examples: [
+      { emoji: "🏮", accent: "#FFF1E0" },
+      { emoji: "👘", accent: "#FFE0EC" },
+      { emoji: "🎎", accent: "#EFEAFF" },
+    ],
+    start: "familyhanbok",
+  },
+  familypet: {
+    key: "familypet",
+    title: "반려동물과 가족사진",
+    subtitle: "우리 애도 가족이니까",
+    emoji: "🐾",
+    accent: "#DCEBFF",
+    description: "반려동물 사진 1장 + 가족 사진(한 명당 한 장)을 올리면 다 같이 찍은 가족사진을 만들어드려요. 우리 애 생김새도, 가족 얼굴도 모두 그대로!",
+    examples: [
+      { emoji: "🐾", accent: "#DCEBFF" },
+      { emoji: "🐶", accent: "#FFF1E0" },
+      { emoji: "👨‍👩‍👧", accent: "#E7F7EA" },
+    ],
+    start: "familypet",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -487,5 +529,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "couple") return CONCEPTS.couple;
   if (go === "hanbokcouple") return CONCEPTS.hanbokcouple;
   if (go === "friend") return CONCEPTS.friend;
+  if (go === "family") return CONCEPTS.family;
+  if (go === "familyhanbok") return CONCEPTS.familyhanbok;
+  if (go === "familypet") return CONCEPTS.familypet;
   return CONCEPTS.soon;
 }
