@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-image";
@@ -8,28 +7,21 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-async function generatePet(imageDataUrl: string): Promise<string> {
+async function generateCar(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Create a funny and adorable professional ID/passport-style headshot of the PET (dog or cat) shown in the photo, as if the pet were a person taking an employee ID photo.
-
-IDENTITY — MOST IMPORTANT:
-Keep the EXACT same animal as in the input photo — same species, same breed, same fur color and pattern, same face, same eyes, same ears. The owner must instantly recognize it as their own pet. Do NOT turn it into a different animal or a generic stock animal.
-
-OUTFIT: Dress the pet in a tiny formal business suit — a small black blazer with a white dress shirt collar, fitted naturally around the pet's neck and shoulders, as if wearing a real little suit. Make it look cute and believable, not pasted on.
-
-COMPOSITION (consistent ID-photo framing):
-- Front-facing, the pet looking straight toward the camera.
-- Head and upper body (shoulders) centered in the frame, with a small even margin above the head.
-- Calm, neutral, cute expression. Mouth closed or gently relaxed.
-- Vertical portrait orientation.
-
-BACKGROUND: A clean, perfectly uniform solid light background (soft white or light blue), flat with NO gradient, NO texture, NO objects.
-
-LIGHTING & SHADOWS: Soft even studio lighting. NO shadow cast on the background behind the pet. Background stays flat and evenly lit.
-
-QUALITY: Photorealistic, sharp focus, natural realistic fur texture, high-resolution studio photo. The suit looks real, the pet looks real.
-
-DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra props, no shadow on background.`;
+  const prompt = `You are a professional automotive photographer. Improve this photo of a car
+for a used-car listing.
+CRITICAL — preserve the actual vehicle exactly:
+- Keep the car's exact model, shape, color, wheels, body condition lines, and
+  visible details. Do NOT hide real dents/damage in a deceptive way; do NOT
+  change the car itself.
+Enhance ONLY presentation:
+- Clean up or tastefully neutralize the messy background; keep the car
+  naturally grounded with correct reflections and shadows.
+- Even, professional lighting; accurate color and white balance; remove harsh
+  glare; recover shadow/highlight detail.
+Photorealistic automotive listing photography, honest and accurate. No fake
+reflections, no altered vehicle, no text, no watermark.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
@@ -56,7 +48,7 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[pet] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[car] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
   if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
@@ -68,20 +60,18 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
-  const dataUrl = `data:image/png;base64,${b64}`;
-  // 📐 반려동물 증명사진: 3.5:4.5 비율로 크롭 (증명사진 규격)
-  return await cropToRatio(dataUrl, 3.5, 4.5);
+  return `data:image/png;base64,${b64}`;
 }
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
     if (!image) return NextResponse.json({ error: "사진을 올려주세요." }, { status: 400 });
-    const output = await generatePet(image);
+    const output = await generateCar(image);
     return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("pet error:", err?.message);
+    console.error("car error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 } 

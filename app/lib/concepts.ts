@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -132,6 +132,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "restore",
   },
+  realestate: {
+    key: "realestate",
+    title: "부동산 매물 정리",
+    subtitle: "매물 사진 깔끔하게",
+    emoji: "🏠",
+    accent: "#E1ECFF",
+    description: "어둡고 어수선하게 찍힌 매물 사진을 올리면 밝고 깔끔하게 보정해드려요. 공간 구조는 그대로, 밝기와 정돈만 손봐요.",
+    examples: [
+      { emoji: "🏠", accent: "#E1ECFF" },
+      { emoji: "🪟", accent: "#E7F7EA" },
+      { emoji: "✨", accent: "#FFEFD6" },
+    ],
+    start: "realestate",
+  },
+  interior: {
+    key: "interior",
+    title: "인테리어 비포/애프터",
+    subtitle: "빈 방에 가구를 채워요",
+    emoji: "🛋️",
+    accent: "#FFEFD6",
+    description: "비어있거나 낡은 방 사진을 올리면 모던한 가구와 인테리어로 꾸민 모습을 보여드려요. 공간 구조와 각도는 그대로예요.",
+    examples: [
+      { emoji: "🛋️", accent: "#FFEFD6" },
+      { emoji: "🪑", accent: "#FFE0EC" },
+      { emoji: "🖼️", accent: "#E1ECFF" },
+    ],
+    start: "interior",
+  },
+  car: {
+    key: "car",
+    title: "중고차 사진 보정",
+    subtitle: "판매용 깔끔샷",
+    emoji: "🚗",
+    accent: "#E7F7EA",
+    description: "어수선한 배경에 찍힌 차 사진을 올리면 배경을 정리하고 조명·색감을 보정해 판매용 사진으로 만들어드려요. 차량 자체는 그대로 유지돼요.",
+    examples: [
+      { emoji: "🚗", accent: "#E7F7EA" },
+      { emoji: "✨", accent: "#DCEBFF" },
+      { emoji: "🔑", accent: "#FFEFD6" },
+    ],
+    start: "car",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -157,5 +199,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "pet") return CONCEPTS.pet;
   if (go === "product") return CONCEPTS.product;
   if (go === "restore") return CONCEPTS.restore;
+  if (go === "realestate") return CONCEPTS.realestate;
+  if (go === "interior") return CONCEPTS.interior;
+  if (go === "car") return CONCEPTS.car;
   return CONCEPTS.soon;
 }
