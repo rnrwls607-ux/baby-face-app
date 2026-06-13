@@ -9,6 +9,17 @@ const NUM_OUTPUTS = 1; // 우선 1장 (응답 용량 안전 + Pro 품질 확인�
 // 📐 증명사진 규격 비율 (가로:세로 = 3.5 : 4.5). 여기 숫자만 바꾸면 비율 변경됨
 const RATIO_W = 3.5;
 const RATIO_H = 4.5;
+
+// 📌 증명사진 구도 표준 (모든 증명사진 컨셉 공통) — 입력 비율과 무관하게 규격 구도로 강제
+//    한국/ICAO 여권·증명 규격 기준: 머리(정수리~턱)가 세로의 약 70%, 중앙·정면, 머리 위 여백 확보
+const ID_COMPOSITION = `This MUST be composed as a regulation ID / passport photo with a TIGHT head-and-shoulders crop, regardless of the framing, angle, or aspect ratio of the input photo(s). Reframe and recompose as needed:
+- Output is a vertical portrait. The person faces the camera directly, shoulders level and squared to the camera.
+- The head is centered horizontally. The face and gaze point straight forward (no tilt, no turn).
+- Head size (very important): the head, from the top of the hair to the chin, fills about 75-80% of the image height. The frame is filled mostly by the head, like a real passport photo. Leave only a small even margin of empty space above the top of the head (do not crop the top of the head or hair).
+- TIGHT crop at the shoulders: crop the body at the SHOULDER LINE so that only the top of the shoulders is visible at the very bottom edge. Do NOT show the chest, do NOT show shirt buttons, do NOT show a wide or full upper body. Only the collar and the very top of the shoulders should appear.
+- Both ears and the full face outline are visible.
+- Crop out any background people or objects; only this one person remains.`;
+
 // data URL 또는 순수 base64 → { mimeType, data }
 function parseImage(input: string): { mimeType: string; data: string } {
   const m = input.match(/^data:(.+?);base64,(.*)$/);
@@ -38,8 +49,8 @@ async function cropToRatio(dataUrl: string): Promise<string> {
       cropH = Math.round(w / targetRatio);
     }
     const left = Math.round((w - cropW) / 2);
-    // 세로 크롭은 위쪽 여백(머리 위)을 조금 더 남기려고 위에서 40%/아래 60% 비율로 잘라냄
-    const top = Math.round((h - cropH) * 0.4);
+    // 세로 크롭은 머리 위 여백을 살짝만 남기려고 위에서 22%/아래 78% 비율로 잘라냄 (어깨선 위주)
+    const top = Math.round((h - cropH) * 0.22);
     const out = await img
       .extract({ left: Math.max(0, left), top: Math.max(0, top), width: cropW, height: cropH })
       .png()
@@ -117,9 +128,18 @@ async function generateIdPhotos(
   const bgDesc = BG[background] || BG.white;
   const outfitDesc = OUTFIT[clothing] || OUTFIT.black_suit;
   const hairDesc = HAIR[hair] || HAIR.keep;
-  
- const prompt = `Create a professional ID/passport-style headshot of the ${who} shown in the photo(s). CRITICAL: keep the exact same face and identity as the input — same facial features, do not turn them into a different person. Front-facing, looking straight at the camera, neutral closed-mouth expression, head and upper shoulders in frame. Dress them in ${outfitDesc}. Hairstyle: ${hairDesc}. Background: ${bgDesc}. Even soft studio lighting, sharp focus, natural realistic skin, high-quality professional photo. No shadow on the background. No text, no watermark, no border.`;
- 
+  const sameIdentity = images.length > 1
+    ? `The ${images.length} input photos are all the SAME person from different angles — use them together to capture their true likeness.`
+    : "";
+
+  const prompt = `Create a professional ID/passport-style headshot of the ${who} shown in the photo(s).
+
+IDENTITY (most important): Keep the EXACT same face and identity as the input person — same facial features, face shape, eyes, nose, mouth, eyebrows, and overall likeness. The result must be instantly recognizable as the same person. Do NOT beautify, slim, reshape, or turn them into a different or more "average" looking person. Keep their natural skin texture. ${sameIdentity}
+
+COMPOSITION: ${ID_COMPOSITION}
+
+STYLING: A gentle, natural closed-mouth smile with a soft, friendly, relaxed expression — warm and approachable, NOT stiff, stern, angry, or sad. Lips stay together (no teeth, not laughing), but the eyes and mouth look subtly pleasant, like a good real-life ID photo. Dress them in ${outfitDesc}. Hairstyle: ${hairDesc}. Background: ${bgDesc}. Even soft studio lighting, sharp focus, natural realistic skin, high-quality professional photo. No shadow on the background. No text, no watermark, no border.`;
+
   const tasks = Array.from({ length: NUM_OUTPUTS }, () => generateOne(prompt, images));
   const settled = await Promise.allSettled(tasks);
   const ok = settled
@@ -130,7 +150,7 @@ async function generateIdPhotos(
     throw new Error(firstErr?.reason?.message || "이미지 생성에 실패했어요.");
   }
   // 📐 생성된 이미지들을 3.5:4.5 비율로 크롭
-const cropped = await Promise.all(ok.map(cropToRatio));
+  const cropped = await Promise.all(ok.map(cropToRatio));
   return cropped;
 }
 export async function POST(req: NextRequest) {
