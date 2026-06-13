@@ -9,32 +9,24 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFood(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional commercial food photographer and retoucher.
-Transform this casually-taken restaurant photo into an advertising-quality
-food image suitable for a menu, catalog, or ad campaign.
-CRITICAL — preserve the actual food exactly:
-- Keep every dish, ingredient, garnish, topping, and side exactly as it
-  appears. Do NOT add any food, ingredient, or prop that is not already in
-  the photo, and do NOT remove or hide any food that is present.
-- Keep the same number of items, same portion sizes, same plating
-  arrangement, and the same cuisine. The viewer must recognize it as the
-  exact same meal.
-Enhance ONLY the photographic quality:
-- Lighting: replace flat or yellow restaurant lighting with soft, bright,
-  directional light that makes the food look fresh and appetizing; recover
-  detail in shadows and highlights.
-- Color: correct the white balance, remove color casts, and render colors
-  rich, accurate, and appetizing — vibrant but natural, never oversaturated
-  or artificial.
-- Texture & freshness: bring out the natural gloss, moisture, crispness,
-  and texture that are already present in the food.
-- Background & composition: clean up non-food distractions (table clutter,
-  phones, hands, crumpled napkins), apply a tasteful shallow depth-of-field
-  blur to the background, and subtly refine the framing for a balanced,
-  professional composition — without cropping out any of the food.
-Final look: photorealistic, high-resolution commercial food photography.
-Clean, crisp, mouth-watering, magazine quality. No cartoon or plastic look,
-no artificial-looking additions, no extra garnish that wasn't there.`;
+  const prompt = `You are a world-class commercial food photographer and retoucher. Transform this casually-taken food photo into a stunning, mouth-watering, thumbnail-worthy food image that makes anyone instantly crave it.
+
+KEEP THE DISH'S IDENTITY: It must remain clearly the same dish — same food type, same main ingredients, same cuisine, roughly the same plating and portion. Do NOT invent a completely different meal or add fake foods that change what the dish is.
+
+BUT ACTIVELY FIX AND PERFECT IT (this is important — be bold, not timid):
+- Repair imperfections: if a part has been eaten, bitten, or is missing, naturally restore it to look whole and untouched. Remove bite marks, gaps, and half-eaten areas.
+- Clean up: erase spills, drips, smudges, stains, crumbs, fingerprints, dirty edges, and any mess on the plate, bowl rim, or table. Make everything spotless.
+- Remove distractions: delete table clutter, phones, hands, used utensils, crumpled napkins, receipts, and background noise.
+- Perfect the food itself: make it look fresh, hot, and just-served. Restore vibrant natural color, glossy moisture, crisp edges, juicy textures, and appetizing sheen. Fix dull, dried-out, soggy, or greasy-looking areas so the food looks at its peak.
+
+PRO FOOD-PHOTOGRAPHY TREATMENT:
+- Lighting: soft, bright, directional side-lighting at ~5500K that sculpts texture and makes the food glow; recover shadow and highlight detail; no flat yellow restaurant light.
+- Color: accurate white balance, rich and appetizing tones — vivid but true-to-life, never oversaturated or artificial.
+- Steam & freshness: if it's a hot dish (soup, stew, noodles, grilled meat, rice), add subtle natural steam wisps to signal it's freshly cooked and hot.
+- Texture micro-details: bring out sear marks, melting cheese, glistening sauce, droplets, flaky crusts, fresh garnish that is ALREADY present.
+- Composition & background: place the dish on a clean, tasteful surface that suits it; tasteful shallow depth-of-field blur; balanced, professional framing without cropping out any of the food.
+
+FINAL LOOK: ultra-photorealistic, high-resolution, magazine-cover and delivery-app-thumbnail quality. Crisp, fresh, irresistible. Absolutely NO cartoon, plastic, CGI, or fake look. No text, no watermark, no border.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
