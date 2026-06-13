@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet"  |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  |  "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -482,6 +482,48 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "familypet",
   },
+  fourcut: {
+    key: "fourcut",
+    title: "인생네컷",
+    subtitle: "나 혼자 네컷 한 장",
+    emoji: "📸",
+    accent: "#FFE0EC",
+    description: "사진 한 장을 올리면 다양한 표정·포즈의 네컷 스트립으로 만들어드려요. 부스 안 가도 인생네컷! 얼굴은 그대로예요.",
+    examples: [
+      { emoji: "📸", accent: "#FFE0EC" },
+      { emoji: "✌️", accent: "#EFEAFF" },
+      { emoji: "😆", accent: "#FFF1E0" },
+    ],
+    start: "fourcut",
+  },
+  fourcutillust: {
+    key: "fourcutillust",
+    title: "인생네컷 (일러스트)",
+    subtitle: "그림체 네컷 한 장",
+    emoji: "🎨",
+    accent: "#EFEAFF",
+    description: "사진 한 장을 올리면 웹툰 그림체의 네컷 스트립으로 그려드려요. 다양한 표정·포즈 4컷, 얼굴 특징은 그대로!",
+    examples: [
+      { emoji: "🎨", accent: "#EFEAFF" },
+      { emoji: "🖌️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF1E0" },
+    ],
+    start: "fourcutillust",
+  },
+  fourcutcouple: {
+    key: "fourcutcouple",
+    title: "커플 네컷",
+    subtitle: "둘이 함께 네컷 한 장",
+    emoji: "📸",
+    accent: "#DCEBFF",
+    description: "두 사람의 사진을 한 장씩 올리면 둘이 함께 찍은 듯한 네컷 스트립을 만들어드려요. 따로 찍은 사진도 OK, 두 얼굴 모두 그대로예요.",
+    examples: [
+      { emoji: "📸", accent: "#DCEBFF" },
+      { emoji: "💕", accent: "#FFE0EC" },
+      { emoji: "✌️", accent: "#EFEAFF" },
+    ],
+    start: "fourcutcouple",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -532,5 +574,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "family") return CONCEPTS.family;
   if (go === "familyhanbok") return CONCEPTS.familyhanbok;
   if (go === "familypet") return CONCEPTS.familypet;
+  if (go === "fourcut") return CONCEPTS.fourcut;
+  if (go === "fourcutillust") return CONCEPTS.fourcutillust;
+  if (go === "fourcutcouple") return CONCEPTS.fourcutcouple;
   return CONCEPTS.soon;
 }
