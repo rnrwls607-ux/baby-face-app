@@ -370,10 +370,7 @@ export default function Home() {
             <Icon.Back />
           </button>
         ) : (
-          <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
-            <span style={{ position: "absolute", top: -8, right: -14, fontSize: 13 }}>✦</span>
-            <span style={{ fontSize: 24, fontWeight: 900, letterSpacing: -1, color: "#191919", fontStyle: "italic" }}>mospic</span>
-          </div>
+          <img src="/logo.png" alt="mospic" style={{ height: 28, width: "auto", display: "block" }} />
         )}
         {title && <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{title}</span>}
       </div>
