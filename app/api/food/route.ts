@@ -11,22 +11,33 @@ async function generateFood(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const prompt = `You are a world-class commercial food photographer and retoucher. Transform this casually-taken food photo into a stunning, mouth-watering, thumbnail-worthy food image that makes anyone instantly crave it.
 
+FIRST, identify what the dish is, then apply the freshness cues and styling that make THAT specific type of food most appetizing:
+- Soup/stew/hot pot: glossy broth, visible ingredients lifted into view, gentle rising steam.
+- Grilled meat / BBQ: caramelized sear marks, juicy glistening surface, light oil sheen.
+- Noodles: glossy strands, a sense of motion as if just lifted, steam for hot noodles.
+- Fried food: crispy golden-brown texture, dry-crunchy (not greasy) surface.
+- Rice dishes: separate glistening grains, steam, vivid toppings.
+- Salad/vegetables/fruit: crisp freshness, dewy water droplets, vibrant natural color.
+- Dessert/bread/baked goods: moist crumb, flaky layers, dusting detail, soft highlights.
+- Cold drinks: condensation droplets on the glass, refreshing clarity.
+
 KEEP THE DISH'S IDENTITY: It must remain clearly the same dish — same food type, same main ingredients, same cuisine, roughly the same plating and portion. Do NOT invent a completely different meal or add fake foods that change what the dish is.
 
-BUT ACTIVELY FIX AND PERFECT IT (this is important — be bold, not timid):
+ACTIVELY FIX AND PERFECT IT (be bold, not timid):
 - Repair imperfections: if a part has been eaten, bitten, or is missing, naturally restore it to look whole and untouched. Remove bite marks, gaps, and half-eaten areas.
-- Clean up: erase spills, drips, smudges, stains, crumbs, fingerprints, dirty edges, and any mess on the plate, bowl rim, or table. Make everything spotless.
+- Clean up: erase spills, drips, smudges, stains, crumbs, fingerprints, and dirty edges on the plate, bowl rim, or table. Make everything spotless.
 - Remove distractions: delete table clutter, phones, hands, used utensils, crumpled napkins, receipts, and background noise.
-- Perfect the food itself: make it look fresh, hot, and just-served. Restore vibrant natural color, glossy moisture, crisp edges, juicy textures, and appetizing sheen. Fix dull, dried-out, soggy, or greasy-looking areas so the food looks at its peak.
+- Perfect the food itself: make it look fresh, hot, and just-served. Restore vibrant natural color, glossy moisture, crisp edges, juicy textures, and appetizing sheen. Fix dull, dried-out, soggy, or greasy-looking areas so the food looks at its peak — but keep it looking like REAL food, never wax-like or fake-perfect.
 
 PRO FOOD-PHOTOGRAPHY TREATMENT:
+- Camera & lens: render as if shot on a 100mm macro lens at f/2.8 with a shallow depth of field; sharp focus on the hero element of the dish with a softly blurred background. Use the most flattering angle for this dish (45-degree for most plated food, top-down flat-lay for pizzas/spreads, eye-level for layered items like burgers).
 - Lighting: soft, bright, directional side-lighting at ~5500K that sculpts texture and makes the food glow; recover shadow and highlight detail; no flat yellow restaurant light.
-- Color: accurate white balance, rich and appetizing tones — vivid but true-to-life, never oversaturated or artificial.
-- Steam & freshness: if it's a hot dish (soup, stew, noodles, grilled meat, rice), add subtle natural steam wisps to signal it's freshly cooked and hot.
-- Texture micro-details: bring out sear marks, melting cheese, glistening sauce, droplets, flaky crusts, fresh garnish that is ALREADY present.
-- Composition & background: place the dish on a clean, tasteful surface that suits it; tasteful shallow depth-of-field blur; balanced, professional framing without cropping out any of the food.
+- Color: accurate white balance, rich and appetizing tones with high dynamic range — vivid and true-to-life, never oversaturated or artificial.
+- Freshness signals: add subtle natural steam wisps to hot dishes; water droplets to fresh produce and cold drinks; a natural glisten to sauces — only where it makes sense for the dish.
+- Texture micro-details: bring out sear marks, melting cheese, glistening sauce, droplets, flaky crusts, and fresh garnish that is ALREADY present (do not add new garnish that wasn't there).
+- Background & composition: place the dish on a clean, tasteful surface and background color that complements the food's own colors; balanced, professional framing without cropping out any of the food.
 
-FINAL LOOK: ultra-photorealistic, high-resolution, magazine-cover and delivery-app-thumbnail quality. Crisp, fresh, irresistible. Absolutely NO cartoon, plastic, CGI, or fake look. No text, no watermark, no border.`;
+FINAL LOOK: ultra-photorealistic, high-resolution, award-winning magazine-cover and delivery-app-thumbnail quality. Crisp, fresh, irresistible, with natural realism. Absolutely NO cartoon, plastic, CGI, or wax-model look. No text, no watermark, no border.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
