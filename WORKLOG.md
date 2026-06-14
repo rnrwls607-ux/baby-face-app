@@ -7,7 +7,24 @@
 - 다음에 할 것:
 - 주의/메모:+
 
-
+### 2026-06-14
+- 한 일:
+  - [증명사진 idstyle B방식] 견본 고정+얼굴교체 방식 실험. Gemini→GPT(gpt-image-1, images/edits, input_fidelity high)까지 시도. 옷·배경은 고정되나 얼굴이 "닮은 딴사람"으로 나오는 한계. InstantID/PhotoMaker도 웹테스트했으나 결과 미흡.
+    → 결론: 일반 이미지 모델로 얼굴 100% 보존은 구조적 불가 확정. 증명사진 닮음은 보류(추후 face-swap 재검토 or "AI프로필" 포지셔닝). idstyle 코드·OpenAI키는 남겨둠(홈 미연결).
+  - [음식 보정 food] 프롬프트 최종 강화본 적용: 음식종류별 자동인식 + 적극보정(먹은자국 복원/오염 제거) + 카메라스펙(100mm macro f/2.8, 5500K) + 김/신선함 신호 + 가짜방지. (배포완료)
+  - [음식 상세페이지] 통이미지(약 1000×8000) 방식 채택. page.tsx에 detailImage 분기 추가, concepts.ts food에 detailImage 연결. public/details/food.png.
+  - [음식 카드] 홈 썸네일 연결: public/cards/food.png (회 모둠 사진), page.tsx food 카드에 image 필드 추가.
+  - [로고] 좌측 상단 로고 텍스트→이미지(public/logo.png, 카메라 마크) 교체. (배포완료)
+  - [상품 보정 product] mospic-prompt-upgrade 스킬로 강화. food 패턴 재활용 + 상품6종 자동인식 + 글자·색·진짜특징 보호 가드(ABSOLUTE NO-TOUCH RULES) 추가. 나노바나나 테스트 양호(누끼 깔끔). ※ route.ts 아직 미반영 — 글자많은 상품 최종 테스트 후 반영 예정.
+  - [스킬 2개 제작] Cowork용 표준화 자산:
+    · mospic-prompt-upgrade: 컨셉 프롬프트 분석·강화·검증 5스텝 체크리스트(유형 A/B/C별)
+    · mospic-detail-page-prompt: 컨셉 상세페이지 통이미지 제작 프롬프트 생성(1080px 고정, 3분류 템플릿)
+- 다음에 할 것: product 글자상품 최종 테스트→route 반영→배포 / 음식 상세페이지 cowork 실제 제작 / 다음 보정형 컨셉(공장·복원 등) 강화
+- 주의/메모:
+  · 증명사진 전용 표준(어깨선 크롭/머리75-80%/옷·배경 고정)은 증명사진 계열에만, 다른 컨셉 적용 금지.
+  · 한 컨셉 파이프라인: mospic-prompt-upgrade(품질확정) → mospic-detail-page-prompt(소개제작) → cowork 제작 → 자산정리.
+  · 자산 폴더 규칙: public/cards/{key}.png, public/details/{key}.png, public/examples/{key}-before/after, test-photos/{key}/
+  · 사진 파일 대부분 png. 윈도우 확장자 숨김으로 .png.png 중복 주의.
 
 
 ### 2026-06-13

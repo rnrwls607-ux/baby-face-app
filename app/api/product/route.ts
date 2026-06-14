@@ -9,23 +9,32 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateProduct(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional e-commerce product photographer and retoucher.
-Turn this casual photo of a product into a clean, professional online-store
-product image.
-CRITICAL — preserve the actual product exactly:
-- Keep the product's exact shape, color, material, text/labels, and details.
-  Do NOT alter, beautify, or change the product itself, and do NOT add or
-  remove any part of it.
-Enhance ONLY the presentation:
-- Replace the messy or distracting background with a clean, seamless studio
-  background (white or soft neutral), keeping the product naturally grounded.
-- Apply bright, even, professional product lighting; recover detail in
-  shadows and highlights; remove harsh glare.
-- Correct white balance and make colors accurate and appealing.
-- Remove background clutter, hands, and distractions; subtly refine framing.
-Photorealistic, high-resolution commercial product photography. Accurate,
-clean, trustworthy. No fake reflections, no altered product, no text overlay,
-no watermark.`;
+  const prompt = `You are a world-class e-commerce product photographer and retoucher. Transform this casual product photo into a clean, premium online-store product image that makes shoppers trust it and want to buy.
+
+FIRST, identify the product type, then apply the treatment that best sells THAT kind of product:
+- Clothing/fashion: smooth out wrinkles, show fabric texture and true color, natural drape.
+- Cosmetics/bottles: glossy or matte finish as-is, crisp label text, elegant soft reflections.
+- Electronics/gadgets: sleek clean surfaces, sharp edges, remove fingerprints and dust.
+- Food packaging/drinks: vivid packaging color, crisp label, fresh appealing look.
+- Jewelry/accessories/small items: sparkle and material shine, fine detail, tasteful macro feel.
+- Home goods/furniture: show material (wood grain, fabric, ceramic) and true proportions.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. TEXT & LOGOS: Keep every letter, word, number, logo, and label EXACTLY as in the original — same spelling, same font, same position, same size. Do NOT redraw, translate, sharpen-into-different-letters, invent, blur, or remove any text. If text is small, keep it pixel-faithful rather than regenerating it. Brand identity must be untouched.
+2. TRUE COLOR: Reproduce the product's real colors EXACTLY as in the original. Do NOT shift hue, boost saturation, or make colors "prettier" — a shopper must receive the exact color they see. Only fix obvious lighting color-cast (e.g. yellow room light) to reveal the product's TRUE color, never to change it.
+3. REAL SHAPE & FEATURES: Preserve the exact shape, proportions, and real material features — fabric weave, leather grain, intentional distressing, stitching, natural texture. These are NOT flaws. Do NOT smooth them away, slim, stretch, or reshape the product.
+
+=== CLEAN UP ONLY THESE (be bold here) ===
+- Erase things that are clearly dirt or handling, NOT part of the product: dust, fingerprints, smudges, lint, stray threads, temporary creases from folding.
+- Remove distractions around the product: background clutter, hands, price tags, stray cables, room reflections.
+- Straighten a tilted photo to an upright, flattering angle — WITHOUT changing the product's real proportions.
+
+PRO PRODUCT-PHOTOGRAPHY TREATMENT:
+- Background: place the product on a clean, seamless studio background — pure white for a marketplace look, or a soft neutral/complementary tone that makes the product's own colors pop. Keep it naturally grounded with a soft, realistic contact shadow directly beneath the product (no floating, no fake or oddly-angled shadows).
+- Camera & lighting: render as if shot on a 100mm product lens with crisp focus across the product; bright, even, soft studio lighting at ~5500K; recover shadow/highlight detail; remove harsh glare and blown-out spots.
+- Material fidelity: keep glossy glossy, matte matte, transparent clear — faithful texture and micro-detail, never turning real material into plastic or CGI.
+
+FINAL LOOK: ultra-photorealistic, high-resolution commercial product photography — clean, crisp, premium, and trustworthy. The product itself (text, color, shape, material) must look IDENTICAL to reality; only the background, lighting, cleanliness, and framing are improved. NO cartoon, plastic, CGI, or fake look; no invented reflections; no altered branding; no text overlay, no watermark, no border.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
