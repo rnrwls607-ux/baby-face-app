@@ -13,6 +13,7 @@ export type Concept = {
   heroImage?: string;
   heroImages?: string[];
   exampleImages?: string[];
+  detailImage?: string;
 };
 
 export const CONCEPTS: Record<string, Concept> = {
@@ -74,6 +75,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🍜", accent: "#FFEFD6" },
       { emoji: "🍰", accent: "#FFE9D6" },
     ],
+    detailImage: "/details/food.png",
     start: "food",
   },
   factory: {

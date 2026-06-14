@@ -164,7 +164,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진 ✨", layout: "scroll",
     items: [
       { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.png" },
-      { id: "food", title: "음식 사진 보정", subtitle: "메뉴판·광고용으로", emoji: "🍽️", accent: "#FFE0EC", badge: "NEW", tags: ["음식"], go: "food" },
+      { id: "food", title: "음식 사진 보정", subtitle: "메뉴판·광고용으로", emoji: "🍽️", accent: "#FFE0EC", badge: "NEW", tags: ["음식"], image: "/cards/food.png", go: "food" },
       { id: "factory", title: "공장 리모델링", subtitle: "리모델링 후 미리보기", emoji: "🏭", accent: "#E1ECFF", badge: "NEW", tags: ["인테리어"], go: "factory" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "pet" },
       { id: "product", title: "상품 사진 보정", subtitle: "쇼핑몰·중고거래용", emoji: "📦", accent: "#E7F7EA", badge: "NEW", tags: ["상품"], go: "product" },
@@ -870,6 +870,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </div>
 
             <div style={{ flex: 1, overflowY: "auto", marginTop: -58 }}>
+              {detail.detailImage ? (
+                /* 통이미지 상세페이지: 풀폭 이미지 한 장만 */
+                <img src={detail.detailImage} alt={detail.title} style={{ width: "100%", display: "block" }} />
+              ) : (
+              <>
               {/* 대표 이미지 (heroImages 여러장 스와이프 > heroImage 1장 > 이모지) */}
               {(() => {
                 const heroes = detail.heroImages && detail.heroImages.length > 0
@@ -943,6 +948,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   </>
                 )}
               </div>
+              </>
+              )}
             </div>
 
             {/* 고정 버튼 */}
