@@ -165,7 +165,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     items: [
       { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.png" },
       { id: "food", title: "음식 사진 보정", subtitle: "메뉴판·광고용으로", emoji: "🍽️", accent: "#FFE0EC", badge: "NEW", tags: ["음식"], image: "/cards/food.png", go: "food" },
-      { id: "factory", title: "공장 리모델링", subtitle: "리모델링 후 미리보기", emoji: "🏭", accent: "#E1ECFF", badge: "NEW", tags: ["인테리어"], go: "factory" },
+      { id: "factory", title: "공장 리모델링", subtitle: "리모델링 후 미리보기", emoji: "🏭", accent: "#E1ECFF", badge: "NEW", tags: ["인테리어"], image: "/cards/factory.png", go: "factory" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "pet" },
       { id: "product", title: "상품 사진 보정", subtitle: "쇼핑몰·중고거래용", emoji: "📦", accent: "#E7F7EA", badge: "NEW", tags: ["상품"], image: "/cards/product.png", go: "product" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], go: "restore" },

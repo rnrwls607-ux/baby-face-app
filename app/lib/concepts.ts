@@ -90,6 +90,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧱", accent: "#ECEEF1" },
       { emoji: "💡", accent: "#FFEFD6" },
     ],
+    detailImage: "/details/factory.png",
     start: "factory",
   },
   pet: {
