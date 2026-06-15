@@ -25,6 +25,8 @@
   · 한 컨셉 파이프라인: mospic-prompt-upgrade(품질확정) → mospic-detail-page-prompt(소개제작) → cowork 제작 → 자산정리.
   · 자산 폴더 규칙: public/cards/{key}.png, public/details/{key}.png, public/examples/{key}-before/after, test-photos/{key}/
   · 사진 파일 대부분 png. 윈도우 확장자 숨김으로 .png.png 중복 주의.
+  - [상품 보정 product] 강화+가드 프롬프트 route.ts 반영 완료(배포). 글자·색·재질 보존 테스트 양호.
+    · 향후 글자많은 상품에서 텍스트 깨지면 → GPT(gpt-image-1)로 교체 검토(텍스트 렌더링 우수). 증명사진 idstyle의 images/edits 연동 패턴 재활용 가능.
 
 
 ### 2026-06-13
