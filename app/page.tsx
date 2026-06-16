@@ -171,7 +171,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.png", go: "restore" },
       { id: "realestate", title: "부동산 매물 정리", subtitle: "매물 사진 깔끔하게", emoji: "🏠", accent: "#E1ECFF", badge: "NEW", tags: ["부동산"], go: "realestate" },
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], image: "/cards/interior.png", go: "interior" },
-      { id: "car", title: "중고차 사진 보정", subtitle: "판매용 깔끔샷", emoji: "🚗", accent: "#E7F7EA", badge: "NEW", tags: ["중고차"], go: "car" },
+      { id: "car", title: "중고차 사진 보정", subtitle: "판매용 깔끔샷", emoji: "🚗", accent: "#E7F7EA", badge: "NEW", tags: ["중고차"], image: "/cards/car.png", go: "car" },
       { id: "lifeshot2", title: "인생샷 프로필", subtitle: "감성 프로필 한 장", emoji: "📸", accent: "#EFEAFF", badge: "NEW", tags: ["인생샷"], go: "lifeshot" },
       { id: "bizprofile", title: "명함·링크드인 프로필", subtitle: "비즈니스 프로필", emoji: "💼", accent: "#DCEBFF", badge: "NEW", tags: ["비즈니스"], go: "bizprofile" },
       { id: "hairstyle", title: "헤어 체인지", subtitle: "미용실 가기 전", emoji: "💇", accent: "#FFE0EC", badge: "NEW", tags: ["헤어"], go: "hairstyle" },
