@@ -27,6 +27,9 @@
   · 사진 파일 대부분 png. 윈도우 확장자 숨김으로 .png.png 중복 주의.
   - [상품 보정 product] 강화+가드 프롬프트 route.ts 반영 완료(배포). 글자·색·재질 보존 테스트 양호.
     · 향후 글자많은 상품에서 텍스트 깨지면 → GPT(gpt-image-1)로 교체 검토(텍스트 렌더링 우수). 증명사진 idstyle의 images/edits 연동 패턴 재활용 가능.
+    - 한 일: 공장(factory) 프롬프트 강화(자동인식·NO-TOUCH/UPGRADE 분리·촬영스펙·글자가드 등 7가지) / 상세페이지 Cowork 제작 프롬프트(A형·차콜 프리미엄) + 비포 3종 프롬프트 생성
+- 다음에 할 것: factory 손테스트→route 배포 / Cowork로 상세페이지 PNG 제작→자산정리(details·cards)→concepts.ts·page.tsx 한 줄 연결 / 다음 보정형(복원·인테리어 등)
+- 주의/메모: factory는 Gemini 유지·그룹B(크롭X). 상세페이지 비포/애프터는 같은 각도로, 브랜드 없는 사진으로.
 
 
 ### 2026-06-13
