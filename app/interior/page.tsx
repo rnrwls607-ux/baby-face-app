@@ -3,9 +3,19 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 
+const STYLE_OPTIONS = [
+  { key: "modern", label: "모던" },
+  { key: "natural", label: "내추럴" },
+  { key: "cozy", label: "코지" },
+  { key: "minimal", label: "미니멀" },
+  { key: "scandi", label: "스칸디" },
+  { key: "vintage", label: "빈티지" },
+] as const;
+
 export default function InteriorPage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
+  const [style, setStyle] = useState<string>("modern");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -40,7 +50,7 @@ export default function InteriorPage() {
       const res = await fetch("/api/interior", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: compressed }),
+        body: JSON.stringify({ image: compressed, style }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -48,7 +58,8 @@ export default function InteriorPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "인테리어");
+      const styleLabel = STYLE_OPTIONS.find(o => o.key === style)?.label || "";
+      void addToHistory(data.output, "인테리어 " + styleLabel);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
@@ -61,20 +72,32 @@ export default function InteriorPage() {
     a.download = "interior.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
+  const chipStyle = (active: boolean) => ({
+    padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
+    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
+    background: active ? "#FFEAF1" : "#fff",
+    color: active ? "#FF4B7C" : "#9B9B9B",
+  });
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => router.push("/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>인테리어 비포/애프터</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>AI 인테리어</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🛋️ 빈 방에 가구를 채워요</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>비어있거나 낡은 방 사진을 올리면 모던한 가구와 인테리어로 꾸민 모습을 보여드려요. 공간 구조와 각도는 그대로예요.</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🛋️ 원하는 스타일로 우리 집 꾸미기</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>비어있거나 낡은 방 사진을 올리면, 고른 스타일로 멋지게 꾸민 모습을 보여드려요. 공간 구조와 각도는 그대로예요.</p>
         </div>
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 스타일로 꾸밀까요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 18 }}>
+                {STYLE_OPTIONS.map(o => (
+                  <button key={o.key} onClick={() => setStyle(o.key)} style={chipStyle(style === o.key)}>{o.label}</button>
+                ))}
+              </div>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>방 사진</p>
               <label style={{ display: "block", cursor: "pointer" }}>
                 <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
@@ -109,11 +132,23 @@ export default function InteriorPage() {
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="인테리어" style={{ width: "100%", display: "block" }} />
             </div>
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, marginBottom: 18 }}>
               <button onClick={handleDownload}
                 style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>저장하기</button>
               <button onClick={() => { setResult(""); setImage(""); }}
-                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
+                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>새 사진으로</button>
+            </div>
+            <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <p style={{ fontSize: 13, fontWeight: 800, color: "#191919", margin: "0 0 12px" }}>다른 스타일로 더 만들어볼까요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>
+                {STYLE_OPTIONS.map(o => (
+                  <button key={o.key} onClick={() => setStyle(o.key)} style={chipStyle(style === o.key)}>{o.label}</button>
+                ))}
+              </div>
+              <button onClick={handleSubmit} disabled={loading}
+                style={{ width: "100%", background: loading ? "#E8E9ED" : "#FF4B7C", color: loading ? "#AEB2BA" : "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 15, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer", boxShadow: loading ? "none" : "0 6px 18px rgba(255,75,124,0.3)" }}>
+                {loading ? `만드는 중... (${elapsed}초)` : "이 스타일로 다시 만들기 ✨"}
+              </button>
             </div>
           </div>
         )}
