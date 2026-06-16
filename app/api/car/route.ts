@@ -11,43 +11,17 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 
 async function generateCar(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional automotive photo retoucher working on used-car listing photos for Korean marketplaces (Danggeun, Encar, KB Chachacha). Take this real photo and turn it into a clean, clear, well-lit, trustworthy listing photo of the SAME exact car, at the SAME real place, in the SAME real condition. This is careful enhancement, NOT a makeover - it must still look like a genuine photo someone took, and the car must still look like a real USED car, never a brand-new or repainted one.
+  const prompt = `Retouch this exact photo of a used car. Keep it the SAME photo - same car, same spot, same background, exactly where it was shot. Do not regenerate the scene; only clean and brighten it.
 
-=== THE CORE OF THIS JOB: wash off ALL dirt, change NONE of the real condition ===
-Dirt and damage are physically different things - treat each one correctly, and be confident about both.
+CHANGE:
+- Brighten and even out the lighting so the car is clearly visible. Fix any color cast for natural, accurate color, keeping the exact paint color.
+- Wash off all dirt, dust, mud, water spots, and smudges from the body, glass, and wheels, so the car looks freshly washed.
 
-DIRT sits ON TOP of the surface and is temporary. Remove ALL of it, thoroughly and confidently - the car must end up genuinely clean, as if it just came out of a professional hand wash and interior vacuum. Leave no dust, mud, grime, surface film, water spots, streaks, bird droppings, fingerprints, or smudges anywhere on the body, glass, mirrors, wheels, or interior. A still-dusty or still-dirty result is a failure.
+KEEP EXACTLY (do not touch):
+- Every scratch, dent, scuff, chip, rust spot, crack, curb rash, and worn tire. A wash removes dirt, never damage. If dirt was hiding a flaw, cleaning makes it MORE visible, never erases it.
+- The same background and surroundings, the same camera angle, and the odometer, badges, and plate.
 
-DAMAGE is permanent and part of the car itself - cut into the paint, dented into the metal, cracked into the glass. Change NONE of it. Keep every scratch, scuff, swirl mark, stone chip, paint chip, flaking or faded or oxidized paint, dent, ding, crease, rust spot, paint transfer, cracked or foggy light, curb rash, worn tire, and damaged or missing trim or part - exactly as it is. Do nothing that a body shop, dent puller, or repaint would do. Erasing or smoothing a scratch or dent is a failure.
-
-The test of a correct result: a dusty, scratched panel comes out CLEAN, and the scratch on it is now MORE clearly visible than before - clean surface, untouched damage. If dirt was hiding a flaw, washing should reveal the flaw, never erase it.
-
-=== READ THE SHOT, THEN ADAPT ===
-Identify vehicle and shot type and enhance appropriately: sedan / SUV / hatchback / van / truck / sports car / motorcycle; full exterior / 3-quarter angle / side profile / interior / engine bay / wheel or detail.
-
-=== ABSOLUTE - NEVER CHANGE ===
-- Car identity: exact make, model, generation, body shape, proportions, number of doors, the EXACT paint color and finish, wheel/rim design, badges, emblems, trim, lights, grille. Never a different or newer model.
-- The REAL SETTING stays: same location, ground, walls, surroundings. Do NOT move the car or replace the background with a studio, showroom, or any other scene. It must look shot right there.
-- Camera viewpoint, perspective, and framing stay essentially the same.
-- Do NOT change the odometer reading, model year, trim, or any gauge or screen value.
-
-=== ENHANCE NATURALLY (believable, not flashy) ===
-- Lighting: brighten dark or underexposed shots, gently lift shadows, tame harsh glare and blown highlights, even out uneven light - so the car is clearly visible in good, natural-looking light. Think "the same spot on a nicer day," NOT studio lighting.
-- Color: correct white balance and color casts (orange garage tint, blue shade) for accurate, clean color, keeping the EXACT paint color.
-- Gentle leveling: straighten a tilted horizon and fix mild lens distortion while keeping the same viewpoint. No dramatic re-angle.
-- Light tidy: you MAY remove small loose clutter right around the car (a stray hose, trash bag, cone) for a cleaner shot, but keep the real location and surroundings intact and recognizable.
-
-=== KEEP IT BELIEVABLE (anti-overprocessing) ===
-- Output must look like a genuine, careful photo, NOT an edited or AI image, and the car must look like a clean USED car, not new.
-- Do NOT over-process: no HDR halos, no heavy sharpening, no fake glossy "AI sheen," no plastic-smooth surfaces, no oversaturation, no dreamy or unreal look. Reflections and gloss stay subtle, realistic, and consistent with the real surroundings.
-
-=== KEEP IT REAL (anti-fake) ===
-- Photorealistic only. Real paint, metal, glass, rubber; real light physics; real reflections and shadows that match the actual scene.
-- NOT a CGI render, NOT a 3D model, NOT a video-game look.
-- No people. Do NOT invent or garble text: keep badges and emblems accurate, keep dashboard screens and gauges plausible (never fabricate values), and keep the license plate area either as-is or cleanly blurred - never melted or fake lettering.
-
-OUTPUT
-- High-resolution, sharp, and natural. No watermark, no text overlay, no added borders or logos. The same used car at the same place - genuinely clean, with every real flaw intact. Honest and trustworthy.`;
+Keep it photorealistic and natural - it must look like the same real photo, just cleaner and brighter. Not glossy, not over-processed, not CGI. Still a used car, not a new one.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
