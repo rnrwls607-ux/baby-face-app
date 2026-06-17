@@ -3,9 +3,19 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 
+const STYLE_OPTIONS = [
+  { key: "white", label: "화이트" },
+  { key: "wood", label: "우드" },
+  { key: "dark", label: "다크무드" },
+  { key: "pop", label: "배달앱" },
+  { key: "korean", label: "한식상차림" },
+  { key: "cafe", label: "카페감성" },
+];
+
 export default function MenuPage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
+  const [style, setStyle] = useState("white");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -30,7 +40,7 @@ export default function MenuPage() {
     img.src = b64;
   });
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
-  const handleSubmit = async () => {
+  const runGenerate = async (styleKey: string) => {
     if (!image) { setError("사진을 올려주세요."); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
@@ -40,7 +50,7 @@ export default function MenuPage() {
       const res = await fetch("/api/menu", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: compressed }),
+        body: JSON.stringify({ image: compressed, style: styleKey }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -61,6 +71,18 @@ export default function MenuPage() {
     a.download = "menu.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   };
+  const chip = (opt: { key: string; label: string }, onResult: boolean) => {
+    const on = style === opt.key;
+    return (
+      <button key={opt.key}
+        onClick={() => { setStyle(opt.key); if (onResult) runGenerate(opt.key); }}
+        style={{ padding: "11px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
+          border: on ? "1.5px solid #FF4B7C" : "1.5px solid #E8E9ED",
+          background: on ? "#FF4B7C" : "#fff", color: on ? "#fff" : "#555" }}>
+        {opt.label}
+      </button>
+    );
+  };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
@@ -70,9 +92,9 @@ export default function MenuPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
           <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>📋 메뉴판에 바로 쓰는 사진</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>대충 찍은 음식 사진을 메뉴판·배달앱·포스터에 바로 쓸 수 있는 깔끔한 비주얼로 만들어드려요. 배경 정리 + 스튜디오 조명, 음식은 그대로예요.</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>대충 찍은 음식 사진을 메뉴판·배달앱·포스터에 바로 쓸 수 있는 깔끔한 비주얼로 만들어드려요. 배경 스타일을 고르면 그 느낌으로 다듬어드려요. 음식은 그대로예요.</p>
         </div>
-        {!result && (
+        {!result && !loading && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>음식 사진</p>
@@ -85,17 +107,21 @@ export default function MenuPage() {
                 <input type="file" accept="image/*" style={{ display: "none" }}
                   onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
               </label>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", margin: "18px 0 10px" }}>배경 스타일</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+                {STYLE_OPTIONS.map(opt => chip(opt, false))}
+              </div>
             </div>
-            <button onClick={handleSubmit} disabled={loading || !image}
-              style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "메뉴판 사진 만들기 ✨"}
+            <button onClick={() => runGenerate(style)} disabled={!image}
+              style={{ width: "100%", marginTop: 18, background: !image ? "#E8E9ED" : "#FF4B7C", color: !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: !image ? "not-allowed" : "pointer", boxShadow: !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
+              메뉴판 사진 만들기 ✨
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>📋</div>
-            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 메뉴판용으로 다듬고 있어요...</p>
+            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 메뉴판용으로 다듬고 있어요... ({elapsed}초)</p>
           </div>
         )}
         {error && (
@@ -109,11 +135,18 @@ export default function MenuPage() {
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="메뉴판 비주얼" style={{ width: "100%", display: "block" }} />
             </div>
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, marginBottom: 22 }}>
               <button onClick={handleDownload}
                 style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>저장하기</button>
-              <button onClick={() => { setResult(""); setImage(""); }}
-                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
+              <button onClick={() => { setResult(""); }}
+                style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>사진 바꾸기</button>
+            </div>
+            <div style={{ background: "#fff", borderRadius: 18, padding: "18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "0 0 4px" }}>다른 스타일로 더 만들어볼까요?</p>
+              <p style={{ fontSize: 12, color: "#9B9B9B", margin: "0 0 12px" }}>같은 사진으로 배경 스타일만 바꿔서 다시 만들어드려요.</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
+                {STYLE_OPTIONS.map(opt => chip(opt, true))}
+              </div>
             </div>
           </div>
         )}
