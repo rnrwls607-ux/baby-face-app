@@ -169,7 +169,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], go: "pet" },
       { id: "product", title: "상품 사진 보정", subtitle: "쇼핑몰·중고거래용", emoji: "📦", accent: "#E7F7EA", badge: "NEW", tags: ["상품"], image: "/cards/product.png", go: "product" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.png", go: "restore" },
-      { id: "realestate", title: "부동산 매물 정리", subtitle: "매물 사진 깔끔하게", emoji: "🏠", accent: "#E1ECFF", badge: "NEW", tags: ["부동산"], go: "realestate" },
+      { id: "realestate", title: "부동산 매물 정리", subtitle: "매물 사진 깔끔하게", emoji: "🏠", accent: "#E1ECFF", badge: "NEW", tags: ["부동산"], image: "/cards/realestate.png", go: "realestate" },
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], image: "/cards/interior.png", go: "interior" },
       { id: "car", title: "중고차 사진 보정", subtitle: "판매용 깔끔샷", emoji: "🚗", accent: "#E7F7EA", badge: "NEW", tags: ["중고차"], image: "/cards/car.png", go: "car" },
       { id: "lifeshot2", title: "인생샷 프로필", subtitle: "감성 프로필 한 장", emoji: "📸", accent: "#EFEAFF", badge: "NEW", tags: ["인생샷"], go: "lifeshot" },
