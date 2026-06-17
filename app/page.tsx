@@ -178,7 +178,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "illust", title: "AI 일러스트", subtitle: "사진이 그림 한 장으로", emoji: "🎨", accent: "#EFEAFF", badge: "NEW", tags: ["일러스트"], go: "illust" },
       { id: "figure", title: "미니어처 피규어", subtitle: "내 사진이 피규어로", emoji: "🧸", accent: "#FFF1E0", badge: "NEW", tags: ["피규어"], go: "figure" },
       { id: "age", title: "노년·베이비 변환", subtitle: "시간을 거슬러서", emoji: "⏳", accent: "#E7F7EA", badge: "NEW", tags: ["재미"], go: "age" },
-      { id: "menu", title: "메뉴판 비주얼", subtitle: "메뉴판에 바로 쓰는 사진", emoji: "📋", accent: "#FFF1E0", badge: "NEW", tags: ["사장님"], go: "menu" },
+      { id: "menu", title: "메뉴판 비주얼", subtitle: "메뉴판에 바로 쓰는 사진", emoji: "📋", accent: "#FFF1E0", image: "/cards/menu.png", badge: "NEW", tags: ["사장님"], go: "menu" },
       { id: "fashion", title: "패션 룩북", subtitle: "오늘의 착장이 화보로", emoji: "👗", accent: "#EFEAFF", badge: "NEW", tags: ["패션"], go: "fashion" },
       { id: "idol", title: "아이돌 프로필", subtitle: "오늘 데뷔하는 내 프로필", emoji: "🌟", accent: "#FFE0EC", badge: "NEW", tags: ["인생샷"], go: "idol" },
       { id: "xmas", title: "크리스마스 화보", subtitle: "따뜻한 연말 한 장", emoji: "🎄", accent: "#E7F7EA", badge: "NEW", tags: ["시즌"], go: "xmas" },
