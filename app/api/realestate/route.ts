@@ -2,30 +2,48 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-image";
+
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+
 async function generateRealestate(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional real-estate / interior photographer and retoucher.
-Improve this real-estate listing photo of a room or property so it looks
-bright, clean, and appealing to potential tenants or buyers.
-CRITICAL — preserve the space exactly:
-- Keep the exact architectural layout, room dimensions, fixtures, windows,
-  doors, and the camera angle and perspective identical. The viewer must
-  recognize it as the same actual room — do NOT fake or add rooms, furniture,
-  or features that are not there.
-Enhance ONLY photographic quality and tidiness:
-- Brighten dim interiors, correct yellow/uneven lighting to clean neutral
-  white balance, let existing windows look bright and inviting.
-- Recover detail in dark corners and blown-out windows.
-- Gently clean minor clutter and tidy the existing scene, without removing
-  real fixtures.
-- Straighten verticals slightly for a professional look.
-Photorealistic real-estate photography, honest and accurate, NOT a fake
-render. No added furniture, no structural changes, no text, no watermark.`;
+  const prompt = `You are a professional real-estate photo retoucher. Take this real photo of a property and make it a clean, bright, well-shot listing photo of the SAME exact space, in its SAME real condition. You improve the PHOTO (lighting, color, perspective, clarity) - you do NOT renovate, restage, or change the property itself. The result must still look like a genuine photo of that real place. This is for Korean property listings (Zigbang, Dabang, Naver Real Estate, Danggeun), where a photo that misrepresents the place loses trust and causes disputes - so honesty is the point.
+
+=== THE CORE: fix the PHOTO, change NONE of the actual property ===
+IMPROVE (the photo only), confidently:
+- Brightness/exposure: brighten dark or underexposed shots, lift shadows, and balance blown-out windows so the room is clearly visible in good, natural light.
+- Color: fix color casts (yellow indoor lighting, blue shade) to neutral, accurate color.
+- Perspective: correct wide-angle lens distortion so vertical lines (walls, door frames, windows) are straight and upright, not leaning or bulging. This is the biggest fix for amateur property photos.
+- Clarity: clean, crisp, even, professional real-estate look.
+
+KEEP EXACTLY (the property itself - do NOT change, add, remove, or hide):
+- The same room: its size, layout, proportions, walls, ceiling, floor, and the exact number, size, and position of all windows and doors.
+- The same contents: keep all furniture and objects as they are. Do NOT add furniture, do NOT stage or fill an empty room, do NOT remove furniture, do NOT redecorate or renovate anything.
+- The same fixtures and finishes: lights, outlets, AC units, sink, tiles, flooring, wallpaper - exactly as they are.
+- Real condition stays honest: do NOT hide or repair real defects - mold, water stains, cracks, peeling wallpaper, scuffs, dirt marks, or damage must remain visible. A renter or buyer relies on these.
+- The real view: keep whatever is actually outside the windows. If a window is blown out white, just tone it down naturally - do NOT invent a fake scenic view.
+- Light tidy is allowed: you MAY remove small loose clutter (a stray trash bag, scattered cables, a pile of laundry) for a cleaner shot - but never remove furniture, change the layout, or hide the room's real state.
+
+The test of a correct result: a dim, yellow, leaning-wall phone photo becomes a bright, color-accurate, straight, clear photo of the EXACT same room - nothing added, removed, renovated, or hidden.
+
+=== READ THE SHOT, THEN ADAPT ===
+Identify the space and enhance appropriately: living room / bedroom / kitchen / bathroom / entryway / full studio (one-room) / building exterior / commercial space.
+
+=== KEEP IT BELIEVABLE (anti-overprocessing - this earns trust) ===
+- The output must look like a genuine, careful photo, NOT an edited or AI image.
+- Do NOT over-process: no HDR halos, no oversaturation, no fake glow, no plastic-smooth surfaces, no dreamy or unreal look. Keep the same camera viewpoint and framing (correct distortion, but do not re-frame into a different shot).
+
+=== KEEP IT REAL (anti-fake) ===
+- Photorealistic only. Real materials, real light physics, real shadows.
+- NOT a CGI render, NOT a 3D model, NOT a video-game look.
+- No people. Do NOT invent or garble any text (signs, labels) - keep it as-is or blank.
+
+OUTPUT
+- High-resolution, sharp, and natural. No watermark, no text overlay, no added borders or logos. The same property, the same room - just brightly and professionally photographed. Honest and trustworthy.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
@@ -66,6 +84,7 @@ render. No added furniture, no structural changes, no text, no watermark.`;
   }
   return `data:image/png;base64,${b64}`;
 }
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

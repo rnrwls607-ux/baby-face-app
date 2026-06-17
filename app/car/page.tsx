@@ -22,7 +22,7 @@ export default function CarPage() {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement("canvas");
-      const M = 1024; let { width: w, height: h } = img;
+      const M = 2048 ; let { width: w, height: h } = img;
       if (w > h) { if (w > M) { h = h * M / w; w = M; } } else { if (h > M) { w = w * M / h; h = M; } }
       c.width = w; c.height = h; c.getContext("2d")!.drawImage(img, 0, 0, w, h);
       res(c.toDataURL("image/jpeg", 0.9));
