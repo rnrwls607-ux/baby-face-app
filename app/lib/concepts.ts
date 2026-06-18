@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  |  "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -280,6 +280,21 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     detailImage: "/details/menu.png",
     start: "menu",
+  },
+  nukki: {
+    key: "nukki",
+    title: "배경 제거",
+    subtitle: "누끼 따서 투명 PNG로",
+    emoji: "✂️",
+    accent: "#DCEBFF",
+    description: "상품·인물·사물 사진의 배경을 깔끔하게 지워 투명 배경 PNG로 만들어드려요. 상세페이지·디자인·합성에 바로 쓰세요.",
+    examples: [
+      { emoji: "✂️", accent: "#DCEBFF" },
+      { emoji: "🖼️", accent: "#E7F7EA" },
+      { emoji: "✨", accent: "#FFEAF1" },
+    ],
+    detailImage: "/details/nukki.png",
+    start: "nukki",
   },
   fashion: {
     key: "fashion",
