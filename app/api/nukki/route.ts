@@ -2,10 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-// 배경 제거 모델. ★출시(과금) 전 이 모델 페이지의 License 항목 확인.
-// 모델 교체 시 이 한 줄만 바꾸면 됨 (입력 image / 출력 투명PNG 형식이면 호환):
-//   851-labs/background-remover (현재) · lucataco/remove-bg · codeplugtech/background_remover
+// 배경 제거 모델 (커뮤니티 모델 → 버전 조회 후 호출).
+// ★출시(과금) 전 이 모델 페이지의 License 항목 확인. 교체 시 이 한 줄만 바꾸면 됨.
 const REPLICATE_MODEL = "851-labs/background-remover";
+
+async function getLatestVersion(token: string): Promise<string> {
+  const r = await fetch(`https://api.replicate.com/v1/models/${REPLICATE_MODEL}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!r.ok) throw new Error("모델 정보를 불러오지 못했어요 (" + r.status + ").");
+  const m = await r.json();
+  const v = m?.latest_version?.id;
+  if (!v) throw new Error("모델 버전을 찾지 못했어요.");
+  return v;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,15 +26,20 @@ export async function POST(request: NextRequest) {
     const token = process.env.REPLICATE_API_TOKEN;
     if (!token) return NextResponse.json({ error: "서버 설정 오류: REPLICATE_API_TOKEN이 없어요." }, { status: 500 });
 
+    const version = await getLatestVersion(token);
+
     const t0 = Date.now();
-    const res = await fetch(`https://api.replicate.com/v1/models/${REPLICATE_MODEL}/predictions`, {
+    const res = await fetch("https://api.replicate.com/v1/predictions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "Prefer": "wait=55",
+        Prefer: "wait=55",
       },
-      body: JSON.stringify({ input: { image } }),
+      body: JSON.stringify({
+        version,
+        input: { image, background_type: "rgba", format: "png", threshold: 0 },
+      }),
     });
 
     const data = await res.json();
@@ -36,7 +51,6 @@ export async function POST(request: NextRequest) {
     const outUrl: string | undefined = typeof out === "string" ? out : (Array.isArray(out) ? out[0] : undefined);
     if (!outUrl) throw new Error("결과 이미지를 받지 못했어요. 다시 시도해주세요.");
 
-    // 투명 PNG를 받아 data URL로 변환 (투명도 유지 + 링크 만료 방지)
     const imgRes = await fetch(outUrl);
     if (!imgRes.ok) throw new Error("결과 이미지를 불러오지 못했어요.");
     const buf = Buffer.from(await imgRes.arrayBuffer());
