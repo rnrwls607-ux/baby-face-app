@@ -583,6 +583,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
+  if (go === "nukki") return CONCEPTS.nukki;
   if (go === "fashion") return CONCEPTS.fashion;
   if (go === "idol") return CONCEPTS.idol;
   if (go === "xmas") return CONCEPTS.xmas;
