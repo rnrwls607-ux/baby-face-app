@@ -7,6 +7,16 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-06-18 — 누끼(배경 제거) 완성
+- 컨셉: 상품·인물·사물 사진 배경 제거 → 투명 PNG. 생성 AI 아님, 배경제거 전용(세그멘테이션) 모델. 셀러·디자이너용.
+- 엔진: Replicate 851-labs/background-remover, 장당 ~0.5원. 커뮤니티 모델이라 version 조회 후 /v1/predictions 호출 (Prefer: wait=55).
+- 만든 파일: app/api/nukki/route.ts, app/nukki/page.tsx, public/cards/nukki.png, public/details/nukki.png.
+- 페이지: 업로드 → 생성 → "PNG 저장", 체커보드로 투명 표시. M=1024.
+- 상세페이지: A형, 밝고 깔끔(체커보드 모티프), Claude Design 제작 → public/details/nukki.png.
+- 디버깅 3건: (1)상세 PNG 오른쪽 잘림 = 1080px인데 700px로 export됨 → 풀폭 재export. (2)카드 누르면 "곧 만나요" = conceptForGo에 nukki 줄 누락 → `if (go==="nukki") return CONCEPTS.nukki;` 추가. (3)"만들기" 누르면 홈으로 튕김 = 버튼 onClick에 nukki 줄 누락 → `else if (detail.start==="nukki") {…"/nukki"}` 추가.
+- ⭐배운 점: 새 컨셉은 conceptForGo + page.tsx 버튼 onClick에 "한 줄씩 수동 등록" 필요. 빠져도 빌드 에러 안 나서 함정(준비중 화면/홈 튕김).
+- 주의: 851-labs 상업 라이선스 확인 필요. 반투명(유리·머리카락) 가장자리 한계. 진짜 투명 PNG는 앱 "PNG 저장" 버튼으로만(스크린샷 X).
+- 다음에 할 것: realestate·car·interior 연결(체크리스트대로), idstyle 보류, Mission 5 토스 결제.
 
 ## 2026-06-18 — 메뉴판 비주얼 (menu) 완성
 - 컨셉: 대충 찍은 음식 사진 → 배달앱·메뉴판·포스터용 깔끔한 사진. "음식은 그대로, 더 먹음직스럽게"(정직 보정).

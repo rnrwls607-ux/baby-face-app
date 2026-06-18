@@ -1,0 +1,139 @@
+"use client";
+import { useState, useEffect } from "react";
+
+export default function UpscalePage() {
+  const [image, setImage] = useState("");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!loading) { setElapsed(0); return; }
+    const t = setInterval(() => setElapsed((p) => p + 1), 1000);
+    return () => clearInterval(t);
+  }, [loading]);
+
+  const toBase64 = (f: File): Promise<string> =>
+    new Promise((res, rej) => {
+      const r = new FileReader();
+      r.readAsDataURL(f);
+      r.onload = () => res(r.result as string);
+      r.onerror = rej;
+    });
+
+  const compress = (b64: string): Promise<string> =>
+    new Promise((res) => {
+      const img = new Image();
+      img.onload = () => {
+        const c = document.createElement("canvas");
+        const M = 1024;
+        let { width: w, height: h } = img;
+        if (w > h) { if (w > M) { h = (h * M) / w; w = M; } }
+        else { if (h > M) { w = (w * M) / h; h = M; } }
+        c.width = w; c.height = h;
+        c.getContext("2d")!.drawImage(img, 0, 0, w, h);
+        res(c.toDataURL("image/jpeg", 0.92));
+      };
+      img.src = b64;
+    });
+
+  const handlePick = async (f: File) => {
+    setResult(""); setError("");
+    setImage(await toBase64(f));
+  };
+
+  const handleRun = async () => {
+    if (!image) { setError("사진을 먼저 올려주세요."); return; }
+    setLoading(true); setError(""); setResult("");
+    try {
+      const c = await compress(image);
+      const res = await fetch("/api/upscale", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: c, scale: 4 }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "오류가 발생했어요.");
+      if (!data.output?.[0]) throw new Error("결과를 받지 못했어요.");
+      setResult(data.output[0]);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "오류가 발생했어요.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = () => {
+    if (!result) return;
+    const a = document.createElement("a");
+    a.href = result.startsWith("data:") ? result : "/api/download?url=" + encodeURIComponent(result);
+    a.download = "mospic_4k.png";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  };
+
+  return (
+    <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", height: 58, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
+        <button onClick={() => (window.location.href = "/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919" }}>‹</button>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>고화질 변환 (4K)</span>
+      </div>
+
+      <div style={{ padding: "8px 20px 100px" }}>
+        <p style={{ fontSize: 22, fontWeight: 900, color: "#191919", margin: "6px 0 4px" }}>🔍 흐린 사진을 또렷하게</p>
+        <p style={{ fontSize: 14, color: "#8A8F99", margin: "0 0 20px", lineHeight: 1.6 }}>
+          작고 흐릿한 사진을 4배 해상도(최대 4096px)로 키워드려요. 인쇄·상세페이지·확대용으로 좋아요.
+        </p>
+
+        {!result && (
+          <label style={{ cursor: "pointer", display: "block" }}>
+            <div style={{ border: image ? "2px solid #FF4B7C" : "2px dashed #E0E0E0", borderRadius: 18, padding: image ? 0 : "48px 20px", textAlign: "center", overflow: "hidden", background: "#FAFAFA" }}>
+              {image ? (
+                <img src={image} alt="" style={{ width: "100%", display: "block" }} />
+              ) : (
+                <>
+                  <div style={{ fontSize: 40, marginBottom: 10 }}>📷</div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "#191919", margin: "0 0 4px" }}>사진 올리기</p>
+                  <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>탭해서 선택하세요</p>
+                </>
+              )}
+            </div>
+            <input type="file" accept="image/*" style={{ display: "none" }}
+              onChange={(e) => { if (e.target.files?.[0]) handlePick(e.target.files[0]); }} />
+          </label>
+        )}
+
+        {image && !result && (
+          <button onClick={handleRun} disabled={loading}
+            style={{ width: "100%", marginTop: 14, background: loading ? "#F0F0F0" : "#FF4B7C", color: loading ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer" }}>
+            {loading ? `변환 중... (${elapsed}초)` : "고화질로 변환하기 ✨"}
+          </button>
+        )}
+
+        {error && (
+          <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 14 }}>
+            <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
+          </div>
+        )}
+
+        {result && (
+          <div style={{ marginTop: 8 }}>
+            <p style={{ fontSize: 16, fontWeight: 900, color: "#191919", margin: "0 0 10px", textAlign: "center" }}>✨ 4배 고화질로 변환됐어요!</p>
+            <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12, border: "1px solid #EEE" }}>
+              <img src={result} alt="고화질 결과" style={{ width: "100%", display: "block" }} />
+            </div>
+            <p style={{ fontSize: 12, color: "#aaa", textAlign: "center", margin: "0 0 14px" }}>※ 저장하면 원본 해상도(최대 4096px)로 받아져요</p>
+            <button onClick={handleDownload}
+              style={{ width: "100%", background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 15, fontWeight: 800, cursor: "pointer", marginBottom: 10 }}>
+              PNG 저장
+            </button>
+            <button onClick={() => { setImage(""); setResult(""); setError(""); }}
+              style={{ width: "100%", background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "13px 0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              다른 사진 변환하기
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
