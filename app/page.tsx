@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, clearHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
+import Upscale4K from "./components/Upscale4K";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
   "눈 모양 만드는 중...",
@@ -701,6 +702,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 <Icon.Share /> 공유하기
               </button>
             </div>
+            <Upscale4K image={results[selected]} />
             <button onClick={() => { setResults([]); setImage1(""); setImage2(""); setSelected(0); }}
               style={{ width: "100%", background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "13px 0", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
               <Icon.Refresh /> 다시 만들기
