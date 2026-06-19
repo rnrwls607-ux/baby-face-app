@@ -308,6 +308,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖼️", accent: "#E7F7EA" },
       { emoji: "✨", accent: "#FFEAF1" },
     ],
+    detailImage: "/details/upscale.png",
     start: "upscale",
   },
   fashion: {
