@@ -7,6 +7,19 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-06-19 — 고화질 변환(업스케일) 컨셉 + "4K로 받기" 버튼
+- 컨셉: 작고 흐린 사진 → 4배 해상도(최대 4096px) 업스케일. 생성 AI 아닌 전용 모델. 인쇄·상세페이지·확대용. (업로드 → 변환 → PNG 저장)
+- 배경지식: 생성 모델(나노바나나/Gemini, gpt-image-1)은 출력 ~1024px 고정 → 4096px은 "업스케일 단계 추가"로만 가능. 모델에 "4096으로 뽑아줘"는 안 됨.
+- 엔진: Replicate nightmareai/real-esrgan, scale 4, face_enhance false. 커뮤니티 모델이라 version 조회 후 /v1/predictions (Prefer: wait=55). 보통 12초 이내.
+- 비용: Replicate에서 청구(누끼·포토메이커와 같은 계정·토큰). 장당 약 $0.0025 ≈ 3~4원. replicate.com → Billing/Usage에서 확인.
+- 만든 파일: app/api/upscale/route.ts, app/upscale/page.tsx, app/components/Upscale4K.tsx.
+- 앱 등록(누끼와 동일 6곳): concepts.ts(start 타입 유니온 + upscale 블록 + conceptForGo 한 줄), page.tsx(GO_CATEGORIES + 홈카드 + 버튼 onClick). 이때 GO_CATEGORIES에 누끼도 추가(이전 누락분 보완).
+- "4K로 받기" 버튼: 공용 컴포넌트 Upscale4K.tsx로 분리 → 결과 화면엔 import 1줄 + `<Upscale4K image={결과} />` 1줄만. 아기 얼굴 결과 화면에 적용·작동 확인.
+- 디버깅: /upscale 404 = 파일 위치·코드 정상인데 배포 시간차였음 → 강력새로고침(Ctrl+Shift+R)으로 해결.
+- ⭐배운 점: 반복 UI는 컴포넌트로 빼면 페이지마다 2줄로 끝. 카드 썸네일/상세 PNG는 없어도 작동(이모지+설명 폴백)이라 나중에 추가 가능.
+- 별도 산출물: "새 컨셉 추가 체크리스트" 참고 문서 작성(수정 지점 11곳 + 빠뜨리면 생기는 증상 정리).
+- 다음에 할 것: 나머지 컨셉 결과 화면에 "4K로 받기" 2줄씩 추가(추후), upscale 카드 썸네일·상세 PNG 제작, 4K를 코인/결제와 묶기(Mission 5).
+
 ## 2026-06-18 — 누끼(배경 제거) 완성
 - 컨셉: 상품·인물·사물 사진 배경 제거 → 투명 PNG. 생성 AI 아님, 배경제거 전용(세그멘테이션) 모델. 셀러·디자이너용.
 - 엔진: Replicate 851-labs/background-remover, 장당 ~0.5원. 커뮤니티 모델이라 version 조회 후 /v1/predictions 호출 (Prefer: wait=55).
