@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -295,6 +295,20 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     detailImage: "/details/nukki.png",
     start: "nukki",
+  },
+  upscale: {
+    key: "upscale",
+    title: "고화질 변환",
+    subtitle: "흐린 사진을 4배 또렷하게",
+    emoji: "🔍",
+    accent: "#E1ECFF",
+    description: "작고 흐릿한 사진을 4배 해상도(최대 4096px)로 키워드려요. 인쇄·상세페이지·확대용으로 좋아요. 없던 디테일을 새로 만들진 못하니, 너무 뭉개진 사진은 한계가 있어요.",
+    examples: [
+      { emoji: "🔍", accent: "#E1ECFF" },
+      { emoji: "🖼️", accent: "#E7F7EA" },
+      { emoji: "✨", accent: "#FFEAF1" },
+    ],
+    start: "upscale",
   },
   fashion: {
     key: "fashion",
@@ -584,6 +598,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
   if (go === "nukki") return CONCEPTS.nukki;
+  if (go === "upscale") return CONCEPTS.upscale;
   if (go === "fashion") return CONCEPTS.fashion;
   if (go === "idol") return CONCEPTS.idol;
   if (go === "xmas") return CONCEPTS.xmas;
