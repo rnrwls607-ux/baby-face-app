@@ -1,30 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
+
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
 const GEMINI_MODEL = "gemini-3.1-flash-image";
+
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+
 async function generateFigure(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Transform this photo into a scene where everything looks like a premium
-handcrafted miniature figure diorama, keeping the original composition.
-CRITICAL — preserve the scene:
-- Keep the same composition, camera angle, framing, and poses. The viewer
-  must recognize it as the exact same scene, recreated in miniature.
-- If people or pets are present, keep their recognizable likeness (face,
-  hairstyle, outfit) faithfully translated into collectible-figure form.
-Style:
-- High-end collectible PVC figure look: smooth, slightly glossy figure
-  surfaces, crisp sculpted details, subtly stylized proportions (tasteful —
-  not extreme chibi).
-- Rebuild the background as a detailed miniature diorama set with realistic
-  miniature materials, and light it like a studio product shot.
-- Shallow depth of field, as if macro-photographed with a real camera.
-Final look: a photorealistic macro photograph of a beautifully crafted
-figure diorama. No text, no watermark, no border.`;
+  const prompt = `Transform this photo into a HYPER-REALISTIC MACRO PHOTOGRAPH of a premium handcrafted miniature figure diorama — as if a beautifully sculpted collectible model of this exact scene is sitting on a real desk, photographed up close with a real camera.
+
+SCENE PRESERVATION (most important):
+- Keep the SAME composition, camera angle, framing, and poses. The viewer must instantly recognize it as the exact same scene, faithfully recreated in miniature.
+- People/pets: preserve their RECOGNIZABLE LIKENESS — same face, facial features, hairstyle, expression, and outfit — accurately translated into figure form. Do NOT change who they are. Tasteful, lifelike figure proportions (NOT extreme chibi, NOT a different person).
+
+FIGURE MATERIAL & SCULPT (make it look like a real collectible):
+- High-end collectible PVC/resin figure: smooth surfaces with a subtle satin sheen, crisp hand-painted detail, fine visible brush/airbrush shading, clean sculpted edges, tiny realistic highlights on raised areas.
+- Believable miniature scale cues: slightly soft sculpted micro-details, gentle seam lines, realistic paint depth.
+
+DIORAMA BASE & SET:
+- Place the whole scene on a small detailed diorama base / round display stand with realistic miniature materials (tiny textured ground, mini props, scaled-down environment rebuilt from the original background).
+- The base sits on a real wooden desk or tabletop.
+
+MACRO / TILT-SHIFT LOOK (this sells the "tiny real model" illusion):
+- Strong shallow depth of field: the figure is razor-sharp in focus while the foreground and background fall off into a soft creamy blur (pronounced tilt-shift / macro bokeh).
+- Real studio product-shot lighting: soft key light, gentle rim light, realistic soft shadows on the desk.
+- Slightly blurred real-world room/desk in the background to reinforce that this is a physical object on a real table.
+
+FINAL LOOK: a crisp, professional macro product photograph of an adorable, highly detailed figure diorama you'd want to collect. Photorealistic — like a real photo of a real figure, NOT a 3D render, NOT a cartoon. No text, no logos, no watermark, no border.`;
+
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
@@ -52,7 +61,9 @@ figure diorama. No text, no watermark, no border.`;
   }
   clearTimeout(timer);
   console.log(`[figure] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+
   if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
@@ -65,6 +76,7 @@ figure diorama. No text, no watermark, no border.`;
   }
   return `data:image/png;base64,${b64}`;
 }
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
