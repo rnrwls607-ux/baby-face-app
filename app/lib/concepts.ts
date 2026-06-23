@@ -250,6 +250,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🏗️", accent: "#E7F7EA" },
       { emoji: "📦", accent: "#DCEBFF" },
     ],
+    detailImage: "/details/figure.png",
     start: "figure",
   },
   age: {
