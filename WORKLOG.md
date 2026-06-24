@@ -7,6 +7,18 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-06-24 — illust·age 상세페이지/썸네일 + 상세페이지 스킬 Claude Design화
+- 스킬 수정(mospic-detail-page-prompt): 제작 도구 Cowork → **Claude Design**으로 전면 교체. + **가로 1080px 잘림 해결책 못박음**: 캔버스 폭 정확히 1080px + 내보내기 **1배율(1x)**(2x가 기본이라 2160px로 커져서 잘렸던 게 원인 추정) + 내보낸 뒤 가로 픽셀 1080 확인. → 앞으로 모든 컨셉 상세페이지가 이 방식.
+- illust(일러스트): route 프롬프트 강화(STEP 구조 — ①사진 먼저 읽기(1인/커플/단체/펫/풍경 자동인식·인원수 보존) ②정체성 유지 ③여러 명일 때 얼굴 섞임/평균화 금지 ④웹툰·애니 키비주얼 화풍 가드, 3D·치비·싸구려필터 금지). 배포 완료. before 6장 GPT 프롬프트 + 파일명 체계 + Claude Design 배치 프롬프트 제공.
+- illust 상세페이지: Claude Design이 HTML로 뽑음. 단 이미지가 base64 임베드가 아니라 assets/ 파일 10개(after6+before3+로고) 참조 구조 → HTML만으론 렌더 시 깨짐. **PNG 마무리 보류**(이미지 10개 or Design 최종 PNG 올리면 1080px로 마무리).
+- age(나이변환): route 프롬프트 강화(노년·아기 둘 다 STEP 구조 + **성별·인종·피부톤 고정** + 노년 과노화/병약 금지·아기 언캐니("애늙은이") 금지). 배포 완료. cropToRatio(3,4) 유지. before 2장(성인 여/남) GPT 프롬프트 + 파일명 체계.
+- age 상세페이지: Claude Design 프롬프트 작성(**👴노년 / 👶아기 모드 섹션 분리**, 히어로=아기·지금·노년 3단 트립틱, 밝은 따뜻 파스텔). 제작 완료. 6장(원본2+노년2+아기2) 자리 재활용 구조.
+- age 썸네일: **아기|지금|노년 3분할 카드** PIL 제작(핑크 라벨+변화 화살표, 1000×1000). public/cards/age.png.
+- 파일명 체계: illust = after_woman/man/couple/family/pet/scene + before_man/woman/couple + mospic-logo / age = age_woman·man_now/old/baby.
+- ⭐배운 점: Claude Design HTML export는 이미지를 assets/ 파일 참조로 빼서 HTML만으론 재현 불가(이미지 같이 있어야). 상세 PNG는 Design에서 1x·1080px로 받는 게 정석.
+- 다음: ① illust·age 상세 PNG 1080px 검수 → public 저장 → concepts.ts detailImage + page.tsx image 연결 → **흐름 검증(conceptForGo·버튼 onClick 누락 체크)** → 묶어서 배포. ② 영구 이미지 저장 재점검(아래) → Toss 코인 결제.
+- 주의: ★영구저장 가정 수정 — 현재 히스토리에 이미지가 (수동저장 안 해도) 저장되고 1시간 만에 안 사라짐. 추정: Gemini 컨셉은 결과가 base64(이미지 자체)라 IndexedDB에 통째 저장→안 만료. Replicate 컨셉(아기·업스케일·누끼)만 URL이라 1시간 만료 위험. + IndexedDB는 기기·브라우저 로컬이라 폰 교체/데이터 삭제 시 사라짐(계정 동기화 아님). → Blob 만들기 전 Replicate route가 URL 반환인지 base64 반환인지 코드 확인 후 범위 결정.
+
 ## 2026-06-24 — 미니어처 피규어(figure) 제작 + 새 컨셉 배치 시작
 - 방향: 재미·바이럴 계열 3개 배치(피규어 → 일러스트 → 나이변환) 시작. 첫 타자 figure.
 - figure 엔진: voxel route 복제(모델·엔드포인트·파싱 검증된 구조 재사용) → 프롬프트만 교체. 모델 gemini-3.1-flash-image.

@@ -33,7 +33,30 @@ async function generateBaby(
   const mom = parseImage(momDataUrl);
   const dad = parseImage(dadDataUrl);
   const childWord = isBoy ? "son (a baby boy)" : "daughter (a baby girl)";
-  const prompt = `Image 1 is the mother. Image 2 is the father. Generate a single photorealistic portrait of their future child — a ${childWord}, around 2 to 3 years old. The child's face MUST be a natural, believable genetic blend of BOTH parents: mix the eye shape and eye color, nose, mouth, eyebrows, and overall face shape from the mother (image 1) and the father (image 2). Korean toddler. Soft natural daylight, candid lifestyle photo in a bright cozy sunlit room, shallow depth of field, warm cheerful mood. An adorable, healthy, realistic toddler with natural baby skin and proportions. Photorealistic, high detail, NOT a cartoon, NOT an illustration, no text. Output one single image of the child.`;
+  const prompt = `You are a professional, photorealistic portrait artist. Image 1 is the MOTHER and Image 2 is the FATHER. Generate one photorealistic portrait of their future child — a ${childWord}, around 2 to 3 years old.
+
+STEP 1 — Read both parents first:
+Look carefully at each parent's face: eye shape and eye color, nose, mouth and lips, eyebrows, overall face shape, skin tone, and hair color/texture. Note the ethnicity of both parents.
+
+STEP 2 — Blend the two faces believably (MOST IMPORTANT):
+- The child's face must look like a natural genetic mix of BOTH parents — clearly taking some features from the mother (image 1) and some from the father (image 2).
+- Inherit, don't copy: blend the eyes, nose, mouth, eyebrows, and face shape so the child resembles each parent in part. Do NOT just clone one parent's face, and do NOT produce a blurry "average" that resembles neither.
+- Keep the child's ethnicity and skin tone a natural blend of the parents'.
+
+STEP 3 — Render a real, healthy toddler (about 2–3 years old):
+- True toddler proportions: a rounder face with full cheeks, larger eyes relative to the face, a small soft nose, soft baby skin, and soft (possibly sparse) baby hair with a color drawn from the parents. This must look like a REAL toddler — never an adult face shrunk down.
+- A cute, cheerful, natural expression.
+
+STEP 4 — Photo look:
+Soft natural daylight, candid lifestyle photo in a bright, cozy, sunlit room, shallow depth of field, warm cheerful mood.
+
+ABSOLUTELY AVOID:
+- Copying only one parent (the child must clearly resemble BOTH).
+- An uncanny "tiny adult" look, or distorted/unnatural features.
+- Any cartoon or illustration style, text, letters, watermark, or border.
+- More than one child — output exactly ONE single image of the child.
+
+Photorealistic, high detail.`;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000); // 50초 넘으면 중단
