@@ -180,7 +180,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "hairstyle", title: "헤어 체인지", subtitle: "미용실 가기 전", emoji: "💇", accent: "#FFE0EC", badge: "NEW", tags: ["헤어"], go: "hairstyle" },
       { id: "illust", title: "AI 일러스트", subtitle: "사진이 그림 한 장으로", emoji: "🎨", accent: "#EFEAFF", image: "/cards/illust.png", badge: "NEW", tags: ["일러스트"], go: "illust" },
       { id: "figure", title: "미니어처 피규어", subtitle: "내 사진이 피규어로", emoji: "🧸", accent: "#FFF1E0", image: "/cards/figure.png", badge: "NEW", tags: ["피규어"], go: "figure" },
-      { id: "age", title: "노년·베이비 변환", subtitle: "시간을 거슬러서", emoji: "⏳", accent: "#E7F7EA", badge: "NEW", tags: ["재미"], go: "age" },
+      { id: "age", title: "노년·베이비 변환", subtitle: "시간을 거슬러서", emoji: "⏳", accent: "#E7F7EA", image: "/cards/age.png", badge: "NEW", tags: ["재미"], go: "age" },
       { id: "menu", title: "메뉴판 비주얼", subtitle: "메뉴판에 바로 쓰는 사진", emoji: "📋", accent: "#FFF1E0", image: "/cards/menu.png", badge: "NEW", tags: ["사장님"], go: "menu" },
       { id: "nukki", title: "배경 제거", subtitle: "누끼 따서 투명 PNG로", emoji: "✂️", accent: "#DCEBFF", image: "/cards/nukki.png", badge: "NEW", tags: ["디자인"], go: "nukki" },
       { id: "upscale", title: "고화질 변환", subtitle: "흐린 사진을 4배 또렷하게", emoji: "🔍", accent: "#E1ECFF", image: "/cards/upscale.png", badge: "NEW", tags: ["고화질"], go: "upscale" },
