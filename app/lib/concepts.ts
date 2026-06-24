@@ -548,6 +548,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖌️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/illust.png",
     start: "fourcutillust",
   },
   fourcutcouple: {
