@@ -24,7 +24,7 @@ async function saveToCloud(src: string, concept: string): Promise<void> {
 // 로그인 사용자의 클라우드 히스토리 목록 불러오기 (비로그인이면 빈 배열)
 export async function getCloudHistory(): Promise<CloudHistoryItem[]> {
   try {
-    const res = await fetch("/api/history/list");
+    const res = await fetch("/api/history/list", { cache: "no-store" });
     if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data.items) ? data.items : [];

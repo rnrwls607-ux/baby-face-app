@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { put } from "@vercel/blob";
 
-// ✅ usage/route.ts와 동일한 null-safe 초기화 방식
 const redis = process.env.KV_REST_API_URL
   ? new Redis({
       url: process.env.KV_REST_API_URL,
@@ -10,7 +9,6 @@ const redis = process.env.KV_REST_API_URL
     })
   : null;
 
-// 사용자당 클라우드에 보관할 최대 개수 (무료 구간 보호)
 const MAX_ITEMS = 500;
 
 function getUserId(request: NextRequest): string | null {
@@ -25,10 +23,12 @@ function getUserId(request: NextRequest): string | null {
 }
 
 export async function POST(request: NextRequest) {
-  // 비로그인·서버 미설정이면 "조용히 스킵" → 기존 동작 그대로 (에러 아님)
   const userId = getUserId(request);
-  if (!userId || !redis || !process.env.BLOB_READ_WRITE_TOKEN) {
-    return NextResponse.json({ saved: false });
+  // 🐛 디버그: 실패 원인을 응답에 노출 (원인 파악 후 제거 예정)
+  if (!userId) return NextResponse.json({ saved: false, reason: "no-userId" });
+  if (!redis) return NextResponse.json({ saved: false, reason: "no-redis" });
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json({ saved: false, reason: "no-blob-token" });
   }
 
   let src: unknown;
@@ -38,22 +38,22 @@ export async function POST(request: NextRequest) {
     src = body.src;
     concept = body.concept;
   } catch {
-    return NextResponse.json({ saved: false });
+    return NextResponse.json({ saved: false, reason: "bad-json" });
   }
 
-  // src 는 data URL (예: data:image/jpeg;base64,....) 이어야 함
   if (typeof src !== "string" || !src.startsWith("data:image/")) {
-    return NextResponse.json({ saved: false });
+    return NextResponse.json({ saved: false, reason: "bad-src" });
   }
 
   try {
     const match = src.match(/^data:(image\/[\w.+-]+);base64,(.*)$/);
-    if (!match) return NextResponse.json({ saved: false });
+    if (!match) return NextResponse.json({ saved: false, reason: "no-match" });
     const contentType = match[1];
     const buffer = Buffer.from(match[2], "base64");
     const ext = contentType.includes("png") ? "png" : "jpg";
 
     const id = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    const key = `history:${userId}`;
 
     // 1) 이미지 파일 → Vercel Blob (영구 보관)
     const blob = await put(`history/${userId}/${id}.${ext}`, buffer, {
@@ -69,12 +69,16 @@ export async function POST(request: NextRequest) {
       concept: typeof concept === "string" ? concept : "",
       createdAt: Date.now(),
     };
-    await redis.lpush(`history:${userId}`, item);
-    await redis.ltrim(`history:${userId}`, 0, MAX_ITEMS - 1);
+    await redis.lpush(key, item);
+    await redis.ltrim(key, 0, MAX_ITEMS - 1);
 
-    return NextResponse.json({ saved: true, url: blob.url });
-  } catch {
-    // 저장 실패해도 기존 동작을 깨지 않도록 조용히 실패 처리
-    return NextResponse.json({ saved: false });
+    // 🐛 디버그: 저장에 사용한 userId / key 를 응답에 노출
+    return NextResponse.json({ saved: true, userId, key, url: blob.url });
+  } catch (e) {
+    return NextResponse.json({
+      saved: false,
+      reason: "error",
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 }
