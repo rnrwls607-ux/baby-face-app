@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
-import { addToHistory, getHistory, clearHistory, type HistoryItem } from "./lib/history";
+import { addToHistory, getHistory, getCloudHistory, clearHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
 import Upscale4K from "./components/Upscale4K";
 const LOADING_MESSAGES = [
@@ -279,7 +279,16 @@ export default function Home() {
     const t = setInterval(() => setElapsed(p => p + 1), 1000);
     return () => { clearInterval(m); clearInterval(t); };
   }, [loading]);
- useEffect(() => { if (activeTab === "history") getHistory().then(setHistory); }, [activeTab]);
+ // 로그인 상태면 클라우드(Blob+Redis) 히스토리를, 비로그인이면 기존 로컬(IndexedDB)을 표시
+ const loadHistory = useCallback(async () => {
+   if (user) {
+     const cloud = await getCloudHistory();
+     setHistory(cloud.map(c => ({ id: c.id, src: c.url, concept: c.concept, createdAt: c.createdAt })));
+   } else {
+     setHistory(await getHistory());
+   }
+ }, [user]);
+ useEffect(() => { if (activeTab === "history") loadHistory(); }, [activeTab, loadHistory]);
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej; });
   const compress = (b64: string): Promise<string> => new Promise(res => {
     const img = new Image();
@@ -359,7 +368,7 @@ export default function Home() {
       try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
       setResults(data.output); setStep("");
       await addToHistory(data.output, "아기 얼굴");
-      getHistory().then(setHistory);
+      loadHistory();
     } catch (e: unknown) {
       clearTimeout(tid); setStep("");
       const err = e as {name?:string;message?:string};
