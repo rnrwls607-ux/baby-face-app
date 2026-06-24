@@ -1,8 +1,37 @@
 // 생성 결과를 브라우저(IndexedDB)에 안정적으로 저장하는 히스토리
 export type HistoryItem = { id: string; src: string; concept: string; createdAt: number };
 
+// 로그인 사용자의 클라우드(Blob+Redis) 히스토리 항목
+export type CloudHistoryItem = { id: string; url: string; concept: string; createdAt: number };
+
 const DB_NAME = "photoAppDB";
 const STORE = "history";
+
+// 로그인 상태면 클라우드(Blob+Redis)에도 저장 시도.
+// 비로그인·오프라인·서버 미설정이면 서버가 조용히 무시하므로 기존 동작에 영향 없음.
+async function saveToCloud(src: string, concept: string): Promise<void> {
+  try {
+    await fetch("/api/history/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ src, concept }),
+    });
+  } catch {
+    /* 저장 실패는 무시 (로컬 IndexedDB 저장은 이미 끝난 상태) */
+  }
+}
+
+// 로그인 사용자의 클라우드 히스토리 목록 불러오기 (비로그인이면 빈 배열)
+export async function getCloudHistory(): Promise<CloudHistoryItem[]> {
+  try {
+    const res = await fetch("/api/history/list");
+    if (!res.ok) return [];
+    const data = await res.json();
+    return Array.isArray(data.items) ? data.items : [];
+  } catch {
+    return [];
+  }
+}
 
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -68,6 +97,8 @@ export async function addToHistory(srcs: string[], concept: string): Promise<num
         tx.onerror = () => resolve();
         tx.onabort = () => resolve();
       });
+      // 로컬 저장 후, 로그인 상태면 클라우드에도 저장 (실패해도 기존 동작 유지)
+      await saveToCloud(small, concept);
       count++;
     }
     return count;
