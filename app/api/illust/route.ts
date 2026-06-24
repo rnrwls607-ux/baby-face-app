@@ -9,23 +9,34 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateIllust(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Transform this photo into a beautiful, high-quality digital illustration
-while keeping the original composition.
-CRITICAL — preserve the scene and identity:
-- Keep the same composition, camera angle, framing, and poses. All subjects
-  must stay exactly where they are in the original photo.
-- If people or pets are present, keep their recognizable likeness: same face
-  shape, hairstyle, expression, and outfit, so they are clearly the same
-  person — just illustrated.
-Style:
-- Premium hand-drawn digital illustration: clean confident line work, soft
-  painterly shading, warm harmonious colors.
-- A polished modern look like a high-end webtoon or animation key visual —
-  charming and warm, NOT a childish doodle and NOT a cheap photo filter.
-- Simplify noisy background details slightly for a clean illustrated look,
-  while keeping the place recognizable.
-Final look: one cohesive hand-crafted illustration. No remaining photo
-textures, no text, no watermark, no border.`;
+  const prompt = `Transform this photo into a premium hand-drawn digital illustration, keeping the original scene and every subject's identity intact.
+
+STEP 1 — Read the photo first:
+Identify what is in the image (a single person, a couple, a group, a pet/animal, a landscape, or an object) and illustrate it accordingly. Keep the exact same number of subjects — never add or remove anyone.
+
+STEP 2 — Preserve composition (do not move anything):
+- Keep the same composition, camera angle, framing, crop, and every pose.
+- Each subject must stay in the exact same position as in the original photo.
+
+STEP 3 — Preserve identity (MOST IMPORTANT):
+- For each person, keep their recognizable likeness: same face shape and proportions, same eye shape, nose, mouth, hairstyle, expression, and outfit — so they are unmistakably the same person, just illustrated.
+- When several people are present, illustrate each one from their own face. NEVER blend, swap, or average features between different people.
+- For pets, keep the same breed, fur color/pattern, and markings.
+
+STEP 4 — Apply the illustration style:
+- Clean, confident line work with consistent weight.
+- Soft painterly shading with smooth cel-style gradients and gentle, warm directional lighting.
+- A harmonious, slightly warm color palette with clear soft highlights.
+- The polished look of a high-end webtoon, animation key visual, or modern editorial illustration — charming, refined, and intentional.
+- Simplify busy background details into clean illustrated shapes, while keeping the location clearly recognizable.
+
+ABSOLUTELY AVOID:
+- 3D render / CGI / plastic look.
+- Childish doodle, chibi, caricature, or distorted proportions.
+- A cheap photo filter — no leftover photographic textures, noise, or realism.
+- Any text, letters, watermark, signature, frame, or border.
+
+Final result: one cohesive, hand-crafted digital illustration with no photo textures remaining.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

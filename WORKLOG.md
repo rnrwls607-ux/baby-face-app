@@ -7,6 +7,19 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-06-24 — 미니어처 피규어(figure) 제작 + 새 컨셉 배치 시작
+- 방향: 재미·바이럴 계열 3개 배치(피규어 → 일러스트 → 나이변환) 시작. 첫 타자 figure.
+- figure 엔진: voxel route 복제(모델·엔드포인트·파싱 검증된 구조 재사용) → 프롬프트만 교체. 모델 gemini-3.1-flash-image.
+- 피규어 방향 결정: "디오라마"(책상 위 정교한 모형). cf. 박스 피규어(A) 대신 디오라마(B) 선택.
+- 프롬프트 강화(5포인트): 틸트시프트 강하게(피규어만 razor-sharp, 앞뒤 크리미 블러), PVC/레진 새틴 광택+손도색 붓터치, 디오라마 받침대+실제 나무 책상, 닮음 가드 강화(같은 얼굴·이목구비·헤어·옷, 딴사람/과한 치비 금지), 제품컷 조명. "3D렌더·만화 아님" 못박음. → 결과물 퀄 확 좋아짐(받침대·미니 소품·틸트시프트 잘 살아남).
+- page.tsx: 이미 존재(디오라마 설명 포함). concepts.ts 블록/타입/conceptForGo, page.tsx 카드/GO_CATEGORIES/버튼도 이미 등록돼 있었음 → route.ts만 새로 만들면 됐음.
+- 썸네일: 원본|피규어 좌우분할 카드 제작(전신 사진이라 위/아래 대신 좌우). public/cards/figure.png. page.tsx figure 카드에 image 추가.
+- 상세페이지: mospic-detail-page-prompt 스킬로 Cowork 프롬프트 작성(C형 변환, (가) 밝은 파스텔). before 4장 GPT 프롬프트(fig_person/couple/family/pet) + 8장(원본4+피규어4) 슬롯 배치표 제공. 실제 before 4장 + /figure 돌린 피규어 4장 준비 완료.
+- 진행: figure route·page·썸네일 완료. 남은 것 = 상세 PNG(Cowork, 1080px 풀폭) 넣고 detailImage 추가 → 그러면 figure 완성.
+- 별도 산출물: HANDOFF(인수인계) 문서 작성. 새컨셉_추가_체크리스트.md·working.md는 이전 세션에 작성됨.
+- 모델 변경 기록: 이미지 생성 모델이 gemini-2.5-flash-image → gemini-3.1-flash-image로 올라가 있음.
+- 다음: figure 상세 마무리 → illust·age 제작. (수익화 전 영구 이미지 저장이 critical 과제로 남아있음.)
+
 ## 2026-06-19 — 고화질 변환(업스케일) 컨셉 + "4K로 받기" 버튼
 - 컨셉: 작고 흐린 사진 → 4배 해상도(최대 4096px) 업스케일. 생성 AI 아닌 전용 모델. 인쇄·상세페이지·확대용. (업로드 → 변환 → PNG 저장)
 - 배경지식: 생성 모델(나노바나나/Gemini, gpt-image-1)은 출력 ~1024px 고정 → 4096px은 "업스케일 단계 추가"로만 가능. 모델에 "4096으로 뽑아줘"는 안 됨.
