@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
-import { addToHistory, getHistory, getCloudHistory, clearHistory, type HistoryItem } from "./lib/history";
+import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
 import Upscale4K from "./components/Upscale4K";
 const LOADING_MESSAGES = [
@@ -794,7 +794,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           ) : (
             <>
               <div style={{ display: "flex", justifyContent: "flex-end", padding: "4px 16px 8px" }}>
-                <button onClick={() => { if (window.confirm("저장된 사진을 모두 지울까요?")) { clearHistory().then(() => setHistory([])); } }}
+                <button onClick={async () => { if (window.confirm("저장된 사진을 모두 지울까요?")) { await clearHistory(); if (user) await clearCloudHistory(); setHistory([]); } }}
                   style={{ background: "none", border: "none", color: "#B5B9C0", fontSize: 12, cursor: "pointer" }}>전체 삭제</button>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4, padding: "0 4px 4px" }}>

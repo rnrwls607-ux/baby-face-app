@@ -33,6 +33,15 @@ export async function getCloudHistory(): Promise<CloudHistoryItem[]> {
   }
 }
 
+// 로그인 사용자의 클라우드 히스토리 전체 삭제 (비로그인이면 서버가 무시)
+export async function clearCloudHistory(): Promise<void> {
+  try {
+    await fetch("/api/history/clear", { method: "POST" });
+  } catch {
+    /* 삭제 실패는 무시 */
+  }
+}
+
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, 1);
