@@ -8,6 +8,7 @@
 - 주의/메모:+
 
 ## 2026-06-24 — illust·age 상세페이지/썸네일 + 상세페이지 스킬 Claude Design화
+WORKLOG.md 맨 위에 이번 작업 정리해줘: 로그인 사용자 클라우드 히스토리(Vercel Blob + Redis) 구현 완료, 기기 간 동기화 작동 확인. 그리고 핵심 교훈(프로젝트가 nn5a/baby-face-app 둘로 갈려 있었던 것, BLOB_READ_WRITE_TOKEN은 코드가 배포되는 프로젝트에 있어야 함)도 남겨줘.
 - 스킬 수정(mospic-detail-page-prompt): 제작 도구 Cowork → **Claude Design**으로 전면 교체. + **가로 1080px 잘림 해결책 못박음**: 캔버스 폭 정확히 1080px + 내보내기 **1배율(1x)**(2x가 기본이라 2160px로 커져서 잘렸던 게 원인 추정) + 내보낸 뒤 가로 픽셀 1080 확인. → 앞으로 모든 컨셉 상세페이지가 이 방식.
 - illust(일러스트): route 프롬프트 강화(STEP 구조 — ①사진 먼저 읽기(1인/커플/단체/펫/풍경 자동인식·인원수 보존) ②정체성 유지 ③여러 명일 때 얼굴 섞임/평균화 금지 ④웹툰·애니 키비주얼 화풍 가드, 3D·치비·싸구려필터 금지). 배포 완료. before 6장 GPT 프롬프트 + 파일명 체계 + Claude Design 배치 프롬프트 제공.
 - illust 상세페이지: Claude Design이 HTML로 뽑음. 단 이미지가 base64 임베드가 아니라 assets/ 파일 10개(after6+before3+로고) 참조 구조 → HTML만으론 렌더 시 깨짐. **PNG 마무리 보류**(이미지 10개 or Design 최종 PNG 올리면 1080px로 마무리).

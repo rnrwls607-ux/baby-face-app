@@ -32,20 +32,15 @@ function getUserId(request: NextRequest): string | null {
 export async function GET(request: NextRequest) {
   const noStore = { headers: { "Cache-Control": "no-store, max-age=0" } };
   const userId = getUserId(request);
+  if (!userId || !redis) {
+    return NextResponse.json({ items: [] }, noStore);
+  }
 
-  // 🐛 디버그: 읽는 userId / key 를 응답에 노출 (원인 파악 후 제거 예정)
-  if (!userId) return NextResponse.json({ items: [], userId: null, reason: "no-userId" }, noStore);
-  if (!redis) return NextResponse.json({ items: [], userId, reason: "no-redis" }, noStore);
-
-  const key = `history:${userId}`;
   try {
-    const items = await redis.lrange<CloudHistoryItem>(key, 0, -1);
-    const arr = Array.isArray(items) ? items : [];
-    return NextResponse.json({ items: arr, userId, key, count: arr.length }, noStore);
-  } catch (e) {
-    return NextResponse.json(
-      { items: [], userId, key, reason: "error", error: e instanceof Error ? e.message : String(e) },
-      noStore
-    );
+    // lpush 로 최신이 앞에 오므로 그대로 최신순
+    const items = await redis.lrange<CloudHistoryItem>(`history:${userId}`, 0, -1);
+    return NextResponse.json({ items: Array.isArray(items) ? items : [] }, noStore);
+  } catch {
+    return NextResponse.json({ items: [] }, noStore);
   }
 }
