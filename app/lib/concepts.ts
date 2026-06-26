@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -236,8 +236,23 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖌️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/illust.png",
     start: "illust",
   },
+   idskyblue: {
+       key: "idskyblue",
+       title: "하늘빛 블루 셔츠",
+       subtitle: "맑고 산뜻한 첫인상",
+       emoji: "📷",
+       accent: "#EAF3FF",
+       description: "하늘빛 블루 셔츠에 깨끗한 하늘색 배경. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올려주시면, 가장 잘 나온 증명사진 3장을 만들어드려요.",
+       examples: [
+         { emoji: "📷", accent: "#EAF3FF" },
+         { emoji: "💙", accent: "#DCEBFF" },
+         { emoji: "✨", accent: "#EAF3FF" },
+       ],
+       start: "idskyblue",
+     },
   figure: {
     key: "figure",
     title: "미니어처 피규어",
@@ -549,7 +564,6 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖌️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
-    detailImage: "/details/illust.png",
     start: "fourcutillust",
   },
   fourcutcouple: {
@@ -598,6 +612,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "bizprofile") return CONCEPTS.bizprofile;
   if (go === "hairstyle") return CONCEPTS.hairstyle;
   if (go === "illust") return CONCEPTS.illust;
+  if (go === "idskyblue") return CONCEPTS.idskyblue;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
