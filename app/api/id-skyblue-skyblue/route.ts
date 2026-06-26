@@ -154,8 +154,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "사진은 최대 6장까지 올릴 수 있어요." }, { status: 400 });
     }
 
-    // ★핵심: 독립 3회 동시 호출 (Promise.all)
-    // 같은 입력·같은 프롬프트를 서로 모르는 3개 요청으로 보내 → 진짜 다른 3장
+    // 독립 3회 동시 호출 — 같은 입력·프롬프트를 서로 모르는 3개 요청으로 보내 진짜 다른 3장
+    // (속도 우선: 재시도 없음. 가끔 1~2장 실패하면 나온 만큼만 반환)
     const results = await Promise.allSettled([
       generateOneIdPhoto(images),
       generateOneIdPhoto(images),
@@ -167,7 +167,6 @@ export async function POST(request: NextRequest) {
       .map((r) => r.value);
 
     if (outputs.length === 0) {
-      // 3개 다 실패하면 첫 번째 에러 메시지 보여주기
       const firstError = results.find((r) => r.status === "rejected") as PromiseRejectedResult | undefined;
       const msg = (firstError?.reason as { message?: string })?.message || "이미지를 만들지 못했어요.";
       return NextResponse.json({ error: msg }, { status: 500 });
