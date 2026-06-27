@@ -182,7 +182,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "idskyblue", title: "하늘빛 블루 셔츠", subtitle: "맑고 산뜻한 첫인상", emoji: "📷", accent: "#EAF3FF", image: "/cards/idskyblue.png", badge: "NEW", tags: ["증명사진"], go: "idskyblue" },
       { id: "biznavy", title: "네이비 정장 프로필", subtitle: "신뢰를 더하는 프로페셔널", emoji: "💼", accent: "#EAF3FF", image: "/cards/biznavy.png", badge: "NEW", tags: ["비즈니스"], go: "biznavy" },
       { id: "bizblack", title: "블랙 정장 프로필", subtitle: "격식을 갖춘 클래식", emoji: "🖤", accent: "#F0F1F4", image: "/cards/bizblack.png", badge: "NEW", tags: ["비즈니스"], go: "bizblack" },
-      { id: "bizwhite", title: "화이트 셔츠 프로필", subtitle: "편안하고 단정한 전문가", emoji: "🤍", accent: "#FFF0F5", badge: "NEW", tags: ["비즈니스"], go: "bizwhite" },
+      { id: "bizwhite", title: "화이트 셔츠 프로필", subtitle: "편안하고 단정한 전문가", emoji: "🤍", accent: "#FFF0F5", image: "/cards/bizwhite.png", badge: "NEW", tags: ["비즈니스"], go: "bizwhite" },
       { id: "figure", title: "미니어처 피규어", subtitle: "내 사진이 피규어로", emoji: "🧸", accent: "#FFF1E0", image: "/cards/figure.png", badge: "NEW", tags: ["피규어"], go: "figure" },
       { id: "age", title: "노년·베이비 변환", subtitle: "시간을 거슬러서", emoji: "⏳", accent: "#E7F7EA", image: "/cards/age.png", badge: "NEW", tags: ["재미"], go: "age" },
       { id: "menu", title: "메뉴판 비주얼", subtitle: "메뉴판에 바로 쓰는 사진", emoji: "📋", accent: "#FFF1E0", image: "/cards/menu.png", badge: "NEW", tags: ["사장님"], go: "menu" },
