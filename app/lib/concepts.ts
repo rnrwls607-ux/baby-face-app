@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -283,6 +283,21 @@ export const CONCEPTS: Record<string, Concept> = {
        ],
        detailImage: "/details/bizblack.png",
        start: "bizblack",
+     },
+     bizwhite: {
+       key: "bizwhite",
+       title: "화이트 셔츠 프로필",
+       subtitle: "편안하고 단정한 전문가",
+       emoji: "🤍",
+       accent: "#FFF0F5",
+       description: "깔끔한 화이트 셔츠와 밝은 회색 배경의 편안한 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🤍", accent: "#FFF0F5" },
+         { emoji: "👔", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       detailImage: "/details/bizwhite.png",
+       start: "bizwhite",
      },
   figure: {
     key: "figure",
@@ -646,6 +661,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "idskyblue") return CONCEPTS.idskyblue;
   if (go === "biznavy") return CONCEPTS.biznavy;
   if (go === "bizblack") return CONCEPTS.bizblack;
+  if (go === "bizwhite") return CONCEPTS.bizwhite;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
