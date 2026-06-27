@@ -7,6 +7,32 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-06-26 — 정리 마무리 + 첫 얼굴 컨셉(증명사진) 풀 구현
+- 한 일:
+  - [정리] nn5a 프로젝트 git 연결 해제 (push가 baby-face-app 하나로만 가게)
+  - [정리] 카카오 배포용 Redirect URI 정리 (거꾸로 된 .../api/auth/callback/kakao 삭제, 올바른 .../api/auth/kakao/callback만 유지)
+  - [신규 컨셉] id-skyblue-skyblue 완성 = 증명사진(하늘색 셔츠 + 하늘색 배경), 한글명 "하늘빛 블루 셔츠"
+    · API route (app/api/id-skyblue-skyblue/route.ts): 입력 3~6장 받아 Gemini 독립 동시 3회 호출(Promise.allSettled)로 "진짜 다른" 증명사진 3장 출력. 프롬프트는 증명사진용(identity 우선, 얼굴 10% 축소, 점 처리=없는 점 X·있는 점 축소, 3.5:4.5 규격, 하늘색 셔츠+배경).
+    · 화면 (app/id-skyblue-skyblue/page.tsx): 갤러리 다중 선택(input multiple, 3~6장 누적) + 썸네일 그리드 미리보기 + 개별 삭제 + "3/6장" 표시 + 정면 얼굴 안내. 결과 3장 세로 나열, 각각 저장. 클라우드 히스토리 자동 연동(addToHistory). 디자인 파랑 #3B82F6 + 핑크 포인트.
+    · 홈 연결 5군데: concepts.ts(start 타입에 "idskyblue" 추가 / CONCEPTS에 idskyblue 블록 / conceptForGo에 if문) + page.tsx(카드 한 줄 추가 / 버튼 onClick에 else if → /id-skyblue-skyblue)
+    · 카피: "맑고 산뜻한 첫인상 / 하늘빛 블루 셔츠"
+    · 상세페이지(Claude Design)·썸네일 제작 → public/details/idskyblue.png, public/cards/idskyblue.png → page.tsx 카드 image, concepts.ts 블록 detailImage 연결
+  - 커밋 메시지: (Claude Code가 배포한 커밋 — id-skyblue 컨셉 + 썸네일/상세 연결)
+- 다음에 할 것:
+  - [수익화 핵심] Toss 코인 충전 연동(Mission 5). 1장당 900원 구상(3장=2700원), 1토큰=300원×3 또는 1토큰=900원. TOSS 키는 baby-face-app에 이미 등록됨.
+  - [수익화와 세트] "무조건 3장 보장" 살리기 → Vercel Pro 업그레이드(maxDuration 120초) + route에 재시도 로직(부족분 재호출) 다시 넣기. 지금은 속도 우선(동시 3회, 재시도 X, 타임아웃 55초)이라 가끔 2장 나옴. Hobby 60초 안에선 재시도가 빠듯해 보류.
+  - [얼굴 컨셉 확장] id-skyblue-skyblue를 "유형 A 템플릿"으로 복제 → 비즈프로필(3~6장→3장), 헤어스타일(2~6장→2장)
+  - [유형 B/C 설계] 커플(→2장)·가족(→3장)·펫+사람(→2장)·펫만(→1장)·베이비(1장→1장). 입력은 대상별로 칸 나눠 UI로 분리(자동 인식 X)
+  - [정리] fourcutillust에 잘못 붙은 detailImage 확인(전에 발견, 급하지 않음)
+- 주의/메모:
+  - ★얼굴 미화 = 버그 아니라 기능. 인물 컨셉 프롬프트에서 "원본 그대로/통통하게" 누르지 말 것. 사용자는 예쁘게 나오길 원함.
+  - ★다중 출력은 반드시 "독립 호출"로 — Gemini는 한 대화 연속 생성 시 앞 결과가 묻어나 비슷해짐. 별개 요청 N개로 보내야 진짜 다른 결과.
+  - ★다중 출력 최대 3장(요금 1장당 900원과 연결). 3장 제각각 나오는 건 의도된 강점(고르는 재미).
+  - ★입력 사진 적합성은 AI 자동 판별 대신 UI 구조(대상별 칸 분리 + 안내 문구)로 해결 — 부작용 적음.
+  - 새 컨셉 추가 시 조용한 버그 주의: 카드(page.tsx) + start타입/CONCEPTS/conceptForGo(concepts.ts) + 버튼onClick(page.tsx) 전부 등록해야 동작. 하나 빠져도 빌드는 통과.
+  - 썸네일 PNG 없이 image 경로 넣으면 조용히 깨짐 → PNG 먼저 넣고 경로 연결.
+  - 새 썸네일은 캐시(브라우저/PWA 서비스워커) 때문에 배포 직후 몇 분간 이모지로 보일 수 있음. 시간 지나면 뜸. 급하면 파일명에 버전(-v1) 붙이기.
+
 ## 2026-06-24 — illust·age 상세페이지/썸네일 + 상세페이지 스킬 Claude Design화
 WORKLOG.md 맨 위에 이번 작업 정리해줘: 로그인 사용자 클라우드 히스토리(Vercel Blob + Redis) 구현 완료, 기기 간 동기화 작동 확인. 그리고 핵심 교훈(프로젝트가 nn5a/baby-face-app 둘로 갈려 있었던 것, BLOB_READ_WRITE_TOKEN은 코드가 배포되는 프로젝트에 있어야 함)도 남겨줘.
 - 스킬 수정(mospic-detail-page-prompt): 제작 도구 Cowork → **Claude Design**으로 전면 교체. + **가로 1080px 잘림 해결책 못박음**: 캔버스 폭 정확히 1080px + 내보내기 **1배율(1x)**(2x가 기본이라 2160px로 커져서 잘렸던 게 원인 추정) + 내보낸 뒤 가로 픽셀 1080 확인. → 앞으로 모든 컨셉 상세페이지가 이 방식.

@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -253,6 +253,20 @@ export const CONCEPTS: Record<string, Concept> = {
        ],
         detailImage: "/details/idskyblue.png",
        start: "idskyblue",
+     },
+       biznavy: {
+       key: "biznavy",
+       title: "네이비 정장 프로필",
+       subtitle: "신뢰를 더하는 프로페셔널",
+       emoji: "💼",
+       accent: "#EAF3FF",
+       description: "깔끔한 네이비 정장과 차분한 회색 배경의 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "💼", accent: "#EAF3FF" },
+         { emoji: "🤵", accent: "#DCEBFF" },
+         { emoji: "✨", accent: "#EAF3FF" },
+       ],
+       start: "biznavy",
      },
   figure: {
     key: "figure",
@@ -614,6 +628,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "hairstyle") return CONCEPTS.hairstyle;
   if (go === "illust") return CONCEPTS.illust;
   if (go === "idskyblue") return CONCEPTS.idskyblue;
+  if (go === "biznavy") return CONCEPTS.biznavy;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
