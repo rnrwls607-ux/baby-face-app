@@ -830,7 +830,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
             <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
-              <button onClick={() => { const a = document.createElement("a"); a.href = historyView.src; a.download = `photo_${historyView.id}.jpg`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }}
+              <button onClick={() => { const a = document.createElement("a"); a.href = historyView.src.startsWith("data:") ? historyView.src : `/api/download?url=${encodeURIComponent(historyView.src)}`; a.download = `mospic_${historyView.id}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
             </div>
