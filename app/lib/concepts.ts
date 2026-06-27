@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" |"soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -298,6 +298,21 @@ export const CONCEPTS: Record<string, Concept> = {
        ],
        detailImage: "/details/bizwhite.png",
        start: "bizwhite",
+     },
+     bizribbon: {
+       key: "bizribbon",
+       title: "리본 블라우스 프로필",
+       subtitle: "우아하고 단정한 여성 프로필",
+       emoji: "🎀",
+       accent: "#FFF0F5",
+       description: "아이보리 리본 블라우스와 블랙 스커트, 밝은 회색 배경의 우아한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🎀", accent: "#FFF0F5" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       detailImage: "/details/bizribbon.png",
+       start: "bizribbon",
      },
   figure: {
     key: "figure",
@@ -662,6 +677,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "biznavy") return CONCEPTS.biznavy;
   if (go === "bizblack") return CONCEPTS.bizblack;
   if (go === "bizwhite") return CONCEPTS.bizwhite;
+  if (go === "bizribbon") return CONCEPTS.bizribbon;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
