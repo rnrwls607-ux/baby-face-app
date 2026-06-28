@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" |"soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -313,6 +313,146 @@ export const CONCEPTS: Record<string, Concept> = {
        ],
        detailImage: "/details/bizribbon.png",
        start: "bizribbon",
+     },
+     bizbeige: {
+       key: "bizbeige",
+       title: "베이지 정장 프로필",
+       subtitle: "부드럽고 따뜻한 전문가",
+       emoji: "🤎",
+       accent: "#F3ECE3",
+       description: "따뜻한 베이지 정장과 밝은 회색 배경의 우아한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🤎", accent: "#F3ECE3" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizbeige",
+     },
+     bizlavender: {
+       key: "bizlavender",
+       title: "라벤더 정장 프로필",
+       subtitle: "화사하고 부드러운 첫인상",
+       emoji: "💜",
+       accent: "#F0EBFA",
+       description: "화사한 파스텔 라벤더 정장과 밝은 회색 배경의 부드러운 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "💜", accent: "#F0EBFA" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizlavender",
+     },
+     bizgray: {
+       key: "bizgray",
+       title: "그레이 정장 프로필",
+       subtitle: "차분하고 전문적인 인상",
+       emoji: "🩶",
+       accent: "#EFF0F2",
+       description: "차분하고 전문적인 그레이 정장과 밝은 회색 배경의 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🩶", accent: "#EFF0F2" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizgray",
+     },
+     bizknit: {
+       key: "bizknit",
+       title: "니트 가디건 프로필",
+       subtitle: "친근하고 단정한 분위기",
+       emoji: "🧶",
+       accent: "#F5EFE6",
+       description: "부드러운 니트 가디건과 깔끔한 블라우스, 밝은 회색 배경의 친근한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🧶", accent: "#F5EFE6" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizknit",
+     },
+     bizchiffon: {
+       key: "bizchiffon",
+       title: "쉬폰 블라우스 프로필",
+       subtitle: "밝고 화사한 여성 프로필",
+       emoji: "🌸",
+       accent: "#FCEFF3",
+       description: "부드러운 쉬폰 블라우스와 파스텔 스커트, 밝은 회색 배경의 밝고 화사한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🌸", accent: "#FCEFF3" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizchiffon",
+     },
+     bizpinkjacket: {
+       key: "bizpinkjacket",
+       title: "핑크 트위드 재킷 프로필",
+       subtitle: "우아하고 화사한 셋업",
+       emoji: "🌷",
+       accent: "#FCE8EF",
+       description: "샤넬풍 핑크 트위드 재킷 셋업과 밝은 회색 배경의 화사하고 우아한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🌷", accent: "#FCE8EF" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizpinkjacket",
+     },
+     bizcreamdress: {
+       key: "bizcreamdress",
+       title: "크림 원피스 프로필",
+       subtitle: "은은하고 우아한 여성 프로필",
+       emoji: "🎀",
+       accent: "#FBF3E8",
+       description: "은은한 리본 장식의 크림 원피스와 밝은 회색 배경의 우아한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🎀", accent: "#FBF3E8" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizcreamdress",
+     },
+     biznavyblouse: {
+       key: "biznavyblouse",
+       title: "네이비 블라우스 프로필",
+       subtitle: "단정하고 클래식한 조합",
+       emoji: "💙",
+       accent: "#EAEFF7",
+       description: "단정한 네이비 블라우스와 베이지 스커트, 밝은 회색 배경의 클래식한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "💙", accent: "#EAEFF7" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "biznavyblouse",
+     },
+     bizskyblouse: {
+       key: "bizskyblouse",
+       title: "스카이블루 블라우스 프로필",
+       subtitle: "맑고 산뜻한 첫인상",
+       emoji: "🩵",
+       accent: "#EAF3FB",
+       description: "맑은 파스텔 스카이블루 블라우스와 베이지 스커트, 밝은 회색 배경의 밝고 산뜻한 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🩵", accent: "#EAF3FB" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizskyblouse",
+     },
+     bizpinktweed: {
+       key: "bizpinktweed",
+       title: "핑크 트위드 원피스 프로필",
+       subtitle: "격식 있는 우아한 원피스",
+       emoji: "🌸",
+       accent: "#FCE8EF",
+       description: "샤넬풍 핑크 트위드 원피스와 밝은 회색 배경의 우아하고 격식 있는 여성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+       examples: [
+         { emoji: "🌸", accent: "#FCE8EF" },
+         { emoji: "💁‍♀️", accent: "#FFE0EC" },
+         { emoji: "✨", accent: "#FFF0F5" },
+       ],
+       start: "bizpinktweed",
      },
   figure: {
     key: "figure",
@@ -678,6 +818,16 @@ export function conceptForGo(go: string): Concept {
   if (go === "bizblack") return CONCEPTS.bizblack;
   if (go === "bizwhite") return CONCEPTS.bizwhite;
   if (go === "bizribbon") return CONCEPTS.bizribbon;
+  if (go === "bizbeige") return CONCEPTS.bizbeige;
+  if (go === "bizlavender") return CONCEPTS.bizlavender;
+  if (go === "bizgray") return CONCEPTS.bizgray;
+  if (go === "bizknit") return CONCEPTS.bizknit;
+  if (go === "bizchiffon") return CONCEPTS.bizchiffon;
+  if (go === "bizpinkjacket") return CONCEPTS.bizpinkjacket;
+  if (go === "bizcreamdress") return CONCEPTS.bizcreamdress;
+  if (go === "biznavyblouse") return CONCEPTS.biznavyblouse;
+  if (go === "bizskyblouse") return CONCEPTS.bizskyblouse;
+  if (go === "bizpinktweed") return CONCEPTS.bizpinktweed;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
