@@ -51,7 +51,7 @@ SKIN & MARKS (default to clean skin)
   a new or bigger mark is never allowed.
 
 STANDARD LOOK
-- Background: solid, even, bright light neutral gray, no shadows.
+- Background: solid, even, pure clean white, no shadows, no gradient. A standard white ID-photo background.
 - Clothing: a sharp black formal suit jacket over a clean white collared shirt, with a
   neat dark necktie.
 - Hair: keep the person's own hairstyle, length, and texture from the primary photo
