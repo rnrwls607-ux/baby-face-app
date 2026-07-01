@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -941,6 +941,146 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "fourcutcouple",
   },
+  idblack: {
+    key: "idblack",
+    title: "블랙 정장 증명사진",
+    subtitle: "취업·이력서용 깔끔한 정석",
+    emoji: "🖤",
+    accent: "#EFEFF1",
+    description: "깔끔한 블랙 정장과 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🖤", accent: "#EFEFF1" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idblack",
+  },
+  idnavy: {
+    key: "idnavy",
+    title: "네이비 정장 증명사진",
+    subtitle: "신뢰감을 주는 면접용",
+    emoji: "💙",
+    accent: "#EAEFF7",
+    description: "신뢰감 있는 네이비 정장과 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "💙", accent: "#EAEFF7" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idnavy",
+  },
+  idcharcoal: {
+    key: "idcharcoal",
+    title: "차콜그레이 정장 증명사진",
+    subtitle: "차분하고 전문적인 인상",
+    emoji: "🩶",
+    accent: "#ECEDEF",
+    description: "차분하고 전문가다운 차콜그레이 정장과 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🩶", accent: "#ECEDEF" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idcharcoal",
+  },
+  idwhiteshirt: {
+    key: "idwhiteshirt",
+    title: "화이트셔츠 증명사진",
+    subtitle: "깔끔한 학생증·사원증용",
+    emoji: "🤍",
+    accent: "#F4F5F7",
+    description: "재킷 없이 깔끔한 화이트 셔츠와 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🤍", accent: "#F4F5F7" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idwhiteshirt",
+  },
+  idbeige: {
+    key: "idbeige",
+    title: "베이지 정장 증명사진",
+    subtitle: "부드럽고 따뜻한 인상",
+    emoji: "🧸",
+    accent: "#F3ECE3",
+    description: "부드럽고 따뜻한 인상의 베이지 정장과 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🧸", accent: "#F3ECE3" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idbeige",
+  },
+  idblacktie: {
+    key: "idblacktie",
+    title: "블랙정장+넥타이 증명사진",
+    subtitle: "격식을 갖춘 면접·서류용",
+    emoji: "🤵",
+    accent: "#EDEDEF",
+    description: "넥타이까지 갖춘 가장 격식 있는 블랙 정장과 밝은 회색 배경의 단정한 증명사진. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🤵", accent: "#EDEDEF" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idblacktie",
+  },
+  idblouse: {
+    key: "idblouse",
+    title: "아이보리 블라우스 증명사진",
+    subtitle: "편안하고 단정한 여성 느낌",
+    emoji: "🤍",
+    accent: "#FBF3E8",
+    description: "부드러운 아이보리 블라우스와 밝은 회색 배경의 단정한 증명사진. 정장보다 편안하면서도 깔끔한 인상을 줘요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🤍", accent: "#FBF3E8" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idblouse",
+  },
+  idknit: {
+    key: "idknit",
+    title: "니트 가디건 증명사진",
+    subtitle: "부드럽고 친근한 분위기",
+    emoji: "🧶",
+    accent: "#F5EFE6",
+    description: "부드럽고 친근한 니트 가디건과 밝은 회색 배경의 단정한 증명사진. 딱딱하지 않고 편안한 인상을 줘요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🧶", accent: "#F5EFE6" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idknit",
+  },
+  idturtleneck: {
+    key: "idturtleneck",
+    title: "터틀넥 증명사진",
+    subtitle: "모던하고 미니멀한 인상",
+    emoji: "🖤",
+    accent: "#EBECEE",
+    description: "모던하고 미니멀한 터틀넥 니트와 밝은 회색 배경의 단정한 증명사진. 깔끔하고 세련된 인상을 줘요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "🖤", accent: "#EBECEE" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idturtleneck",
+  },
+  idglasses: {
+    key: "idglasses",
+    title: "정장+안경 증명사진",
+    subtitle: "안경을 깔끔하게 살린 정장",
+    emoji: "👓",
+    accent: "#ECEEF1",
+    description: "안경을 깔끔하게 살린 정장 증명사진. 렌즈 반사·빛 번짐 없이 또렷하게 만들어드려요. 안경을 쓴 정면 사진을 3~6장 올리면, 가장 잘 나온 증명사진 3장을 만들어드려요. (남녀 모두 사용할 수 있어요.)",
+    examples: [
+      { emoji: "👓", accent: "#ECEEF1" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idglasses",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -998,6 +1138,16 @@ export function conceptForGo(go: string): Concept {
   if (go === "bizpinstripe") return CONCEPTS.bizpinstripe;
   if (go === "bizcheck") return CONCEPTS.bizcheck;
   if (go === "bizknitdress") return CONCEPTS.bizknitdress;
+  if (go === "idblack") return CONCEPTS.idblack;
+  if (go === "idnavy") return CONCEPTS.idnavy;
+  if (go === "idcharcoal") return CONCEPTS.idcharcoal;
+  if (go === "idwhiteshirt") return CONCEPTS.idwhiteshirt;
+  if (go === "idbeige") return CONCEPTS.idbeige;
+  if (go === "idblacktie") return CONCEPTS.idblacktie;
+  if (go === "idblouse") return CONCEPTS.idblouse;
+  if (go === "idknit") return CONCEPTS.idknit;
+  if (go === "idturtleneck") return CONCEPTS.idturtleneck;
+  if (go === "idglasses") return CONCEPTS.idglasses;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
