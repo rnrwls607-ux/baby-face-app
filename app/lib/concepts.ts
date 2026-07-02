@@ -953,6 +953,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idblack.png",
     start: "idblack",
   },
   idnavy: {
@@ -967,6 +968,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idnavy.png",
     start: "idnavy",
   },
   idcharcoal: {
@@ -981,6 +983,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idcharcoal.png",
     start: "idcharcoal",
   },
   idwhiteshirt: {
@@ -995,6 +998,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idwhiteshirt.png",
     start: "idwhiteshirt",
   },
   idbeige: {
@@ -1009,6 +1013,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idbeige.png",
     start: "idbeige",
   },
   idblacktie: {
@@ -1023,6 +1028,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idblacktie.png",
     start: "idblacktie",
   },
   idblouse: {
@@ -1037,6 +1043,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idblouse.png",
     start: "idblouse",
   },
   idknit: {
@@ -1051,6 +1058,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idknit.png",
     start: "idknit",
   },
   idturtleneck: {
@@ -1065,6 +1073,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idturtleneck.png",
     start: "idturtleneck",
   },
   idglasses: {
@@ -1079,6 +1088,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idglasses.png",
     start: "idglasses",
   },
   soon: {
