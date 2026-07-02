@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -1091,6 +1091,146 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/idglasses.png",
     start: "idglasses",
   },
+  idoffshoulder: {
+    key: "idoffshoulder",
+    title: "단발 오프숄더 증명사진",
+    subtitle: "청초하고 자연스러운 무드",
+    emoji: "💜",
+    accent: "#F0EBF7",
+    description: "청초한 단발과 오프숄더, 소프트 라벤더 배경의 화사한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "💜", accent: "#F0EBF7" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idoffshoulder",
+  },
+  idupdo: {
+    key: "idupdo",
+    title: "올림머리 블라우스 증명사진",
+    subtitle: "정돈된 이미지를 주는",
+    emoji: "🤍",
+    accent: "#EAF2EC",
+    description: "정돈된 올림머리와 아이보리 블라우스, 페일 민트 배경의 단정한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🤍", accent: "#EAF2EC" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idupdo",
+  },
+  idlonghair: {
+    key: "idlonghair",
+    title: "긴머리 블라우스 증명사진",
+    subtitle: "우아하고 자연스러운",
+    emoji: "🌸",
+    accent: "#F7ECF0",
+    description: "우아한 긴 생머리와 화이트 블라우스, 더스티 로즈 배경의 자연스러운 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🌸", accent: "#F7ECF0" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idlonghair",
+  },
+  idtweed: {
+    key: "idtweed",
+    title: "반묶음 트위드 증명사진",
+    subtitle: "포멀한 러블리 무드",
+    emoji: "🎀",
+    accent: "#F9EEE8",
+    description: "단정한 반묶음 헤어와 아이보리 트위드 자켓, 웜 피치 배경의 우아한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🎀", accent: "#F9EEE8" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idtweed",
+  },
+  idwavebob: {
+    key: "idwavebob",
+    title: "물결 단발 증명사진",
+    subtitle: "발랄하고 상큼한 C컬",
+    emoji: "💛",
+    accent: "#F7F3E4",
+    description: "발랄한 C컬 물결 단발과 베이지 니트, 버터옐로 배경의 상큼한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "💛", accent: "#F7F3E4" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idwavebob",
+  },
+  idponytail: {
+    key: "idponytail",
+    title: "로우 포니테일 증명사진",
+    subtitle: "깔끔하고 프로페셔널한",
+    emoji: "💙",
+    accent: "#ECEFF4",
+    description: "깔끔한 로우 포니테일과 네이비 정장, 라이트 그레이 배경의 프로페셔널한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (여성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "💙", accent: "#ECEFF4" },
+      { emoji: "💁‍♀️", accent: "#FFE0EC" },
+      { emoji: "✨", accent: "#FFF0F5" },
+    ],
+    start: "idponytail",
+  },
+  idgarma: {
+    key: "idgarma",
+    title: "가르마컷 블랙정장 증명사진",
+    subtitle: "신뢰감 있는 첫인상",
+    emoji: "🖤",
+    accent: "#ECEDEF",
+    description: "단정한 가르마컷과 블랙 정장, 차콜그레이 배경의 신뢰감 있는 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (남성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🖤", accent: "#ECEDEF" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idgarma",
+  },
+  iddropcut: {
+    key: "iddropcut",
+    title: "드랍컷 블루셔츠 증명사진",
+    subtitle: "차분한 리더의 이미지",
+    emoji: "💙",
+    accent: "#EAEFF7",
+    description: "자연스러운 드랍컷과 라이트 블루 셔츠, 그레이블루 배경의 차분한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (남성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "💙", accent: "#EAEFF7" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "iddropcut",
+  },
+  idperm: {
+    key: "idperm",
+    title: "페릭컷 화이트티 증명사진",
+    subtitle: "기본에 충실한 산뜻함",
+    emoji: "🤍",
+    accent: "#F5F1EA",
+    description: "깔끔한 페릭컷과 화이트 티셔츠, 샌드베이지 배경의 산뜻한 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (남성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🤍", accent: "#F5F1EA" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idperm",
+  },
+  idpomade: {
+    key: "idpomade",
+    title: "포마드 레트로정장 증명사진",
+    subtitle: "그 시절 감성의 클래식",
+    emoji: "🕶️",
+    accent: "#F0EBE4",
+    description: "클래식한 포마드 올백과 레트로 정장, 세피아 브라운 배경의 그 시절 감성 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요. (남성 전용 컨셉이에요.)",
+    examples: [
+      { emoji: "🕶️", accent: "#F0EBE4" },
+      { emoji: "🧑‍💼", accent: "#DCEBFF" },
+      { emoji: "✨", accent: "#EAF3FF" },
+    ],
+    start: "idpomade",
+  },
   soon: {
     key: "soon",
     title: "곧 만나요",
@@ -1158,6 +1298,16 @@ export function conceptForGo(go: string): Concept {
   if (go === "idknit") return CONCEPTS.idknit;
   if (go === "idturtleneck") return CONCEPTS.idturtleneck;
   if (go === "idglasses") return CONCEPTS.idglasses;
+  if (go === "idoffshoulder") return CONCEPTS.idoffshoulder;
+  if (go === "idupdo") return CONCEPTS.idupdo;
+  if (go === "idlonghair") return CONCEPTS.idlonghair;
+  if (go === "idtweed") return CONCEPTS.idtweed;
+  if (go === "idwavebob") return CONCEPTS.idwavebob;
+  if (go === "idponytail") return CONCEPTS.idponytail;
+  if (go === "idgarma") return CONCEPTS.idgarma;
+  if (go === "iddropcut") return CONCEPTS.iddropcut;
+  if (go === "idperm") return CONCEPTS.idperm;
+  if (go === "idpomade") return CONCEPTS.idpomade;
   if (go === "figure") return CONCEPTS.figure;
   if (go === "age") return CONCEPTS.age;
   if (go === "menu") return CONCEPTS.menu;
