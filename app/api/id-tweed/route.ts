@@ -29,7 +29,7 @@ SKIN & MARKS (default to clean skin)
 - Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
-- Hair: restyle into a HALF-UP style — the top and sides gathered back neatly while the rest falls down, smooth and glossy, tidy and elegant. (This overrides the source hairstyle, but NOT the face.)
+- Hair: restyle into a HALF-UP style — the top and sides gathered back neatly while the rest falls down, smooth and glossy, tidy and elegant. The hair outline must be clean and smooth where it meets the background — a soft, even, natural silhouette with no jagged, lumpy, rough, or pixelated edges, and no hard cut-out look. (This overrides the source hairstyle, but NOT the face.)
 - Clothing: an elegant ivory tweed jacket (Chanel-style) with a soft black ribbon/bow at the neckline, refined and lovely.
 - Background: solid warm peach tone, smooth and even, no shadows, no props.
 
