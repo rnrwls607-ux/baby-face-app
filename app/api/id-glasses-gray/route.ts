@@ -63,12 +63,14 @@ STANDARD LOOK
   warm and friendly for a good first impression. Keep it subtle so the face still looks
   like the same person; not wide, toothy, or a smirk. Eyes open and relaxed, on camera.
 - Lighting: bright, even, frontal (high-key), almost no facial shadow.
-- Eyewear & accessories: this look is optimized for glasses. If the person wears eyeglasses
-  in the source, keep the SAME glasses with their real shape and frame color, sitting
-  straight and level; render the lenses perfectly clear and transparent with NO glare, NO
-  reflections, and NO distortion, so both eyes are fully visible through the lenses. If the
-  source has no glasses, do not add any. Render the ears clean — remove all earrings and
-  ear jewelry even if present in the source. No other jewelry or accessories.
+- Eyewear & accessories: this is a WITH-GLASSES ID photo — the final image MUST show the
+  person wearing clean, clear eyeglasses, WITHOUT EXCEPTION. If the person already wears
+  eyeglasses in the source, keep the SAME glasses with their real shape and frame color. If
+  the source has NO glasses, you MUST add well-fitting eyeglasses with a simple, modern frame
+  that suits the face. In every case: sit the glasses straight and level, and render the
+  lenses perfectly clear and transparent with NO glare, NO reflections, and NO distortion, so
+  both eyes are fully visible through the lenses. Render the ears clean — remove all earrings
+  and ear jewelry even if present in the source. No other jewelry or accessories.
 
 FRAMING (always identical — ignore how the input is cropped)
 - Do NOT copy the input's zoom. Even if the input is a tight close-up of the face, always
