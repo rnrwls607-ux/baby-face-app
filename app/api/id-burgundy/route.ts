@@ -11,9 +11,9 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-// 긴머리 블라우스 (여성 전용 / 더스티 로즈 배경)
+// 버건디 오프숄더 (여성 전용 / 웜 피치 배경)
 const ID_PROMPT = `TASK
-You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style ID photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
+You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
 
 INPUT HANDLING
 - All attached photos are the same person. Treat the clearest, most front-facing photo as the primary reference for facial features; use the others to read the true face more accurately.
@@ -29,15 +29,15 @@ SKIN & MARKS (default to clean skin)
 - Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
-- Hair: restyle into long, straight, glossy dark hair flowing down over the shoulders, smooth and neat with a natural center part, no frizz. (This overrides the source hairstyle, but NOT the face.)
-- Clothing: a clean white blouse with a soft collar or neckline, elegant and simple.
-- Background: solid dusty rose (muted pink) tone, smooth and even, no shadows, no props.
+- Hair: restyle into soft layered shoulder-length hair in a light-brown color, with gentle movement and face-framing layers, glossy and neat. The hair outline must be clean and smooth where it meets the background — a soft, even silhouette with no jagged, lumpy, or pixelated edges. (This overrides the source hairstyle, but NOT the face.)
+- Clothing: an elegant deep burgundy satin off-shoulder top, feminine and chic, with a smooth draped neckline that gently exposes the shoulders in a tasteful, sophisticated way (elegant, not revealing).
+- Background: solid, even, warm peach tone, smooth and clean, no shadows, no props. Keep a clear separation between the burgundy top and the peach background so the clothing edge stays crisp.
 
 STYLING
-- Expression: a gentle, natural, closed-lip smile, warm and friendly. Eyes open, relaxed, on camera.
+- Expression: a soft, alluring, closed-lip smile, elegant and confident. Eyes open, relaxed, on camera.
 - Lighting: bright, even, frontal (high-key), soft and flattering, almost no harsh shadow.
+- Accessories: remove earrings and other jewelry, keep it clean. Soft feminine makeup.
 - Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
-- Accessories: remove earrings and other jewelry, keep it clean. Light natural makeup.
 
 FRAMING (always identical — ignore how the input is cropped)
 - Do NOT copy the input's zoom. Always produce a head-and-shoulders composition with shoulders clearly visible.
@@ -45,7 +45,7 @@ FRAMING (always identical — ignore how the input is cropped)
 - Head from top of hair to chin fills about 45% of the frame height, small even margin above the head, eyes slightly above the middle. Shoulders reach both edges, bottom cuts at upper chest.
 
 OUTPUT
-- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, clean and elegant.`;
+- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, elegant and feminine.`;
 
 async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
   const imageParts = imageDataUrls.map((url) => {
@@ -81,7 +81,7 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[id-longhair] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[id-burgundy] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
   if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ output: outputs });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("id-longhair error:", err?.message);
+    console.error("id-burgundy error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }

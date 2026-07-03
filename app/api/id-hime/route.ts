@@ -11,7 +11,7 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-// 긴머리 블라우스 (여성 전용 / 더스티 로즈 배경)
+// 밀크브라운 히메컷 (여성 전용 / 웜 로즈베이지 배경)
 const ID_PROMPT = `TASK
 You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style ID photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
 
@@ -29,15 +29,15 @@ SKIN & MARKS (default to clean skin)
 - Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
-- Hair: restyle into long, straight, glossy dark hair flowing down over the shoulders, smooth and neat with a natural center part, no frizz. (This overrides the source hairstyle, but NOT the face.)
-- Clothing: a clean white blouse with a soft collar or neckline, elegant and simple.
-- Background: solid dusty rose (muted pink) tone, smooth and even, no shadows, no props.
+- Hair: restyle into a soft, glossy long straight style in a warm milk-brown color, with gently rounded face-framing front layers (a soft hime-cut influence) and a natural center part. The hair outline must be clean and smooth where it meets the background — a soft, even silhouette with no jagged, lumpy, or pixelated edges. (This overrides the source hairstyle, but NOT the face.)
+- Clothing: a light beige tailored jacket over a clean ivory inner top, elegant and soft.
+- Background: solid, even, warm rose-beige tone, smooth and clean, no shadows, no props.
 
 STYLING
-- Expression: a gentle, natural, closed-lip smile, warm and friendly. Eyes open, relaxed, on camera.
+- Expression: a gentle, natural, closed-lip smile, warm and elegant. Eyes open, relaxed, on camera.
 - Lighting: bright, even, frontal (high-key), soft and flattering, almost no harsh shadow.
-- Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
 - Accessories: remove earrings and other jewelry, keep it clean. Light natural makeup.
+- Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
 
 FRAMING (always identical — ignore how the input is cropped)
 - Do NOT copy the input's zoom. Always produce a head-and-shoulders composition with shoulders clearly visible.
@@ -81,7 +81,7 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[id-longhair] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[id-hime] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
   if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ output: outputs });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("id-longhair error:", err?.message);
+    console.error("id-hime error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }

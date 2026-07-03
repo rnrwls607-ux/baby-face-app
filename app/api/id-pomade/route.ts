@@ -36,6 +36,7 @@ CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
 STYLING
 - Expression: a calm, composed, closed-lip expression, dignified and natural. Eyes open, relaxed, on camera.
 - Lighting: soft classic studio lighting with a gentle warm tone, like an old formal portrait.
+- Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
 - Accessories: no earrings or jewelry, clean.
 
 FRAMING (always identical — ignore how the input is cropped)

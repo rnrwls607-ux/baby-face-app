@@ -11,9 +11,9 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-// 긴머리 블라우스 (여성 전용 / 더스티 로즈 배경)
+// 소프트펌 베이지 블레이저 (남성 전용 / 웜 아이보리 배경)
 const ID_PROMPT = `TASK
-You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style ID photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
+You are RETOUCHING a real photograph of one real person into a single clean, refined profile-style ID photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
 
 INPUT HANDLING
 - All attached photos are the same person. Treat the clearest, most front-facing photo as the primary reference for facial features; use the others to read the true face more accurately.
@@ -21,23 +21,23 @@ INPUT HANDLING
 
 KEEP THE PERSON — replicate the face, do not redesign it (highest priority)
 - Reproduce the facial structure exactly as in the source: same face shape and width, same jaw and chin, same cheek fullness, same eye size and shape, same nose, same lips, same eyebrows, and the same spacing and proportions between all features. If a feature conflicts with the concept, keep the feature — identity wins.
-- Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, enlarge, sharpen, or beautify the face. Do not drift toward a generic idol-like face. This is one specific individual.
+- Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, sharpen, or beautify the face. Do not drift toward a generic idol-like face. This is one specific individual.
 - Even though the hairstyle changes, the face must stay the SAME person — same identity, same proportions. Changing the hair must never change the face.
-- Keep the apparent age and natural bone structure as in the source.
+- Keep the apparent age, natural bone structure, and any facial hair as in the source.
 
 SKIN & MARKS (default to clean skin)
 - Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
-- Hair: restyle into long, straight, glossy dark hair flowing down over the shoulders, smooth and neat with a natural center part, no frizz. (This overrides the source hairstyle, but NOT the face.)
-- Clothing: a clean white blouse with a soft collar or neckline, elegant and simple.
-- Background: solid dusty rose (muted pink) tone, smooth and even, no shadows, no props.
+- Hair: restyle into a soft, natural men's perm with gentle waves and light volume, relaxed and tidy, natural dark hair. The hair outline must be clean and smooth where it meets the background. (This overrides the source hairstyle, but NOT the face.)
+- Clothing: a soft beige blazer over a clean white or light inner top, refined and warm.
+- Background: solid, even, warm ivory tone, smooth and clean, no shadows, no props.
 
 STYLING
-- Expression: a gentle, natural, closed-lip smile, warm and friendly. Eyes open, relaxed, on camera.
-- Lighting: bright, even, frontal (high-key), soft and flattering, almost no harsh shadow.
+- Expression: a gentle, natural, closed-lip smile, warm and easygoing. Eyes open, relaxed, on camera.
+- Lighting: bright, even, frontal (high-key), soft, almost no harsh shadow.
+- Accessories: no earrings or jewelry, clean.
 - Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
-- Accessories: remove earrings and other jewelry, keep it clean. Light natural makeup.
 
 FRAMING (always identical — ignore how the input is cropped)
 - Do NOT copy the input's zoom. Always produce a head-and-shoulders composition with shoulders clearly visible.
@@ -45,7 +45,7 @@ FRAMING (always identical — ignore how the input is cropped)
 - Head from top of hair to chin fills about 45% of the frame height, small even margin above the head, eyes slightly above the middle. Shoulders reach both edges, bottom cuts at upper chest.
 
 OUTPUT
-- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, clean and elegant.`;
+- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, refined and warm.`;
 
 async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
   const imageParts = imageDataUrls.map((url) => {
@@ -81,7 +81,7 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[id-longhair] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[id-beigeblazer] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
   if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ output: outputs });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("id-longhair error:", err?.message);
+    console.error("id-beigeblazer error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }

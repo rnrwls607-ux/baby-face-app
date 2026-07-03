@@ -35,6 +35,7 @@ CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
 
 STYLING
 - Expression: a gentle, natural, closed-lip smile, calm and friendly. Eyes open, relaxed, on camera.
+- Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
 - Lighting: bright, even, frontal (high-key), almost no harsh shadow.
 - Accessories: no earrings or jewelry, clean.
 
