@@ -1103,6 +1103,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idoffshoulder.png",
     start: "idoffshoulder",
   },
   idupdo: {
@@ -1117,6 +1118,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idupdo.png",
     start: "idupdo",
   },
   idlonghair: {
@@ -1131,6 +1133,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idlonghair.png",
     start: "idlonghair",
   },
   idtweed: {
@@ -1145,6 +1148,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idtweed.png",
     start: "idtweed",
   },
   idwavebob: {
@@ -1159,6 +1163,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idwavebob.png",
     start: "idwavebob",
   },
   idponytail: {
@@ -1173,6 +1178,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁‍♀️", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF0F5" },
     ],
+    detailImage: "/details/idponytail.png",
     start: "idponytail",
   },
   idgarma: {
@@ -1187,6 +1193,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idgarma.png",
     start: "idgarma",
   },
   iddropcut: {
@@ -1201,6 +1208,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/iddropcut.png",
     start: "iddropcut",
   },
   idperm: {
@@ -1215,6 +1223,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idperm.png",
     start: "idperm",
   },
   idpomade: {
@@ -1229,6 +1238,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧑‍💼", accent: "#DCEBFF" },
       { emoji: "✨", accent: "#EAF3FF" },
     ],
+    detailImage: "/details/idpomade.png",
     start: "idpomade",
   },
   soon: {
