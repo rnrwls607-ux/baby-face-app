@@ -31,7 +31,7 @@ SKIN & MARKS (default to clean skin)
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
 - Hair: restyle into a neat Korean "가르마컷" — a clean side-parted men's cut with light natural volume on top, tidy around the ears and forehead, groomed and professional, natural black hair. (This overrides the source hairstyle, but NOT the face.)
 - Clothing: a sharp black formal suit jacket over a clean white collared shirt with a neat dark necktie.
-- Background: solid deep charcoal gray tone, smooth and even, no shadows, no props.
+- Background: solid, even, light neutral gray (clearly lighter than the dark suit and hair, so the person stands out crisply against it), smooth and clean, no shadows, no props.
 
 STYLING
 - Expression: a gentle, natural, closed-lip smile, confident and friendly. Eyes open, relaxed, on camera.
