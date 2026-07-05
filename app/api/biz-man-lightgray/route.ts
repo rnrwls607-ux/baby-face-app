@@ -43,8 +43,7 @@ SKIN & MARKS
 
 STYLING (men's business profile — gray studio background)
 - Clothing: a well-tailored LIGHT-TO-MEDIUM GRAY men's business suit jacket over a crisp white dress shirt, with a neat necktie (navy, burgundy, or blue), properly knotted and centered. Keep the gray suit clearly distinct in tone and brightness from the gray studio background so they do NOT merge. Crisp, fitted, modern corporate style.
-- Background: a clean, even studio backdrop in medium-light neutral gray, softly lit, subtle
-  gentle gradient, no harsh shadows — premium corporate studio feel.
+- Background: a clean, even studio backdrop in a BRIGHT, LIGHT neutral gray — a soft, airy light gray that is clearly lighter than the suit and the hair (but NOT pure white). Softly and evenly lit with a subtle gentle gradient (only very slightly deeper toward the edges), no harsh shadows. Keep the background distinctly BRIGHTER than the subject so the person clearly stands out and never blends into it — clean, bright, premium corporate studio feel.
 - Hair: keep the person's own hairstyle, length, texture and true color, but render it neat,
   groomed, and polished (no frizz or stray flyaways). Professional and tidy.
 - Expression: a calm, confident, approachable closed-lip smile conveying competence and
