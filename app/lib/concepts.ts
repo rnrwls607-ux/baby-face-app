@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -268,6 +268,146 @@ export const CONCEPTS: Record<string, Concept> = {
        ],
        detailImage: "/details/biznavy.png",
        start: "biznavy",
+     },
+     bizmnavy: {
+       key: "bizmnavy",
+       title: "남성 네이비 정장",
+       subtitle: "믿음직한 프로페셔널",
+       emoji: "💼",
+       accent: "#EAF3FF",
+       description: "깔끔한 네이비 정장과 넥타이, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "💼", accent: "#EAF3FF" },
+         { emoji: "🤵", accent: "#EAF3FF" },
+         { emoji: "✨", accent: "#EAF3FF" },
+       ],
+       start: "bizmnavy",
+     },
+     bizmcharcoal: {
+       key: "bizmcharcoal",
+       title: "남성 차콜 정장",
+       subtitle: "비즈니스 스탠다드",
+       emoji: "💼",
+       accent: "#ECEEF1",
+       description: "깔끔한 차콜 그레이 정장, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "💼", accent: "#ECEEF1" },
+         { emoji: "🤵", accent: "#ECEEF1" },
+         { emoji: "✨", accent: "#ECEEF1" },
+       ],
+       start: "bizmcharcoal",
+     },
+     bizmblack: {
+       key: "bizmblack",
+       title: "남성 블랙 정장",
+       subtitle: "격식 있는 클래식",
+       emoji: "🖤",
+       accent: "#F0F1F4",
+       description: "깔끔한 블랙 정장과 넥타이, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🖤", accent: "#F0F1F4" },
+         { emoji: "🤵", accent: "#F0F1F4" },
+         { emoji: "✨", accent: "#F0F1F4" },
+       ],
+       start: "bizmblack",
+     },
+     bizmlightgray: {
+       key: "bizmlightgray",
+       title: "남성 라이트그레이 정장",
+       subtitle: "밝고 부드러운 인상",
+       emoji: "🤵",
+       accent: "#F2F3F5",
+       description: "깔끔한 라이트그레이 정장, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🤵", accent: "#F2F3F5" },
+         { emoji: "💼", accent: "#F2F3F5" },
+         { emoji: "✨", accent: "#F2F3F5" },
+       ],
+       start: "bizmlightgray",
+     },
+     bizmvest: {
+       key: "bizmvest",
+       title: "남성 쓰리피스 (조끼)",
+       subtitle: "무게감 있는 임원룩",
+       emoji: "💼",
+       accent: "#ECEDF0",
+       description: "깔끔한 차콜 쓰리피스(조끼) 정장, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "💼", accent: "#ECEDF0" },
+         { emoji: "🤵", accent: "#ECEDF0" },
+         { emoji: "✨", accent: "#ECEDF0" },
+       ],
+       start: "bizmvest",
+     },
+     bizmbeige: {
+       key: "bizmbeige",
+       title: "남성 베이지 정장",
+       subtitle: "따뜻하고 친근한",
+       emoji: "🧥",
+       accent: "#F5EFE6",
+       description: "깔끔한 베이지 정장, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🧥", accent: "#F5EFE6" },
+         { emoji: "🤵", accent: "#F5EFE6" },
+         { emoji: "✨", accent: "#F5EFE6" },
+       ],
+       start: "bizmbeige",
+     },
+     bizmblazer: {
+       key: "bizmblazer",
+       title: "남성 네이비 블레이저",
+       subtitle: "노타이 비즈캐주얼",
+       emoji: "🧥",
+       accent: "#EAF3FF",
+       description: "깔끔한 네이비 블레이저(노타이), 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🧥", accent: "#EAF3FF" },
+         { emoji: "🤵", accent: "#EAF3FF" },
+         { emoji: "✨", accent: "#EAF3FF" },
+       ],
+       start: "bizmblazer",
+     },
+     bizmturtle: {
+       key: "bizmturtle",
+       title: "남성 블레이저 터틀넥",
+       subtitle: "모던 미니멀",
+       emoji: "⬛",
+       accent: "#EDEEF0",
+       description: "깔끔한 블레이저와 터틀넥, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "⬛", accent: "#EDEEF0" },
+         { emoji: "🤵", accent: "#EDEEF0" },
+         { emoji: "✨", accent: "#EDEEF0" },
+       ],
+       start: "bizmturtle",
+     },
+     bizmdb: {
+       key: "bizmdb",
+       title: "남성 더블브레스티드",
+       subtitle: "존재감 있는 실루엣",
+       emoji: "🤵",
+       accent: "#E9EEF6",
+       description: "깔끔한 네이비 더블브레스티드 정장, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "🤵", accent: "#E9EEF6" },
+         { emoji: "💼", accent: "#E9EEF6" },
+         { emoji: "✨", accent: "#E9EEF6" },
+       ],
+       start: "bizmdb",
+     },
+     bizmknittie: {
+       key: "bizmknittie",
+       title: "남성 니트타이 재킷",
+       subtitle: "젊은 전문직 세미포멀",
+       emoji: "👔",
+       accent: "#EDEFEA",
+       description: "깔끔한 스포츠 재킷과 니트타이, 차분한 회색 배경의 남성 전문가 프로필. 정면 사진 3~6장을 올리면, 팔짱·두 손 모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요.",
+       examples: [
+         { emoji: "👔", accent: "#EDEFEA" },
+         { emoji: "🤵", accent: "#EDEFEA" },
+         { emoji: "✨", accent: "#EDEFEA" },
+       ],
+       start: "bizmknittie",
      },
       bizblack: {
        key: "bizblack",
@@ -1425,6 +1565,16 @@ export function conceptForGo(go: string): Concept {
   if (go === "illust") return CONCEPTS.illust;
   if (go === "idskyblue") return CONCEPTS.idskyblue;
   if (go === "biznavy") return CONCEPTS.biznavy;
+  if (go === "bizmnavy") return CONCEPTS.bizmnavy;
+  if (go === "bizmcharcoal") return CONCEPTS.bizmcharcoal;
+  if (go === "bizmblack") return CONCEPTS.bizmblack;
+  if (go === "bizmlightgray") return CONCEPTS.bizmlightgray;
+  if (go === "bizmvest") return CONCEPTS.bizmvest;
+  if (go === "bizmbeige") return CONCEPTS.bizmbeige;
+  if (go === "bizmblazer") return CONCEPTS.bizmblazer;
+  if (go === "bizmturtle") return CONCEPTS.bizmturtle;
+  if (go === "bizmdb") return CONCEPTS.bizmdb;
+  if (go === "bizmknittie") return CONCEPTS.bizmknittie;
   if (go === "bizblack") return CONCEPTS.bizblack;
   if (go === "bizwhite") return CONCEPTS.bizwhite;
   if (go === "bizribbon") return CONCEPTS.bizribbon;

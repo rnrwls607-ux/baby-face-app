@@ -1,12 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
-
-const notoSansKR = Noto_Sans_KR({
-  weight: ["400", "500", "700", "900"],
-  subsets: ["latin"],
-  variable: "--font-noto",
-});
 
 export const metadata: Metadata = {
   title: "MOSPIC",
@@ -24,13 +17,27 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FF4B7C",
+  themeColor: "#FAFAF8",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className={`${notoSansKR.variable} antialiased`} style={{ fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" }}>
+      <head>
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
+      <body
+        className="antialiased"
+        style={{
+          fontFamily:
+            "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
+        }}
+      >
         {children}
       </body>
     </html>
