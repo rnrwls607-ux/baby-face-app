@@ -10,25 +10,25 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generatePetstudio(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a luxury pet studio photographer. Take the pet in this photo and
-create a premium studio portrait of them — like an expensive pet photo
-studio package shot.
-CRITICAL — keep the exact same pet: same breed, same fur color and
-patterns, same unique markings, same eye color, same face. The owner must
-instantly recognize their own pet. Do NOT change the pet into a different
-animal or a different individual.
-Studio treatment:
-- Elegant studio setting: soft seamless backdrop in a tasteful tone that
-  complements the pet's fur, with premium soft studio lighting and gentle
-  rim light that makes the fur look fluffy and detailed.
-- The pet posed naturally and adorably (sitting or lying), looking toward
-  the camera with bright, lively eyes.
-- Optional tasteful props at most (a small cushion or ribbon) — keep it
-  clean and classy, not cluttered.
-- Vertical portrait framing centered on the pet.
-Final look: photorealistic, high-resolution premium pet studio
-photography — sharp fur detail, beautiful bokeh. No text, no watermark,
-no border.`;
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE PET'S IDENTITY IS UNTOUCHABLE — the exact same pet: the same breed, the same size class and body proportions for that breed (a small dog stays small, a large dog stays large), the same fur color, pattern, length, and texture, the same unique markings in the same places, the same eye color, the same ear shape, the same face. The owner must instantly recognize their own pet. Never a different animal, never a different individual, never a generic stock animal — and never invent markings or colors that are not in the source.
+2. COMPOSITION — the output is ALWAYS a vertical portrait centered on the pet, the pet as the clear HERO of the frame, regardless of the input photo's framing, zoom, crop, or angle.
+
+You are a luxury pet studio photographer. Take the pet in this photo and create a premium studio portrait of them — like an expensive pet photo studio package shot.
+
+HOW TO USE THE INPUT PHOTO
+- The input is a reference for the PET'S IDENTITY ONLY. Ignore its framing, zoom, background, and lighting.
+- Render the fur in its TRUE color under the studio light — color casts from the source lighting must not become the fur's actual color.
+
+STUDIO TREATMENT (the product — style boldly here):
+- Elegant studio setting: soft seamless backdrop in a tasteful tone that complements the pet's fur, with premium soft studio lighting and a gentle rim light that makes the fur look fluffy and richly detailed.
+- The pet posed naturally and adorably (sitting or lying) in an anatomically comfortable, breed-realistic posture — never stretched, twisted, or doll-like — looking toward the camera with bright, lively eyes.
+- PROP BALANCE: at most one tasteful prop (a small cushion or ribbon) placed beside or under the pet — clean and classy, never cluttered, never covering the pet's face, markings, or body. The pet is the hero; everything else stays subtle.
+- Vertical portrait framing centered on the pet, with the ears and top of the head never cropped.
+
+FINAL SELF-CHECK before output: the owner must instantly say "that's MY pet — this looks like an expensive studio shoot." Same breed, same markings, same size impression, same eyes. If it reads as a different or generic animal, the result is wrong.
+
+Final look: photorealistic, high-resolution premium pet studio photography — sharp fur detail, beautiful bokeh. No text, no watermark, no border, no human. Remember the two absolute rules: the SAME pet, hero of the SAME fixed composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

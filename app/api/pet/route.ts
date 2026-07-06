@@ -10,26 +10,35 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generatePet(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Create a funny and adorable professional ID/passport-style headshot of the PET (dog or cat) shown in the photo, as if the pet were a person taking an employee ID photo.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE PET'S IDENTITY IS UNTOUCHABLE — the output must show the EXACT same animal as the input: the same species and breed, the same size class and head shape for that breed, the same fur color, pattern, and length, the same unique markings in the same places, the same eye color, the same ear shape and posture, the same face. The owner must instantly recognize their own pet — never a different animal, never a generic stock animal of the same breed, and never a different individual. Do NOT invent new markings, patches, or eye colors that are not in the source.
+2. COMPOSITION — the output is ALWAYS the fixed ID-photo framing described below, regardless of the input photo's framing, zoom, crop, or angle. Even an extreme close-up of the pet's face comes out as the standard head-and-shoulders ID composition.
 
-IDENTITY — MOST IMPORTANT:
-Keep the EXACT same animal as in the input photo — same species, same breed, same fur color and pattern, same face, same eyes, same ears. The owner must instantly recognize it as their own pet. Do NOT turn it into a different animal or a generic stock animal.
+Create a funny and adorable professional ID/passport-style headshot of the PET (dog or cat) shown in the photo, as if the pet were a person taking an employee ID photo.
 
-OUTFIT: Dress the pet in a tiny formal business suit — a small black blazer with a white dress shirt collar, fitted naturally around the pet's neck and shoulders, as if wearing a real little suit. Make it look cute and believable, not pasted on.
+HOW TO USE THE INPUT PHOTO
+- The input is a reference for the PET'S IDENTITY ONLY. Ignore its framing, zoom, background, lighting, and any accessories — the suit below replaces them.
+- Render the fur in its TRUE color under neutral studio light — warm/yellow tints from the source lighting must not become the fur's actual color.
 
-COMPOSITION (consistent ID-photo framing):
+OUTFIT (the fun — built on top of the identity):
+- Dress the pet in a tiny formal business suit — a small black blazer with a white dress shirt collar, fitted naturally around the pet's neck and shoulders, as if wearing a real little suit. Cute and believable, not pasted on.
+- The suit must fit the pet's real body naturally and comfortably — never distorted anatomy, never a humanized body; this is the real pet wearing a tiny suit. The face and head markings stay fully visible.
+
+COMPOSITION (fixed ID-photo framing):
 - Front-facing, the pet looking straight toward the camera.
-- Head and upper body (shoulders) centered in the frame, with a small even margin above the head.
+- Head and upper body (shoulders) centered in the frame, with a small even margin above the head (ears and the top of the head never cropped).
 - Calm, neutral, cute expression. Mouth closed or gently relaxed.
 - Vertical portrait orientation.
 
-BACKGROUND: A clean, perfectly uniform solid light background (soft white or light blue), flat with NO gradient, NO texture, NO objects.
+BACKGROUND: a clean, perfectly uniform solid light background (soft white or light blue), flat with NO gradient, NO texture, NO objects.
 
-LIGHTING & SHADOWS: Soft even studio lighting. NO shadow cast on the background behind the pet. Background stays flat and evenly lit.
+LIGHTING & SHADOWS: soft even studio lighting. NO shadow cast on the background behind the pet. Background stays flat and evenly lit.
 
-QUALITY: Photorealistic, sharp focus, natural realistic fur texture, high-resolution studio photo. The suit looks real, the pet looks real.
+QUALITY: photorealistic, sharp focus, natural realistic fur texture with fine detail, high-resolution studio photo. The suit looks real, the pet looks real.
 
-DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra props, no shadow on background.`;
+FINAL SELF-CHECK before output: the owner must instantly say "that's MY baby in a suit!" — same breed, same markings, same eyes, same size impression. If it reads as a different or generic animal, the result is wrong.
+
+DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra props, no shadow on background. Remember the two absolute rules: the SAME pet, inside the SAME fixed ID composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

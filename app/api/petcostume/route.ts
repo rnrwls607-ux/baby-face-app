@@ -8,14 +8,15 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const BASE_RULE = `CRITICAL — keep the exact same pet: same breed, same fur color and
-patterns, same unique markings, same eye color, same face. The owner must
-instantly recognize their own pet. Do NOT change the pet into a different
-animal or a different individual. The costume must fit the pet naturally
-and look comfortable — never distorted anatomy.
-Vertical portrait framing centered on the pet, premium studio lighting.
-Photorealistic, high resolution, sharp fur detail. No text, no watermark,
-no border.`;
+const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
+1. THE PET'S IDENTITY IS UNTOUCHABLE — the exact same pet: the same breed, the same size class and body proportions for that breed, the same fur color, pattern, length, and texture, the same unique markings in the same places, the same eye color, the same ear shape, the same face. The owner must instantly recognize their own pet — never a different animal, never a different individual, never a generic animal of the breed. Do NOT invent markings or colors that are not in the source. The costume is worn ON TOP of the real pet — it must fit the pet's actual body naturally and look comfortable, with correct animal anatomy: never distorted, humanized, stretched, or doll-like. The pet's FACE and head markings stay fully visible — no costume piece may cover or reshape the face.
+2. COMPOSITION — the output is ALWAYS a vertical portrait centered on the pet, regardless of the input photo's framing, zoom, crop, or angle, with the ears, head, and any hat never cropped at the top.
+
+The input photo is a reference for the PET'S IDENTITY ONLY — ignore its framing, zoom, background, lighting, and any existing accessories. Render the fur in its TRUE color under the scene's lighting; color casts from the source photo must not become the fur's actual color.
+
+Premium studio lighting, photorealistic, high resolution, sharp fur detail.
+FINAL SELF-CHECK: the owner must instantly say "that's MY pet in a costume!" — same breed, markings, size, and eyes. If it reads as a different or generic animal, or the anatomy looks unnatural, the result is wrong.
+No text, no watermark, no border, no human.`;
 const COSTUME_PROMPTS: Record<string, string> = {
   royal: `You are a luxury pet costume photographer. Take the pet in this photo
 and dress them as adorable royalty — a tiny king, queen, prince, or
