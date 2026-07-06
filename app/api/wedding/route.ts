@@ -10,25 +10,34 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateWedding(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional wedding photographer shooting a solo bridal /
-groom portrait. Take the person in this photo and create an elegant
-wedding studio portrait of them alone.
-CRITICAL — keep the exact same face and identity: same facial features,
-same face shape. Do NOT turn them into a different person. Natural,
-subtle retouch only.
-Wedding styling:
-- If the person presents as a woman, dress her in an elegant white
-  wedding dress with a tasteful bridal hairstyle and soft bridal makeup.
-  If the person presents as a man, dress him in a refined tuxedo or
-  classic wedding suit with neat groom styling.
-- Background: a luxurious, airy wedding studio set — soft white and
-  cream tones, elegant drapery or floral arrangements, dreamy soft-focus
-  depth.
-- Bright, soft, romantic studio lighting; graceful, happy, natural
-  expression.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be unmistakably the SAME person as the input, transformed by full bridal/groom styling. The goal is "them, on their wedding day" — never a generic bride or groom. Transform through MAKEUP, HAIR, ATTIRE, and LIGHTING; NEVER by reshaping facial features.
+2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait of exactly ONE person, as specified below. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+You are a professional wedding photographer shooting a solo bridal / groom portrait. Take the person in this photo and create an elegant wedding studio portrait of them alone.
+
+HOW TO USE THE INPUT PHOTOS
+- The inputs are a reference for IDENTITY ONLY (facial structure and features). Ignore their framing, zoom, background, lighting, clothing, and current grooming — the wedding styling below replaces it.
+- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
+- Exactly ONE person in the output — the person from the photo, alone. Never add a partner or anyone else.
+
+IDENTITY FOUNDATION (styling is built ON TOP OF this, never instead of it):
+- The same face shape and width-to-length ratio, the same jawline and chin, the same cheekbones, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrow position, and the same spacing between all features. Keep natural asymmetries.
+- HARD LIMITS: do not enlarge the eyes, slim the jaw, raise the nose, or shift any facial proportion. Makeup may create the ILLUSION of definition — the underlying structure must not move.
+- Keep the apparent age and the person's TRUE skin tone (correct source color cast; never lighten or darken their actual tone). Clean skin — do not invent moles or blemishes; treat shadows and compression noise as clean skin.
+
+WEDDING STYLING (go all in — this is the product):
+- If the person presents as a woman: an elegant white wedding dress with refined detailing, a tasteful bridal hairstyle (updo or soft styling that suits her — restyling the hair IS allowed and encouraged for this concept), and complete soft bridal makeup: luminous base in her true tone, gentle eye definition, soft blush, an elegant lip — radiant but classic, built on her real features.
+- If the person presents as a man: a refined tuxedo or classic wedding suit with a crisp shirt and bow tie or necktie, neat groom hair styling, clean subtle grooming.
+- Render the attire with premium detail: realistic fabric behavior (satin sheen, lace texture, wool structure), clean seams and edges — the dress/suit must look expensive and real, never melted, smudged, or warped.
+- If hands are visible, render them naturally with the correct number of fingers; a small bouquet is welcome if natural — otherwise keep hands relaxed and simple or out of frame.
+- Background: a luxurious, airy wedding studio set — soft white and cream tones, elegant drapery or floral arrangements, dreamy soft-focus depth.
+- Bright, soft, romantic studio lighting; graceful, happy, natural expression.
 - Vertical upper-body portrait framing.
-Final look: photorealistic, high-resolution wedding studio photography.
-No text, no watermark, no border.`;
+
+FINAL SELF-CHECK before output: next to the source photo, a family member must instantly say "same person — they look beautiful on their wedding day." If it reads as a different, generic bride or groom, the result is wrong.
+
+Final look: photorealistic, high-resolution wedding studio photography. No text, no watermark, no border. Remember the two absolute rules: the SAME facial structure under the styling, exactly ONE person, inside the SAME fixed composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

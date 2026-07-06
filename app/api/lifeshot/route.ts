@@ -10,21 +10,35 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateLifeshot(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a high-end portrait photographer creating a trendy "lifeshot"
-profile photo. Take the person shown in the photo(s) and create a beautiful,
-natural, magazine-quality vertical portrait.
-CRITICAL — keep the exact same face and identity as the input: same facial
-features, do not turn them into a different person, do not heavily beautify
-away their real features. Subtle, natural retouch only.
-Style:
-- Soft natural lighting, gentle film-like color grading, shallow depth of
-  field with a softly blurred background.
-- Flattering but realistic; clean modern aesthetic like a Korean studio
-  profile / SNS lifeshot.
-- Natural relaxed expression, looking toward camera.
-- Tasteful neutral background (studio paper, soft gradient, or softly blurred
-  cafe/outdoor). Upper-body vertical framing.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. Make them look their absolute best through LIGHTING, GROOMING, and STYLING — never by reshaping facial features. "Them, on their best day," never a prettier different person.
+2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait as specified below. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition — even an extreme close-up selfie comes out as the standard upper-body portrait.
+
+You are a high-end portrait photographer creating a trendy "lifeshot" profile photo. Take the person shown in the photo(s) and create a beautiful, natural, magazine-quality vertical portrait.
+
+HOW TO USE THE INPUT PHOTOS
+- The inputs are a reference for IDENTITY ONLY (face and hairstyle). Ignore their framing, zoom, background, lighting, and clothing completely.
+- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
+
+IDENTITY LOCK (highest priority — beauty comes from styling, never from changing the face):
+- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between all features. Keep natural asymmetries — they are part of the identity.
+- Do NOT enlarge eyes, slim the jaw, raise the nose, or shift facial proportions in any way.
+- Keep the apparent age and the person's TRUE skin tone (correct any color cast from the source lighting; the lighting color must never become the skin color).
+
+SKIN
+- Perfectly clean, smooth, healthy skin with a natural glow — treat shadows, contrast edges, and compression noise in the source as clean skin; do not invent moles, marks, or blemishes that are not there. Only a large, unmistakably real mole may remain, smaller and fainter. Soften pores and fine lines to about half strength — polished but real, never plastic.
+
+LIFESHOT STYLING (where the magic is allowed — go all in here):
+- Light, natural "no-makeup makeup" grooming that suits the person; neat, softly styled hair with natural shine (keep their own hairstyle and color, beautifully groomed).
+- Soft natural lighting, gentle film-like color grading, shallow depth of field with a softly blurred background.
+- Flattering but realistic; clean modern aesthetic like a Korean studio profile / SNS lifeshot.
+- Tasteful, effortlessly stylish casual outfit that suits the person.
+- Natural relaxed expression with an easy, warm micro-smile, looking toward camera.
+- Tasteful neutral background (studio paper, soft gradient, or softly blurred cafe/outdoor). Upper-body vertical framing.
+
+FINAL SELF-CHECK before output: next to the source photo, a family member must instantly say "same person — this is just a really good photo of them." If it reads as a different, prettier person, the result is wrong.
+
+Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: the SAME face, beautified only through light and styling, inside the SAME fixed composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
