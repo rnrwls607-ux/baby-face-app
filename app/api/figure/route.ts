@@ -13,11 +13,22 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 
 async function generateFigure(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Transform this photo into a HYPER-REALISTIC MACRO PHOTOGRAPH of a premium handcrafted miniature figure diorama — as if a beautifully sculpted collectible model of this exact scene is sitting on a real desk, photographed up close with a real camera.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — every person/pet must be instantly recognizable as themselves in figure form: the same face, hairstyle, expression, and outfit, faithfully sculpted. Translate the MATERIAL into figure form, never the IDENTITY.
+2. COMPOSITION — preserve the original photo's composition exactly: same camera angle, same framing, same poses, same positions, recreated as a miniature. Nothing added, nothing removed, nothing moved.
+
+Transform this photo into a HYPER-REALISTIC MACRO PHOTOGRAPH of a premium handcrafted miniature figure diorama — as if a beautifully sculpted collectible model of this exact scene is sitting on a real desk, photographed up close with a real camera.
 
 SCENE PRESERVATION (most important):
 - Keep the SAME composition, camera angle, framing, and poses. The viewer must instantly recognize it as the exact same scene, faithfully recreated in miniature.
-- People/pets: preserve their RECOGNIZABLE LIKENESS — same face, facial features, hairstyle, expression, and outfit — accurately translated into figure form. Do NOT change who they are. Tasteful, lifelike figure proportions (NOT extreme chibi, NOT a different person).
+- Keep the exact same number of subjects — never add or remove anyone.
+
+IDENTITY IN FIGURE FORM (highest priority):
+- For each person: sculpt and paint the FACE with the HIGHEST detail of the whole figure — the same face shape and width-to-length proportions, the same eye shape and eyelid type (double eyelid stays double, monolid stays monolid), the same nose and mouth impression, the same eyebrows, the same hairstyle and hair color, the same expression, and the same outfit with its real colors and patterns. Someone who knows them must instantly say "that's a figure of them."
+- Keep each person's distinctive cues (dimples, glasses, beard) — and do not invent new ones. Keep natural facial asymmetries; do not "prettify" or average the face into a generic anime-style or doll-style character.
+- When several people are present, sculpt each one from their own face. NEVER blend, swap, or average features between different people.
+- Tasteful, lifelike figure proportions matching the real people's body proportions (NOT extreme chibi, NOT elongated, NOT a different person).
+- For pets, keep the same breed, fur color/pattern, and markings in sculpted form.
 
 FIGURE MATERIAL & SCULPT (make it look like a real collectible):
 - High-end collectible PVC/resin figure: smooth surfaces with a subtle satin sheen, crisp hand-painted detail, fine visible brush/airbrush shading, clean sculpted edges, tiny realistic highlights on raised areas.
@@ -32,7 +43,9 @@ MACRO / TILT-SHIFT LOOK (this sells the "tiny real model" illusion):
 - Real studio product-shot lighting: soft key light, gentle rim light, realistic soft shadows on the desk.
 - Slightly blurred real-world room/desk in the background to reinforce that this is a physical object on a real table.
 
-FINAL LOOK: a crisp, professional macro product photograph of an adorable, highly detailed figure diorama you'd want to collect. Photorealistic — like a real photo of a real figure, NOT a 3D render, NOT a cartoon. No text, no logos, no watermark, no border.`;
+FINAL SELF-CHECK before output: someone who knows the people must instantly recognize each figure as that specific person. If any figure reads as a generic doll or anime character, the result is wrong.
+
+FINAL LOOK: a crisp, professional macro product photograph of an adorable, highly detailed figure diorama you'd want to collect. Photorealistic — like a real photo of a real figure, NOT a 3D render, NOT a cartoon. No text, no logos, no watermark, no border. Remember the two absolute rules: same identities in figure form, same composition — only the material changes.`;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);

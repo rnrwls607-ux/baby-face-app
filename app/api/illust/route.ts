@@ -9,7 +9,11 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateIllust(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Transform this photo into a premium hand-drawn digital illustration, keeping the original scene and every subject's identity intact.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — every subject must be instantly recognizable in the illustration: the same person(s)/pet(s), just drawn. Simplify the RENDERING, never the IDENTITY.
+2. COMPOSITION — preserve the original photo's composition exactly: same camera angle, same framing, same crop, same poses, same positions. Nothing moves, nothing is added, nothing is removed.
+
+Transform this photo into a premium hand-drawn digital illustration, keeping the original scene and every subject's identity intact.
 
 STEP 1 — Read the photo first:
 Identify what is in the image (a single person, a couple, a group, a pet/animal, a landscape, or an object) and illustrate it accordingly. Keep the exact same number of subjects — never add or remove anyone.
@@ -19,7 +23,9 @@ STEP 2 — Preserve composition (do not move anything):
 - Each subject must stay in the exact same position as in the original photo.
 
 STEP 3 — Preserve identity (MOST IMPORTANT):
-- For each person, keep their recognizable likeness: same face shape and proportions, same eye shape, nose, mouth, hairstyle, expression, and outfit — so they are unmistakably the same person, just illustrated.
+- For each person, keep their recognizable likeness: the same face shape and width-to-length proportions, the same eye shape and eyelid type (double eyelid stays double, monolid stays monolid), the same nose and mouth impression, the same hairstyle and hair color, the same expression, and the same outfit — so they are unmistakably the same person, just illustrated.
+- FACES GET THE HIGHEST DETAIL: backgrounds may be simplified into clean illustrated shapes, but faces must keep enough drawn detail to stay clearly recognizable. Never let the illustration style blur, average, or "prettify" a face into a generic character.
+- Keep each person's natural asymmetries and distinctive cues (dimples, beauty marks that exist in the source) — and do not invent new ones.
 - When several people are present, illustrate each one from their own face. NEVER blend, swap, or average features between different people.
 - For pets, keep the same breed, fur color/pattern, and markings.
 
@@ -36,7 +42,9 @@ ABSOLUTELY AVOID:
 - A cheap photo filter — no leftover photographic textures, noise, or realism.
 - Any text, letters, watermark, signature, frame, or border.
 
-Final result: one cohesive, hand-crafted digital illustration with no photo textures remaining.`;
+FINAL SELF-CHECK before output: someone who knows the people in the photo must instantly recognize each of them in the illustration. If any face reads as a generic character, the result is wrong.
+
+Final result: one cohesive, hand-crafted digital illustration with no photo textures remaining. Remember the two absolute rules: same identities, same composition — only the medium changes.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

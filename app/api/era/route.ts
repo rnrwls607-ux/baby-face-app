@@ -8,12 +8,14 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const BASE_RULE = `CRITICAL — keep the exact same face and identity as the input person:
-same facial features, same face shape, same eyes, nose, and mouth. Do NOT
-turn them into a different person. Natural, subtle retouch only — they
-must be clearly recognizable.
-Vertical upper-body portrait framing. Photorealistic, high resolution,
-no text, no watermark, no border.`;
+const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side: same face shape and width-to-length ratio, same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), same ears, same nose bridge/width/tip, same philtrum, same lip shape and thickness, same eyebrows, same spacing between all features, keeping their natural asymmetries. Era-appropriate MAKEUP, HAIRSTYLING, and grooming ARE welcome and encouraged — style the person fully and beautifully for the era — but NEVER reshape the facial features themselves (no enlarging eyes, no slimming the jaw, no raising the nose). The goal is "the same person, styled for that era," never a different person.
+2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait, regardless of the input photo's framing, zoom, crop, or angle. Even an extreme close-up selfie must come out as the standard upper-body composition.
+
+The input photo is a reference for IDENTITY ONLY — ignore its framing, background, lighting, and clothing. Render the skin in the person's TRUE tone (correct any color cast from the source lighting); do not invent moles or marks that are not in the source — treat shadows, contrast, and compression noise as clean skin. Period makeup may be applied on top of clean skin.
+
+FINAL SELF-CHECK: next to the source photo, a family member must instantly say "same person, in that era." If not, the result is wrong.
+Photorealistic, high resolution, no text, no watermark, no border.`;
 const ERA_PROMPTS: Record<string, string> = {
   joseon: `You are a historical portrait photographer. Take the person in this photo
 and portray them as a noble person living in Korea's Joseon dynasty.

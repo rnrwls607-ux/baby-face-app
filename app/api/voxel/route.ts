@@ -14,24 +14,28 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateVoxel(imageDataUrl: string, target: string): Promise<string> {
   void target;
   const img = parseImage(imageDataUrl);
-  const prompt = `Transform this photo into a striking scene where the BACKGROUND and environment are completely rebuilt out of large, clearly identifiable 3D cube blocks — like a blocky 3D sandbox building game.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE PERSON IS UNTOUCHABLE — any person(s) in the photo must remain EXACTLY as in the original photograph: photorealistic, same face, same body, same pose, same clothing, same position, pixel-faithful. The blocky style must NEVER touch, restyle, or leak into the person — not the face, not the hair edges, not the clothing. The contrast between the REAL person and the blocky world is the whole point of this image.
+2. COMPOSITION — preserve the original photo's composition exactly: same camera angle, same framing, same crop, same subject positions. Only the environment is rebuilt.
+
+Transform this photo into a striking scene where the BACKGROUND and environment are completely rebuilt out of large, clearly identifiable 3D cube blocks — like a blocky 3D sandbox building game.
 
 Background reconstruction:
 - Rebuild buildings, walls, structures, terrain, and scenery using big, distinct cubic blocks (stone-like, brick-like, wood-like, grass/dirt, sand, glass cubes) chosen to match the colors and materials of the original scene.
-- Keep large structures, architecture, and landscape shapes clearly recognizable.
+- Keep large structures, architecture, and landscape shapes clearly recognizable — someone who knows the place should still recognize it, now made of blocks.
 - Omit small noisy details (text, small signs, distant cars, random clutter) for a clean, bold block look.
 - Use large, crisp blocks with visible cube faces and stair-stepped edges; avoid tiny noisy textures.
 - Bright sunny daylight, defined blocky shadows, clear blue sky.
-
-CRITICAL — keep the person photorealistic:
-- Any person(s) in the photo MUST remain exactly as in the original photograph: real and photorealistic, NOT converted into blocks. The contrast between the real person and the blocky world is the whole point.
+- The transition at the person's outline must be clean: the real person stands in front of the blocky world with a crisp, natural edge — no blocky pixels bleeding onto their silhouette, no photorealistic patches left in the background.
 
 First-person game HUD overlay (generic blocky sandbox-game style):
 - Add a centered crosshair, a bottom row item hotbar (square slots), simple health and hunger style icon bars above the hotbar, and the player's first-person arm/hand in the lower-right corner.
 - Add small coordinate-style text (e.g., "XYZ: 128 / 64 / 256") in a corner.
 - Keep the HUD generic — do not copy any specific company's exact logo or trademarked interface.
 
-High detail, bold, clean. No watermark.`;
+FINAL SELF-CHECK before output: ① the person must look like they were photographed and pasted from the real world — zero style change on them; ② the background must be fully blocky with no photorealistic leftovers. If either fails, the result is wrong.
+
+High detail, bold, clean. No watermark; no text anywhere except the HUD elements described above. Remember the two absolute rules: the person untouched, the world rebuilt in blocks, in the original composition.`;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
