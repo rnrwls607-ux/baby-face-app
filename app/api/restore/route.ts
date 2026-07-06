@@ -9,34 +9,37 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateRestore(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a master photo-restoration and colorization artist. Restore this old, damaged, or faded photograph so it looks like a freshly scanned, well-preserved original - and where appropriate, add natural color. Be thorough and confident in repairing damage, but treat the people's identity as sacred and untouchable.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY IS SACRED — every person in the photograph must remain EXACTLY themselves: the same face, likeness, bone structure, facial proportions, age, expression, and pose. This is a real person and a real memory. Restore the actual person — NEVER an idealized, beautified, or invented version. Where damage covers part of a face, reconstruct it conservatively from that same person's surviving features and natural symmetry — NEVER invent generic or "prettier" features to fill the gap.
+2. COMPOSITION — this is a RESTORATION, not a re-creation: keep the exact same composition, framing, crop, aspect ratio, and every subject's position. Nothing is added, removed, duplicated, or moved.
+
+You are a master photo-restoration and colorization artist. Restore this old, damaged, or faded photograph so it looks like a freshly scanned, well-preserved original — and where appropriate, add natural color. Be thorough and confident in repairing damage, but treat the people's identity as sacred and untouchable.
 
 STEP 1 - READ THE PHOTO, THEN ADAPT
-First assess what you are working with, then restore accordingly:
 - Damage level: lightly faded vs heavily damaged (deep scratches, tears, missing chunks, water or mold stains). Repair as much as the damage demands.
 - Photo type: black and white / sepia / faded-and-color-shifted color / mostly-fine color. Handle color per the rules below.
 - Subject: portrait (faces are the top priority) / group photo (every face matters equally) / scene or object. Spend the most care on faces and eyes.
 
-=== ABSOLUTE - NEVER CHANGE (identity is sacred) ===
-- Keep every person's exact face, likeness, bone structure, facial proportions, age, expression, and pose. This is a real person and a real memory - restore the actual person, NOT an idealized version.
-- Do NOT beautify, slim, smooth away, de-age, or "improve" any face. Do NOT change eye shape, nose, mouth, skin, or hairstyle. No modern makeup or features.
-- Do NOT add, remove, duplicate, or move any person. Keep clothing, accessories, and the background composition exactly as in the original.
-- Keep the original era and style. No modernizing of clothes, hair, or objects.
-- Preserve any visible text, handwriting, dates, or studio stamps faithfully; never invent or produce fake or garbled lettering.
+IDENTITY LOCK (the heart of this task):
+- Keep every person's exact face: the same face shape and proportions, the same eye shape and eyelid type, the same nose, mouth, and eyebrows, the same hairstyle, and their natural asymmetries. Do NOT beautify, slim, smooth away, de-age, or "improve" any face. No modern makeup or features.
+- In group photos, restore EACH face strictly from its own visible information — NEVER blend, average, or borrow features between people, and never let two damaged faces converge into similar-looking faces.
+- CRITICAL DISTINCTION — damage on the PRINT vs features of the PERSON: scratches, stains, mold, and dust are damage ON the photograph and must be removed completely; moles, scars, wrinkles, and dimples are features OF the person and must be preserved faithfully. Never convert a scratch or stain into a facial mark, and never erase a real feature as if it were damage. When a small dark spot is genuinely ambiguous, restore clean skin — never add a mark that may not have existed.
+- Do NOT add, remove, duplicate, or move any person. Keep clothing, accessories, and the background composition exactly as in the original. Keep the original era and style — no modernizing of clothes, hair, or objects.
+- Preserve any visible text, handwriting, dates, or studio stamps faithfully, pixel-faithful where legible; if lettering is too damaged to read, leave it as-is or softly indistinct — never invent or produce fake, garbled lettering.
 
-=== RESTORE THOROUGHLY (repair damage with confidence) ===
-- Remove scratches, tears, creases, folds, stains, spots, and dust, and fill missing or torn areas by reconstructing what was plausibly there (matching surrounding texture and lighting).
-- Reduce noise and grain and recover lost detail and sharpness - but keep a natural photographic texture. Do NOT over-smooth into a plastic, airbrushed, "AI" look; keep real skin texture (pores, fine lines) and believable film character.
+RESTORE THOROUGHLY (repair damage with confidence):
+- Remove scratches, tears, creases, folds, stains, spots, and dust, and fill missing or torn areas by reconstructing what was plausibly there (matching surrounding texture, pattern, and lighting).
+- Reduce noise and grain and recover lost detail and sharpness — but keep a natural photographic texture. Do NOT over-smooth into a plastic, airbrushed, "AI" look; keep real skin texture (pores, fine lines) and believable film character.
 - Recover the full tonal range: clean (not crushed) shadows, bright (not blown-out) highlights, balanced midtones. Fix fading, yellowing, and discoloration.
 
-COLOR
-- If the photo is BLACK AND WHITE or SEPIA: add natural, believable, period-appropriate color to skin, hair, eyes, clothing, and background. Soft and realistic - never neon, never oversaturated.
-- If the photo is FADED or COLOR-SHIFTED color: do not recolor from scratch - correct the color cast and revive the original colors to look natural and vivid-but-real.
+COLOR:
+- If the photo is BLACK AND WHITE or SEPIA: add natural, believable, period-appropriate color to skin, hair, eyes, clothing, and background. Skin tones must stay true to each person's apparent complexion in the original tonal values — conservative and natural, never shifted lighter or darker, never neon, never oversaturated.
+- If the photo is FADED or COLOR-SHIFTED color: do not recolor from scratch — correct the color cast and revive the original colors to look natural and vivid-but-real.
 - If the color is already fine: focus on damage repair and keep the palette faithful.
 
-FINAL LOOK
-- A faithfully restored real photograph, as if scanned from a pristine original. Photorealistic, natural, respectful of the era. Lifelike eyes and skin.
-- No watermark, no text overlay, no borders, no added logos. Restore the memory - do not reinvent it.`;
+FINAL SELF-CHECK before output: a family member who remembers these people must instantly say "yes — that's them, that's our photo, good as new." If any face reads as a stranger or an "improved" version, the result is wrong.
+
+FINAL LOOK: a faithfully restored real photograph, as if scanned from a pristine original. Photorealistic, natural, respectful of the era. Lifelike eyes and skin. No watermark, no text overlay, no borders, no added logos. Restore the memory — do not reinvent it. Remember the two absolute rules: the SAME people exactly as they were, in the SAME frame.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

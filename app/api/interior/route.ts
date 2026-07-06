@@ -21,38 +21,39 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateInterior(imageDataUrl: string, styleKey: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const styleLine = STYLES[styleKey] || STYLES.modern;
-  const prompt = `You are an elite interior-design and real-estate staging artist. Take this photo of a room and transform it into a beautifully furnished, styled, magazine-quality interior in a specific style - while keeping it unmistakably the SAME room. Be a confident designer: the result should look professionally styled and aspirational, not a timid edit. Suit a modern Korean home (apartment / villa / house) or commercial space - natural and livable, not oversized or cluttered.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE ROOM'S IDENTITY IS UNTOUCHABLE — the architectural shell must remain EXACTLY the same room: the same position, number, size, and shape of every wall, window, door, ceiling, column, stair, and built-in structural fixture (kitchen counters, fixed bathroom fixtures); the same ceiling height, the same room dimensions and proportions, and the same camera angle, perspective, and framing. NEVER add, remove, move, or resize any structural element, window, or door. The viewer must instantly recognize it as the SAME room — only styled.
+2. WHAT MAY CHANGE — furnishing and finish ONLY: furniture, decor, textiles, art, plants, lighting fixtures, and surface finishes (paint and flooring refresh following the existing surface areas). This is the product — work boldly and confidently HERE, and only here.
+
+You are an elite interior-design and real-estate staging artist. Take this photo of a room and transform it into a beautifully furnished, styled, magazine-quality interior in a specific style — while keeping it unmistakably the SAME room. Be a confident designer: the result should look professionally styled and aspirational, not a timid edit. Suit a modern Korean home (apartment / villa / house) or commercial space — natural and livable, not oversized or cluttered.
 
 STEP 1 - READ THE ROOM, THEN ADAPT
 First identify the room type and its current state, then style it appropriately:
 - Room type: living room / bedroom / kitchen / bathroom / entryway / study-office / dining / kids room / commercial space (cafe, shop, office). Furnish and style to fit that purpose.
 - Current state:
   - If the room is EMPTY or bare: add a complete, tasteful set of furniture and decor appropriate to the room's purpose (virtual staging).
-  - If the room is already FURNISHED but outdated or cluttered: restyle it - replace or rearrange furniture and decor into a clean modern look, declutter, and refresh tired finishes.
+  - If the room is already FURNISHED but outdated or cluttered: restyle it — replace or rearrange furniture and decor into a clean modern look, declutter, and refresh tired finishes.
 
-=== ABSOLUTE - NEVER CHANGE (lock the room's identity) ===
-- Architectural geometry: the exact position, number, size and shape of all walls, windows, doors, ceiling, columns, and built-in structural fixtures (e.g. kitchen counters/cabinets, fixed bathroom fixtures). Keep ceiling height and the room's dimensions and proportions identical.
-- Camera angle, perspective, and framing stay identical. The viewer must instantly recognize it as the SAME room, only styled - never a different space.
-- Do NOT add, remove, move, or resize any structural element, window, or door.
-
-=== STYLE BOLDLY in this EXACT style ===
-- Apply this specific interior style throughout - furniture, palette, materials, and mood: ${styleLine}. Commit fully to this style.
-- Furniture and decor: add or replace with realistic, well-proportioned pieces in a balanced, intentional layout with a clear focal point. Ground everything correctly - real scale, contact shadows, matching perspective. Tasteful and livable; do NOT overcrowd the room or add floating or duplicated items.
-- Accents: add tasteful touches consistent with the chosen style - a few plants, soft textiles, simple art, layered lighting.
-- Surfaces: refresh flooring, walls, and ceiling to clean finishes that suit the style, following the existing surfaces (no structural change).
+STYLE BOLDLY in this EXACT style:
+- Apply this specific interior style throughout — furniture, palette, materials, and mood: ${styleLine}. Commit fully to this style.
+- Furniture and decor: realistic, well-proportioned pieces in a balanced, intentional layout with a clear focal point. Ground everything correctly — real scale for THIS room's actual size, contact shadows, matching perspective. Tasteful and livable; do NOT overcrowd the room, no floating or duplicated items, and never block doors or windows with furniture.
+- Accents: a few plants, soft textiles, simple art, layered lighting — consistent with the chosen style.
+- Surfaces: refresh flooring, walls, and ceiling to clean finishes that suit the style, strictly following the existing surfaces (no structural change).
+- Windows: keep whatever is actually visible outside the windows — balance the exposure naturally, never invent a different view.
 - Lighting: bright, even, and inviting; balance natural daylight from the existing windows with warm interior lighting. Make it feel airy and welcoming.
 
-PHOTOGRAPHY SPEC (make it look professionally shot)
+PHOTOGRAPHY SPEC (make it look professionally shot):
 - Wide interior lens with CORRECTED perspective: vertical lines stay straight, no fisheye bulge, no leaning walls.
 - Balanced even exposure (open shadows, controlled highlights), neutral-to-warm white balance, crisp focus. Professional real-estate / interior photography quality.
 
-KEEP IT REAL (anti-fake)
+KEEP IT REAL (anti-fake):
 - Photorealistic only. Real materials, real light physics, real reflections and shadows.
 - NOT a CGI render, NOT a 3D model, NOT a video-game look, NOT over-smoothed plastic surfaces.
-- No people. Do NOT generate fake or garbled text on books, screens, posters, or art - keep wall art simple or abstract or blank, never melted lettering.
+- No people. Do NOT generate fake or garbled text on books, screens, posters, or art — keep wall art simple, abstract, or blank; never melted lettering.
 
-OUTPUT
-- High-resolution, sharp, and professional. No watermark, no text overlay, no added borders or logos. The same room - beautifully styled and inviting.`;
+FINAL SELF-CHECK before output: the owner must instantly say "that's MY room — beautifully staged," recognizing every wall, window, and door in its exact place. If the structure changed or it reads as a different space, the result is wrong.
+
+OUTPUT: high-resolution, sharp, and professional. No watermark, no text overlay, no added borders or logos. Remember the two absolute rules: the SAME room's shell, boldly restyled contents.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

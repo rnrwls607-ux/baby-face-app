@@ -9,35 +9,38 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFood(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a world-class commercial food photographer and retoucher. Transform this casually-taken food photo into a stunning, mouth-watering, thumbnail-worthy food image that makes anyone instantly crave it.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE DISH IS UNTOUCHABLE — this is a PHOTO-RETOUCH task, NOT a re-generation. The output must show the EXACT same dish as the input: the same food type, the same ingredients, the same preparation and CUT STYLE of every ingredient, the same count and placement of every topping and side, the same plating, the same portion, on the same kind of dish. NEVER invent, add, swap, remove, or replace any food element. Concrete examples of forbidden changes: a breaded pork cutlet (donkatsu) must stay a breaded pork cutlet — never morph into a hamburg steak or any other dish; finely shredded perilla leaves must stay finely shredded — never become one whole leaf; three shrimp must stay exactly three shrimp in the same spots; a garnish's cut style (shredded / julienned / sliced / diced / whole) must stay identical.
+2. WHAT MAY CHANGE — photographic quality ONLY: lighting, color accuracy, sharpness, natural gloss and freshness cues, removal of mess and clutter, and the surface/background. Be bold HERE — and only here.
 
-FIRST, identify what the dish is, then apply the freshness cues and styling that make THAT specific type of food most appetizing:
-- Soup/stew/hot pot: glossy broth, visible ingredients lifted into view, gentle rising steam.
-- Grilled meat / BBQ: caramelized sear marks, juicy glistening surface, light oil sheen.
-- Noodles: glossy strands, a sense of motion as if just lifted, steam for hot noodles.
-- Fried food: crispy golden-brown texture, dry-crunchy (not greasy) surface.
-- Rice dishes: separate glistening grains, steam, vivid toppings.
-- Salad/vegetables/fruit: crisp freshness, dewy water droplets, vibrant natural color.
-- Dessert/bread/baked goods: moist crumb, flaky layers, dusting detail, soft highlights.
-- Cold drinks: condensation droplets on the glass, refreshing clarity.
+You are a world-class commercial food photographer and retoucher. Make this casually-taken photo of the dish look stunning, mouth-watering, and thumbnail-worthy — while keeping it unmistakably the SAME dish the owner cooked.
 
-KEEP THE DISH'S IDENTITY: It must remain clearly the same dish — same food type, same main ingredients, same cuisine, roughly the same plating and portion. Do NOT invent a completely different meal or add fake foods that change what the dish is.
+FIRST, identify what the dish is, then apply the freshness cues that make THAT specific type of food most appetizing (never changing the food itself):
+- Soup/stew/hot pot: glossy broth, gentle rising steam; the visible ingredients stay the same ingredients.
+- Grilled meat / BBQ: caramelized sear marks, juicy glistening surface, light oil sheen — on the same cuts, same count.
+- Noodles: glossy strands, steam for hot noodles — same noodle type, same toppings.
+- Fried food: crispy golden-brown texture, dry-crunchy (not greasy) surface — same coating, same shape.
+- Rice dishes: separate glistening grains, steam — same toppings in the same places.
+- Salad/vegetables/fruit: crisp freshness, dewy droplets, vibrant natural color — same produce, same cut style.
+- Dessert/bread: moist crumb, flaky layers, soft highlights — same item, same decoration.
+- Cold drinks: condensation droplets, refreshing clarity — same drink, same garnish.
 
-ACTIVELY FIX AND PERFECT IT (be bold, not timid):
-- Repair imperfections: if a part has been eaten, bitten, or is missing, naturally restore it to look whole and untouched. Remove bite marks, gaps, and half-eaten areas.
-- Clean up: erase spills, drips, smudges, stains, crumbs, fingerprints, and dirty edges on the plate, bowl rim, or table. Make everything spotless.
-- Remove distractions: delete table clutter, phones, hands, used utensils, crumpled napkins, receipts, and background noise.
-- Perfect the food itself: make it look fresh, hot, and just-served. Restore vibrant natural color, glossy moisture, crisp edges, juicy textures, and appetizing sheen. Fix dull, dried-out, soggy, or greasy-looking areas so the food looks at its peak — but keep it looking like REAL food, never wax-like or fake-perfect.
+CLEAN UP AND REPAIR (bold, but identity-safe):
+- Erase spills, drips, smudges, stains, crumbs, fingerprints, and dirty edges on the plate, bowl rim, or table.
+- Remove distractions: table clutter, phones, hands, used utensils, napkins, receipts, background noise.
+- If a part has been eaten, bitten, or is missing: restore it with MORE OF THE EXACT SAME food (fill a missing cutlet slice with an identical cutlet slice; never with different food), so the dish looks whole and untouched.
+- Revive dull, dried-out, or soggy areas to look fresh and just-served — the same ingredient at its peak, never a different ingredient.
 
 PRO FOOD-PHOTOGRAPHY TREATMENT:
-- Camera & lens: render as if shot on a 100mm macro lens at f/2.8 with a shallow depth of field; sharp focus on the hero element of the dish with a softly blurred background. Use the most flattering angle for this dish (45-degree for most plated food, top-down flat-lay for pizzas/spreads, eye-level for layered items like burgers).
-- Lighting: soft, bright, directional side-lighting at ~5500K that sculpts texture and makes the food glow; recover shadow and highlight detail; no flat yellow restaurant light.
-- Color: accurate white balance, rich and appetizing tones with high dynamic range — vivid and true-to-life, never oversaturated or artificial.
-- Freshness signals: add subtle natural steam wisps to hot dishes; water droplets to fresh produce and cold drinks; a natural glisten to sauces — only where it makes sense for the dish.
-- Texture micro-details: bring out sear marks, melting cheese, glistening sauce, droplets, flaky crusts, and fresh garnish that is ALREADY present (do not add new garnish that wasn't there).
-- Background & composition: place the dish on a clean, tasteful surface and background color that complements the food's own colors; balanced, professional framing without cropping out any of the food.
+- Camera & lens: as if shot on a 100mm macro lens at f/2.8, shallow depth of field; sharp focus on the hero element, softly blurred background. Most flattering angle for this dish (45° for most plated food, top-down for pizzas/spreads, eye-level for layered items).
+- Lighting: soft, bright, directional side-lighting at ~5500K that sculpts texture; recover shadow and highlight detail; no flat yellow restaurant light.
+- Color: accurate white balance, rich appetizing tones, vivid and true-to-life — the food's REAL colors at their best, never shifted to different colors, never oversaturated.
+- Freshness signals: subtle steam for hot dishes, droplets for fresh produce and cold drinks, natural glisten on sauces — only where it makes sense, never adding new garnish or ingredients that weren't there.
+- Background & composition: place the dish on a clean, tasteful surface that complements the food's own colors; balanced framing without cropping out any of the food.
 
-FINAL LOOK: ultra-photorealistic, high-resolution, award-winning magazine-cover and delivery-app-thumbnail quality. Crisp, fresh, irresistible, with natural realism. Absolutely NO cartoon, plastic, CGI, or wax-model look. No text, no watermark, no border.`;
+FINAL SELF-CHECK before output: the restaurant owner must say "that's exactly the dish I cooked — just photographed beautifully," and a customer comparing photo to delivery must find zero differences in what's actually in the dish. If any ingredient changed type, cut style, count, or position, the result is wrong.
+
+FINAL LOOK: ultra-photorealistic, high-resolution, delivery-app-thumbnail quality. NO cartoon, plastic, CGI, or wax look. No text, no watermark, no border. Remember the two absolute rules: the SAME dish, only the photography improved.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

@@ -11,39 +11,33 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 
 async function generateRealestate(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a professional real-estate photo retoucher. Take this real photo of a property and make it a clean, bright, well-shot listing photo of the SAME exact space, in its SAME real condition. You improve the PHOTO (lighting, color, perspective, clarity) - you do NOT renovate, restage, or change the property itself. The result must still look like a genuine photo of that real place. This is for Korean property listings (Zigbang, Dabang, Naver Real Estate, Danggeun), where a photo that misrepresents the place loses trust and causes disputes - so honesty is the point.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE PROPERTY IS UNTOUCHABLE — this is a PHOTO-RETOUCH task, NOT a renovation and NOT a re-generation. Everything real stays exactly as it is: the same room size, layout, walls, ceiling, and floor; the same number, size, and position of all windows and doors; the same furniture and objects in the same places and the same COUNT (never stage an empty room, never remove or add furniture); the same fixtures and finishes (lights, outlets, AC units, sink, tiles, flooring, wallpaper); and — critically — the same REAL CONDITION: mold, water stains, cracks, peeling wallpaper, scuffs, and damage must remain visible, because a renter or buyer relies on them. The real view outside the windows stays the real view. NEVER add, remove, hide, repair, stage, or replace anything.
+2. WHAT MAY CHANGE — the PHOTOGRAPH only: brightness/exposure, accurate color (fixing yellow/blue casts), perspective correction (straightening leaning verticals), clarity/sharpness, and sensor-noise/compression cleanup. Plus one small allowance: removing small LOOSE clutter (a stray trash bag, scattered cables, a pile of laundry) — never furniture, never the room's real state.
 
-=== THE CORE: fix the PHOTO, change NONE of the actual property ===
+You are a professional real-estate photo retoucher. Take this real photo of a property and make it a clean, bright, well-shot listing photo of the SAME exact space, in its SAME real condition. This is for Korean property listings (Zigbang, Dabang, Naver Real Estate, Danggeun), where a photo that misrepresents the place loses trust and causes disputes — honesty is the point.
+
 IMPROVE (the photo only), confidently:
 - Brightness/exposure: brighten dark or underexposed shots, lift shadows, and balance blown-out windows so the room is clearly visible in good, natural light.
 - Color: fix color casts (yellow indoor lighting, blue shade) to neutral, accurate color.
-- Perspective: correct wide-angle lens distortion so vertical lines (walls, door frames, windows) are straight and upright, not leaning or bulging. This is the biggest fix for amateur property photos.
+- Perspective: correct wide-angle lens distortion so vertical lines (walls, door frames, windows) are straight and upright, not leaning or bulging — the biggest fix for amateur property photos. Keep the same camera viewpoint and framing (correct distortion, but do not re-frame into a different shot).
 - Clarity: clean, crisp, even, professional real-estate look.
+- Windows: if a window is blown out white, tone it down naturally to reveal the REAL view — do NOT invent a fake scenic view.
 
-KEEP EXACTLY (the property itself - do NOT change, add, remove, or hide):
-- The same room: its size, layout, proportions, walls, ceiling, floor, and the exact number, size, and position of all windows and doors.
-- The same contents: keep all furniture and objects as they are. Do NOT add furniture, do NOT stage or fill an empty room, do NOT remove furniture, do NOT redecorate or renovate anything.
-- The same fixtures and finishes: lights, outlets, AC units, sink, tiles, flooring, wallpaper - exactly as they are.
-- Real condition stays honest: do NOT hide or repair real defects - mold, water stains, cracks, peeling wallpaper, scuffs, dirt marks, or damage must remain visible. A renter or buyer relies on these.
-- The real view: keep whatever is actually outside the windows. If a window is blown out white, just tone it down naturally - do NOT invent a fake scenic view.
-- Light tidy is allowed: you MAY remove small loose clutter (a stray trash bag, scattered cables, a pile of laundry) for a cleaner shot - but never remove furniture, change the layout, or hide the room's real state.
-
-The test of a correct result: a dim, yellow, leaning-wall phone photo becomes a bright, color-accurate, straight, clear photo of the EXACT same room - nothing added, removed, renovated, or hidden.
-
-=== READ THE SHOT, THEN ADAPT ===
+READ THE SHOT, THEN ADAPT:
 Identify the space and enhance appropriately: living room / bedroom / kitchen / bathroom / entryway / full studio (one-room) / building exterior / commercial space.
 
-=== KEEP IT BELIEVABLE (anti-overprocessing - this earns trust) ===
+KEEP IT BELIEVABLE (anti-overprocessing — this earns trust):
 - The output must look like a genuine, careful photo, NOT an edited or AI image.
-- Do NOT over-process: no HDR halos, no oversaturation, no fake glow, no plastic-smooth surfaces, no dreamy or unreal look. Keep the same camera viewpoint and framing (correct distortion, but do not re-frame into a different shot).
+- No HDR halos, no oversaturation, no fake glow, no plastic-smooth surfaces, no dreamy or unreal look.
 
-=== KEEP IT REAL (anti-fake) ===
+KEEP IT REAL (anti-fake):
 - Photorealistic only. Real materials, real light physics, real shadows.
-- NOT a CGI render, NOT a 3D model, NOT a video-game look.
-- No people. Do NOT invent or garble any text (signs, labels) - keep it as-is or blank.
+- No people. Do NOT invent or garble any text (signs, labels) — keep existing text exactly as photographed; if it is too small to read in the source, leave it unreadable rather than regenerating it.
 
-OUTPUT
-- High-resolution, sharp, and natural. No watermark, no text overlay, no added borders or logos. The same property, the same room - just brightly and professionally photographed. Honest and trustworthy.`;
+FINAL SELF-CHECK before output: the agent must say "same place, same condition — just a much better photo," and a visitor comparing this photo to the real property must find ZERO differences in what is actually there — including its flaws. If anything was added, removed, hidden, or repaired, the result is wrong.
+
+OUTPUT: high-resolution, sharp, and natural. No watermark, no text overlay, no added borders or logos. The same property, honestly and professionally photographed. Remember the two absolute rules: the SAME property in its SAME condition, only the photograph improved.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

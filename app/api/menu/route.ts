@@ -21,37 +21,37 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateMenu(imageDataUrl: string, styleKey: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const styleLine = STYLES[styleKey] || STYLES.white;
-  const prompt = `You are a professional food and delivery-app photographer. Take this casually-taken food photo and turn it into a clean, appetizing, high-converting photo ready for a restaurant menu, poster, or delivery app (Baemin, Coupang Eats). Make the food look fresh and delicious so it sells - while staying completely TRUE to the actual dish.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. THE FOOD IS UNTOUCHABLE — this is a PHOTO-RETOUCH task, NOT a re-generation. The customer must receive exactly what this photo shows: the same dish, the same ingredients, the same preparation and CUT STYLE of every ingredient (shredded stays shredded, sliced stays sliced, whole stays whole), the same count and placement of toppings and sides, the same portion, the same plating. NEVER add, remove, swap, or replace any food. Never make the portion look bigger. A breaded cutlet stays a breaded cutlet; finely shredded garnish stays finely shredded.
+2. WHAT MAY CHANGE — photographic quality ONLY: lighting, true-color accuracy, sharpness, natural freshness cues, cleanup of clutter, and the background/surface. This is where you work boldly.
 
-STEP 1 - READ THE DISH, THEN ADAPT
-Identify the food type and style it appropriately:
-- Soup/stew: gentle rising steam, fresh garnish, rich broth.
-- Grilled meat: glossy, juicy, sizzling look.
-- Stir-fry/noodles: fresh, vibrant, glossy.
-- Fried food: crisp, golden texture.
-- Dessert/bakery: bright, clean, soft.
-- Drinks/coffee: fresh, with natural condensation for cold drinks.
+You are a professional food and delivery-app photographer. Take this casually-taken food photo and turn it into a clean, appetizing, high-converting photo ready for a restaurant menu, poster, or delivery app (Baemin, Coupang Eats) — while staying completely TRUE to the actual dish, because a photo that overpromises creates refunds and bad reviews.
 
-=== ABSOLUTE - KEEP THE FOOD HONEST (most important) ===
-- Keep every dish, ingredient, garnish, side, portion, and plating EXACTLY as it appears. The customer must receive what this photo shows.
-- Do NOT add or remove any food. Do NOT add ingredients, toppings, or garnish that are not there. Do NOT increase the portion or make it look like more food. Same cuisine, same amount, same plating. The owner must recognize it as their exact menu item.
+STEP 1 - READ THE DISH, THEN ADAPT (freshness cues only — never changing the food):
+- Soup/stew: gentle rising steam, rich glossy broth — same visible ingredients.
+- Grilled meat: glossy, juicy, sizzling look — same cuts, same count.
+- Stir-fry/noodles: fresh, vibrant, glossy — same components.
+- Fried food: crisp, golden texture — same coating, same shape.
+- Dessert/bakery: bright, clean, soft — same item, same decoration.
+- Drinks/coffee: fresh, natural condensation for cold drinks — same drink, same garnish.
 
-=== MAKE IT APPETIZING (within honesty) ===
-- Bring out fresh, natural, vibrant color; glossy sauces; gentle steam for hot food; crispness for fried; condensation for cold drinks. Make the existing food look its freshest and most delicious - without changing what it is.
+MAKE IT APPETIZING (within honesty):
+- Bring out fresh, natural, vibrant color; glossy sauces; gentle steam for hot food; crispness for fried; condensation for cold drinks. The existing food at its freshest — never different food, never invented garnish.
 
-=== CLEAN IT UP AND STYLE IT ===
+CLEAN IT UP AND STYLE IT:
 - Remove all clutter: hands, phones, receipts, napkins, messy table items.
 - Background: place the dish on ${styleLine}.
-- Composition: balanced and centered with comfortable margins so text could be added later - but do NOT add any text yourself.
+- Composition: balanced and centered with comfortable margins so text could be added later — but do NOT add any text, letters, or numbers yourself.
 
-PHOTOGRAPHY SPEC
-- Bright, soft, even studio lighting; crisp focus on the dish; gentle separation from the background (shallow depth of field); an appetizing straight-on or 45-degree angle. High-end food / delivery-app thumbnail quality.
+PHOTOGRAPHY SPEC:
+- Bright, soft, even studio lighting; crisp focus on the dish; gentle separation from the background (shallow depth of field); an appetizing straight-on or 45-degree angle. High-end delivery-app thumbnail quality.
 
-KEEP IT REAL
+KEEP IT REAL:
 - Photorealistic only. Real food textures, real light. NOT a CGI render, NOT a 3D model, NOT over-processed or plastic-looking. No fake garnish.
 
-OUTPUT
-- High-resolution, clean, appetizing, professional. No text, no watermark, no logo, no border.`;
+FINAL SELF-CHECK before output: the owner must recognize it as their exact menu item, and a customer comparing this photo to the delivered dish must find zero differences in the food itself. If anything about the food changed, the result is wrong.
+
+OUTPUT: high-resolution, clean, appetizing, professional. No text, no watermark, no logo, no border. Remember the two absolute rules: the SAME honest dish, only the photography improved.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
