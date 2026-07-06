@@ -11,24 +11,33 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateFriend(image1DataUrl: string, image2DataUrl: string): Promise<string> {
   const img1 = parseImage(image1DataUrl);
   const img2 = parseImage(image2DataUrl);
-  const prompt = `Image 1 shows person A. Image 2 shows person B. Create ONE single
-photorealistic friendship snap photo showing BOTH friends together in the
-same photo, having fun side by side.
-CRITICAL — keep BOTH identities exactly:
-- Person A's face must match image 1 exactly: same facial features, same
-  face shape. Person B's face must match image 2 exactly. Do NOT turn
-  either of them into a different person, and do NOT mix their features
-  together.
-- Both people must appear once each — exactly two people in the photo.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. BOTH IDENTITIES ARE LOCKED INDIVIDUALLY — person A's face must match image 1 exactly, and person B's face must match image 2 exactly, each judged on its own. Treat this as TWO separate identity-preservation jobs in one photo: NEVER mix, blend, average, or swap any feature between the two friends, and never let their faces drift toward looking alike.
+2. COMPOSITION — the output is ALWAYS one vertical snap with EXACTLY TWO people, both clearly visible from the waist up, both faces at a similar scale and the same level of detail. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+Image 1 shows person A. Image 2 shows person B. Create ONE single photorealistic friendship snap photo showing BOTH friends together in the same photo, having fun side by side.
+
+HOW TO USE THE INPUT PHOTOS
+- Each image is an identity reference for ITS person only (face and hairstyle): image 1 → person A, image 2 → person B. Ignore each input's framing, zoom, background, lighting, and clothing.
+- If an input photo contains more than one person, use the clearest, most prominent person in that photo.
+- Place person A on the LEFT and person B on the RIGHT.
+
+PER-PERSON IDENTITY LOCK (apply to EACH person separately):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep each person's natural asymmetries, apparent age, and TRUE skin tone (corrected per person, never unified).
+- Clean natural skin on both — do not invent moles or blemishes; treat shadows and compression noise as clean skin.
+
+ANTI-BLEND:
+- Do NOT unify or harmonize their faces or builds — real friends look different, and that contrast is the charm of the photo.
+
 Friendship snap styling:
-- A trendy "bestie" photo: cheerful natural poses (shoulder to shoulder,
-  playful peace signs, or laughing together), stylish casual outfits
-  that suit each person.
-- Background: a bright clean studio backdrop OR a softly blurred trendy
-  street/cafe scene with warm film-like color grading.
-- Bright, joyful, genuine expressions on both.
-Vertical framing with both people clearly visible from the waist up.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+- A trendy "bestie" photo: cheerful natural poses (shoulder to shoulder, playful peace signs, or laughing together), stylish casual outfits that suit each person.
+- HANDS (high-risk in playful poses): every visible hand must have exactly five correct fingers with natural proportions — a peace sign shows exactly two raised fingers. If any gesture would look awkward or tangled, simplify it (relaxed hands, arms around shoulders) rather than forcing it.
+- Background: a bright clean studio backdrop OR a softly blurred trendy street/cafe scene with warm film-like color grading.
+- Bright, joyful, genuine expressions on both — natural laughter is welcome, but each face must stay clearly recognizable (no extreme distortion from exaggerated expressions).
+
+FINAL SELF-CHECK before output: cover person B — A's family must instantly say "that's A." Cover person A — B's family must instantly say "that's B." Count the fingers on every visible hand. If a face reads as a stranger or a mix, or any hand is wrong, the result is wrong.
+
+Vertical framing with both people clearly visible from the waist up. Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: TWO friends, each exactly themselves, inside the fixed waist-up composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

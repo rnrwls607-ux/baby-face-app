@@ -11,25 +11,38 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateFourcutcouple(image1DataUrl: string, image2DataUrl: string): Promise<string> {
   const img1 = parseImage(image1DataUrl);
   const img2 = parseImage(image2DataUrl);
-  const prompt = `Image 1 shows person A. Image 2 shows person B. Create ONE single vertical
-photo-booth strip image in the popular Korean "인생네컷 (life four-cut)"
-style, showing BOTH people together.
-LAYOUT — this is critical:
-- A tall vertical strip divided into FOUR separate frames stacked top to
-  bottom, with small even white gaps between the frames, like a real
-  photo-booth strip.
-- Each of the 4 frames shows BOTH people together in a different fun pose
-  and expression (smiling side by side, peace signs, laughing, leaning in).
-CRITICAL — keep BOTH identities exactly in every frame:
-- Person A's face must match image 1 exactly and person B's face must
-  match image 2 exactly. Do NOT mix their features and do NOT turn either
-  into a different person in any frame. Exactly two people per frame.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. TWO PEOPLE, LOCKED IN EVERY FRAME — person A's face must match image 1 exactly and person B's face must match image 2 exactly, in ALL FOUR frames: that is eight face checks in one strip. NEVER mix, blend, or average features between the two people, never let either face drift between frames, and keep exactly TWO people in every frame — nobody added, removed, or duplicated.
+2. COMPOSITION — the output is ALWAYS one tall vertical photo-booth strip: exactly FOUR frames stacked top to bottom, small even white gaps between the frames, a thin clean white border around the whole strip, and BOTH faces clearly visible at a similar scale in every frame. The input photos' framing, zoom, crop, and angle have ZERO influence on this layout.
+
+Image 1 shows person A. Image 2 shows person B. Create ONE single vertical photo-booth strip image in the popular Korean "인생네컷 (life four-cut)" style, showing BOTH people together.
+
+HOW TO USE THE INPUT PHOTOS
+- Each image is an identity reference for ITS person only: image 1 → person A, image 2 → person B. Ignore each input's framing, zoom, background, lighting, and clothing.
+- If an input photo contains more than one person, use the clearest, most prominent person.
+- POSITION CONSISTENCY: person A stays on the LEFT and person B stays on the RIGHT in ALL four frames — never swap sides between frames.
+
+ONE BOOTH SESSION (the key to frame consistency):
+- All four frames were shot seconds apart in the same booth: each person keeps the SAME hairstyle and the SAME outfit in every frame, under the SAME lighting and background tone. Only the poses and expressions change.
+
+PER-PERSON IDENTITY LOCK (apply to EACH person, in EVERY frame):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep each person's natural asymmetries, apparent age, and TRUE skin tone (corrected per person, never unified).
+- Clean natural skin on both — do not invent moles or blemishes on either person.
+
+ANTI-BLEND:
+- Do NOT unify or harmonize their faces or builds — their real differences stay true in every frame.
+
+THE FOUR FRAMES:
+- Each frame shows BOTH people together in a different fun couple pose (smiling side by side, peace signs, laughing, leaning in).
+- Expressions stay natural — lively but never so exaggerated that either face distorts.
+- HANDS: a peace sign shows exactly two raised fingers; every visible hand has five correct fingers; if a gesture would tangle between the two people in a small frame, simplify it.
+
 Style:
-- Trendy Korean photo-booth look: clean bright lighting, simple tasteful
-  background, modern fashionable feel; thin clean white border around the
-  whole strip.
-The four frames must clearly be one connected vertical strip.
-Photorealistic, high resolution. No text, no captions, no watermark.`;
+- Trendy Korean photo-booth look: clean bright lighting, a simple tasteful background tone (consistent across all four frames), modern fashionable feel.
+
+FINAL SELF-CHECK before output: count the frames — exactly four. In each frame, count the people — exactly two, A on the left, B on the right. Then check all eight faces: covering the other person, each face in each frame must be instantly recognizable as A or as B. If any face in any frame reads as a stranger or a mix, the result is wrong.
+
+Photorealistic, high resolution. No text, no captions, no watermark. Remember the two absolute rules: the SAME two people in all FOUR frames, inside the fixed strip layout.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

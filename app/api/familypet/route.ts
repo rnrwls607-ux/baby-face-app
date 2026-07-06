@@ -10,26 +10,36 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFamilypet(imageDataUrls: string[]): Promise<string> {
   const imgs = imageDataUrls.map(parseImage);
-  const prompt = `Image 1 shows the family's beloved PET. Each of the remaining input
-images shows ONE human member of the same family. Create ONE single
-photorealistic family studio portrait showing ALL the people AND the pet
-together in the same photo.
-CRITICAL — keep EVERY identity exactly:
-- The pet must exactly match image 1: same breed, same fur color and
-  patterns, same unique markings, same face. The owner must instantly
-  recognize their own pet.
-- Each person's face must exactly match their own source image: same
-  facial features, same face shape, recognizably the same person.
-- Do NOT mix features, do NOT turn anyone into a different person or the
-  pet into a different animal, and do NOT add or remove anyone. Every
-  person and the pet must appear exactly once.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. EVERY IDENTITY IS LOCKED INDIVIDUALLY — the PET must exactly match image 1: the same breed, the same fur color and patterns, the same unique markings, the same eye color, the same face; the owner must instantly recognize their own pet — never a different animal or a different individual of the same breed. Each PERSON's face must exactly match their own source image, judged one by one — NEVER mix, blend, or average features between any two people. Everyone appears exactly once: all the people AND the pet, nobody added, removed, or duplicated.
+2. COMPOSITION — the output is ALWAYS one vertical family portrait with every person clearly visible from the waist up and the pet fully visible (face unobstructed), all faces at a similar scale and the same level of detail. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+Image 1 shows the family's beloved PET. Each of the remaining input images shows ONE human member of the same family. Create ONE single photorealistic family studio portrait showing ALL the people AND the pet together in the same photo.
+
+HOW TO USE THE INPUT PHOTOS
+- Image 1 is the identity reference for the PET only. Each remaining image is the identity reference for ITS person only (face and hairstyle). Ignore each input's framing, zoom, background, lighting, and clothing.
+- If an input photo contains more than one subject, use the clearest, most prominent one.
+
+PET IDENTITY LOCK (image 1 — treat like a photo-retouch subject):
+- Same breed, same size class and body proportions for that breed (a small dog stays small, a large dog stays large — never resize the pet unnaturally), same fur length and texture, same color patches in the same places, same unique markings, same eye color, same ear shape and posture, same face.
+- The pet's anatomy stays natural and comfortable in the pose — held in someone's arms or sitting beside the family with realistic weight and posture; never distorted, stretched, or doll-like. The pet's face stays fully visible.
+
+PER-PERSON IDENTITY LOCK (apply to EACH person separately):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep natural asymmetries.
+- AGE IS PART OF IDENTITY: children stay children, adults stay their age, seniors stay seniors.
+- Keep each person's TRUE skin tone individually (never unified), and clean natural skin on everyone — no invented moles or blemishes.
+
+ANTI-BLEND:
+- Never average faces toward a "family look," and never let the pet drift toward a generic animal of its breed. Every subject is a specific individual.
+
 Family studio styling:
-- A premium family photo studio shoot: coordinated neat outfits, the pet
-  held in someone's arms or sitting adorably beside the family.
-- Clean studio backdrop in a soft tasteful tone, professional soft
-  lighting; warm, happy, natural expressions.
-Vertical framing with everyone (including the pet) clearly visible.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+- A premium family photo studio shoot: coordinated neat outfits, the pet held naturally in someone's arms or sitting adorably beside the family.
+- If the pet is held: the holder's hands and arms wrap the pet naturally with the correct number of fingers, supporting its real weight; the pet's body is not squashed or bent unnaturally.
+- Clean studio backdrop in a soft tasteful tone, professional soft lighting; warm, happy, natural expressions on everyone — the pet calm and bright-eyed.
+
+FINAL SELF-CHECK before output: first, the owner must instantly say "that's MY pet" (breed, markings, size all correct). Then go person by person — each must be instantly recognizable to their own family. If the pet reads as a different animal, or any face reads as a stranger or a blend, the result is wrong.
+
+Vertical framing with everyone (including the pet) clearly visible. Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: every person exactly themselves AND the exact same pet, inside the fixed composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

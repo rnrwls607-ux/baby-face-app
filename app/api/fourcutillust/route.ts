@@ -10,25 +10,34 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFourcutillust(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `Create ONE single vertical photo-booth strip image in the popular Korean
-"인생네컷 (life four-cut)" style, drawn as a polished digital illustration,
-using the person in the input photo.
-LAYOUT — this is critical:
-- A tall vertical strip divided into FOUR separate square frames stacked
-  top to bottom, with small even white gaps between the frames, like a
-  real photo-booth strip.
-- Each of the 4 frames shows the SAME person illustrated in a different
-  fun pose and expression (smiling, peace sign, surprised, candid laugh).
-CRITICAL — keep the recognizable likeness in every frame: same face shape,
-hairstyle, and features, clearly the same person — just illustrated. Do
-NOT make them a different person in any frame.
-Style:
-- Premium hand-drawn webtoon / animation illustration: clean line work,
-  soft painterly shading, warm harmonious colors. Charming and modern,
-  NOT a childish doodle and NOT a photo filter.
-- A thin clean white border framing the whole strip.
-The four frames must clearly be one connected vertical strip.
-High resolution. No text, no captions, no watermark.`;
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. ONE PERSON, FOUR TIMES, ILLUSTRATED — all four frames show the SAME person in drawn form, and every frame must be instantly recognizable as that person on its own. Simplify the RENDERING, never the IDENTITY: the illustrated face must not drift or change between frames — only the pose and expression change.
+2. COMPOSITION & STYLE CONSISTENCY — the output is ALWAYS one tall vertical photo-booth strip: exactly FOUR square frames stacked top to bottom, small even white gaps between the frames, a thin clean white border around the whole strip; and ONE consistent illustration style across all four frames — the same line weight, the same color palette, the same shading technique, as if one artist drew all four cuts in one sitting. The input photo's framing, zoom, crop, and angle have ZERO influence on this layout.
+
+Create ONE single vertical photo-booth strip image in the popular Korean "인생네컷 (life four-cut)" style, drawn as a polished digital illustration, using the person in the input photo.
+
+HOW TO USE THE INPUT PHOTOS
+- The inputs are a reference for IDENTITY ONLY (face and hairstyle). Ignore their framing, zoom, background, lighting, and clothing.
+- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true features.
+
+ONE BOOTH SESSION:
+- All four frames are the same booth session: the SAME illustrated hairstyle, the SAME outfit, and the SAME background tone in every frame. Only the pose and expression change.
+
+IDENTITY IN ILLUSTRATED FORM (must hold in every frame):
+- Keep the recognizable likeness: the same face shape and width-to-length proportions, the same eye shape and eyelid type (double eyelid stays double, monolid stays monolid), the same nose and mouth impression, the same eyebrows, and the same hairstyle and hair color — clearly the same person, just drawn.
+- FACES GET THE HIGHEST DETAIL: backgrounds may be flat and simple, but every face keeps enough drawn detail to stay instantly recognizable. Never let the style blur or "prettify" the face into a generic character — and never drift toward chibi or caricature proportions in any frame.
+- Keep distinctive cues that exist in the source (glasses, dimples); do not invent new ones.
+
+THE FOUR FRAMES:
+- Each frame shows a different fun pose and expression (warm smile, peace sign, playful surprise, candid laugh) — expressive but never distorting the likeness.
+- HANDS: drawn cleanly — a peace sign shows exactly two raised fingers; every visible hand has five fingers; simplify any gesture that would look awkward in a small square frame.
+
+Illustration style:
+- Premium hand-drawn webtoon / animation illustration: clean, confident line work with consistent weight, soft painterly shading, warm harmonious colors. Charming and modern — NOT a childish doodle, NOT a photo filter, and no leftover photographic textures anywhere in the strip.
+
+FINAL SELF-CHECK before output: count the frames — exactly four, all in ONE consistent art style. Then look at each frame alone: someone who knows this person must instantly recognize them in every single cut. If any frame reads as a different person or a different art style, the result is wrong.
+
+High resolution. No text, no captions, no watermark, no signature. Remember the two absolute rules: the SAME person in all FOUR frames, one consistent illustration style, inside the fixed strip layout.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

@@ -10,25 +10,33 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFamilyhanbok(imageDataUrls: string[]): Promise<string> {
   const imgs = imageDataUrls.map(parseImage);
-  const prompt = `Each of the ${imgs.length} input images shows ONE member of the same
-family. Create ONE single photorealistic traditional Korean holiday
-family portrait showing ALL ${imgs.length} of them together in beautiful
-hanbok.
-CRITICAL — keep EVERY identity exactly:
-- Each person's face must exactly match their own source image: same
-  facial features, same face shape, recognizably the same person.
-- Do NOT mix features between people, do NOT turn anyone into a different
-  person, and do NOT add or remove anyone. Exactly ${imgs.length} people
-  must appear, each exactly once.
-Hanbok holiday styling:
-- Dress everyone in elegant traditional Korean hanbok in harmonious
-  festive colors that suit each person (silk fabrics, refined details).
-- Background: a warm traditional Korean holiday setting — a hanok
-  interior or courtyard with soft warm lighting, like a Lunar New Year /
-  Chuseok family greeting photo.
-- Warm, happy, natural expressions; close family poses.
-Vertical framing with every person clearly visible from the waist up.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. EVERY IDENTITY IS LOCKED INDIVIDUALLY — each person's face must exactly match their own source image, judged one by one. This is ${imgs.length} separate identity-preservation jobs in one photo: NEVER mix, blend, or average features between ANY two people, and never nudge faces toward a "family average" — each face is built ONLY from its own source photo. Exactly ${imgs.length} people appear, each exactly once. Full festive hanbok styling is the product, built ON TOP of each person's real face — never by reshaping any face.
+2. COMPOSITION — the output is ALWAYS one vertical family portrait with all ${imgs.length} people clearly visible from the waist up, every face unobstructed, at a similar scale and the same level of detail. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+Each of the ${imgs.length} input images shows ONE member of the same family. Create ONE single photorealistic traditional Korean holiday family portrait showing ALL ${imgs.length} of them together in beautiful hanbok.
+
+HOW TO USE THE INPUT PHOTOS
+- Each image is an identity reference for ITS person only (face). Ignore each input's framing, zoom, background, lighting, clothing, and current grooming — the hanbok styling below replaces it.
+- If an input photo contains more than one person, use the clearest, most prominent person.
+
+PER-PERSON IDENTITY LOCK (apply to EACH of the ${imgs.length} people separately):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep natural asymmetries.
+- AGE IS PART OF IDENTITY: children stay children at their real age, adults stay their age, seniors stay seniors — never de-age or age up anyone.
+- Keep each person's TRUE skin tone individually (never unified), and clean natural skin on everyone — no invented moles or blemishes. Neat, light traditional grooming that suits each person is welcome; never reshape features.
+
+ANTI-BLEND:
+- Resist the pull toward averaged faces as the group grows — each face keeps its own distinct structure, and realistic height/build/age differences stay true.
+
+HANBOK HOLIDAY STYLING (go all in — this is the product):
+- Dress everyone in elegant traditional Korean hanbok in harmonious festive colors that suit each person: silk fabrics with refined details, age-appropriate designs — bright saekdong or cheerful tones for children, elegant deeper tones for adults and seniors.
+- HANBOK STRUCTURE MUST BE CORRECT on every person (critical): a clean white dongjeong collar line on each jeogori; each otgoreum (front ribbon) properly tied with a natural bow shape and smoothly hanging tails — never melted, tangled, fused, or floating; saekdong stripes stay crisp, parallel, and evenly colored; silk drapes and folds behave like real fabric on every figure.
+- Background: a warm traditional Korean holiday setting — a hanok interior or courtyard with soft warm lighting, like a Lunar New Year / Chuseok family greeting photo.
+- Warm, happy, natural expressions; close family poses (standing/sitting together, children in front, arms around shoulders). If hands are visible — including traditional polite hand positions — render every hand with the correct number of fingers; simplify any gesture that would look awkward.
+
+FINAL SELF-CHECK before output: count the people — exactly ${imgs.length}. Check every jeogori's collar and otgoreum. Then face by face: each person must be instantly recognizable to their own family. If the count is wrong, any tie is melted, or any face reads as a blend, the result is wrong.
+
+Vertical framing with every person clearly visible from the waist up. Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: ${imgs.length} people, each exactly themselves in correct hanbok, inside the fixed composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

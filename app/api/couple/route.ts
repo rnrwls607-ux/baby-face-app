@@ -11,24 +11,34 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 async function generateCouple(image1DataUrl: string, image2DataUrl: string): Promise<string> {
   const img1 = parseImage(image1DataUrl);
   const img2 = parseImage(image2DataUrl);
-  const prompt = `Image 1 shows person A. Image 2 shows person B. Create ONE single
-photorealistic studio couple portrait showing BOTH people together in the
-same photo, standing or sitting close together like a loving couple.
-CRITICAL — keep BOTH identities exactly:
-- Person A's face must match image 1 exactly: same facial features, same
-  face shape. Person B's face must match image 2 exactly. Do NOT turn
-  either of them into a different person, and do NOT mix their features
-  together.
-- Both people must appear once each — exactly two people in the photo.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. BOTH IDENTITIES ARE LOCKED INDIVIDUALLY — person A's face must match image 1 exactly, and person B's face must match image 2 exactly, each judged on its own. Treat this as TWO separate identity-preservation jobs happening in one photo: NEVER mix, blend, average, or swap any feature between the two people, and never let their faces drift toward looking alike.
+2. COMPOSITION — the output is ALWAYS one vertical portrait with EXACTLY TWO people, both clearly visible from the waist up, both faces at a similar scale and the same level of detail. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+Image 1 shows person A. Image 2 shows person B. Create ONE single photorealistic studio couple portrait showing BOTH people together in the same photo, standing or sitting close together like a loving couple.
+
+HOW TO USE THE INPUT PHOTOS
+- Each image is an identity reference for ITS person only (face and hairstyle): image 1 → person A, image 2 → person B. Ignore each input's framing, zoom, background, lighting, and clothing.
+- If an input photo contains more than one person, use the clearest, most prominent person in that photo.
+- Place person A on the LEFT and person B on the RIGHT, so each person is easy to identify.
+
+PER-PERSON IDENTITY LOCK (apply to EACH person separately):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep each person's natural asymmetries and apparent age.
+- Keep each person's TRUE skin tone individually — the two people may have different skin tones; correct source color casts per person and never unify their tones.
+- Clean natural skin on both — do not invent moles or blemishes on either person; treat shadows, contrast edges, and compression noise as clean skin.
+
+ANTI-BLEND (the #1 failure mode of two-person shots):
+- Do NOT unify or harmonize their faces. If one face is rounder and the other sharper, keep that contrast. Realistic height and build differences stay true to each person.
+
 Studio styling:
-- A premium couple studio photoshoot: coordinated neat outfits (smart
-  casual or semi-formal that suit each person), natural affectionate
-  poses (side by side, slight lean-in, or gentle hand on shoulder).
-- Clean studio backdrop in a soft tasteful tone, professional soft
-  lighting, gentle depth of field.
-- Warm, happy, natural expressions on both.
-Vertical framing with both people clearly visible from the waist up.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+- A premium couple studio photoshoot: coordinated neat outfits (smart casual or semi-formal that suit each person), natural affectionate poses (side by side, slight lean-in, or gentle hand on shoulder).
+- Clean studio backdrop in a soft tasteful tone, professional soft lighting, gentle depth of field.
+- Warm, happy, natural expressions on both, eyes engaged with the camera.
+- If hands are visible (holding hands, hand on shoulder), render them naturally with the correct number of fingers; if a hand would look awkward, keep it relaxed and simple or out of frame.
+
+FINAL SELF-CHECK before output: cover person B with your hand — A's family must instantly say "that's A." Cover person A — B's family must instantly say "that's B." If either face reads as a stranger, or as a mix of the two, the result is wrong.
+
+Vertical framing with both people clearly visible from the waist up. Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: TWO people, each exactly themselves, inside the fixed waist-up composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

@@ -10,24 +10,34 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFamily(imageDataUrls: string[]): Promise<string> {
   const imgs = imageDataUrls.map(parseImage);
-  const prompt = `Each of the ${imgs.length} input images shows ONE member of the same
-family. Create ONE single photorealistic family studio portrait showing
-ALL ${imgs.length} of them together in the same photo.
-CRITICAL — keep EVERY identity exactly:
-- Each person's face must exactly match their own source image: same
-  facial features, same face shape, recognizably the same person.
-- Do NOT mix features between people, do NOT turn anyone into a different
-  person, and do NOT add or remove anyone. Exactly ${imgs.length} people
-  must appear, each exactly once.
+  const prompt = `TWO ABSOLUTE RULES (these override everything else):
+1. EVERY IDENTITY IS LOCKED INDIVIDUALLY — each person's face must exactly match their own source image, judged one by one. Treat this as ${imgs.length} separate identity-preservation jobs happening in one photo: NEVER mix, blend, average, or swap features between ANY two people. Real family members may naturally resemble each other, but each face must be built ONLY from its own source photo — never nudged toward a "family average." Exactly ${imgs.length} people appear, each exactly once: never add, remove, or duplicate anyone.
+2. COMPOSITION — the output is ALWAYS one vertical family portrait with all ${imgs.length} people clearly visible from the waist up, every face unobstructed, at a similar scale and the same level of detail. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+Each of the ${imgs.length} input images shows ONE member of the same family. Create ONE single photorealistic family studio portrait showing ALL ${imgs.length} of them together in the same photo.
+
+HOW TO USE THE INPUT PHOTOS
+- Each image is an identity reference for ITS person only (face and hairstyle). Ignore each input's framing, zoom, background, lighting, and clothing.
+- If an input photo contains more than one person, use the clearest, most prominent person in that photo.
+
+PER-PERSON IDENTITY LOCK (apply to EACH of the ${imgs.length} people separately):
+- The same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between features. Keep each person's natural asymmetries.
+- AGE IS PART OF IDENTITY: keep each person's apparent age exactly — children stay children at their real age, adults stay their age, seniors stay seniors. Never de-age a grandparent or age up a child.
+- Keep each person's TRUE skin tone individually (correct source color casts per person; family members' tones may differ — never unify them).
+- Clean natural skin on everyone — do not invent moles or blemishes on anyone; treat shadows, contrast edges, and compression noise as clean skin.
+
+ANTI-BLEND (the #1 failure mode as the group grows):
+- The more people in the frame, the stronger the pull toward averaged, similar faces — resist it completely. Each face keeps its own distinct structure, and realistic height/build/age differences between members stay true.
+
 Family studio styling:
-- A premium family photo studio shoot: coordinated neat outfits in
-  harmonious tones that suit each person, natural warm family poses
-  (standing/sitting close together, arms around shoulders).
-- Clean studio backdrop in a soft tasteful tone, professional soft
-  lighting, gentle depth of field.
-- Warm, happy, natural expressions on everyone.
-Vertical framing with every person clearly visible from the waist up.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+- A premium family photo studio shoot: coordinated neat outfits in harmonious tones that suit each person (age-appropriate for children and seniors), natural warm family poses — standing/sitting close together, arms around shoulders, taller members naturally behind or beside shorter ones.
+- Clean studio backdrop in a soft tasteful tone, professional soft lighting, gentle depth of field.
+- Warm, happy, natural expressions on everyone, eyes toward the camera.
+- If hands are visible (arms around shoulders, holding hands), render every hand naturally with the correct number of fingers; if a gesture would look awkward or tangled between people, simplify it.
+
+FINAL SELF-CHECK before output: count the people — exactly ${imgs.length}. Then go face by face: covering everyone else, each person's own family must instantly say "that's them." If the count is wrong, or any face reads as a stranger or a blend of relatives, the result is wrong.
+
+Vertical framing with every person clearly visible from the waist up. Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: ${imgs.length} people, each exactly themselves, inside the fixed waist-up composition.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
