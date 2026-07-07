@@ -12,21 +12,25 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 
 // 버건디 오프숄더 (여성 전용 / 웜 피치 배경)
-const ID_PROMPT = `TASK
-You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style photo. One to six photos of the SAME individual are provided. THE HIGHEST PRIORITY, above everything else: the output face must be instantly recognizable as the SAME person side by side with the source. You may restyle hair and clothing to the concept below, but you must NOT redesign the face.
+const ID_PROMPT = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side, even though the hairstyle is restyled below. Hair and clothing are the ONLY things that change — NEVER reshape the facial features themselves.
+2. COMPOSITION — the output is ALWAYS the fixed head-and-shoulders composition described below, regardless of the input photo's framing, zoom, crop, or angle. Even an extreme close-up selfie comes out as the standard composition — never more of the face, no matter how large it fills the frame in the source.
 
-INPUT HANDLING
-- All attached photos are the same person. Treat the clearest, most front-facing photo as the primary reference for facial features; use the others to read the true face more accurately.
+TASK
+You are RETOUCHING a real photograph of one real person into a single clean, elegant profile-style photo. One to six photos of the SAME individual are provided. You may restyle hair and clothing to the concept below, but you must NOT redesign the face. This concept is for WOMEN only — always render a woman.
+
+HOW TO USE THE INPUT PHOTOS
+- All attached photos are the same person, used for IDENTITY ONLY. Treat the clearest, most front-facing photo as the primary reference for facial features; use the others only to confirm the true face more accurately — never to average or blend them into a different face.
+- Ignore the input photos' framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the same standard composition.
 - Output exactly one photo of this one person.
 
-KEEP THE PERSON — replicate the face, do not redesign it (highest priority)
-- Reproduce the facial structure exactly as in the source: same face shape and width, same jaw and chin, same cheek fullness, same eye size and shape, same nose, same lips, same eyebrows, and the same spacing and proportions between all features. If a feature conflicts with the concept, keep the feature — identity wins.
-- Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, enlarge, sharpen, or beautify the face. Do not drift toward a generic idol-like face. This is one specific individual.
-- Even though the hairstyle changes, the face must stay the SAME person — same identity, same proportions. Changing the hair must never change the face.
+IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
+- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries. If a feature conflicts with the concept, keep the feature — identity wins.
+- Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, enlarge, sharpen, or beautify the face. Do not drift toward a generic idol-like face — this is one specific individual. Changing the hair must never change the face.
 - Keep the apparent age and natural bone structure as in the source.
 
 SKIN & MARKS (default to clean skin)
-- Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
+- Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks — treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
 - Hair: restyle into soft layered shoulder-length hair in a light-brown color, with gentle movement and face-framing layers, glossy and neat. The hair outline must be clean and smooth where it meets the background — a soft, even silhouette with no jagged, lumpy, or pixelated edges. (This overrides the source hairstyle, but NOT the face.)
@@ -40,12 +44,14 @@ STYLING
 - Glasses: if the person is wearing glasses in the source photo, keep the same glasses on; if they are not wearing glasses, do not add any. Match the source exactly.
 
 FRAMING (always identical — ignore how the input is cropped)
-- Do NOT copy the input's zoom. Always produce a head-and-shoulders composition with shoulders clearly visible.
+- Do NOT copy the input's zoom. Always produce a head-and-shoulders composition with shoulders clearly visible — never more of the face, no matter how large it fills the frame in the source, and no matter how tightly cropped the input already is.
 - Centered, facing straight at the camera, symmetric, portrait-lens perspective (~85mm, no distortion).
 - Head from top of hair to chin fills about 45% of the frame height, small even margin above the head, eyes slightly above the middle. Shoulders reach both edges, bottom cuts at upper chest.
 
+FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, with the new hair and styling." If not, the result is wrong.
+
 OUTPUT
-- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, elegant and feminine.`;
+- Vertical ID ratio (3.5:4.5), high-quality studio portrait, photorealistic, elegant and feminine. Remember the two absolute rules: the SAME face under the new hair, inside the SAME fixed composition.`;
 
 async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
   const imageParts = imageDataUrls.map((url) => {

@@ -12,76 +12,48 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 
 // 증명사진 프롬프트 (니트/가디건 + 밝은 회색 배경 / 남녀공용)
-const ID_PROMPT = `TASK
-You are RETOUCHING a real photograph of one real person — NOT generating a new person.
-One to six photos of the SAME individual are provided. Edit them into a single clean,
-formal ID photo. THE HIGHEST PRIORITY, above everything else: the output face must be
-instantly recognizable as the SAME person side by side with the source. Keep the face as
-it is, lightly polished; change only background, clothing, hair tidiness, framing, and
-lighting to the standard below.
+const ID_PROMPT = `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. This is a formal ID PHOTO — the face must be truly theirs. Enhance only through grooming, lighting, and the standard attire below; NEVER reshape facial features.
+2. COMPOSITION — the output is ALWAYS the fixed head-and-shoulders ID composition described below, regardless of the input photo's framing, zoom, crop, or angle. Even an extreme close-up selfie comes out as the standard ID composition — never more of the face, no matter how large it fills the frame in the source.
 
-INPUT HANDLING
-- All attached photos are the same person. Treat the clearest, most front-facing photo as
-  the primary reference for hairstyle and overall appearance; use the other photos to
-  read the true facial features more accurately (shape, proportions, spacing).
+TASK
+You are RETOUCHING a real photograph of one real person — NOT generating a new person. One to six photos of the SAME individual are provided. Edit them into a single clean, formal ID photo. Keep the face as it is, lightly polished; change only background, clothing, hair tidiness, framing, and lighting to the standard below.
+
+HOW TO USE THE INPUT PHOTOS
+- All attached photos are the same person, used for IDENTITY ONLY. Treat the clearest, most front-facing photo as the primary reference for hairstyle and overall appearance; use the other photos only to confirm the true facial features more accurately (shape, proportions, spacing) — never to average or blend them into a different face.
+- Ignore the input photos' framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the same standard ID composition.
 - Output exactly one ID photo of this one person.
 
-KEEP THE PERSON — replicate the face, do not redesign it (highest priority)
-- Reproduce the facial structure exactly as in the source: the same face shape and width,
-  the same jaw and chin shape and width (sharp stays sharp, soft stays soft, square stays
-  square), the same cheek fullness, the same eye size and shape, the same nose, the same
-  lips, the same eyebrows, and the same spacing and proportions between all features.
-  If a feature conflicts with the standard look, keep the feature — identity wins.
-- Do not drift toward a generic, idealized, or "prettier" face. This is one specific
-  individual; preserve their exact identity and unique features. Do not slim, enlarge,
-  sharpen, feminize, harden, or beautify anything.
+IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
+- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same jaw and chin shape and width (sharp stays sharp, soft stays soft, square stays square), the same cheek fullness, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries — they are part of the identity.
+- Do not drift toward a generic, idealized, or "prettier" face. This is one specific individual; preserve their exact identity and unique features. Do not slim, enlarge, sharpen, feminize, harden, or beautify anything.
 - Keep the apparent age, natural bone structure, and sex characteristics as in the source.
 - Keep facial hair (beard, stubble, mustache, or clean-shaven) exactly as in the source.
 
 SKIN & MARKS (default to clean skin)
-- Render clean, smooth, even, healthy skin with good color; correct any dull or off color
-  from the source lighting. By default the skin carries NO spots, dots, or marks.
-- Soften pores and wrinkles to about half strength — a lightly-retouched look that still
-  keeps the person's real age and texture, never plastic and never younger.
-- The ONLY mark allowed: a mole that is unmistakably a real, obvious mole in the source.
-  Render it SMALLER and fainter than in the source. If you are not fully certain a dark
-  area is a real mole, render clean skin — treat every shadow, contrast edge, lighting
-  gradient, or blemish as clean skin.
-- Never add, invent, or enlarge any mark. A real mole becoming lighter or gone is fine;
-  a new or bigger mark is never allowed.
+- Render clean, smooth, even, healthy skin with good color; correct any dull or off color from the source lighting. By default the skin carries NO spots, dots, or marks. Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks.
+- Soften pores and wrinkles to about half strength — a lightly-retouched look that still keeps the person's real age and texture, never plastic and never younger.
+- The ONLY mark allowed: a mole that is unmistakably a real, obvious mole in the source. Render it SMALLER and fainter than in the source. If you are not fully certain a dark area is a real mole, render clean skin.
+- Never add, invent, or enlarge any mark. A real mole becoming lighter or gone is fine; a new or bigger mark is never allowed.
 
 STANDARD LOOK
 - Background: solid, even, pure clean white, no shadows, no gradient. A standard white ID-photo background.
 - Clothing: a soft, neat knit cardigan in a calm neutral tone over a simple top.
-- Hair: keep the person's own hairstyle, length, and texture from the primary photo
-  (front or swept back — match the source). Render it neat with a smooth, ROUNDED top
-  outline — no spiky, stray, or flyaway strands, no frizz; if it falls in front keep both
-  sides even and off the face and eyes. Render it in its true color under the output's
-  neutral lighting — warm/orange/brown tints from the source light must not become the
-  hair's actual color.
-- Expression: a gentle, natural, closed-lip smile — corners of the mouth slightly raised,
-  warm and friendly for a good first impression. Keep it subtle so the face still looks
-  like the same person; not wide, toothy, or a smirk. Eyes open and relaxed, on camera.
+- Hair: keep the person's own hairstyle, length, and texture from the primary photo (front or swept back — match the source). Render it neat with a smooth, ROUNDED top outline — no spiky, stray, or flyaway strands, no frizz; if it falls in front keep both sides even and off the face and eyes. Render it in its true color under the output's neutral lighting — warm/orange/brown tints from the source light must not become the hair's actual color.
+- Expression: a gentle, natural, closed-lip smile — corners of the mouth slightly raised, warm and friendly for a good first impression. Keep it subtle so the face still looks like the same person; not wide, toothy, or a smirk. Eyes open and relaxed, on camera.
 - Lighting: bright, even, frontal (high-key), almost no facial shadow.
-- Eyewear & accessories: keep eyeglasses if worn (clear, glare-free). Render the ears
-  clean — remove all earrings and ear jewelry even if present in the source. No other
-  jewelry or accessories.
+- Eyewear & accessories: keep eyeglasses if worn (clear, glare-free). Render the ears clean — remove all earrings and ear jewelry even if present in the source. No other jewelry or accessories.
 
 FRAMING (always identical — ignore how the input is cropped)
-- Do NOT copy the input's zoom. Even if the input is a tight close-up of the face, always
-  produce the same standard head-and-shoulders ID composition with the shoulders clearly
-  visible. Use the same head size for every subject.
-- Centered, facing straight at the camera, symmetric, portrait-lens perspective (~85mm,
-  no wide-angle distortion).
-- The head, from the top of the hair to the chin, fills about 45% of the frame height,
-  with a small even margin above the head; the eyes sit a little above the middle.
-- Shoulders are level and reach the left and right edges; the bottom edge cuts at the
-  upper chest. Show ONLY head and upper shoulders — no arms, hands, or torso below the
-  upper chest, under any circumstance.
+- Do NOT copy the input's zoom. Even if the input is a tight close-up of the face, always produce the same standard head-and-shoulders ID composition with the shoulders clearly visible — never more of the face, no matter how large it fills the frame in the source, and no matter how tightly cropped the input already is. Use the same head size for every subject.
+- Centered, facing straight at the camera, symmetric, portrait-lens perspective (~85mm, no wide-angle distortion).
+- The head, from the top of the hair to the chin, fills about 45% of the frame height, with a small even margin above the head; the eyes sit a little above the middle.
+- Shoulders are level and reach the left and right edges; the bottom edge cuts at the upper chest. Show ONLY head and upper shoulders — no arms, hands, or torso below the upper chest, under any circumstance.
+
+FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, in a formal ID photo." If not, the result is wrong.
 
 OUTPUT
-- Vertical ID ratio (3.5:4.5), studio passport-photo quality, photorealistic, formal —
-  not casual, not editorial, not a fashion portrait.`;
+- Vertical ID ratio (3.5:4.5), studio passport-photo quality, photorealistic, formal — not casual, not editorial, not a fashion portrait. Remember the two absolute rules: the SAME face, inside the SAME fixed ID composition.`;
 
 // 사진 여러 장(3~6장)으로 증명사진 1장 생성 — 독립 1회 호출
 async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
