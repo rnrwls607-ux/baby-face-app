@@ -215,7 +215,7 @@ const HOME_PILLS = [
 ];
 const HOME_HERO = [
   { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "/cards/baby.jpg" },
-  { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" },
+  // { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" }, // 홈 노출 숨김 (초기 테스트본, 파일은 유지)
   { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby", image: "" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
@@ -223,7 +223,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     id: "popular", heading: "지금 제일 인기 있는", title: "인기 AI 사진 🔥", layout: "scroll",
     items: [
       { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.jpg" },
-      { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto", image: "/cards/idphoto-1.jpg" },
+      // { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto", image: "/cards/idphoto-1.jpg" }, // 홈 노출 숨김 (초기 테스트본, 파일은 유지)
       { id: "couple", title: "커플 사진", subtitle: "여행·데이트 합성", emoji: "💑", accent: "#FFE9D6", badge: "", tags: ["인생샷"], go: "" },
     ],
   },
@@ -337,11 +337,12 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
   },
   {
     id: "idstyle", heading: "", title: "이런 스타일은 어때요?", layout: "grid",
+    // 아래 4장 전부 go: "idphoto" — id-photo 홈 노출 숨김으로 전부 주석 처리 (초기 테스트본, 파일은 유지)
     items: [
-      { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s1.jpg" },
-      { id: "s2", title: "긴머리 블랙 정장", subtitle: "부드러운 인상을 주는", emoji: "💁", accent: "#FFE0EC", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s2.jpg" },
-      { id: "s3", title: "블랙 셋업", subtitle: "기본을 충실히 담아낸", emoji: "🕴️", accent: "#ECEEF1", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s3.jpg" },
-      { id: "s4", title: "네이비 셔츠", subtitle: "은은하면서도 깊이감 있는", emoji: "👔", accent: "#E1ECFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s4.jpg" },
+      // { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s1.jpg" },
+      // { id: "s2", title: "긴머리 블랙 정장", subtitle: "부드러운 인상을 주는", emoji: "💁", accent: "#FFE0EC", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s2.jpg" },
+      // { id: "s3", title: "블랙 셋업", subtitle: "기본을 충실히 담아낸", emoji: "🕴️", accent: "#ECEEF1", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s3.jpg" },
+      // { id: "s4", title: "네이비 셔츠", subtitle: "은은하면서도 깊이감 있는", emoji: "👔", accent: "#E1ECFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s4.jpg" },
     ],
   },
 ];
