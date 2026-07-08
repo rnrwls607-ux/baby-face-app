@@ -23,11 +23,12 @@ You are RETOUCHING real photographs of one real WOMAN into a single polished, pr
 HOW TO USE THE INPUT PHOTOS
 - All attached photos are the same woman, used for IDENTITY ONLY. Use the clearest, most front-facing photo as the primary reference for the face and hairstyle; use the others only to confirm the true facial features more accurately (shape, proportions, spacing) — never to average or blend them into a different face.
 - Ignore the input photos' framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the same standard business-portrait composition.
+- Even if every input is a tight face selfie, the output still shows the full waist-to-mid-thigh business framing below — build the body, outfit, and studio scene from the spec, and place this woman's exact face and hair on it.
 - Output exactly one business profile photo of this one woman.
 
 IDENTITY LOCK (highest priority)
-- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same jaw and chin, the same cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features, so the result is unmistakably THIS person. Keep her natural asymmetries — they are part of her identity.
-- Keep the apparent age and feminine characteristics as in the source. Do not slim, enlarge, sharpen, or beautify her face — the professional look below comes from styling, pose, and lighting, never from reshaping features.
+- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same hairline and forehead, the same jaw and chin, the same cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features, so the result is unmistakably THIS person. Keep her natural asymmetries — they are part of her identity.
+- Keep the apparent age and feminine characteristics as in the source, and her TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone). Do not slim, enlarge, sharpen, or beautify her face — the professional look below comes from styling, pose, and lighting, never from reshaping features.
 
 SKIN & MARKS
 - Clean, smooth, even, healthy skin with good color; correct dull/off color from source light. Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — polished but not plastic, keep real age.

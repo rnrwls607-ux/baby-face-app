@@ -25,9 +25,9 @@ HOW TO USE THE INPUT PHOTOS
 - Output exactly one photo of this one person.
 
 IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
-- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries. If a feature conflicts with the concept, keep the feature — identity wins.
+- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same hairline and forehead height, the same jaw and chin, the same cheek fullness and cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries. If a feature conflicts with the concept, keep the feature — identity wins.
 - Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, enlarge, sharpen, or beautify the face. Do not drift toward a generic idol-like face — this is one specific individual. Changing the hair must never change the face.
-- Keep the apparent age, natural bone structure, and any facial hair as in the source.
+- Keep the apparent age, natural bone structure, and any facial hair as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
 
 SKIN & MARKS (default to clean skin)
 - Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks — treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.

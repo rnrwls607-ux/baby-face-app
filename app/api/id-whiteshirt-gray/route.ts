@@ -25,9 +25,9 @@ HOW TO USE THE INPUT PHOTOS
 - Output exactly one ID photo of this one person.
 
 IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
-- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same jaw and chin shape and width (sharp stays sharp, soft stays soft, square stays square), the same cheek fullness, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries — they are part of the identity.
+- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same hairline and forehead height, the same jaw and chin shape and width (sharp stays sharp, soft stays soft, square stays square), the same cheek fullness and cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries — they are part of the identity.
 - Do not drift toward a generic, idealized, or "prettier" face. This is one specific individual; preserve their exact identity and unique features. Do not slim, enlarge, sharpen, feminize, harden, or beautify anything.
-- Keep the apparent age, natural bone structure, and sex characteristics as in the source.
+- Keep the apparent age, natural bone structure, and sex characteristics as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
 - Keep facial hair (beard, stubble, mustache, or clean-shaven) exactly as in the source.
 
 SKIN & MARKS (default to clean skin)
