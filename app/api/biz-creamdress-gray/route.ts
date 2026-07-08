@@ -13,33 +13,25 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 
 // 여성 비즈프로필 (크림 리본 원피스 + 밝은 회색 배경). {POSE} 자리에 포즈별 지시.
 function buildPrompt(pose: string): string {
-  return `TASK
-You are RETOUCHING real photographs of one real WOMAN into a single polished, professional
-BUSINESS PROFILE photo (corporate portrait / lookbook style) — NOT a stiff ID photo, and
-NOT a new person. One to six photos of the SAME woman are provided. THE HIGHEST PRIORITY:
-the output face must be clearly recognizable as the SAME person as the source. Keep the face,
-lightly polished and flattering; restyle clothing, pose, framing, background, and lighting to
-the professional standard below. This concept is for WOMEN only — always render a woman.
+  return `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be clearly recognizable as the SAME person as the input, side by side. This is a BUSINESS PROFILE photo — professional styling, pose, and lighting are the transformation; NEVER reshape their facial features.
+2. COMPOSITION — the output is ALWAYS the half-to-three-quarter body business-portrait framing described below, regardless of the input photos' framing, zoom, crop, or angle. Even an extreme close-up selfie comes out as the standard business-portrait composition.
 
-INPUT HANDLING
-- All attached photos are the same woman. Use the clearest, most front-facing photo as the
-  primary reference for the face and hairstyle; use the others to read the true facial
-  features more accurately (shape, proportions, spacing).
+TASK
+You are RETOUCHING real photographs of one real WOMAN into a single polished, professional BUSINESS PROFILE photo (corporate portrait / lookbook style) — NOT a stiff ID photo, and NOT a new person. One to six photos of the SAME woman are provided. Keep the face as it is; restyle clothing, pose, framing, background, and lighting to the professional standard below. This concept is for WOMEN only — always render a woman.
+
+HOW TO USE THE INPUT PHOTOS
+- All attached photos are the same woman, used for IDENTITY ONLY. Use the clearest, most front-facing photo as the primary reference for the face and hairstyle; use the others only to confirm the true facial features more accurately (shape, proportions, spacing) — never to average or blend them into a different face.
+- Ignore the input photos' framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the same standard business-portrait composition.
 - Output exactly one business profile photo of this one woman.
 
-KEEP THE PERSON (high priority, but a flattering professional result is desired)
-- Reproduce the facial structure faithfully: the same face shape, jaw and chin, cheekbones,
-  eye shape, nose, lips, eyebrows, and the spacing/proportions between features, so the result
-  is unmistakably THIS person. Keep apparent age and feminine characteristics.
-- A clean, attractive, confident, professional look is welcome and encouraged — well-groomed,
-  polished, photogenic — but it must still clearly be the same individual, not a generic face.
+IDENTITY LOCK (highest priority)
+- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same jaw and chin, the same cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features, so the result is unmistakably THIS person. Keep her natural asymmetries — they are part of her identity.
+- Keep the apparent age and feminine characteristics as in the source. Do not slim, enlarge, sharpen, or beautify her face — the professional look below comes from styling, pose, and lighting, never from reshaping features.
 
 SKIN & MARKS
-- Clean, smooth, even, healthy skin with good color; correct dull/off color from source light.
-  Soften pores and wrinkles to about half strength — polished but not plastic, keep real age.
-- By default NO spots or marks. The only exception: a clearly real, obvious mole in the source,
-  rendered SMALLER and fainter. If unsure whether a dark area is a real mole, render clean skin.
-  Never add, invent, or enlarge any mark.
+- Clean, smooth, even, healthy skin with good color; correct dull/off color from source light. Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — polished but not plastic, keep real age.
+- By default NO spots or marks. The only exception: a clearly real, obvious mole in the source, rendered SMALLER and fainter. If unsure whether a dark area is a real mole, render clean skin. Never add, invent, or enlarge any mark.
 
 STYLING (women's business profile — cream ribbon dress / bright light gray background)
 - Clothing: an elegant, well-fitted CREAM (soft ivory) one-piece dress with a soft ribbon/bow tie
@@ -65,19 +57,14 @@ STYLING (women's business profile — cream ribbon dress / bright light gray bac
 
 POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)
 - ${pose}
-- Frame the person from roughly the head down to the hips/upper-thigh area (about waist-to-mid-
-  thigh visible), so the outfit and posture are clearly shown — a half-to-three-quarter body
-  business portrait, like a corporate lookbook. Do NOT crop tightly to head-and-shoulders.
-- The person is well-composed and centered with comfortable, balanced spacing; confident and
-  natural, never stiff. Portrait-lens perspective (~85mm), realistic proportions, no wide-angle
-  distortion. Eyes looking at the camera.
-- Render hands naturally and correctly with the right number of fingers; if a hand would look
-  awkward, keep it relaxed and simple.
+- Frame the person from roughly the head down to the hips/upper-thigh area (about waist-to-mid-thigh visible), so the outfit and posture are clearly shown — a half-to-three-quarter body business portrait, like a corporate lookbook. Do NOT crop tightly to head-and-shoulders, no matter how tightly the source photo was cropped.
+- The person is well-composed and centered with comfortable, balanced spacing; confident and natural, never stiff. Portrait-lens perspective (~85mm), realistic proportions, no wide-angle distortion. Eyes looking at the camera.
+- Render hands naturally and correctly with the right number of fingers; if a hand would look awkward, keep it relaxed and simple.
+
+FINAL SELF-CHECK before output: placed next to the source photos, someone who knows her must instantly say "that's her, in a professional business profile." If not, the result is wrong.
 
 OUTPUT
-- Vertical ratio 1:1.5 (width:height = 3:4.5), high-end professional studio profile photo,
-  photorealistic, polished and corporate — like a premium business headshot/lookbook, not
-  casual, not an ID photo.`;
+- Vertical ratio 1:1.5 (width:height = 3:4.5), high-end professional studio profile photo, photorealistic, polished and corporate — like a premium business headshot/lookbook, not casual, not an ID photo. Remember the two absolute rules: the SAME person, inside the SAME fixed business-portrait composition.`;
 }
 
 const POSES = [
