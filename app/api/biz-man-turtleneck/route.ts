@@ -21,7 +21,7 @@ You are RETOUCHING real photographs of one real person into a single polished, p
 
 HOW TO USE THE INPUT PHOTOS
 - All attached photos are the same person, used for IDENTITY ONLY. Use the clearest, most front-facing photo as the primary reference for the face and hairstyle; use the others only to confirm the true facial features more accurately (shape, proportions, spacing) — never to average or blend them into a different face.
-- Ignore the input photos' framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the same standard business-portrait composition.
+- Ignore the input photos' framing, zoom, crop, angle, and background entirely — even an extreme close-up selfie must produce the same standard business-portrait composition.
 - Even if every input is a tight face selfie, the output still shows the full waist-to-mid-thigh business framing below — build the body, outfit, and studio scene from the spec, and place this person's exact face and hair on it.
 - Output exactly one business profile photo of this one person.
 
@@ -35,8 +35,8 @@ SKIN & MARKS
 - By default NO spots or marks. The only exception: a clearly real, obvious mole in the source, rendered SMALLER and fainter. If unsure whether a dark area is a real mole, render clean skin. Never add, invent, or enlarge any mark.
 
 STYLING (men's business profile — gray studio background)
-- Clothing: a well-tailored CHARCOAL or NAVY blazer worn over a fine-gauge TURTLENECK (roll-neck) sweater in black, charcoal, or cream — NO shirt collar, NO tie. Modern, minimal, creative-executive style — sleek and intentional.
-- Background: a clean, even studio backdrop in a BRIGHT, LIGHT neutral gray — a soft, airy light gray that is clearly lighter than the suit and the hair (but NOT pure white). Softly and evenly lit with a subtle gentle gradient (only very slightly deeper toward the edges), no harsh shadows. Keep the background distinctly BRIGHTER than the subject so the person clearly stands out and never blends into it — clean, bright, premium corporate studio feel.
+- Clothing: a well-tailored CHARCOAL or NAVY blazer worn over a fine-gauge TURTLENECK (roll-neck) sweater in black, charcoal, or cream — NO shirt collar, NO tie. Modern, minimal, sophisticated style — sleek and intentional.
+- Background: a clean, even studio backdrop in a BRIGHT, LIGHT neutral gray — a soft, airy light gray that is clearly lighter than the suit and the hair (but NOT pure white). Softly and evenly lit with a subtle gentle gradient (only very slightly deeper toward the edges), no harsh shadows. Keep the background distinctly BRIGHTER than the subject so the person clearly stands out and never blends into it — clean, bright, premium corporate studio feel. This is a plain seamless studio backdrop ONLY — absolutely NO office, NO windows, NO furniture, NO plants, NO interior scene of any kind behind the person.
 - Hair: keep the person's own hairstyle, length, texture and true color, but render it neat,
   groomed, and polished (no frizz or stray flyaways). Professional and tidy.
 - Expression: a calm, confident, approachable closed-lip smile conveying competence and
