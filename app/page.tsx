@@ -218,7 +218,7 @@ const HOME_HERO = [
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
-    id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "scroll",
+    id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "grid",
     items: [
       { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.jpg" },
       // { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto", image: "/cards/idphoto-1.jpg" }, // 홈 노출 숨김 (초기 테스트본, 파일은 유지)
