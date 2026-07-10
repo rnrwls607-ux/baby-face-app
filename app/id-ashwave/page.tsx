@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
+import GateBadge from "../components/GateBadge";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -10,7 +12,8 @@ const ACCENT = "#FF4B7C";
 
 export default function IdAshwavePage() {
   const router = useRouter();
-  const [images, setImages] = useState<string[]>([]);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const images = photos.map(p => p.src);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -44,11 +47,33 @@ export default function IdAshwavePage() {
     if (remaining <= 0) { setError(`사진은 최대 ${MAX_PHOTOS}장까지 올릴 수 있어요.`); return; }
     const picked = Array.from(files).slice(0, remaining);
     const converted = await Promise.all(picked.map(toBase64));
-    setImages(prev => [...prev, ...converted]);
+    // 1) 먼저 "확인 중" 상태로 담아 화면에 바로 보여준다.
+    const batch: Photo[] = converted.map(src => ({ id: newPhotoId(), src, gate: { status: "checking" } }));
+    setPhotos(prev => [...prev, ...batch]);
+
+    // 2) 여러 장을 동시에 판정한다.
+    const checks = await Promise.all(batch.map(p => checkPhoto(p.src, "solo_face")));
+
+    const rejected = new Set<string>();
+    const passed = new Map<string, Photo["gate"]>();
+    const reasons: string[] = [];
+    batch.forEach((p, i) => {
+      const c = checks[i];
+      if (c.ok) passed.set(p.id, c.gate);
+      else { rejected.add(p.id); reasons.push(...c.reasons); }
+    });
+
+    // 3) 인덱스가 아니라 id 로 찾아 지우고 갱신한다 — 기다리는 동안 사진이
+    //    추가·삭제돼도 엉뚱한 사진을 건드리지 않는다.
+    setPhotos(prev => prev
+      .filter(p => !rejected.has(p.id))
+      .map(p => (passed.has(p.id) ? { ...p, gate: passed.get(p.id)! } : p)));
+
+    if (reasons.length) setError([...new Set(reasons)].join(" · "));
   };
 
   const removeImage = (idx: number) => {
-    setImages(prev => prev.filter((_, i) => i !== idx));
+    setPhotos(prev => prev.filter((_, i) => i !== idx));
   };
 
   const handleSubmit = async () => {
@@ -110,6 +135,7 @@ export default function IdAshwavePage() {
                 {images.map((img, idx) => (
                   <div key={idx} style={{ position: "relative", aspectRatio: "1", borderRadius: 12, overflow: "hidden", border: `1.5px solid ${ACCENT}` }}>
                     <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <GateBadge gate={photos[idx]?.gate} />
                     <button onClick={() => removeImage(idx)}
                       style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,0.55)", color: "#fff", border: "none", fontSize: 13, lineHeight: 1, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
                   </div>
@@ -180,7 +206,7 @@ export default function IdAshwavePage() {
               ))}
             </div>
 
-            <button onClick={() => { setResults([]); setImages([]); }}
+            <button onClick={() => { setResults([]); setPhotos([]); }}
               style={{ width: "100%", marginTop: 18, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
           </div>
         )}
