@@ -613,25 +613,26 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
           {HOME_HERO.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
-              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 320, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
+              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 360, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
                   <>
-                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
+                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 28%" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 35%, transparent 60%)" }} />
                   </>
                 ) : (
                   <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
                 )}
                 <div style={{ position: "absolute", left: 24, bottom: 28, textAlign: "left" }}>
-                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: "#191919", letterSpacing: -0.5, whiteSpace: "pre-line", textShadow: "0 1px 4px rgba(255,255,255,0.7)" }}>{h.title}</p>
-                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "#4a4a4a", textShadow: "0 1px 3px rgba(255,255,255,0.6)" }}>{h.subtitle}</p>
+                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: "#fff", letterSpacing: -0.5, whiteSpace: "pre-line", textShadow: "0 2px 8px rgba(0,0,0,0.45)" }}>{h.title}</p>
+                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.92)", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>{h.subtitle}</p>
                 </div>
               </div>
             </div>
           ))}
         </div>
         )}
-        {/* 점 인디케이터 — 전체(pill 0)에서만 표시 */}
-        {pill === 0 && (
+        {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
+        {pill === 0 && HOME_HERO.length > 1 && (
         <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
           {HOME_HERO.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
