@@ -22,27 +22,36 @@ export default function Toast() {
   if (!msg) return null;
 
   return (
+    // 바깥: 위치·좌우 중앙 정렬만 담당 (transform 없음)
     <div
-      className="fade-up"
       style={{
         position: "fixed",
         bottom: "calc(100px + env(safe-area-inset-bottom))",
-        left: "50%",
-        transform: "translateX(-50%)",
-        background: "#1A1A1A",
-        color: "#fff",
-        borderRadius: 18,
-        padding: "12px 20px",
-        fontSize: 14,
-        fontWeight: 600,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
         zIndex: 9999,
-        maxWidth: "90vw",
-        textAlign: "center",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
         pointerEvents: "none",
       }}
     >
-      {msg}
+      {/* 안쪽: 모양·애니메이션만 담당. fade-up의 translateY가 정렬을 깨지 않는다 */}
+      <div
+        className="fade-up"
+        style={{
+          background: "#1A1A1A",
+          color: "#fff",
+          borderRadius: 18,
+          padding: "12px 20px",
+          fontSize: 14,
+          fontWeight: 600,
+          maxWidth: "90vw",
+          textAlign: "center",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+        }}
+      >
+        {msg}
+      </div>
     </div>
   );
 }
