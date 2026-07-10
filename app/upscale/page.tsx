@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { toast } from "../lib/toast";
 
 export default function UpscalePage() {
   const [image, setImage] = useState("");
@@ -70,6 +71,7 @@ export default function UpscalePage() {
     a.href = result.startsWith("data:") ? result : "/api/download?url=" + encodeURIComponent(result);
     a.download = "mospic_4k.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
 
   return (

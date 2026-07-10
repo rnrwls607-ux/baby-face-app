@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 export default function HanbokcouplePage() {
   const router = useRouter();
@@ -63,6 +64,7 @@ export default function HanbokcouplePage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "hanbokcouple.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const canSubmit = !!images[0] && !!images[1] && !loading;
   return (

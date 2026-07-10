@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 // ── 디자인 토큰 (색·둥글기를 여기서 통제) ──
 const UI = {
@@ -130,6 +131,7 @@ export default function IdPhotoPage() {
     a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`;
     a.download = "id_photo.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
 
   const canSubmit = images.filter(Boolean).length > 0 && !loading;

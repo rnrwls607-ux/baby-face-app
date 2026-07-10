@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 const STYLE_OPTIONS = [
   { key: "modern", label: "모던" },
@@ -71,6 +72,7 @@ export default function InteriorPage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "interior.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const chipStyle = (active: boolean) => ({
     padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",

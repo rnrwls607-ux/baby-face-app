@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 export default function FactoryPage() {
   const router = useRouter();
@@ -60,6 +61,7 @@ export default function FactoryPage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "factory.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>

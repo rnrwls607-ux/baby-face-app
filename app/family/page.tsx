@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 const SLOT_LABELS = ["가족 1 (필수)", "가족 2 (필수)", "가족 3 (선택)", "가족 4 (선택)"];
 const MIN_PHOTOS = 2;
@@ -68,6 +69,7 @@ export default function FamilyPage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "family.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const canSubmit = validCount >= MIN_PHOTOS && !loading;
   return (

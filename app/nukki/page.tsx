@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 export default function NukkiPage() {
   const router = useRouter();
@@ -60,6 +61,7 @@ export default function NukkiPage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "nukki.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const checker = {
     backgroundImage: "linear-gradient(45deg,#dfe2e7 25%,transparent 25%),linear-gradient(-45deg,#dfe2e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dfe2e7 75%),linear-gradient(-45deg,transparent 75%,#dfe2e7 75%)",

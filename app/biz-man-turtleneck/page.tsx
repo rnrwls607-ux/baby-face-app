@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -80,6 +81,7 @@ export default function BizManTurtlePage() {
     a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`;
     a.download = `biz-man-turtleneck-${idx + 1}.png`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
 
   return (

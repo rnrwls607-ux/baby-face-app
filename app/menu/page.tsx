@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 const STYLE_OPTIONS = [
   { key: "white", label: "화이트" },
@@ -70,6 +71,7 @@ export default function MenuPage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "menu.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const chip = (opt: { key: string; label: string }, onResult: boolean) => {
     const on = style === opt.key;

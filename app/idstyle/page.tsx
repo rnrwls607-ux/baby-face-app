@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 const STYLE_KEY = "blueshirt";
 const STYLE_LABEL = "S컬 블루 셔츠";
@@ -75,6 +76,7 @@ export default function IdStylePage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "idphoto.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const canSubmit = faces.length >= MIN_FACES && !loading;
 

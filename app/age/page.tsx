@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
+import { toast } from "../lib/toast";
 
 export default function AgePage() {
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function AgePage() {
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
     a.download = "age.png";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    toast("저장됐어요");
   };
   const chipStyle = (active: boolean) => ({
     flex: 1, padding: "13px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
