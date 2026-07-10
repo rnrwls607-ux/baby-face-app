@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
@@ -669,7 +669,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             : section.items.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
           if (filteredItems.length === 0) return null;
           return (
-            <div key={section.id} style={{ marginTop: 30 }}>
+            <Fragment key={section.id}>
+            <div style={{ marginTop: 30 }}>
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
                 <div>
                   {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 14, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
@@ -687,6 +688,14 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 </div>
               )}
             </div>
+            {/* MOSPIC STUDIO 검은 배너 — more 섹션 바로 뒤, 전체(pill 0)에서만 */}
+            {section.id === "more" && (
+              <div style={{ marginTop: 30, background: "#191919", padding: "32px 24px" }}>
+                <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "#FF4B7C", fontWeight: 700, letterSpacing: 1 }}>MOSPIC STUDIO</p>
+                <p style={{ margin: 0, fontSize: 23, color: "#fff", fontWeight: 900, whiteSpace: "pre-line", letterSpacing: -0.4, lineHeight: 1.35 }}>{"사진관 안 가도,\n사진관보다 잘 나오게"}<span style={{ color: "#FF4B7C" }}>.</span></p>
+              </div>
+            )}
+            </Fragment>
           );
         }) : (() => {
           // 카테고리 선택 시: 해당 카테고리 컨셉 전체를 2열 그리드로 (전체보기 오버레이와 동일 로직)
