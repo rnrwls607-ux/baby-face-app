@@ -27,3 +27,13 @@ body {
   background-size: 200% auto;
   animation: shimmer 1.5s infinite;
 }
+
+button, .pressable {
+  touch-action: manipulation;
+  transition: transform 0.08s ease, opacity 0.08s ease;
+  user-select: none;
+}
+button:active, .pressable:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}

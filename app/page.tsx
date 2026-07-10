@@ -576,7 +576,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       setHeroIdx(idx);
     };
     const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
-      <div key={item.id} onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
+      <div key={item.id} className="pressable" onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
         <div style={{ position: "relative" }}>
           <div style={{ aspectRatio: ratio, borderRadius: HOME.radius, overflow: "hidden", background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 52 }}>
             {item.image ? <img src={item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
@@ -1269,7 +1269,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               return (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {list.map(item => (
-                    <div key={item.id} onClick={() => { setShowAllConcepts(false); setDetail(conceptForGo(item.go)); }} style={{ cursor: "pointer" }}>
+                    <div key={item.id} className="pressable" onClick={() => { setShowAllConcepts(false); setDetail(conceptForGo(item.go)); }} style={{ cursor: "pointer" }}>
                       <div style={{ position: "relative" }}>
                         <div style={{ aspectRatio: "3 / 4", borderRadius: HOME.radius, overflow: "hidden", background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>
                           {item.image ? <img src={item.image} alt={item.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
