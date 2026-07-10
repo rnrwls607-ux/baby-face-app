@@ -138,7 +138,7 @@ export default function IdPhotoPage() {
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: UI.pageBg, fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       {/* 헤더 */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, borderBottom: `1px solid ${UI.line}`, position: "sticky", top: 0, background: UI.surface, zIndex: 10 }}>
-        <button onClick={() => router.push("/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: UI.text, padding: "4px 8px", lineHeight: 1 }}>‹</button>
+        <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: UI.text, padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: UI.text }}>AI 증명사진</span>
       </div>
 
