@@ -672,8 +672,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             <div key={section.id} style={{ marginTop: 30 }}>
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
                 <div>
-                  {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 13, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
-                  <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}<span style={{ color: "#FF4B7C" }}>.</span></p>
+                  {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 14, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
+                  <p style={{ margin: 0, fontSize: 24, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}<span style={{ color: "#FF4B7C" }}>.</span></p>
                 </div>
                 <button onClick={() => { setAllConceptsCat(HOME_PILLS[pill].value); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
               </div>
