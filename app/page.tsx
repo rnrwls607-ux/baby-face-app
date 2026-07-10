@@ -214,8 +214,8 @@ const HOME_PILLS = [
   { label: "재미·추억", value: "fun" },
 ];
 const HOME_HERO = [
-  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg" },
-  { id: "biz", title: "정장 입은 나를,\n1분 만에", subtitle: "AI 비즈니스 프로필", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg" },
+  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg", objectPosition: "center 48%" },
+  { id: "biz", title: "정장 입은 나를,\n1분 만에", subtitle: "AI 비즈니스 프로필", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
@@ -613,7 +613,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 270, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
                   <>
-                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 48%" }} />
+                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: h.objectPosition }} />
                     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 35%, transparent 60%)" }} />
                   </>
                 ) : (
