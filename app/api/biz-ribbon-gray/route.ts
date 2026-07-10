@@ -56,7 +56,7 @@ STYLING (women's business profile — ivory pussy-bow blouse + black skirt / bri
   dimension through soft, smooth shading along the sides, the shoulder line, and under the collar
   and bow (form shadows only — NOT fabric wrinkles), so it has defined edges and never merges
   into the light background. Keep the blouse bright, smooth, and clean, but NOT blown out or overexposed.
-- Accessories: keep eyeglasses if worn (clear, glare-free). Keep jewelry minimal and tasteful
+- Accessories: eyeglasses ONLY if the person is clearly wearing them in the source (then keep them, clear and glare-free); if they are NOT wearing glasses in the source, add NO glasses of any kind. Keep jewelry minimal and tasteful
   (small simple earrings are fine); remove anything flashy — keep it clean and professional.
 
 POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)

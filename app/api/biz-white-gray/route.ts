@@ -61,7 +61,7 @@ STYLING (business profile — crisp white dress shirt tucked into black trousers
   dimension through soft, smooth shading along the sides, the shoulder line, and under the collar
   (form shadows only — NOT fabric wrinkles), so it has defined edges and never merges into the
   light background. Keep the shirt bright, smooth, and clean, but NOT blown out or overexposed.
-- Accessories: keep eyeglasses if worn (clear, glare-free). Remove earrings/ear jewelry and any
+- Accessories: eyeglasses ONLY if the person is clearly wearing them in the source (then keep them, clear and glare-free); if they are NOT wearing glasses in the source, add NO glasses of any kind. Remove earrings/ear jewelry and any
   flashy accessories — keep it clean and professional.
 
 POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)

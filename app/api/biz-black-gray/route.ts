@@ -49,7 +49,7 @@ STYLING (business profile — black suit / light gray background)
   trustworthiness. Subtle and natural, eyes engaged with the camera.
 - Lighting: soft, even, flattering professional studio lighting (gentle key + fill), polished
   corporate-headshot quality, minimal harsh shadow, clean and crisp against the light gray backdrop.
-- Accessories: keep eyeglasses if worn (clear, glare-free). Remove earrings/ear jewelry and any
+- Accessories: eyeglasses ONLY if the person is clearly wearing them in the source (then keep them, clear and glare-free); if they are NOT wearing glasses in the source, add NO glasses of any kind. Remove earrings/ear jewelry and any
   flashy accessories — keep it clean and professional.
 
 POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)

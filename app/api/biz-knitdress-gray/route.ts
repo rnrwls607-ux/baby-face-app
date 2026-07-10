@@ -53,7 +53,7 @@ STYLING (women's business profile — camel knit dress / bright light gray backg
   dimension through soft, smooth shading along the sides, the shoulder line, and folds of form
   (form shadows only — NOT messy fabric wrinkles), so it has defined edges and never merges into
   the light background. Keep the fine knit texture soft and even.
-- Accessories: keep eyeglasses if worn (clear, glare-free). Keep jewelry minimal and tasteful
+- Accessories: eyeglasses ONLY if the person is clearly wearing them in the source (then keep them, clear and glare-free); if they are NOT wearing glasses in the source, add NO glasses of any kind. Keep jewelry minimal and tasteful
   (small simple earrings are fine); remove anything flashy — keep it clean and professional.
 
 POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)
