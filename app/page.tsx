@@ -610,7 +610,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             );
           })}
         </div>
-        {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) */}
+        {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
+        {pill === 0 && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: "0 18px" }}>
           {HOME_HERO.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
@@ -631,12 +632,15 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </div>
           ))}
         </div>
-        {/* 점 인디케이터 */}
+        )}
+        {/* 점 인디케이터 — 전체(pill 0)에서만 표시 */}
+        {pill === 0 && (
         <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
           {HOME_HERO.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
           ))}
         </div>
+        )}
         {/* 무료 횟수 (기존 기능 유지) */}
         {user && (
           <div style={{ margin: "16px 18px 0", background: limitReached ? "#FFF0F3" : "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -655,8 +659,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             )}
           </div>
         )}
-        {/* 섹션들 */}
-        {HOME_SECTIONS.map(section => {
+        {/* 섹션들 — 전체(pill 0)는 기존 섹션 미리보기, 그 외 칩은 2열 그리드 */}
+        {pill === 0 ? HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
           const cat = HOME_PILLS[pill].value;
           // "인기"는 badge가 BEST/NEW인 카드만, 나머지는 카테고리 매칭
@@ -686,7 +690,36 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               )}
             </div>
           );
-        })}
+        }) : (() => {
+          // 카테고리 선택 시: 해당 카테고리 컨셉 전체를 2열 그리드로 (전체보기 오버레이와 동일 로직)
+          const seen = new Set<string>();
+          const all: HomeCardItem[] = [];
+          for (const sec of HOME_SECTIONS) {
+            for (const it of sec.items) {
+              const k = it.go || it.id;
+              if (seen.has(k)) continue;
+              seen.add(k);
+              all.push(it);
+            }
+          }
+          const cat = HOME_PILLS[pill].value;
+          const list = cat === "hot"
+            ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+            : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
+          if (list.length === 0) {
+            return (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12 }}>
+                <span style={{ fontSize: 48, opacity: 0.15 }}>🪄</span>
+                <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0 }}>이 카테고리는 준비 중이에요</p>
+              </div>
+            );
+          }
+          return (
+            <div style={{ marginTop: 20, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 18px" }}>
+              {list.map(it => renderCard(it, "100%", "3 / 4"))}
+            </div>
+          );
+        })()}
         <div style={{ height: 110 }} />
       </div>
     );
