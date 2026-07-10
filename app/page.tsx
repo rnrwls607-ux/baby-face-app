@@ -218,7 +218,7 @@ const HOME_HERO = [
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
-    id: "popular", heading: "지금 제일 인기 있는", title: "인기 AI 사진 🔥", layout: "scroll",
+    id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "scroll",
     items: [
       { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.jpg" },
       // { id: "idphoto", title: "AI 증명사진", subtitle: "정장·깔끔 배경 1분", emoji: "🪪", accent: "#DCEBFF", badge: "NEW", tags: ["증명사진"], go: "idphoto", image: "/cards/idphoto-1.jpg" }, // 홈 노출 숨김 (초기 테스트본, 파일은 유지)
@@ -226,7 +226,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     ],
   },
   {
-    id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진 ✨", layout: "scroll",
+    id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진", layout: "scroll",
     items: [
       { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.png" },
       { id: "food", title: "음식 사진 보정", subtitle: "메뉴판·광고용으로", emoji: "🍽️", accent: "#FFE0EC", badge: "NEW", tags: ["음식"], image: "/cards/food.png", go: "food" },
@@ -334,7 +334,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     ],
   },
   {
-    id: "idstyle", heading: "", title: "이런 스타일은 어때요?", layout: "grid",
+    id: "idstyle", heading: "여권·이력서·프로필까지", title: "AI 증명사진", layout: "grid",
     // 아래 4장 전부 go: "idphoto" — id-photo 홈 노출 숨김으로 전부 주석 처리 (초기 테스트본, 파일은 유지)
     items: [
       // { id: "s1", title: "올림머리 블랙 정장", subtitle: "클래식의 정석", emoji: "🧑‍💼", accent: "#DCEBFF", badge: "", tags: [], go: "idphoto", image: "/cards/idphoto-s1.jpg" },
@@ -672,8 +672,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             <div key={section.id} style={{ marginTop: 30 }}>
               <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
                 <div>
-                  {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 13, color: HOME.text, fontWeight: 500 }}>{section.heading}</p> : null}
-                  <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}</p>
+                  {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 13, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
+                  <p style={{ margin: 0, fontSize: 20, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}<span style={{ color: "#FF4B7C" }}>.</span></p>
                 </div>
                 <button onClick={() => { setAllConceptsCat(HOME_PILLS[pill].value); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
               </div>
