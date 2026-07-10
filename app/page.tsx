@@ -145,6 +145,7 @@ const GO_CATEGORIES: Record<string, string[]> = {
   bizpinstripe: ["business"],
   bizcheck: ["business"],
   bizknitdress: ["business"],
+  idskyblue: ["idcard"],
   idblack: ["idcard"],
   idnavy: ["idcard"],
   idcharcoal: ["idcard"],
