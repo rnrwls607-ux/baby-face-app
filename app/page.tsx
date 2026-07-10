@@ -616,7 +616,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 270, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
                   <>
-                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 28%" }} />
+                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 42%" }} />
                     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 35%, transparent 60%)" }} />
                   </>
                 ) : (
