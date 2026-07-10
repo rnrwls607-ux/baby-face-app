@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const GEMINI_MODEL = "gemini-3.5-flash";
+const GEMINI_MODEL = "gemini-3.1-flash-lite";
 const TIMEOUT_MS = 8000;          // 사용자가 업로드 직후 기다리는 순간이라 짧게
 const MIN_FACE_RATIO = 0.15;      // 이보다 작으면 얼굴이 너무 작다고 본다
 
