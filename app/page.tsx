@@ -215,6 +215,7 @@ const HOME_PILLS = [
 ];
 const HOME_HERO = [
   { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg" },
+  { id: "biz", title: "정장 입은 나를,\n1분 만에", subtitle: "AI 비즈니스 프로필", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
