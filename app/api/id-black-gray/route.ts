@@ -38,11 +38,11 @@ SKIN & MARKS (default to clean skin)
 
 STANDARD LOOK
 - Background: solid, even, pure clean white, no shadows, no gradient. A standard white ID-photo background.
-- Clothing: a sharp black formal suit jacket over a clean white collared shirt.
+- Clothing: a sharp formal suit jacket in TRUE DEEP BLACK (pure black fabric — NOT navy, NOT dark blue, NOT charcoal) over a clean white collared shirt with NO necktie — the collar area stays clean and tie-free (no tie, no bow tie, no neck accessory of any kind).
 - Hair: keep the person's own hairstyle, length, and texture from the primary photo (front or swept back — match the source). Render it neat with a smooth, ROUNDED top outline — no spiky, stray, or flyaway strands, no frizz; if it falls in front keep both sides even and off the face and eyes. Render it in its true color under the output's neutral lighting — warm/orange/brown tints from the source light must not become the hair's actual color.
 - Expression: a gentle, natural, closed-lip smile — corners of the mouth slightly raised, warm and friendly for a good first impression. Keep it subtle so the face still looks like the same person; not wide, toothy, or a smirk. Eyes open and relaxed, on camera.
 - Lighting: bright, even, frontal (high-key), almost no facial shadow.
-- Eyewear & accessories: keep eyeglasses if worn (clear, glare-free). Render the ears clean — remove all earrings and ear jewelry even if present in the source. No other jewelry or accessories.
+- Eyewear & accessories: eyeglasses ONLY if the person is clearly wearing them in the source photos — then keep them (clear, glare-free). If they are NOT wearing glasses in the source, the output must have NO glasses — never add eyewear of any kind. Render the ears clean — remove all earrings and ear jewelry even if present in the source. No other jewelry or accessories.
 
 FRAMING (always identical — ignore how the input is cropped)
 - Do NOT copy the input's zoom. Even if the input is a tight close-up of the face, always produce the same standard head-and-shoulders ID composition with the shoulders clearly visible — never more of the face, no matter how large it fills the frame in the source, and no matter how tightly cropped the input already is. Use the same head size for every subject.
