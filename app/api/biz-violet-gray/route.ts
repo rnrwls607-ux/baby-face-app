@@ -30,9 +30,9 @@ IDENTITY LOCK (highest priority)
 - Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same hairline and forehead, the same jaw and chin, the same cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features, so the result is unmistakably THIS person. Keep her natural asymmetries — they are part of her identity.
 - Keep the apparent age and feminine characteristics as in the source, and her TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone). Do not slim, enlarge, sharpen, or beautify her face — the professional look below comes from styling, pose, and lighting, never from reshaping features.
 
-SKIN & MARKS
-- Clean, smooth, even, healthy skin with good color; correct dull/off color from source light. Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — polished but not plastic, keep real age.
-- By default NO spots or marks. The only exception: a clearly real, obvious mole in the source, rendered SMALLER and fainter. If unsure whether a dark area is a real mole, render clean skin. Never add, invent, or enlarge any mark.
+SKIN & MARKS (absolute rule: flawless clean skin)
+- Clean, smooth, even, healthy skin with good color; correct dull/off color from source light. Acne, pimples, blemishes, redness, irritation, discoloration, and dark spots in the source are TEMPORARY conditions — NOT part of the person's identity; remove them ALL and render perfectly clean skin, like a professional studio retouch with light makeup. Treat shadows, contrast edges, lighting gradients, and compression artifacts as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — polished but not plastic, keep real age.
+- Marks: render AT MOST ONE mole in the entire face, and ONLY if it is large and iconic in the source (smaller and fainter than the source). Two or more marks are NEVER allowed. When in ANY doubt, render zero marks: a face with no marks is always correct; a face with added marks is always wrong.
 
 STYLING (women's business profile — white shirt + violet skirt / bright light gray background)
 - Clothing: a crisp WHITE shirt/blouse with a clean collar, neatly tucked into a well-fitted soft
@@ -61,7 +61,7 @@ POSE & FRAMING (this is a confident professional portrait, NOT an ID shot)
 - The person is well-composed and centered with comfortable, balanced spacing; confident and natural, never stiff. Portrait-lens perspective (~85mm), realistic proportions, no wide-angle distortion. Eyes looking at the camera.
 - Render hands naturally and correctly with the right number of fingers; if a hand would look awkward, keep it relaxed and simple.
 
-FINAL SELF-CHECK before output: placed next to the source photos, someone who knows her must instantly say "that's her, in a professional business profile." If not, the result is wrong.
+FINAL SELF-CHECK before output: placed next to the source photos, someone who knows her must instantly say "that's her, in a professional business profile." If not, the result is wrong. Also check the skin: if the output face has two or more spots/marks, or any acne or blemish, the result is wrong — regenerate mentally with clean skin.
 
 OUTPUT
 - Vertical ratio 1:1.5 (width:height = 3:4.5), high-end professional studio profile photo, photorealistic, polished and corporate — like a premium business headshot/lookbook, not casual, not an ID photo. Remember the two absolute rules: the SAME person, inside the SAME fixed business-portrait composition.`;

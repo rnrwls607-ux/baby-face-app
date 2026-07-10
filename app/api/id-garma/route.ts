@@ -29,8 +29,8 @@ IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
 - Even though the hairstyle is changed below, the FACE must remain 100% the same person. Do not slim, enlarge, sharpen, or beautify the face. Do not drift toward a generic idol-like face — this is one specific individual. Changing the hair must never change the face.
 - Keep the apparent age, natural bone structure, and any facial hair as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
 
-SKIN & MARKS (default to clean skin)
-- Render clean, smooth, even, healthy skin. Soften pores and wrinkles to about half strength — natural, not plastic. By default no spots or marks — treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin. Only keep a clearly real, obvious mole, rendered smaller and fainter. If unsure, render clean skin.
+SKIN & MARKS (absolute rule: flawless clean skin)
+- Render completely clean, smooth, even, healthy skin. Acne, pimples, blemishes, redness, irritation, discoloration, and dark spots in the source are TEMPORARY conditions — NOT part of the person's identity; remove them ALL and render perfectly clean skin, like a professional studio retouch with light makeup. Soften pores and wrinkles to about half strength — natural, not plastic. Treat shadows, contrast edges, lighting gradients, and compression artifacts as clean skin, never real marks. Marks: render AT MOST ONE mole, and only if large and iconic in the source (smaller and fainter); two or more marks are NEVER allowed. When in ANY doubt, render zero marks — a face with no marks is always correct.
 
 CONCEPT — HAIR / CLOTHING / BACKGROUND (restyle to this)
 - Hair: restyle into a neat Korean "가르마컷" — a clean side-parted men's cut with light natural volume on top, tidy around the ears and forehead, groomed and professional, natural black hair. (This overrides the source hairstyle, but NOT the face.)
@@ -48,7 +48,7 @@ FRAMING (always identical — ignore how the input is cropped)
 - Centered, facing straight at the camera, symmetric, portrait-lens perspective (~85mm, no distortion).
 - Head from top of hair to chin fills about 45% of the frame height, small even margin above the head, eyes slightly above the middle. Shoulders reach both edges, bottom cuts at upper chest.
 
-FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, with the new hair and styling." If not, the result is wrong.
+FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, with the new hair and styling." If not, the result is wrong. Also check the skin: if the output face has two or more spots/marks, or any acne or blemish, the result is wrong — regenerate mentally with clean skin.
 
 OUTPUT
 - Vertical ID ratio (3.5:4.5), studio passport-photo quality, photorealistic, formal. Remember the two absolute rules: the SAME face under the new hair, inside the SAME fixed composition.`;
