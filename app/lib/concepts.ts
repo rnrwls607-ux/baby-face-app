@@ -281,6 +281,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#EAF3FF" },
          { emoji: "✨", accent: "#EAF3FF" },
        ],
+       detailImage: "/details/bizmnavy.png",
        start: "bizmnavy",
      },
      bizmcharcoal: {
@@ -295,6 +296,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#ECEEF1" },
          { emoji: "✨", accent: "#ECEEF1" },
        ],
+       detailImage: "/details/bizmcharcoal.png",
        start: "bizmcharcoal",
      },
      bizmblack: {
@@ -309,6 +311,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#F0F1F4" },
          { emoji: "✨", accent: "#F0F1F4" },
        ],
+       detailImage: "/details/bizmblack.png",
        start: "bizmblack",
      },
      bizmlightgray: {
@@ -323,6 +326,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "💼", accent: "#F2F3F5" },
          { emoji: "✨", accent: "#F2F3F5" },
        ],
+       detailImage: "/details/bizmlightgray.png",
        start: "bizmlightgray",
      },
      bizmvest: {
@@ -337,6 +341,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#ECEDF0" },
          { emoji: "✨", accent: "#ECEDF0" },
        ],
+       detailImage: "/details/bizmvest.png",
        start: "bizmvest",
      },
      bizmbeige: {
@@ -351,6 +356,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#F5EFE6" },
          { emoji: "✨", accent: "#F5EFE6" },
        ],
+       detailImage: "/details/bizmbeige.png",
        start: "bizmbeige",
      },
      bizmblazer: {
@@ -365,6 +371,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#EAF3FF" },
          { emoji: "✨", accent: "#EAF3FF" },
        ],
+       detailImage: "/details/bizmblazer.png",
        start: "bizmblazer",
      },
      bizmturtle: {
@@ -379,6 +386,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#EDEEF0" },
          { emoji: "✨", accent: "#EDEEF0" },
        ],
+       detailImage: "/details/bizmturtle.png",
        start: "bizmturtle",
      },
      bizmdb: {
@@ -393,6 +401,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "💼", accent: "#E9EEF6" },
          { emoji: "✨", accent: "#E9EEF6" },
        ],
+       detailImage: "/details/bizmdb.png",
        start: "bizmdb",
      },
      bizmknittie: {
@@ -407,6 +416,7 @@ export const CONCEPTS: Record<string, Concept> = {
          { emoji: "🤵", accent: "#EDEFEA" },
          { emoji: "✨", accent: "#EDEFEA" },
        ],
+       detailImage: "/details/bizmknittie.png",
        start: "bizmknittie",
      },
       bizblack: {
