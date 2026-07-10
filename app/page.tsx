@@ -214,9 +214,7 @@ const HOME_PILLS = [
   { label: "재미·추억", value: "fun" },
 ];
 const HOME_HERO = [
-  { id: "baby", title: "우리 아기 얼굴은?", subtitle: "엄마·아빠 닮은 아기를 미리 만나요", emoji: "👶", accent: "#FFDCE8", go: "baby", image: "/cards/baby.jpg" },
-  // { id: "idphoto", title: "AI 증명사진", subtitle: "스튜디오 없이 1분 완성", emoji: "🪪", accent: "#DCEBFF", go: "idphoto", image: "/cards/idphoto-1.jpg" }, // 홈 노출 숨김 (초기 테스트본, 파일은 유지)
-  { id: "event", title: "지금 첫 3회 무료 🎉", subtitle: "가입하고 바로 만들어보세요", emoji: "🎁", accent: "#E6F7E9", go: "baby", image: "" },
+  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "bizmnavy", image: "/hero/hero_main.jpg" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
@@ -625,7 +623,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
                 )}
                 <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: h.image ? "#fff" : HOME.text, letterSpacing: -0.5 }}>{h.title}</p>
+                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: h.image ? "#fff" : HOME.text, letterSpacing: -0.5, whiteSpace: "pre-line" }}>{h.title}</p>
                   <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: h.image ? "rgba(255,255,255,0.9)" : "#6a6a6a" }}>{h.subtitle}</p>
                 </div>
               </div>
