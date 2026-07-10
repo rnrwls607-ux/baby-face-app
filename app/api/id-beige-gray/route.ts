@@ -30,11 +30,11 @@ IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
 - Keep the apparent age, natural bone structure, and sex characteristics as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
 - Keep facial hair (beard, stubble, mustache, or clean-shaven) exactly as in the source.
 
-SKIN & MARKS (default to clean skin)
-- Render clean, smooth, even, healthy skin with good color; correct any dull or off color from the source lighting. By default the skin carries NO spots, dots, or marks. Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks.
+SKIN & MARKS (absolute rule: flawless clean skin)
+- Render completely clean, smooth, even, healthy skin with good color; correct any dull or off color from the source lighting. Acne, pimples, blemishes, redness, irritation, discoloration, dark spots, and skin texture issues in the source are TEMPORARY skin conditions — NOT part of the person's identity. Remove them ALL and render that area as perfectly clean skin, exactly like a professional studio retouch with light makeup.
+- Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks.
 - Soften pores and wrinkles to about half strength — a lightly-retouched look that still keeps the person's real age and texture, never plastic and never younger.
-- The ONLY mark allowed: a mole that is unmistakably a real, obvious mole in the source. Render it SMALLER and fainter than in the source. If you are not fully certain a dark area is a real mole, render clean skin.
-- Never add, invent, or enlarge any mark. A real mole becoming lighter or gone is fine; a new or bigger mark is never allowed.
+- Marks: render AT MOST ONE mole in the entire face, and ONLY if it is large and iconic in the source — smaller and fainter than the source. Two or more marks are NEVER allowed. When in ANY doubt, render zero marks: a face with no marks is always correct; a face with added marks is always wrong.
 
 STANDARD LOOK
 - Background: solid, even, pure clean white, no shadows, no gradient. A standard white ID-photo background.
@@ -50,7 +50,7 @@ FRAMING (always identical — ignore how the input is cropped)
 - The head, from the top of the hair to the chin, fills about 45% of the frame height, with a small even margin above the head; the eyes sit a little above the middle.
 - Shoulders are level and reach the left and right edges; the bottom edge cuts at the upper chest. Show ONLY head and upper shoulders — no arms, hands, or torso below the upper chest, under any circumstance.
 
-FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, in a formal ID photo." If not, the result is wrong.
+FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, in a formal ID photo." If not, the result is wrong. Also check the skin: if the output face has two or more spots/marks, or any acne or blemish, the result is wrong — regenerate mentally with clean skin.
 
 OUTPUT
 - Vertical ID ratio (3.5:4.5), studio passport-photo quality, photorealistic, formal — not casual, not editorial, not a fashion portrait. Remember the two absolute rules: the SAME face, inside the SAME fixed ID composition.`;
