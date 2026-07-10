@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
+import { toast } from "./lib/toast";
 import Upscale4K from "./components/Upscale4K";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -472,7 +473,7 @@ export default function Home() {
       const file = new File([blob], "babyface.png", { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) await navigator.share({ title: "우리 아기 얼굴은?", text, files: [file] });
       else if (navigator.share) await navigator.share({ title: "우리 아기 얼굴은?", text, url: "https://baby-face-app-seven.vercel.app" });
-      else { await navigator.clipboard.writeText(text); alert("링크가 복사됐어요!"); }
+      else { await navigator.clipboard.writeText(text); toast("링크를 복사했어요"); }
     } catch (e: unknown) { if ((e as {name?:string})?.name !== "AbortError") handleDownload(); }
   };
   const handleSubmit = async () => {
@@ -1197,7 +1198,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                       <p style={{ fontSize: 12, color: "#9B9B9B", margin: "2px 0 0" }}>카카오 계정 연결됨</p>
                     </div>
                   </div>
-                  <button onClick={() => { navigator.clipboard?.writeText(user.id); alert("사용자 ID가 복사됐어요."); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                  <button onClick={() => { navigator.clipboard?.writeText(user.id); toast("사용자 ID를 복사했어요"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
                     <span style={{ fontSize: 13, color: "#9B9B9B" }}>사용자 ID</span>
                     <span style={{ fontSize: 12, color: "#C2C6CE", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.id} 📋</span>
                   </button>

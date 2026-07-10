@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import Toast from "./components/Toast";
 
 export const metadata: Metadata = {
   title: "MOSPIC",
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}
       >
         {children}
+        <Toast />
       </body>
     </html>
   );
