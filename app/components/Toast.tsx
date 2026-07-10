@@ -26,7 +26,7 @@ export default function Toast() {
       className="fade-up"
       style={{
         position: "fixed",
-        bottom: 12,
+        bottom: "calc(100px + env(safe-area-inset-bottom))",
         left: "50%",
         transform: "translateX(-50%)",
         background: "#1A1A1A",
