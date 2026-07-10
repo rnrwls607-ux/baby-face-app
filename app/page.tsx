@@ -610,21 +610,20 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         </div>
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
         {pill === 0 && (
-        <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: "0 18px" }}>
+        <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
           {HOME_HERO.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
-              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 22, height: 240, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
+              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 320, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
                   <>
-                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }} />
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.1) 30%, transparent 55%)" }} />
+                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }} />
                   </>
                 ) : (
                   <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
                 )}
-                <div style={{ position: "absolute", left: 0, right: 0, bottom: 34, textAlign: "center" }}>
-                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: h.image ? "#fff" : HOME.text, letterSpacing: -0.5, whiteSpace: "pre-line" }}>{h.title}</p>
-                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: h.image ? "rgba(255,255,255,0.9)" : "#6a6a6a" }}>{h.subtitle}</p>
+                <div style={{ position: "absolute", left: 24, bottom: 28, textAlign: "left" }}>
+                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: "#191919", letterSpacing: -0.5, whiteSpace: "pre-line", textShadow: "0 1px 4px rgba(255,255,255,0.7)" }}>{h.title}</p>
+                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "#4a4a4a", textShadow: "0 1px 3px rgba(255,255,255,0.6)" }}>{h.subtitle}</p>
                 </div>
               </div>
             </div>
