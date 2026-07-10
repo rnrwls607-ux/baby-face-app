@@ -214,7 +214,7 @@ const HOME_PILLS = [
   { label: "재미·추억", value: "fun" },
 ];
 const HOME_HERO = [
-  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "bizmnavy", image: "/hero/hero_main.jpg" },
+  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg" },
 ];
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
