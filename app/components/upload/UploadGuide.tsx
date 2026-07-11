@@ -19,7 +19,7 @@ export default function UploadGuide({
   type,
   accent = "#FF4B7C",
 }: {
-  type: "solo_face" | "generic";
+  type: "solo_face" | "generic" | "pet";
   accent?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -51,12 +51,24 @@ export default function UploadGuide({
   if (!open) return null;
 
   const isSolo = type === "solo_face";
-  const good = isSolo
-    ? { emoji: "🙂", text: "자연스럽게 살짝 웃는 정면 사진" }
-    : { emoji: "☀️", text: "대상이 크고 밝게 나온 사진" };
-  const bad = isSolo
-    ? { emoji: "🫥", text: "얼굴이 작거나 여럿이 나온 사진" }
-    : { emoji: "🌫️", text: "어둡고 흐린 사진" };
+  const CONTENT = {
+    solo_face: {
+      good: { emoji: "🙂", text: "자연스럽게 살짝 웃는 정면 사진" },
+      bad: { emoji: "🫥", text: "얼굴이 작거나 여럿이 나온 사진" },
+      chips: ["인물 특징 차이", "포즈 차이", "헤어 차이"],
+    },
+    generic: {
+      good: { emoji: "☀️", text: "대상이 크고 밝게 나온 사진" },
+      bad: { emoji: "🌫️", text: "어둡고 흐린 사진" },
+      chips: ["색감 차이", "디테일 차이", "배경 차이"],
+    },
+    pet: {
+      good: { emoji: "🐶", text: "얼굴이 정면으로 또렷한 사진" },
+      bad: { emoji: "🐾", text: "흔들리거나 얼굴이 작은 사진" },
+      chips: ["무늬·털색 차이", "표정 차이", "자세 차이"],
+    },
+  } as const;
+  const { good, bad, chips } = CONTENT[type] ?? CONTENT.generic;
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
@@ -82,7 +94,7 @@ export default function UploadGuide({
           <p style={{ margin: "0 0 4px", fontSize: 13, fontWeight: 800, color: "#191919" }}>이런 결과가 나올 수 있어요</p>
           <p style={{ margin: "0 0 10px", fontSize: 11.5, color: "#8A8F99", lineHeight: 1.5 }}>AI 특성상 일부 표현이 기대와 다를 수 있어요</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-            {(isSolo ? ["인물 특징 차이", "포즈 차이", "헤어 차이"] : ["색감 차이", "디테일 차이", "배경 차이"]).map(t => (
+            {chips.map(t => (
               <span key={t} style={{ fontSize: 11, fontWeight: 600, color: "#7A8095", background: "#fff", border: "1px solid #E7E9EE", borderRadius: 8, padding: "4px 9px" }}>{t}</span>
             ))}
           </div>
