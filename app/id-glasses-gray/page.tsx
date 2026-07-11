@@ -127,10 +127,10 @@ export default function IdGlassesGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idglasses.png" caption="ì ì¥+ìê²½ ì¦ëªì¬ì§, ë¯¸ë¦¬ ë§ëë³´ì¸ì" accent={ACCENT} />
+            <PreviewCard image="/details/idglasses.png" caption="정장+안경 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
-              label="ì ë©´ ì¬ì§"
+              label="정면 사진"
               images={images}
               max={MAX_PHOTOS}
               onPick={handleUpload}
@@ -138,9 +138,9 @@ export default function IdGlassesGrayPage() {
               renderBadge={idx => <GateBadge gate={photos[idx]?.gate} />}
               accent={ACCENT}
               cameraFacing="user"
-              gridHint="ì²« ë²ì§¸ ì¬ì§ì´ ê²°ê³¼ì ê¸°ì¤ì´ ë¼ì â ê°ì¥ ì ëì¨ ì ë©´ ì¬ì§ì ì²« ë²ì§¸ë¡"
+              gridHint="첫 번째 사진이 결과의 기준이 돼요 — 가장 잘 나온 정면 사진을 첫 번째로"
             />
-            <TipChips tips={[{ icon: "face", label: "ì ë©´ ì¼êµ´" }, { icon: "sun", label: "ë°ì ê³³ìì" }, { icon: "eye", label: "ì¼êµ´ ê°ë¦¬ì§ ìê²" }]} />
+            <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않게" }]} />
             <PrivacyLine />
 
             <button onClick={handleSubmit} disabled={loading || images.length < MIN_PHOTOS}
