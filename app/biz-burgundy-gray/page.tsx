@@ -5,6 +5,12 @@ import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -112,59 +118,30 @@ export default function BizBurgundyGrayPage() {
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="solo_face" accent={ACCENT} />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>버건디 슬랙스 프로필</span>
       </div>
 
       <div style={{ padding: "18px 18px 100px" }}>
-        <div style={{ background: "#FFF0F5", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: ACCENT, margin: "0 0 5px" }}>🍷 자신감 있는 버건디 슬랙스</p>
-          <p style={{ fontSize: 12.5, color: "#7A6A70", margin: 0, lineHeight: 1.55 }}>우아한 타이 블라우스와 버건디 슬랙스, 밝은 회색 배경의 자신감 있는 여성 전문가 프로필이에요. 정면 사진 3~6장을 올리면, 팔짱·손모음·자연스러운 각도까지 서로 다른 포즈의 프로필 3장을 만들어드려요. (여성 전용 컨셉이에요.)</p>
-        </div>
-
         {results.length === 0 && (
           <>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", margin: 0 }}>내 사진</p>
-                <span style={{ fontSize: 12, fontWeight: 700, color: images.length >= MIN_PHOTOS ? ACCENT : "#9B9B9B" }}>{images.length}/{MAX_PHOTOS}장</span>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                {images.map((img, idx) => (
-                  <div key={idx} style={{ position: "relative", aspectRatio: "1", borderRadius: 12, overflow: "hidden", border: `1.5px solid ${ACCENT}` }}>
-                    <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    <GateBadge gate={photos[idx]?.gate} />
-                    <button onClick={() => removeImage(idx)}
-                      style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,0.55)", color: "#fff", border: "none", fontSize: 13, lineHeight: 1, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
-                  </div>
-                ))}
-
-                {images.length < MAX_PHOTOS && (
-                  <label style={{ display: "block", cursor: "pointer" }}>
-                    <div style={{ aspectRatio: "1", borderRadius: 12, border: "1.5px dashed #D9DCE2", background: "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
-                      <span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span>
-                      <span style={{ fontSize: 10.5, color: "#9B9B9B", fontWeight: 600, textAlign: "center" }}>여러 장<br/>한번에</span>
-                    </div>
-                    <input type="file" accept="image/*" multiple style={{ display: "none" }}
-                      onChange={async e => { if (e.target.files?.length) { await handleUpload(e.target.files); e.target.value = ""; } }} />
-                  </label>
-                )}
-              </div>
-
-              <div style={{ marginTop: 14, background: "#F4F4F6", borderRadius: 12, padding: "13px 14px" }}>
-                <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT, margin: "0 0 7px" }}>📸 이렇게 찍으면 더 잘 나와요</p>
-                <p style={{ fontSize: 11.5, color: "#7A8095", margin: 0, lineHeight: 1.7 }}>
-                  · <b style={{ color: "#5A6275" }}>여성</b> 정면 사진을 올려주세요 (여성 전용 컨셉)<br/>
-                  · <b style={{ color: "#5A6275" }}>정면</b>을 바라보고 얼굴이 또렷하게 나온 사진<br/>
-                  · <b style={{ color: "#5A6275" }}>밝은 곳</b>에서 찍어 얼굴이 어둡지 않은 사진<br/>
-                  · 이마·눈·코·입이 <b style={{ color: "#5A6275" }}>가려지지 않은</b> 사진<br/>
-                  · 표정이 서로 다른 정면 사진을 <b style={{ color: "#5A6275" }}>여러 장</b> 넣을수록 좋아요<br/>
-                  <span style={{ color: "#B0B5C2" }}>✗ 옆모습·뒷모습·너무 어둡거나 흐린 사진은 피해주세요</span>
-                </p>
-              </div>
-            </div>
+            <PreviewCard image="/details/bizburgundy.png" caption="ë²ê±´ë ì¬ëì¤ íë¡í, ë¯¸ë¦¬ ë§ëë³´ì¸ì" accent={ACCENT} />
+            <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
+            <UploadZone
+              label="ì ë©´ ì¬ì§"
+              images={images}
+              max={MAX_PHOTOS}
+              onPick={handleUpload}
+              onRemove={removeImage}
+              renderBadge={idx => <GateBadge gate={photos[idx]?.gate} />}
+              accent={ACCENT}
+              cameraFacing="user"
+              gridHint="ì²« ë²ì§¸ ì¬ì§ì´ ê²°ê³¼ì ê¸°ì¤ì´ ë¼ì â ê°ì¥ ì ëì¨ ì ë©´ ì¬ì§ì ì²« ë²ì§¸ë¡"
+            />
+            <TipChips tips={[{ icon: "face", label: "ì ë©´ ì¼êµ´" }, { icon: "sun", label: "ë°ì ê³³ìì" }, { icon: "eye", label: "ì¼êµ´ ê°ë¦¬ì§ ìê²" }]} />
+            <PrivacyLine />
 
             <button onClick={handleSubmit} disabled={loading || images.length < MIN_PHOTOS}
               style={{ width: "100%", marginTop: 18, background: loading || images.length < MIN_PHOTOS ? "#E8E9ED" : ACCENT, color: loading || images.length < MIN_PHOTOS ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || images.length < MIN_PHOTOS ? "not-allowed" : "pointer", boxShadow: loading || images.length < MIN_PHOTOS ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
@@ -189,6 +166,7 @@ export default function BizBurgundyGrayPage() {
 
         {results.length > 0 && (
           <div>
+            <StepIndicator current={3} accent={ACCENT} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 6px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 13, color: "#9B9B9B", textAlign: "center", margin: "0 0 18px" }}>마음에 드는 포즈를 저장하세요</p>
 
