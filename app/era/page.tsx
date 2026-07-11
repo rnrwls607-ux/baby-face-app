@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 const ERA_OPTIONS = [
   { key: "joseon", label: "👘 조선시대" },
@@ -75,44 +81,26 @@ export default function EraPage() {
   };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="solo_face" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>시대·복장 변신</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
-        <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🕰️ 다른 시대에 태어났다면?</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>내 사진을 올리고 시대를 고르면 그 시대의 옷·헤어·배경으로 변신시켜드려요. 얼굴은 그대로, 시대만 바뀌어요.</p>
-        </div>
         {!result && (
           <>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>시대 고르기</p>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 22 }}>
-                {ERA_OPTIONS.map(o => {
-                  const on = era === o.key;
-                  return (
-                    <button key={o.key} onClick={() => setEra(o.key)}
-                      style={{ flex: "1 1 0", minWidth: 100, padding: "11px 8px", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
-                        border: on ? "1.5px solid #FF4B7C" : "1.5px solid transparent",
-                        background: on ? "#FFEAF1" : "#F1F2F6", color: on ? "#FF4B7C" : "#8A8F99",
-                        transition: "all .15s ease" }}>
-                      {o.label}
-                    </button>
-                  );
-                })}
-              </div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>내 사진</p>
-              <label style={{ display: "block", cursor: "pointer" }}>
-                <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
-                  {image
-                    ? <img src={image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <><span style={{ fontSize: 32, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>사진 올리기</span></>}
-                </div>
-                <input type="file" accept="image/*" style={{ display: "none" }}
-                  onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
-              </label>
-            </div>
+            <PreviewCard placeholder="👤" caption="시대·복장 변신, 미리 만나보세요" />
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
+            <UploadZone
+              label="내 사진"
+              images={image ? [image] : []}
+              max={1}
+              onPick={files => handleUpload(files[0])}
+              onRemove={() => setImage("")}
+            />
+            <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않게" }]} />
+            <PrivacyLine />
+
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "시대 변신하기 ✨"}
@@ -132,6 +120,7 @@ export default function EraPage() {
         )}
         {result && (
           <div>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="시대 변신" style={{ width: "100%", display: "block" }} />
