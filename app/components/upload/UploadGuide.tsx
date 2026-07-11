@@ -19,7 +19,7 @@ export default function UploadGuide({
   type,
   accent = "#FF4B7C",
 }: {
-  type: "solo_face" | "generic" | "pet";
+  type: "solo_face" | "generic" | "pet" | "family";
   accent?: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -66,6 +66,11 @@ export default function UploadGuide({
       good: { emoji: "🐶", text: "얼굴이 정면으로 또렷한 사진" },
       bad: { emoji: "🐾", text: "흔들리거나 얼굴이 작은 사진" },
       chips: ["무늬·털색 차이", "표정 차이", "자세 차이"],
+    },
+    family: {
+      good: { emoji: "😊", text: "각자 정면 얼굴이 또렷한 사진" },
+      bad: { emoji: "🫥", text: "한 장에 여러 명 나온 사진" },
+      chips: ["인물 특징 차이", "배치 차이", "표정 차이"],
     },
   } as const;
   const { good, bad, chips } = CONTENT[type] ?? CONTENT.generic;
