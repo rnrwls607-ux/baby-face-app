@@ -8,6 +8,7 @@ import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 const STYLE_OPTIONS = [
   { key: "modern", label: "모던" },
@@ -87,6 +88,7 @@ export default function InteriorPage() {
   });
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="generic" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>AI 인테리어</span>
@@ -110,6 +112,7 @@ export default function InteriorPage() {
               max={1}
               onPick={files => handleUpload(files[0])}
               onRemove={() => setImage("")}
+              cameraFacing="environment"
               uploadHint="방이 잘 보이는 가로 사진 1장이면 충분해요"
             />
             <TipChips tips={[{ icon: "expand", label: "방 전체 담기" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "level", label: "수평 맞추기" }]} />

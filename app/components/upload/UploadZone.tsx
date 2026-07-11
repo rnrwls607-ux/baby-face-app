@@ -21,6 +21,7 @@ type Props = {
   uploadTitle?: string;
   uploadHint?: string;
   gridHint?: string;
+  cameraFacing?: "user" | "environment";
 };
 
 export default function UploadZone({
@@ -29,8 +30,10 @@ export default function UploadZone({
   uploadTitle = "사진 올리기",
   uploadHint = "갤러리에서 선택하거나 바로 촬영해요",
   gridHint,
+  cameraFacing = "user",
 }: Props) {
   const multi = max > 1;
+  const canAddMore = !multi || images.length < max;
 
   return (
     <div>
@@ -90,6 +93,17 @@ export default function UploadZone({
           </div>
           {gridHint && <p style={{ margin: "12px 2px 0", fontSize: 11.5, color: "#9AA0AA", lineHeight: 1.5 }}>{gridHint}</p>}
         </div>
+      )}
+
+      {canAddMore && (
+        <label style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 10, padding: "12px 0", borderRadius: 14, border: "1px solid #EFF0F3", background: "#fff", cursor: "pointer", fontSize: 13.5, fontWeight: 700, color: "#5A6068" }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" />
+          </svg>
+          바로 촬영하기
+          <input type="file" accept="image/*" capture={cameraFacing} style={{ display: "none" }}
+            onChange={e => { if (e.target.files?.length) { onPick(e.target.files); e.target.value = ""; } }} />
+        </label>
       )}
     </div>
   );

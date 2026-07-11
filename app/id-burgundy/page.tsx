@@ -10,6 +10,7 @@ import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -118,6 +119,7 @@ export default function IdBurgundyPage() {
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="solo_face" accent={ACCENT} />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>버건디 오프숄더 프로필</span>
@@ -136,6 +138,7 @@ export default function IdBurgundyPage() {
               onRemove={removeImage}
               renderBadge={idx => <GateBadge gate={photos[idx]?.gate} />}
               accent={ACCENT}
+              cameraFacing="user"
               gridHint="첫 번째 사진이 결과의 기준이 돼요 — 가장 잘 나온 정면 사진을 첫 번째로"
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않게" }]} />
