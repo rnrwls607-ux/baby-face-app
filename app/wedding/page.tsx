@@ -4,9 +4,15 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
 
+const ROLE_OPTIONS = [
+  { key: "bride", label: "신부" },
+  { key: "groom", label: "신랑" },
+] as const;
+
 export default function WeddingPage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
+  const [role, setRole] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -41,7 +47,7 @@ export default function WeddingPage() {
       const res = await fetch("/api/wedding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: compressed }),
+        body: JSON.stringify({ image: compressed, role }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -56,6 +62,12 @@ export default function WeddingPage() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
+  const chipStyle = (active: boolean) => ({
+    padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
+    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
+    background: active ? "#FFEAF1" : "#fff",
+    color: active ? "#FF4B7C" : "#9B9B9B",
+  });
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
@@ -77,6 +89,12 @@ export default function WeddingPage() {
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>누구의 웨딩 화보인가요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8, marginBottom: 18 }}>
+                {ROLE_OPTIONS.map(o => (
+                  <button key={o.key} onClick={() => setRole(o.key)} style={chipStyle(role === o.key)}>{o.label}</button>
+                ))}
+              </div>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>내 사진</p>
               <label style={{ display: "block", cursor: "pointer" }}>
                 <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
@@ -88,8 +106,8 @@ export default function WeddingPage() {
                   onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
               </label>
             </div>
-            <button onClick={handleSubmit} disabled={loading || !image}
-              style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
+            <button onClick={handleSubmit} disabled={loading || !image || !role}
+              style={{ width: "100%", marginTop: 18, background: loading || !image || !role ? "#E8E9ED" : "#FF4B7C", color: loading || !image || !role ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image || !role ? "not-allowed" : "pointer", boxShadow: loading || !image || !role ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "웨딩 화보 만들기 ✨"}
             </button>
           </>
@@ -114,7 +132,7 @@ export default function WeddingPage() {
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
                 style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>저장하기</button>
-              <button onClick={() => { setResult(""); setImage(""); }}
+              <button onClick={() => { setResult(""); setImage(""); setRole(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
             </div>
           </div>

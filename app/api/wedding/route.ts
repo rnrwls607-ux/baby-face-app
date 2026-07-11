@@ -8,36 +8,54 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-async function generateWedding(imageDataUrl: string): Promise<string> {
-  const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be unmistakably the SAME person as the input, transformed by full bridal/groom styling. The goal is "them, on their wedding day" — never a generic bride or groom. Transform through MAKEUP, HAIR, ATTIRE, and LIGHTING; NEVER by reshaping facial features.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait of exactly ONE person, as specified below. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
+function buildPrompt(role: "bride" | "groom"): string {
+  const ROLE_WORD = role === "groom" ? "GROOM" : "BRIDE";
+  const styling = role === "groom"
+    ? `- Wardrobe: a refined black or midnight-navy tuxedo (or a classic formal wedding suit) over a crisp white dress shirt, with a neat bow tie or tie and a small boutonnière.
+- Hair: neat, polished groom styling keeping his real hairstyle, length, and true hair color.`
+    : `- Wardrobe: an elegant, classic white wedding dress with tasteful refined details (clean silhouette — not gaudy). She may optionally hold a small elegant bouquet.
+- Hair & makeup: a graceful bridal hairstyle that is a natural evolution of her real hairstyle, keeping her true hair color; soft bridal makeup that brightens but never changes her features.`;
+  return `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. This is a WEDDING PORTRAIT of this one real person — the elegant wardrobe, styling, and lighting are the transformation; NEVER reshape their facial features.
+2. ROLE — the person in this photo is the ${ROLE_WORD}. Style them exactly as described in the WEDDING STYLING section below, even if their appearance might read differently. Never switch the wardrobe to the other role.
 
-You are a professional wedding photographer shooting a solo bridal / groom portrait. Take the person in this photo and create an elegant wedding studio portrait of them alone.
+TASK
+You are RETOUCHING a real photograph of one real person into a single elegant solo wedding studio portrait — NOT generating a new person. Keep the face as it is, lightly polished; transform only wardrobe, hair styling, background, lighting, and framing to the wedding standard below. Output exactly one wedding portrait of this one person.
 
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for IDENTITY ONLY (facial structure and features). Ignore their framing, zoom, background, lighting, clothing, and current grooming — the wedding styling below replaces it.
-- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
-- Exactly ONE person in the output — the person from the photo, alone. Never add a partner or anyone else.
+HOW TO USE THE INPUT PHOTO
+- Ignore the input photo's framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the standard wedding-portrait composition below.
 
-IDENTITY FOUNDATION (styling is built ON TOP OF this, never instead of it):
-- The same face shape and width-to-length ratio, the same jawline and chin, the same cheekbones, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrow position, and the same spacing between all features. Keep natural asymmetries.
-- HARD LIMITS: do not enlarge the eyes, slim the jaw, raise the nose, or shift any facial proportion. Makeup may create the ILLUSION of definition — the underlying structure must not move.
-- Keep the apparent age and the person's TRUE skin tone (correct source color cast; never lighten or darken their actual tone). Clean skin — do not invent moles or blemishes; treat shadows and compression noise as clean skin.
+IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
+- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same hairline and forehead height, the same jaw and chin shape and width, the same cheek fullness and cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries — they are part of the identity.
+- Do not drift toward a generic, idealized, or "prettier" face. This is one specific individual; do not slim, enlarge, sharpen, or beautify anything — the bridal/groom beauty comes from wardrobe, styling, and lighting, never from reshaping features.
+- Keep the apparent age and sex characteristics as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
+- Keep facial hair (beard, stubble, mustache, or clean-shaven) exactly as in the source.
 
-WEDDING STYLING (go all in — this is the product):
-- If the person presents as a woman: an elegant white wedding dress with refined detailing, a tasteful bridal hairstyle (updo or soft styling that suits her — restyling the hair IS allowed and encouraged for this concept), and complete soft bridal makeup: luminous base in her true tone, gentle eye definition, soft blush, an elegant lip — radiant but classic, built on her real features.
-- If the person presents as a man: a refined tuxedo or classic wedding suit with a crisp shirt and bow tie or necktie, neat groom hair styling, clean subtle grooming.
-- Render the attire with premium detail: realistic fabric behavior (satin sheen, lace texture, wool structure), clean seams and edges — the dress/suit must look expensive and real, never melted, smudged, or warped.
-- If hands are visible, render them naturally with the correct number of fingers; a small bouquet is welcome if natural — otherwise keep hands relaxed and simple or out of frame.
+SKIN & MARKS (absolute rule: flawless clean skin)
+- Render completely clean, smooth, even, healthy skin with good color; correct any dull or off color from the source lighting. Acne, pimples, blemishes, redness, irritation, discoloration, dark spots, and skin texture issues in the source are TEMPORARY skin conditions — NOT part of the person's identity. Remove them ALL and render that area as perfectly clean skin, exactly like a professional studio retouch with light makeup.
+- Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — a lightly-retouched look that keeps the person's real age, never plastic.
+- Marks: render AT MOST ONE mole in the entire face, and ONLY if it is large and iconic in the source — smaller and fainter than the source. Two or more marks are NEVER allowed. When in ANY doubt, render zero marks.
+
+WEDDING STYLING
+${styling}
 - Background: a luxurious, airy wedding studio set — soft white and cream tones, elegant drapery or floral arrangements, dreamy soft-focus depth.
-- Bright, soft, romantic studio lighting; graceful, happy, natural expression.
-- Vertical upper-body portrait framing.
+- Lighting: bright, soft, romantic studio lighting, flattering and even.
+- Expression: a graceful, happy, natural soft smile — subtle, never exaggerated; eyes relaxed and on camera.
+- Eyewear & accessories: eyeglasses ONLY if the person is clearly wearing them in the source photo — then keep them (clear, glare-free). If they are NOT wearing glasses in the source, the output must have NO glasses — never add eyewear of any kind.
+- Hands: render naturally and correctly with the right number of fingers; if a hand would look awkward, keep it relaxed and simple.
 
-FINAL SELF-CHECK before output: next to the source photo, a family member must instantly say "same person — they look beautiful on their wedding day." If it reads as a different, generic bride or groom, the result is wrong.
+FRAMING
+- Vertical upper-body wedding portrait: from roughly the head to the waist, centered, portrait-lens perspective (~85mm, no wide-angle distortion), with a small even margin above the head.
 
-Final look: photorealistic, high-resolution wedding studio photography. No text, no watermark, no border. Remember the two absolute rules: the SAME facial structure under the styling, exactly ONE person, inside the SAME fixed composition.`;
+FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, in a wedding portrait." Also check the skin: if the output face has two or more spots/marks, or any acne or blemish, the result is wrong. And confirm the wardrobe matches the role: ${ROLE_WORD} styling only.
+
+OUTPUT
+- High-end wedding studio photography, photorealistic and elegant. No text, no watermark, no border.`;
+}
+
+async function generateWedding(imageDataUrl: string, role: "bride" | "groom"): Promise<string> {
+  const img = parseImage(imageDataUrl);
+  const prompt = buildPrompt(role);
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
@@ -85,7 +103,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const image: string = body?.image;
     if (!image) return NextResponse.json({ error: "사진을 올려주세요." }, { status: 400 });
-    const output = await generateWedding(image);
+    const role: "bride" | "groom" = body?.role === "groom" ? "groom" : "bride";
+    const output = await generateWedding(image, role);
     return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };
