@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
 
 export default function FoodPage() {
   const router = useRouter();
@@ -70,24 +75,20 @@ export default function FoodPage() {
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>음식 사진 보정</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
-        <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🍽️ 메뉴판·광고용 사진으로</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>대충 찍은 음식 사진을 올리면 조명·색감·배경을 정리해 광고처럼 먹음직스러운 사진으로 바꿔드려요. 음식 자체는 그대로 유지돼요.</p>
-        </div>
         {!result && (
           <>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>음식 사진</p>
-              <label style={{ display: "block", cursor: "pointer" }}>
-                <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
-                  {image
-                    ? <img src={image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <><span style={{ fontSize: 32, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>사진 올리기</span></>}
-                </div>
-                <input type="file" accept="image/*" style={{ display: "none" }}
-                  onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
-              </label>
-            </div>
+            <PreviewCard image="/details/food.png" caption="메뉴판·광고용 사진으로, 미리 만나보세요" placeholder="🍽️" />
+            <StepIndicator current={1} />
+            <UploadZone
+              label="음식 사진"
+              images={image ? [image] : []}
+              max={1}
+              onPick={files => handleUpload(files[0])}
+              onRemove={() => setImage("")}
+              uploadHint="음식이 잘 보이는 사진 한 장이면 충분해요"
+            />
+            <TipChips tips={[{ icon: "expand", label: "음식 가까이" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "위에서 찍기" }]} />
+            <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "음식 사진 보정하기 ✨"}

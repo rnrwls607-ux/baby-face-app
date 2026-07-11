@@ -5,6 +5,11 @@ import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -119,52 +124,22 @@ export default function IdBurgundyPage() {
       </div>
 
       <div style={{ padding: "18px 18px 100px" }}>
-        <div style={{ background: "#FFF0F5", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: ACCENT, margin: "0 0 5px" }}>🍷 버건디 오프숄더 프로필</p>
-          <p style={{ fontSize: 12.5, color: "#7A6A70", margin: 0, lineHeight: 1.55 }}>우아한 버건디 새틴 오프숄더와 웜 피치 배경의 여성스러운 화보 프로필이에요. 얼굴이 정면으로 잘 보이는 사진을 3~6장 올리면, 가장 잘 나온 사진 3장을 만들어드려요.</p>
-        </div>
-
         {results.length === 0 && (
           <>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", margin: 0 }}>내 사진</p>
-                <span style={{ fontSize: 12, fontWeight: 700, color: images.length >= MIN_PHOTOS ? ACCENT : "#9B9B9B" }}>{images.length}/{MAX_PHOTOS}장</span>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-                {images.map((img, idx) => (
-                  <div key={idx} style={{ position: "relative", aspectRatio: "1", borderRadius: 12, overflow: "hidden", border: `1.5px solid ${ACCENT}` }}>
-                    <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    <GateBadge gate={photos[idx]?.gate} />
-                    <button onClick={() => removeImage(idx)}
-                      style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", background: "rgba(0,0,0,0.55)", color: "#fff", border: "none", fontSize: 13, lineHeight: 1, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
-                  </div>
-                ))}
-
-                {images.length < MAX_PHOTOS && (
-                  <label style={{ display: "block", cursor: "pointer" }}>
-                    <div style={{ aspectRatio: "1", borderRadius: 12, border: "1.5px dashed #D9DCE2", background: "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
-                      <span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span>
-                      <span style={{ fontSize: 10.5, color: "#9B9B9B", fontWeight: 600, textAlign: "center" }}>여러 장<br/>한번에</span>
-                    </div>
-                    <input type="file" accept="image/*" multiple style={{ display: "none" }}
-                      onChange={async e => { if (e.target.files?.length) { await handleUpload(e.target.files); e.target.value = ""; } }} />
-                  </label>
-                )}
-              </div>
-
-              <div style={{ marginTop: 14, background: "#F4F4F6", borderRadius: 12, padding: "13px 14px" }}>
-                <p style={{ fontSize: 12, fontWeight: 800, color: ACCENT, margin: "0 0 7px" }}>📸 이렇게 찍으면 더 잘 나와요</p>
-                <p style={{ fontSize: 11.5, color: "#7A8095", margin: 0, lineHeight: 1.7 }}>
-                  · <b style={{ color: "#5A6275" }}>정면</b>을 바라보고 얼굴이 또렷하게 나온 사진<br/>
-                  · <b style={{ color: "#5A6275" }}>밝은 곳</b>에서 찍어 얼굴이 어둡지 않은 사진<br/>
-                  · 이마·눈·코·입이 <b style={{ color: "#5A6275" }}>가려지지 않은</b> 사진<br/>
-                  · 표정이 서로 다른 정면 사진을 <b style={{ color: "#5A6275" }}>여러 장</b> 넣을수록 더 닮게 나와요<br/>
-                  <span style={{ color: "#B0B5C2" }}>✗ 옆모습·뒷모습·너무 어둡거나 흐린 사진은 피해주세요</span>
-                </p>
-              </div>
-            </div>
+            <PreviewCard image="/details/idburgundy.png" caption="버건디 오프숄더 프로필, 미리 만나보세요" placeholder="🍷" accent={ACCENT} />
+            <StepIndicator current={1} accent={ACCENT} />
+            <UploadZone
+              label="정면 사진"
+              images={images}
+              max={MAX_PHOTOS}
+              onPick={handleUpload}
+              onRemove={removeImage}
+              renderBadge={idx => <GateBadge gate={photos[idx]?.gate} />}
+              accent={ACCENT}
+              gridHint="첫 번째 사진이 결과의 기준이 돼요 — 가장 잘 나온 정면 사진을 첫 번째로"
+            />
+            <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않게" }]} />
+            <PrivacyLine />
 
             <button onClick={handleSubmit} disabled={loading || images.length < MIN_PHOTOS}
               style={{ width: "100%", marginTop: 18, background: loading || images.length < MIN_PHOTOS ? "#E8E9ED" : ACCENT, color: loading || images.length < MIN_PHOTOS ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || images.length < MIN_PHOTOS ? "not-allowed" : "pointer", boxShadow: loading || images.length < MIN_PHOTOS ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>

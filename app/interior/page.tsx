@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
 
 const STYLE_OPTIONS = [
   { key: "modern", label: "모던" },
@@ -87,30 +92,28 @@ export default function InteriorPage() {
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>AI 인테리어</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
-        <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🛋️ 원하는 스타일로 우리 집 꾸미기</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>비어있거나 낡은 방 사진을 올리면, 고른 스타일로 멋지게 꾸민 모습을 보여드려요. 공간 구조와 각도는 그대로예요.</p>
-        </div>
         {!result && (
           <>
-            <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+            <PreviewCard image="/details/interior.png" caption="달라진 우리 집, 미리 만나보세요" placeholder="🛋️" />
+            <StepIndicator current={1} />
+            <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 스타일로 꾸밀까요?</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 18 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
                 {STYLE_OPTIONS.map(o => (
                   <button key={o.key} onClick={() => setStyle(o.key)} style={chipStyle(style === o.key)}>{o.label}</button>
                 ))}
               </div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>방 사진</p>
-              <label style={{ display: "block", cursor: "pointer" }}>
-                <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: image ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: image ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
-                  {image
-                    ? <img src={image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                    : <><span style={{ fontSize: 32, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>사진 올리기</span></>}
-                </div>
-                <input type="file" accept="image/*" style={{ display: "none" }}
-                  onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
-              </label>
             </div>
+            <UploadZone
+              label="방 사진"
+              images={image ? [image] : []}
+              max={1}
+              onPick={files => handleUpload(files[0])}
+              onRemove={() => setImage("")}
+              uploadHint="방이 잘 보이는 가로 사진 1장이면 충분해요"
+            />
+            <TipChips tips={[{ icon: "expand", label: "방 전체 담기" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "level", label: "수평 맞추기" }]} />
+            <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "인테리어 미리보기 ✨"}
