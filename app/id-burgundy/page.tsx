@@ -129,7 +129,7 @@ export default function IdBurgundyPage() {
         {results.length === 0 && (
           <>
             <PreviewCard image="/details/idburgundy.png" caption="버건디 오프숄더 프로필, 미리 만나보세요" placeholder="🍷" accent={ACCENT} />
-            <StepIndicator current={1} accent={ACCENT} />
+            <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"
               images={images}
@@ -167,6 +167,7 @@ export default function IdBurgundyPage() {
 
         {results.length > 0 && (
           <div>
+            <StepIndicator current={3} accent={ACCENT} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 6px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 13, color: "#9B9B9B", textAlign: "center", margin: "0 0 18px" }}>마음에 드는 사진을 저장하세요</p>
 

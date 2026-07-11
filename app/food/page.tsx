@@ -80,7 +80,7 @@ export default function FoodPage() {
         {!result && (
           <>
             <PreviewCard image="/details/food.png" caption="메뉴판·광고용 사진으로, 미리 만나보세요" placeholder="🍽️" />
-            <StepIndicator current={1} />
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="음식 사진"
               images={image ? [image] : []}
@@ -111,6 +111,7 @@ export default function FoodPage() {
         )}
         {result && (
           <div>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="음식 사진" style={{ width: "100%", display: "block" }} />

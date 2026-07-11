@@ -97,7 +97,7 @@ export default function InteriorPage() {
         {!result && (
           <>
             <PreviewCard image="/details/interior.png" caption="달라진 우리 집, 미리 만나보세요" placeholder="🛋️" />
-            <StepIndicator current={1} />
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 스타일로 꾸밀까요?</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
@@ -136,6 +136,7 @@ export default function InteriorPage() {
         )}
         {result && (
           <div>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="인테리어" style={{ width: "100%", display: "block" }} />
