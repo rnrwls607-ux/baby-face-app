@@ -1,10 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// 업로드 화면 첫 진입 시 1회만 뜨는 안내 모달.
-// "확인했어요!" 를 누르면 localStorage 에 기록해 다음부터 안 뜬다.
-// type 별로 키가 분리돼, solo_face 와 generic 은 각각 한 번씩 뜬다.
+// 업로드 화면 진입 시 뜨는 안내 모달.
+// 기본은 매번 뜨고, "오늘 하루 보지 않기" 를 누른 날에만 안 뜬다.
+// (localStorage 에 그날 날짜를 저장 → 저장된 날짜가 오늘이면 숨김)
+// type 별로 키가 분리돼, solo_face 와 generic 은 각각 따로 관리된다.
 const KEY_PREFIX = "mospic_guide_";
+
+// 로컬 기준 오늘 날짜 YYYY-MM-DD
+function todayStr(): string {
+  const d = new Date();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
 
 export default function UploadGuide({
   type,
@@ -19,15 +28,20 @@ export default function UploadGuide({
   useEffect(() => {
     if (typeof window === "undefined") return;
     try {
-      if (!localStorage.getItem(storageKey)) setOpen(true);
+      // 저장된 날짜가 오늘이 아니면(값 없음·지난 날짜 포함) 띄운다.
+      if (localStorage.getItem(storageKey) !== todayStr()) setOpen(true);
     } catch {
       /* localStorage 접근 불가(시크릿 모드 등) 시 조용히 넘어간다 */
     }
   }, [storageKey]);
 
-  const dismiss = () => {
+  // "확인했어요!" — 닫기만 한다(저장 안 함 → 다음 진입 때 다시 뜸).
+  const close = () => setOpen(false);
+
+  // "오늘 하루 보지 않기" — 오늘 날짜를 저장해 그날은 안 뜨게 한다.
+  const hideToday = () => {
     try {
-      localStorage.setItem(storageKey, "1");
+      localStorage.setItem(storageKey, todayStr());
     } catch {
       /* 저장 실패해도 모달은 닫는다 */
     }
@@ -81,8 +95,11 @@ export default function UploadGuide({
           </p>
         )}
 
-        <button onClick={dismiss} style={{ width: "100%", background: accent, color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+        <button onClick={close} style={{ width: "100%", background: accent, color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
           확인했어요!
+        </button>
+        <button onClick={hideToday} style={{ display: "block", margin: "12px auto 0", background: "none", border: "none", color: "#9AA0AA", fontSize: 12.5, fontWeight: 500, cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 2 }}>
+          오늘 하루 보지 않기
         </button>
       </div>
     </div>
