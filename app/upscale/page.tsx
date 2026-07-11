@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { toast } from "../lib/toast";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
 
 export default function UpscalePage() {
   const [image, setImage] = useState("");
@@ -82,34 +87,25 @@ export default function UpscalePage() {
       </div>
 
       <div style={{ padding: "8px 20px 100px" }}>
-        <p style={{ fontSize: 22, fontWeight: 900, color: "#191919", margin: "6px 0 4px" }}>🔍 흐린 사진을 또렷하게</p>
-        <p style={{ fontSize: 14, color: "#8A8F99", margin: "0 0 20px", lineHeight: 1.6 }}>
-          작고 흐릿한 사진을 4배 해상도(최대 4096px)로 키워드려요. 인쇄·상세페이지·확대용으로 좋아요.
-        </p>
-
         {!result && (
-          <label style={{ cursor: "pointer", display: "block" }}>
-            <div style={{ border: image ? "2px solid #FF4B7C" : "2px dashed #E0E0E0", borderRadius: 18, padding: image ? 0 : "48px 20px", textAlign: "center", overflow: "hidden", background: "#FAFAFA" }}>
-              {image ? (
-                <img src={image} alt="" style={{ width: "100%", display: "block" }} />
-              ) : (
-                <>
-                  <div style={{ fontSize: 40, marginBottom: 10 }}>📷</div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "#191919", margin: "0 0 4px" }}>사진 올리기</p>
-                  <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>탭해서 선택하세요</p>
-                </>
-              )}
-            </div>
-            <input type="file" accept="image/*" style={{ display: "none" }}
-              onChange={(e) => { if (e.target.files?.[0]) handlePick(e.target.files[0]); }} />
-          </label>
-        )}
-
-        {image && !result && (
-          <button onClick={handleRun} disabled={loading}
-            style={{ width: "100%", marginTop: 14, background: loading ? "#F0F0F0" : "#FF4B7C", color: loading ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading ? "not-allowed" : "pointer" }}>
-            {loading ? `변환 중... (${elapsed}초)` : "고화질로 변환하기 ✨"}
-          </button>
+          <>
+            <PreviewCard image="/details/upscale.png" caption="고화질 변환, 미리 만나보세요" />
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
+            <UploadZone
+              label="사진"
+              images={image ? [image] : []}
+              max={1}
+              onPick={files => handlePick(files[0])}
+              onRemove={() => setImage("")}
+              cameraFacing="environment"
+            />
+            <TipChips tips={[{ icon: "expand", label: "작아도 괜찮아요" }, { icon: "sun", label: "흐려도 괜찮아요" }, { icon: "eye", label: "오래된 사진도" }]} />
+            <PrivacyLine />
+            <button onClick={handleRun} disabled={loading || !image}
+              style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
+              {loading ? `변환 중... (${elapsed}초)` : "고화질로 변환하기 ✨"}
+            </button>
+          </>
         )}
 
         {error && (
@@ -120,6 +116,7 @@ export default function UpscalePage() {
 
         {result && (
           <div style={{ marginTop: 8 }}>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 16, fontWeight: 900, color: "#191919", margin: "0 0 10px", textAlign: "center" }}>✨ 4배 고화질로 변환됐어요!</p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12, border: "1px solid #EEE" }}>
               <img src={result} alt="고화질 결과" style={{ width: "100%", display: "block" }} />

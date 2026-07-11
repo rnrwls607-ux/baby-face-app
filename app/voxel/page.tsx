@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import PreviewCard from "../components/upload/PreviewCard";
+import StepIndicator from "../components/upload/StepIndicator";
+import UploadZone from "../components/upload/UploadZone";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 export default function VoxelPage() {
   const router = useRouter();
@@ -65,29 +71,28 @@ export default function VoxelPage() {
   };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="generic" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px", height: 56, borderBottom: "1px solid #f0f0f0", position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#111", padding: "4px 8px 4px 0" }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>복셀 아트</span>
       </div>
       <div style={{ padding: "20px 20px 100px" }}>
-        <div style={{ background: "#F7F7F7", borderRadius: 14, padding: "14px 16px", marginBottom: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: "0 0 4px" }}>사진을 3D 블록(복셀) 아트로 바꿔요</p>
-          <p style={{ fontSize: 12, color: "#999", margin: 0, lineHeight: 1.5 }}>사진 한 장을 올리면 작은 큐브로 쌓은 3D 블록 스타일로 변환해드려요.</p>
-        </div>
         {!result && (
           <>
-            <p style={{ fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>사진</p>
-            <label style={{ display: "block", cursor: "pointer", marginBottom: 24 }}>
-              <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: `1.5px ${image ? "solid #D6E0FF" : "dashed #E0E0E0"}`, background: image ? "#fff" : "#FAFAFA", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 4 }}>
-                {image
-                  ? <img src={image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                  : <><span style={{ fontSize: 30, color: "#ccc" }}>＋</span><span style={{ fontSize: 12, color: "#bbb" }}>사진 올리기</span></>}
-              </div>
-              <input type="file" accept="image/*" style={{ display: "none" }}
-                onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0]); }} />
-            </label>
+            <PreviewCard placeholder="✨" caption="복셀 아트, 미리 만나보세요" />
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
+            <UploadZone
+              label="사진"
+              images={image ? [image] : []}
+              max={1}
+              onPick={files => handleUpload(files[0])}
+              onRemove={() => setImage("")}
+              cameraFacing="environment"
+            />
+            <TipChips tips={[{ icon: "expand", label: "대상 또렷하게" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "배경 단순하게" }]} />
+            <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image}
-              style={{ width: "100%", background: loading || !image ? "#F0F0F0" : "#111", color: loading || !image ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 700, cursor: loading || !image ? "not-allowed" : "pointer" }}>
+              style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "복셀 아트 만들기 ✨"}
             </button>
           </>
@@ -105,13 +110,14 @@ export default function VoxelPage() {
         )}
         {result && (
           <div>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>완성됐어요! ✨</p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
               <img src={result} alt="복셀 아트" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
-                style={{ flex: 1, background: "#111", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
+                style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
               <button onClick={() => { setResult(""); setImage(""); }}
                 style={{ flex: 1, background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>다시 만들기</button>
             </div>
