@@ -1195,7 +1195,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 데이터 */}
             <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>데이터</p>
             <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
-              <button onClick={() => alert("생성 기록 전체 삭제는 다음 업데이트에서 제공될 예정이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+              <button onClick={async () => { if (window.confirm("모든 생성 기록이 삭제되며 복구할 수 없습니다. 계속할까요?")) { await clearHistory(); if (user) await clearCloudHistory(); setHistory([]); toast("생성 기록을 모두 삭제했어요"); } }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>생성 기록 전체 삭제</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
@@ -1217,7 +1217,20 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                     <span style={{ fontSize: 13, color: "#9B9B9B" }}>사용자 ID</span>
                     <span style={{ fontSize: 12, color: "#C2C6CE", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.id} 📋</span>
                   </button>
-                  <button onClick={() => alert("회원탈퇴는 다음 업데이트에서 제공될 예정이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                  <button onClick={async () => {
+                    if (!window.confirm("정말 탈퇴하시겠어요?")) return;
+                    if (!window.confirm("생성 기록이 모두 삭제되며 복구할 수 없습니다. 계속할까요?")) return;
+                    try {
+                      const res = await fetch("/api/auth/withdraw", { method: "POST" });
+                      if (!res.ok) throw new Error();
+                      // 탈퇴 성공 후에만 기기 기록 정리 (클라우드 기록은 서버가 삭제)
+                      await clearHistory();
+                      alert("탈퇴가 완료됐어요. 이용해 주셔서 감사합니다.");
+                      window.location.href = "/";
+                    } catch {
+                      alert("탈퇴 처리에 실패했어요. 다시 시도해주세요.");
+                    }
+                  }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
                     <span style={{ fontSize: 15, fontWeight: 600, color: "#9AA0AA" }}>회원탈퇴</span>
                     <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
                   </button>
