@@ -4,6 +4,7 @@ import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
+import { APP_VERSION } from "./lib/version";
 import Upscale4K from "./components/Upscale4K";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -1164,11 +1165,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 필수 동의 약관 */}
             <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>필수 동의 약관</p>
             <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
-              <button onClick={() => alert("개인정보 처리방침은 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+              <button onClick={() => { window.location.href = "/privacy"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>개인정보 처리방침</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
-              <button onClick={() => alert("이용약관은 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+              <button onClick={() => { window.location.href = "/terms"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>이용약관</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
@@ -1177,14 +1178,27 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 서비스 정보 */}
             <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>서비스 정보</p>
             <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
+              <button onClick={() => { window.location.href = "/ai-notice"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>AI 생성물 안내</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
               <button onClick={() => alert("고객센터는 준비 중이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>고객센터</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>현재 버전</span>
-                <span style={{ fontSize: 13, color: "#9B9B9B" }}>1.0.0 · 최신 버전</span>
+                <span style={{ fontSize: 13, color: "#9B9B9B" }}>{APP_VERSION} · 최신 버전</span>
               </div>
+            </div>
+
+            {/* 데이터 */}
+            <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>데이터</p>
+            <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
+              <button onClick={() => alert("생성 기록 전체 삭제는 다음 업데이트에서 제공될 예정이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>생성 기록 전체 삭제</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
             </div>
 
             {/* 사용자 정보 */}
@@ -1199,9 +1213,13 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                       <p style={{ fontSize: 12, color: "#9B9B9B", margin: "2px 0 0" }}>카카오 계정 연결됨</p>
                     </div>
                   </div>
-                  <button onClick={() => { navigator.clipboard?.writeText(user.id); toast("사용자 ID를 복사했어요"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                  <button onClick={() => { navigator.clipboard?.writeText(user.id); toast("사용자 ID를 복사했어요"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                     <span style={{ fontSize: 13, color: "#9B9B9B" }}>사용자 ID</span>
                     <span style={{ fontSize: 12, color: "#C2C6CE", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.id} 📋</span>
+                  </button>
+                  <button onClick={() => alert("회원탈퇴는 다음 업데이트에서 제공될 예정이에요.")} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+                    <span style={{ fontSize: 15, fontWeight: 600, color: "#9AA0AA" }}>회원탈퇴</span>
+                    <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
                   </button>
                 </div>
                 <button onClick={handleLogout} style={{ width: "100%", background: "#fff", color: "#FF4B7C", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
