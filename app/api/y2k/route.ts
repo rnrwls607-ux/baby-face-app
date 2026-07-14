@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cropToRatio } from "../../lib/crop";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-image";
@@ -40,7 +41,7 @@ Photorealistic, high resolution, no text, no letters, no watermark, no border. R
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -53,7 +54,8 @@ Photorealistic, high resolution, no text, no letters, no watermark, no border. R
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
         signal: ctrl.signal,
-      }
+      },
+      "y2k"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -62,7 +64,7 @@ Photorealistic, high resolution, no text, no letters, no watermark, no border. R
   }
   clearTimeout(timer);
   console.log(`[y2k] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "y2k"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
