@@ -38,6 +38,15 @@ const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
    facial character. Hair may move slightly in the breeze but the
    hairstyle, hair length, and hair color stay exactly theirs.
 
+EYEWEAR — EXACTLY ONE PAIR MAXIMUM (critical):
+- If the person wears glasses in the source photo: keep that EXACT same
+  pair on their face — same frame shape and color — and do NOT add any
+  other eyewear anywhere (no sunglasses on the head, no glasses in hand,
+  no second pair of any kind).
+- If they do NOT wear glasses in the source: do not add any glasses or
+  sunglasses at all.
+- Never render two pairs of eyewear on one person under any circumstance.
+
 SKIN & POLISH (make them look their absolute best — without changing who they are):
 - Clean, even, healthy skin: remove temporary blemishes (acne, pimples,
   redness; soften under-eye darkness) while keeping permanent features
@@ -54,7 +63,15 @@ The goal: "them on their absolute best day" — the SAME person, clearly
 at their best, through skin, grooming, light, and styling ONLY (the
 facial structure from the IDENTITY rule never moves).
 
-2. COMPOSITION — the output is ALWAYS a vertical upper-body travel snap with the person as the clear HERO of the frame (sharpest, best-lit, largest element); the landscape is the softly blurred supporting stage. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
+2. COMPOSITION — the output is ALWAYS a vertical CHEST-UP travel portrait — framed from the chest up so the FACE is LARGE in the frame — with the person as the clear HERO of the frame (sharpest, best-lit, largest element); the landscape is the softly blurred supporting stage. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
+
+FACE DETAIL PRIORITY: the face is the largest, sharpest, most detailed
+element of the entire image — rendered at maximum detail. The scenery
+stays a softly blurred backdrop behind them. Scenery is the mood; the
+face is the subject — never let the landscape shrink the person.
+Render the face with its real three-dimensional contour from the source
+— never wider, flatter, or puffier than the source; cheek fullness and
+face width stay exactly as in the source photo.
 
 The input photos are a reference for IDENTITY ONLY (face and hairstyle) — ignore their framing, zoom, background, lighting, and clothing; the travel styling replaces them. Do NOT average the faces across photos; use the clearest, most front-facing photo as the single primary reference.
 
@@ -89,7 +106,7 @@ ${BASE_RULE}
 Scene: a charming cobblestone alley with pastel plastered buildings, wooden shutters, flower boxes, and warm late-afternoon golden light raking across the stone; outfit: effortless European-holiday chic (light knit or linen, tasteful and comfortable).`,
   beach: `You are a travel snap photographer. Portray this person at a tropical resort beach:
 ${BASE_RULE}
-Scene: powdery white sand, clear turquoise shallows, gentle waves and a few palm fronds entering the frame edge, brilliant vacation sunlight with a soft sea-breeze feel; outfit: breezy resort wear (light shirt or summer dress, tasteful), sunglasses only pushed up on the head so the eyes stay fully visible.`,
+Scene: powdery white sand, clear turquoise shallows, gentle waves and a few palm fronds entering the frame edge, brilliant vacation sunlight with a soft sea-breeze feel; outfit: breezy resort wear (light shirt or summer dress, tasteful), no sunglasses — the eyes stay fully visible.`,
   citynight: `You are a travel snap photographer. Portray this person on a city night walk abroad:
 ${BASE_RULE}
 Scene: a glowing evening street — warm bokeh of city lights and neon glow softly blurred behind (no readable signs), reflections on the pavement, cozy jacket weather; the warm ambient glow gently lighting one side of the face; outfit: smart-casual night-out travel look.`,
