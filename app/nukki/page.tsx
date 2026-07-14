@@ -85,7 +85,7 @@ export default function NukkiPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && !loading && (
           <>
-            <PreviewCard image="/details/nukki.png" caption="배경 제거, 미리 만나보세요" />
+            <PreviewCard image="/details/nukki.webp" caption="배경 제거, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"

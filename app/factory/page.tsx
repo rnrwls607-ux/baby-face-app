@@ -79,7 +79,7 @@ export default function FactoryPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/factory.png" caption="공장 리모델링, 미리 만나보세요" />
+            <PreviewCard image="/details/factory.webp" caption="공장 리모델링, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="공장 사진"

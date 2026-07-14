@@ -127,7 +127,7 @@ export default function IdDropcutPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/iddropcut.png" caption="드랍컷 블루셔츠 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/iddropcut.webp" caption="드랍컷 블루셔츠 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

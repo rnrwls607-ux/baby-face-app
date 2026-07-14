@@ -127,7 +127,7 @@ export default function IdTweedPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idtweed.png" caption="반묶음 트위드 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idtweed.webp" caption="반묶음 트위드 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

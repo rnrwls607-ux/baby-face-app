@@ -79,7 +79,7 @@ export default function ProductPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/product.png" caption="상품 사진 보정, 미리 만나보세요" />
+            <PreviewCard image="/details/product.webp" caption="상품 사진 보정, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="제품 사진"

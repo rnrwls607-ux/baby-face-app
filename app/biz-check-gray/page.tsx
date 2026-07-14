@@ -127,7 +127,7 @@ export default function BizCheckGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizcheck.png" caption="체크 블레이저 수트 프로필, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizcheck.webp" caption="체크 블레이저 수트 프로필, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

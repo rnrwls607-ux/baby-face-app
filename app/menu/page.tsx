@@ -101,7 +101,7 @@ export default function MenuPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && !loading && (
           <>
-            <PreviewCard image="/details/menu.png" caption="메뉴판 비주얼, 미리 만나보세요" />
+            <PreviewCard image="/details/menu.webp" caption="메뉴판 비주얼, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>배경 스타일</p>

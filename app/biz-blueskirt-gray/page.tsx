@@ -127,7 +127,7 @@ export default function BizBlueskirtGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizblueskirt.png" caption="블루 스커트 프로필, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizblueskirt.webp" caption="블루 스커트 프로필, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

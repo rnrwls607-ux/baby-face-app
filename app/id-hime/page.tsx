@@ -127,7 +127,7 @@ export default function IdHimePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idhime.png" caption="밀크브라운 히메컷 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idhime.webp" caption="밀크브라운 히메컷 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

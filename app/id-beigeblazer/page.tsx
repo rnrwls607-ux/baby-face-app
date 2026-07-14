@@ -127,7 +127,7 @@ export default function IdBeigeblazerPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idbeigeblazer.png" caption="소프트펌 베이지 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idbeigeblazer.webp" caption="소프트펌 베이지 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

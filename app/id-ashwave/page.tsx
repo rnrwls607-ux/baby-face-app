@@ -127,7 +127,7 @@ export default function IdAshwavePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idashwave.png" caption="애쉬 웨이브 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idashwave.webp" caption="애쉬 웨이브 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

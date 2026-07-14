@@ -127,7 +127,7 @@ export default function BizManBlazerPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizmblazer.png" caption="남성 네이비 블레이저, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizmblazer.webp" caption="남성 네이비 블레이저, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

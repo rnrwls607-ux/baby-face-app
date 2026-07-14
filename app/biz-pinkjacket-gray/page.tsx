@@ -127,7 +127,7 @@ export default function BizPinkjacketGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizpinkjacket.png" caption="핑크 트위드 재킷 프로필, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizpinkjacket.webp" caption="핑크 트위드 재킷 프로필, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

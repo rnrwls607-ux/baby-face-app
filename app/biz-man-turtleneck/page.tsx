@@ -127,7 +127,7 @@ export default function BizManTurtlePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizmturtle.png" caption="남성 블레이저 터틀넥, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizmturtle.webp" caption="남성 블레이저 터틀넥, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

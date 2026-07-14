@@ -19,7 +19,7 @@ export default function PreviewCard({
       <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 10", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <span style={{ position: "absolute", top: 12, left: 12, zIndex: 2, background: "rgba(255,255,255,0.9)", color: "#8A8F99", fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 8 }}>결과 예시</span>
         {image
-          ? <img src={image} alt="결과 예시" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          ? <img src={image} alt="결과 예시" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover", background: "#E3E4E8" }} />
           : <span style={{ fontSize: 46, opacity: 0.3 }}>{placeholder ?? "🖼️"}</span>}
       </div>
       <div style={{ background: "#fff", margin: "0 10px 10px", borderRadius: 14, padding: "13px 16px", boxShadow: "0 2px 10px rgba(0,0,0,0.05)" }}>

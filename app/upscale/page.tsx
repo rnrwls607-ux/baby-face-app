@@ -89,7 +89,7 @@ export default function UpscalePage() {
       <div style={{ padding: "8px 20px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/upscale.png" caption="고화질 변환, 미리 만나보세요" />
+            <PreviewCard image="/details/upscale.webp" caption="고화질 변환, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"

@@ -86,7 +86,7 @@ export default function AgePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/age.png" caption="노년·베이비 변환, 미리 만나보세요" />
+            <PreviewCard image="/details/age.webp" caption="노년·베이비 변환, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 모습이 궁금해요?</p>

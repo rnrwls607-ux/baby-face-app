@@ -127,7 +127,7 @@ export default function BizManNavyPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizmnavy.png" caption="남성 네이비 정장, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizmnavy.webp" caption="남성 네이비 정장, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

@@ -79,7 +79,7 @@ export default function IllustPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/illust.png" caption="AI 일러스트, 미리 만나보세요" />
+            <PreviewCard image="/details/illust.webp" caption="AI 일러스트, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"

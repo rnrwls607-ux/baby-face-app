@@ -79,7 +79,7 @@ export default function RestorePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/restore.png" caption="옛날 사진 복원, 미리 만나보세요" />
+            <PreviewCard image="/details/restore.webp" caption="옛날 사진 복원, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"

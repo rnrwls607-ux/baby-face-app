@@ -127,7 +127,7 @@ export default function IdNavyGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idnavy.png" caption="네이비 정장 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idnavy.webp" caption="네이비 정장 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

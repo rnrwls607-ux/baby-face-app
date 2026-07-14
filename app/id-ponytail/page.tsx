@@ -127,7 +127,7 @@ export default function IdPonytailPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idponytail.png" caption="로우 포니테일 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idponytail.webp" caption="로우 포니테일 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

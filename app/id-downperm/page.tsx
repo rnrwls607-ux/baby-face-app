@@ -127,7 +127,7 @@ export default function IdDownpermPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/iddownperm.png" caption="다운펌 화이트셔츠 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/iddownperm.webp" caption="다운펌 화이트셔츠 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

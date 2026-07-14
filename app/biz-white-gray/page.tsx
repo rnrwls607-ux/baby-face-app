@@ -127,7 +127,7 @@ export default function BizWhiteGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizwhite.png" caption="화이트 셔츠 프로필, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizwhite.webp" caption="화이트 셔츠 프로필, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

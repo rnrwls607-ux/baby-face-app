@@ -127,7 +127,7 @@ export default function BizPinktweedGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizpinktweed.png" caption="핑크 트위드 원피스 프로필, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizpinktweed.webp" caption="핑크 트위드 원피스 프로필, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

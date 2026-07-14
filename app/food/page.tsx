@@ -79,7 +79,7 @@ export default function FoodPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/food.png" caption="메뉴판·광고용 사진으로, 미리 만나보세요" placeholder="🍽️" />
+            <PreviewCard image="/details/food.webp" caption="메뉴판·광고용 사진으로, 미리 만나보세요" placeholder="🍽️" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="음식 사진"

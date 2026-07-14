@@ -127,7 +127,7 @@ export default function IdPomadePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idpomade.png" caption="포마드 레트로정장 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idpomade.webp" caption="포마드 레트로정장 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

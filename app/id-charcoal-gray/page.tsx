@@ -127,7 +127,7 @@ export default function IdCharcoalGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idcharcoal.png" caption="차콜그레이 정장 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idcharcoal.webp" caption="차콜그레이 정장 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

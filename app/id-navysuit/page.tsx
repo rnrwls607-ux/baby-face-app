@@ -127,7 +127,7 @@ export default function IdNavysuitPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idnavysuit.png" caption="가르마 네이비수트 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idnavysuit.webp" caption="가르마 네이비수트 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

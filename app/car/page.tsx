@@ -79,7 +79,7 @@ export default function CarPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/car.png" caption="중고차 사진 보정, 미리 만나보세요" />
+            <PreviewCard image="/details/car.webp" caption="중고차 사진 보정, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="차 사진"

@@ -127,7 +127,7 @@ export default function BizManCharcoalPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizmcharcoal.png" caption="남성 차콜 정장, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/bizmcharcoal.webp" caption="남성 차콜 정장, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"

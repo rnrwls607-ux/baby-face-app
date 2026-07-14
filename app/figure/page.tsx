@@ -79,7 +79,7 @@ export default function FigurePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/figure.png" caption="미니어처 피규어, 미리 만나보세요" />
+            <PreviewCard image="/details/figure.webp" caption="미니어처 피규어, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"

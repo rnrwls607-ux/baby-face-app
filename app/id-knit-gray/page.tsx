@@ -127,7 +127,7 @@ export default function IdKnitGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/idknit.png" caption="니트 가디건 증명사진, 미리 만나보세요" accent={ACCENT} />
+            <PreviewCard image="/details/idknit.webp" caption="니트 가디건 증명사진, 미리 만나보세요" accent={ACCENT} />
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"
