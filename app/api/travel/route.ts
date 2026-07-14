@@ -10,7 +10,33 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be instantly recognizable as the SAME person, side by side with the source. Make it "them, on a wonderful trip" — enhance only through travel-casual styling, natural light, and the location's mood; NEVER reshape facial features (same face shape and width-to-length ratio, same jaw and chin, same eye size/shape and eyelid type — double eyelid stays double, monolid stays monolid — same ears, nose bridge/width/tip, philtrum, lip shape and thickness, eyebrows, spacing, natural asymmetries, apparent age). TRUE skin tone (correct source color cast; the location's light may warm the scene but must never change their actual tone). Clean natural skin — do not invent moles or blemishes.
+1. IDENTITY — THE SINGLE MOST IMPORTANT RULE. The output must be so
+   recognizable that the person's close friends and family instantly say
+   "that's YOU — where did you travel to?!" with ZERO doubt. This is a
+   travel photo of THIS EXACT PERSON, not of someone similar.
+   Treat the clearest, most front-facing input photo as the single ground
+   truth for identity. Preserve with photographic precision:
+   - the exact face shape and width-to-length ratio, jawline and chin
+   - the exact eye size, eye shape, and eyelid type (double eyelid stays
+     double, monolid stays monolid — NEVER add or remove a crease)
+   - the exact eyebrow shape, thickness, and position
+   - the exact nose bridge width, tip shape, and nostril impression
+   - the exact philtrum length, lip shape and thickness
+   - the exact ears, hairline shape, and forehead proportion
+   - the exact spacing between ALL features (eyes-to-eyes, eyes-to-brows,
+     nose-to-lips distances)
+   - natural asymmetries (slightly different eyes, uneven smile — these
+     make the person THEM; keep them)
+   - the apparent age and TRUE skin tone (the location's light may warm
+     the scene but must never change their actual tone)
+   The person should look like themselves on a genuinely good day —
+   well-rested, healthy glow, flattering natural light — NOT like a
+   beautified or idealized different person. Enhancing means better
+   LIGHT and MOOD on the SAME face, never a "prettier" face.
+   HARD LIMITS: no enlarging eyes, no slimming the jaw or face, no
+   raising the nose, no plumping lips, no smoothing away their real
+   facial character. Hair may move slightly in the breeze but the
+   hairstyle, hair length, and hair color stay exactly theirs.
 2. COMPOSITION — the output is ALWAYS a vertical upper-body travel snap with the person as the clear HERO of the frame (sharpest, best-lit, largest element); the landscape is the softly blurred supporting stage. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
 
 The input photos are a reference for IDENTITY ONLY (face and hairstyle) — ignore their framing, zoom, background, lighting, and clothing; the travel styling replaces them. Do NOT average the faces across photos; use the clearest, most front-facing photo as the single primary reference.
@@ -21,7 +47,16 @@ MAKE IT A REAL TRAVEL SNAP (anti-composite rules):
 - Travel-casual outfit that suits the person and the destination.
 - BACKGROUND HAS NO READABLE TEXT: avoid signboards, banners, and lettering entirely — keep the scenery architectural and natural (never render melted or fake letters).
 
-FINAL SELF-CHECK: next to the source photo, a family member must instantly say "same person — where did they travel to?!" If it reads as a different person or a pasted composite, the result is wrong.
+FINAL SELF-CHECK before output — do this rigorously:
+1) Place the output next to the source photo mentally. Same face shape?
+   Same eyes (size, shape, eyelid type)? Same nose? Same lips? Same
+   eyebrows? Same feature spacing? If ANY answer is "slightly different",
+   the result is WRONG — regenerate the face to match.
+2) Would this person's own mother recognize them instantly at first
+   glance? If there is any hesitation, the result is wrong.
+3) Does it look like a real travel snap (ambient light wrapping the
+   person, consistent shadows) rather than a composite? If not, fix the
+   light integration — but NEVER by altering the face.
 Photorealistic, high resolution, no text, no watermark, no border.`;
 const TRAVEL_PROMPTS: Record<string, string> = {
   jeju: `You are a travel snap photographer. Portray this person on a beautiful trip to Jeju Island:
