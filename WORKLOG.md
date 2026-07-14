@@ -7,6 +7,11 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-14 — 신규 컨셉 8종(y2k~goods) 배선 완료 + era·petcostume 칩 버그 수리
+- 한 일: 신규 14종 중 Gemini 8종 전부 배선(y2k·roman·clay·luxe·homecafe·travel·halloween·goods, 각 4파일 커밋) + era·petcostume 칩 UI 복구(옵션 setter 미호출로 항상 기본값만 생성되던 버그, 전수 스캔 결과 이 2개뿐)
+- ★O2O 메모 (패치 3-4, M11 실물 아크릴 주문 진행 시 필독): goods의 생성물은 "실물처럼 보이는 목업 사진"이지 **인쇄용 도안이 아니다**. 실물 굿즈 주문(M11)을 붙일 때는 고해상 도안·누끼(투명배경 컷팅 패스) 파이프라인이 **별도로 필요** — 현재 goods route 출력물을 그대로 인쇄에 쓸 수 없음.
+- 다음에 할 것: 신규 8종 썸네일 webp(전부 이모지 상태) / 보류군은 조건 충족 후(makeup·glasses·haircolor·useditem=gpt-image-2 검증, petswap=Pro 테스트, bodyprofile=맨 마지막)
+
 ## 2026-07-05 — 오리지널 증명사진 10종 상세페이지·썸네일 완성 + 컨셉 로드맵 + 보정 프롬프트 + 홈 리디자인 시안
 - 한 일:
   - [완성] 오리지널 증명사진 10종 상세페이지 3종 세트(①애프터 파일명 ②Claude Design 디자인 프롬프트 ③사진 배치 프롬프트) 전부 제작 → MJ가 썸네일·상세 PNG 생성 → Claude Code가 image·detailImage 20줄 연결, 빌드 204/204 통과, 커밋 bf9b5bb 배포
