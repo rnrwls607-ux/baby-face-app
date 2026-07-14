@@ -107,6 +107,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐱", accent: "#FFE0EC" },
       { emoji: "🎓", accent: "#DCEBFF" },
     ],
+    detailImage: "/details/pet.png",
     start: "pet",
   },
   product: {
@@ -944,6 +945,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "👰", accent: "#EFEAFF" },
       { emoji: "🤵", accent: "#DCEBFF" },
     ],
+    detailImage: "/details/wedding.png",
     start: "wedding",
   },
   petstudio: {
@@ -958,6 +960,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐱", accent: "#FFE0EC" },
       { emoji: "📸", accent: "#EFEAFF" },
     ],
+    detailImage: "/details/petstudio.png",
     start: "petstudio",
   },
   petreceipt: {
