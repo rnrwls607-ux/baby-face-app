@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -63,7 +64,7 @@ Photorealistic, high detail.`;
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
       {
         method: "POST",
@@ -78,7 +79,8 @@ Photorealistic, high detail.`;
           }],
         }),
         signal: ctrl.signal,
-      }
+      },
+      "generate"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -88,7 +90,7 @@ Photorealistic, high detail.`;
   clearTimeout(timer);
   console.log(`[baby] model=${model} status=${res.status} ${Date.now() - t0}ms`);
 
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "generate"));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];

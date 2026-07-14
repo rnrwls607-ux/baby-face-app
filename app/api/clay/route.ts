@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -42,7 +43,7 @@ High resolution, photorealistic render of physical clay. No text, no letters, no
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -55,7 +56,8 @@ High resolution, photorealistic render of physical clay. No text, no letters, no
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
         signal: ctrl.signal,
-      }
+      },
+      "clay"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -65,7 +67,7 @@ High resolution, photorealistic render of physical clay. No text, no letters, no
   clearTimeout(timer);
   console.log(`[clay] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "clay"));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];

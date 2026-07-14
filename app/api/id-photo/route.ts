@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import sharp from "sharp";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -70,14 +71,15 @@ async function generateOne(prompt: string, images: { mimeType: string; data: str
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
         headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
         body: JSON.stringify({ contents: [{ parts }], generationConfig: { responseModalities: ["IMAGE"] } }),
         signal: ctrl.signal,
-      }
+      },
+      "id-photo"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -86,7 +88,7 @@ async function generateOne(prompt: string, images: { mimeType: string; data: str
   }
   clearTimeout(timer);
   console.log(`[id-photo] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "id-photo"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);

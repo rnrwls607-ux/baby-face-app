@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -52,7 +53,7 @@ FINAL LOOK: a crisp, professional macro product photograph of an adorable, highl
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -65,7 +66,8 @@ FINAL LOOK: a crisp, professional macro product photograph of an adorable, highl
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
         signal: ctrl.signal,
-      }
+      },
+      "figure"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -75,7 +77,7 @@ FINAL LOOK: a crisp, professional macro product photograph of an adorable, highl
   clearTimeout(timer);
   console.log(`[figure] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "figure"));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];

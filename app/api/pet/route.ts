@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -44,7 +45,7 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -57,7 +58,8 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
         signal: ctrl.signal,
-      }
+      },
+      "pet"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -66,7 +68,7 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
   }
   clearTimeout(timer);
   console.log(`[pet] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "pet"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);

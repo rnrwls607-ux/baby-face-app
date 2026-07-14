@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -68,7 +69,7 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
 
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -81,7 +82,8 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
           generationConfig: { responseModalities: ["IMAGE"] },
         }),
         signal: ctrl.signal,
-      }
+      },
+      "id-navy-gray"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -92,7 +94,7 @@ async function generateOneIdPhoto(imageDataUrls: string[]): Promise<string> {
   clearTimeout(timer);
   console.log(`[id-navy-gray] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
 
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "id-navy-gray"));
 
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];

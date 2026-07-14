@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-lite";
@@ -36,7 +37,7 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetch(
+    res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -48,7 +49,8 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
           ] }],
         }),
         signal: ctrl.signal,
-      }
+      },
+      "petreceipt"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -57,7 +59,7 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
   }
   clearTimeout(timer);
   console.log(`[petreceipt] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error("Gemini 오류 " + res.status + ": " + (await res.text()).slice(0, 300));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "petreceipt"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const txt: string = respParts.find((p: { text?: string }) => p.text)?.text || "";
