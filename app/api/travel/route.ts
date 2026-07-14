@@ -23,6 +23,8 @@ const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
    - the exact nose bridge width, tip shape, and nostril impression
    - the exact philtrum length, lip shape and thickness
    - the exact ears, hairline shape, and forehead proportion
+   - facial hair exactly as in the source (beard, stubble, mustache, or
+     clean-shaven — never added, never removed)
    - the exact spacing between ALL features (eyes-to-eyes, eyes-to-brows,
      nose-to-lips distances)
    - natural asymmetries (slightly different eyes, uneven smile — these
@@ -40,9 +42,10 @@ const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
 
 EYEWEAR — EXACTLY ONE PAIR MAXIMUM (critical):
 - If the person wears glasses in the source photo: keep that EXACT same
-  pair on their face — same frame shape and color — and do NOT add any
-  other eyewear anywhere (no sunglasses on the head, no glasses in hand,
-  no second pair of any kind).
+  pair on their face — same frame shape and color, rendered clear and
+  glare-free with the eyes fully visible through the lenses — and do NOT
+  add any other eyewear anywhere (no sunglasses on the head, no glasses
+  in hand, no second pair of any kind).
 - If they do NOT wear glasses in the source: do not add any glasses or
   sunglasses at all.
 - Never render two pairs of eyewear on one person under any circumstance.
@@ -50,15 +53,28 @@ EYEWEAR — EXACTLY ONE PAIR MAXIMUM (critical):
 SKIN & POLISH (make them look their absolute best — without changing who they are):
 - Clean, even, healthy skin: remove temporary blemishes (acne, pimples,
   redness; soften under-eye darkness) while keeping permanent features
-  (dimples, eyelid type; at most one small prominent mole if clearly in
-  the source) and realistic skin texture — luminous and smooth but never
-  plastic, never blurred, never a filter look.
+  (dimples, eyelid type) and realistic skin texture — luminous and
+  smooth but never plastic, never blurred, never a filter look.
+- Treat shadows, contrast edges, lighting gradients, and compression
+  artifacts in the source photo as clean skin — never mistake them for
+  real marks.
+- Soften pores and fine wrinkles to about half strength — a lightly
+  retouched look that keeps the person's real age and texture, never
+  plastic and never younger.
+- MARKS: render AT MOST ONE mole in the entire face, and ONLY if it is
+  large and iconic in the source — smaller and fainter than the source.
+  Two or more marks are NEVER allowed. When in ANY doubt, render zero
+  marks: a face with no marks is always correct.
 - Well-groomed: a neat, flattering version of THEIR OWN hairstyle with
   healthy shine (tidy, not messy), eyebrows groomed in their real shape.
+  Render the hair in its TRUE color under the scene's light — warm or
+  orange tints from the source lighting must never become the hair's
+  actual color.
 - The most flattering light on the face: soft, bright, even — no harsh
   shadows across the face, no color cast on skin.
 - Photogenic expression: a relaxed, confident, natural smile that reads
-  well as a profile picture.
+  well as a profile picture — warm and genuine, never an exaggerated
+  toothy grin; eyes open and engaged with the camera.
 The goal: "them on their absolute best day" — the SAME person, clearly
 at their best, through skin, grooming, light, and styling ONLY (the
 facial structure from the IDENTITY rule never moves).
@@ -72,6 +88,8 @@ face is the subject — never let the landscape shrink the person.
 Render the face with its real three-dimensional contour from the source
 — never wider, flatter, or puffier than the source; cheek fullness and
 face width stay exactly as in the source photo.
+Portrait-lens perspective (~85mm) on the person — no wide-angle
+distortion that stretches, widens, or flattens the face.
 
 The input photos are a reference for IDENTITY ONLY (face and hairstyle) — ignore their framing, zoom, background, lighting, and clothing; the travel styling replaces them. Do NOT average the faces across photos; use the clearest, most front-facing photo as the single primary reference.
 
@@ -96,6 +114,9 @@ FINAL SELF-CHECK before output — do this rigorously:
    light, confident natural expression)? If they look tired, rough, or
    unflattering, improve the skin, light, grooming, and pose — NEVER
    the facial structure.
+5) Check the skin one more time: if the face shows two or more
+   spots/marks, or any acne or blemish, the result is wrong — the skin
+   must be clean.
 Photorealistic, high resolution, no text, no watermark, no border.`;
 const TRAVEL_PROMPTS: Record<string, string> = {
   jeju: `You are a travel snap photographer. Portray this person on a beautiful trip to Jeju Island:
