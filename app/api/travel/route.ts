@@ -37,15 +37,33 @@ const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
    raising the nose, no plumping lips, no smoothing away their real
    facial character. Hair may move slightly in the breeze but the
    hairstyle, hair length, and hair color stay exactly theirs.
+
+SKIN & POLISH (make them look their absolute best — without changing who they are):
+- Clean, even, healthy skin: remove temporary blemishes (acne, pimples,
+  redness; soften under-eye darkness) while keeping permanent features
+  (dimples, eyelid type; at most one small prominent mole if clearly in
+  the source) and realistic skin texture — luminous and smooth but never
+  plastic, never blurred, never a filter look.
+- Well-groomed: a neat, flattering version of THEIR OWN hairstyle with
+  healthy shine (tidy, not messy), eyebrows groomed in their real shape.
+- The most flattering light on the face: soft, bright, even — no harsh
+  shadows across the face, no color cast on skin.
+- Photogenic expression: a relaxed, confident, natural smile that reads
+  well as a profile picture.
+The goal: "them on their absolute best day" — the SAME person, clearly
+at their best, through skin, grooming, light, and styling ONLY (the
+facial structure from the IDENTITY rule never moves).
+
 2. COMPOSITION — the output is ALWAYS a vertical upper-body travel snap with the person as the clear HERO of the frame (sharpest, best-lit, largest element); the landscape is the softly blurred supporting stage. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
 
 The input photos are a reference for IDENTITY ONLY (face and hairstyle) — ignore their framing, zoom, background, lighting, and clothing; the travel styling replaces them. Do NOT average the faces across photos; use the clearest, most front-facing photo as the single primary reference.
 
 MAKE IT A REAL TRAVEL SNAP (anti-composite rules):
 - The person is truly IN the scene: the location's ambient light wraps naturally around them (sunlight direction, sky bounce, warm reflections), with consistent shadows on the ground and matching color temperature between subject and background — never a studio-lit person pasted onto a backdrop.
-- Shot like a friend took it on a good camera: natural depth of field, relaxed candid posture (a warm easy smile, hair moving slightly in the breeze if outdoors).
+- Shot like a friend took it on a good camera: natural depth of field, a relaxed but composed, flattering pose — facing the camera, profile-picture worthy (a warm easy smile, hair neat and flattering — at most a hint of gentle breeze, never messy).
 - Travel-casual outfit that suits the person and the destination.
 - BACKGROUND HAS NO READABLE TEXT: avoid signboards, banners, and lettering entirely — keep the scenery architectural and natural (never render melted or fake letters).
+- PROFILE-READY: the face is the clear focus of the frame — well-lit, sharp, and flattering; steady clean composition that works directly as a profile picture.
 
 FINAL SELF-CHECK before output — do this rigorously:
 1) Place the output next to the source photo mentally. Same face shape?
@@ -57,6 +75,10 @@ FINAL SELF-CHECK before output — do this rigorously:
 3) Does it look like a real travel snap (ambient light wrapping the
    person, consistent shadows) rather than a composite? If not, fix the
    light integration — but NEVER by altering the face.
+4) Do they look their absolute best (clean glowing skin, flattering
+   light, confident natural expression)? If they look tired, rough, or
+   unflattering, improve the skin, light, grooming, and pose — NEVER
+   the facial structure.
 Photorealistic, high resolution, no text, no watermark, no border.`;
 const TRAVEL_PROMPTS: Record<string, string> = {
   jeju: `You are a travel snap photographer. Portray this person on a beautiful trip to Jeju Island:
