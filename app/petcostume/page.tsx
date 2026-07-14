@@ -21,7 +21,7 @@ const COSTUME_OPTIONS = [
 export default function PetcostumePage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
-  const [costume, setCostume] = useState("royal");
+  const [costume, setCostume] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -72,6 +72,12 @@ export default function PetcostumePage() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
+  const chipStyle = (active: boolean) => ({
+    padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
+    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
+    background: active ? "#FFEAF1" : "#fff",
+    color: active ? "#FF4B7C" : "#9B9B9B",
+  });
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
@@ -91,6 +97,14 @@ export default function PetcostumePage() {
           <>
             <PreviewCard placeholder="🐾" caption="펫 코스튬, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
+            <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 코스튬을 입힐까요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+                {COSTUME_OPTIONS.map(o => (
+                  <button key={o.key} onClick={() => setCostume(o.key)} style={chipStyle(costume === o.key)}>{o.label}</button>
+                ))}
+              </div>
+            </div>
             <UploadZone
               label="반려동물 사진"
               images={image ? [image] : []}
@@ -101,8 +115,8 @@ export default function PetcostumePage() {
             <TipChips tips={[{ icon: "face", label: "얼굴 정면" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 또렷하게" }]} />
             <PrivacyLine />
 
-            <button onClick={handleSubmit} disabled={loading || !image}
-              style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
+            <button onClick={handleSubmit} disabled={loading || !image || !costume}
+              style={{ width: "100%", marginTop: 18, background: loading || !image || !costume ? "#E8E9ED" : "#FF4B7C", color: loading || !image || !costume ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image || !costume ? "not-allowed" : "pointer", boxShadow: loading || !image || !costume ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : "코스튬 입히기 ✨"}
             </button>
           </>
@@ -128,7 +142,7 @@ export default function PetcostumePage() {
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
                 style={{ flex: 1, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>저장하기</button>
-              <button onClick={() => { setResult(""); }}
+              <button onClick={() => { setResult(""); setCostume(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다른 코스튬으로</button>
             </div>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>※ 사진은 유지돼요. &quot;다른 코스튬으로&quot;를 누르고 옷만 바꿔서 또 만들어보세요!</p>
