@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -254,6 +254,20 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#F5E9DC" },
     ],
     start: "luxe",
+  },
+  homecafe: {
+    key: "homecafe",
+    title: "홈카페 감성 사진",
+    subtitle: "인스타 감성 한 장",
+    emoji: "☕",
+    accent: "#F5E9DC",
+    description: "대충 찍은 음식·음료 사진을 햇살 좋은 홈카페에서 찍은 듯한 감성 사진으로 바꿔드려요. 음식과 그릇은 그대로, 테이블·소품·빛만 예쁘게 연출돼요.",
+    examples: [
+      { emoji: "☕", accent: "#F5E9DC" },
+      { emoji: "🍰", accent: "#FFE9D6" },
+      { emoji: "🌿", accent: "#E7F7EA" },
+    ],
+    start: "homecafe",
   },
   bizprofile: {
     key: "bizprofile",
@@ -1700,6 +1714,7 @@ export function conceptForGo(go: string): Concept {
   if (go === "roman") return CONCEPTS.roman;
   if (go === "clay") return CONCEPTS.clay;
   if (go === "luxe") return CONCEPTS.luxe;
+  if (go === "homecafe") return CONCEPTS.homecafe;
   if (go === "bizprofile") return CONCEPTS.bizprofile;
   if (go === "hairstyle") return CONCEPTS.hairstyle;
   if (go === "illust") return CONCEPTS.illust;
