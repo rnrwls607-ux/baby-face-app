@@ -211,6 +211,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💿", accent: "#E1ECFF" },
       { emoji: "✨", accent: "#EFEAFF" },
     ],
+    detailImage: "/details/y2k.webp",
     start: "y2k",
   },
   roman: {
@@ -225,6 +226,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌹", accent: "#FFE0EC" },
       { emoji: "💎", accent: "#E1ECFF" },
     ],
+    detailImage: "/details/roman.webp",
     start: "roman",
   },
   clay: {
@@ -239,6 +241,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎬", accent: "#E1ECFF" },
       { emoji: "🐶", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/clay.webp",
     start: "clay",
   },
   luxe: {
@@ -253,6 +256,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💎", accent: "#E1ECFF" },
       { emoji: "✨", accent: "#F5E9DC" },
     ],
+    detailImage: "/details/luxe.webp",
     start: "luxe",
   },
   homecafe: {
@@ -267,6 +271,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🍰", accent: "#FFE9D6" },
       { emoji: "🌿", accent: "#E7F7EA" },
     ],
+    detailImage: "/details/homecafe.webp",
     start: "homecafe",
   },
   travel: {
