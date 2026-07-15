@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useBackClose } from "../../lib/useBackClose";
 
 // 업로드 화면 진입 시 뜨는 안내 모달.
 // 기본은 매번 뜨고, "오늘 하루 보지 않기" 를 누른 날에만 안 뜬다.
@@ -24,6 +25,8 @@ export default function UploadGuide({
 }) {
   const [open, setOpen] = useState(false);
   const storageKey = KEY_PREFIX + type;
+  // 뒤로가기 → 가이드 모달만 닫기 (페이지 이탈 방지)
+  useBackClose(open, () => setOpen(false));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
