@@ -20,12 +20,22 @@
   - [★토스+결제 전략] 전자결제 신청서 작성 완료: 기본 결제 패키지 / 카드+카카오페이+토스페이+네이버페이+페이코(계좌이체 제외 — 최저 건당 200원=소액 실효 7~20%) / 플랫폼 아니요·환금성 아니요·5만원 이하·즉시 / 사업자등록증 업로드 → 33만원(가입22+연관리11) 결제 대기, ★기한 2026-08-14, 심사 거절 시 환불. MEVU 정찰: 구글 인앱결제, 증명사진 6,900원 "최다 판매"(코인 가격 기준점)
   - [★방향 선언] MJ: 앱스토어 배포가 본선, 웹은 임시 형태. 인앱결제 감수 — 웹 우선 하이브리드 전략 재고
   - [Capacitor 타당성 조사 완료] 원격 모드(server.url=mospic.com) 하이브리드 — 코드 변경 0, 웹 배포=앱 업데이트 / 1순위 리스크=카카오톡 간편로그인 kakaotalk:// 스킴(1주차 실기기 테스트로 판정, 실패 시 시스템 브라우저 플로우 +1~2주) / 신규 계정=테스터 12명×14일 클로즈드 테스트 의무 / 스토어 앱 내 디지털 재화=Play Billing 강제(RevenueCat 권장, 15%) + AI 콘텐츠 신고 버튼 요구 / 타임라인: 무료 셸 5~6주, IAP 포함 7~9주 / iOS 별개(Play 먼저 = 아이폰 사용자 IAP 결제 불가) / ★핵심 시사점: 코인 원장은 서버(Redis) 중심으로, 결제 수단(Toss/IAP)은 갈아끼우는 부품으로 설계
+  - [★Capacitor 1주차 관문 통과] 셸 생성~실기기 카카오 로그인 판정 완료
+    · 셸: C:\mospic-app (별도 폴더 — baby-face-app 경로 공백 "Hello G.BOX" 리스크 회피), Capacitor v8.4.2, appId com.mospic.app, 원격 모드 server.url=https://mospic.com, allowNavigation ["*.kakao.com"], 로컬 git 커밋 c545093 (GitHub 푸시 없음)
+    · 사전 조사 결과: Capacitor 흔적 0 / output export 없음 / 로그인 경로 새 창 0 / redirect_uri env 방식 → 원격 모드 적합 판정
+    · 실기기(갤럭시 Z플립5 SM-F731N) 설치 성공 → ★카카오 로그인 웹뷰 안에서 완결, 앱 재실행 후에도 세션 유지 확인 = 관문 통과
+    · ★진짜 원인은 카카오톡 스킴이 아니었음 — Vercel env KAKAO_REDIRECT_URI가 옛 주소(baby-face-app-seven.vercel.app) → 카카오가 옛 도메인으로 리다이렉트 → 허용목록 밖이라 Capacitor가 크롬으로 방출 → 크롬/PWA에서 로그인 완료되던 것. adb logcat으로 ActivityManager START 줄 잡아 확정(kakaotalk://·intent:// 0건)
+    · 조치: KAKAO_REDIRECT_URI=https://mospic.com/api/auth/kakao/callback, NEXTAUTH_URL=https://mospic.com 로 재생성(Sensitive OFF) + 캐시 해제 Redeploy
+    · 부수 이득: 웹도 308 우회 한 홉 제거 + 로그아웃 리다이렉트 정상화
+    · ★타임라인 영향: 카카오 보정(+1~2주) 불필요 → 무료 셸 5~6주 중 상단 리스크 제거
 - 다음에 할 것:
   1. [★결정, 8/14 기한] 토스 33만원 — A안 결제(IAP 전 공백기+아이폰용 웹 레일 확보) vs B안 스킵(IAP 직행, 9월 중순까지 매출 0 + 아이폰 장기 결제불가 감수). Capacitor 1주차 관문 결과 보고 판단 권장
   2. Capacitor 1주차: 셸 생성+아이콘/스플래시+원격 모드 → ★실기기 카카오 로그인 테스트(최대 리스크 조기 판정)
   3. 코인 시스템 설계 — 서버 원장 중심·수단 중립(Toss/IAP 겸용). 원칙 내장: 로그인 필수·원본 Blob·실패 자동 반환·환불 약관("현금 환급·양도 불가, 미사용분 결제취소 가능")·사업자 정보 표기. 가격 기준점 MEVU 6,900원
   4. [MJ 손] 테스터 12명 모집 시작(14일 시계가 병목) / 법률 문서 [__] 시행일·대표자명 / (토스 결제 시) 통신판매업 바로신청→면허세 40,500원 위택스
   5. 사이드: travel 결판→y2k·halloween 이식→숨김 3종 해제 / 리디자인 9종(기존 페이지 첨부받아 프롬프트) / goods 킷 / GPT 4종(gpt-image-2 검증 후)
+  6. [2주차] 이미지 저장 브리지 — a.download 114곳이 안드로이드 웹뷰에서 data URL 다운로드 미처리. Capacitor 다운로드 리스너 or Filesystem/Media 플러그인 필요. 패턴 균일해 벌크 가능. + navigator.share 1곳(@capacitor/share), mailto 1곳 확인
+  7. 셸 마무리: 아이콘·스플래시(현재 Capacitor 기본), 카카오 개발자센터 앱 아이콘이 아직 옛 아기얼굴 → MOSPIC 로고로 교체(동의화면 신뢰도)
 - 주의/메모:
   - ★카카오 새 UI 경로(2026 개편): 웹 도메인=[앱>제품 링크 관리], 로그인 Redirect URI=[앱>플랫폼 키]→'대표' 뱃지 REST API 키 카드 클릭 안. [제품설정>카카오로그인>일반]엔 없음, [고급]은 로그아웃용. "REST API 키 추가" 화면은 새 키 생성 함정 — 기존 카드를 눌러 수정할 것
   - 도메인 교체 여파: 기존 사용자는 mospic.com에서 재로그인 필요(클라우드 히스토리 복원됨), 비로그인 로컬 기록은 옛 주소에 묶임
@@ -33,6 +43,11 @@
   - 새 컨셉 복제 시 AI 도장·고지 자동 포함됨(route 조립줄 stamp + page 고지 1줄) — 지우지 말 것
   - 상세페이지 교체 공정(루틴): 같은 파일명 PNG를 details에 덮어넣기→컨셉명만 알려주면 일괄 처리(webp 88 변환→덮어쓰기→원료 png 정리). PWA 캐시로 옛 이미지 보이면 앱 재시작
   - 미정리: nn5a git 연결 해제(Vercel — mospic-images Blob 스토어 삭제 금지) / 카카오 로그아웃 리다이렉트 URI mospic 버전(급X) / 카카오 비즈 앱 전환(수익화 때) / GitHub Private / og 메타태그
+  - ★도메인 이전 시 env 전수 점검 필수. 웹은 308이 가려줘서 "성공"처럼 보임 — 앱 웹뷰가 리트머스지 역할
+  - ★Vercel Sensitive 토글은 URL류 env에 쓰지 말 것(값 되읽기 불가 → 디버깅 차단). 비밀키만 Sensitive
+  - Redeploy 시 "Use existing Build Cache" 해제해야 env 반영 확실
+  - 셸 재빌드: Android Studio로 C:\mospic-app\android 열고 ▶ (폰 USB 디버깅 ON, 삼성 자동차단의 USB 항목 OFF 필요)
+  - C:\mospic-app\logcat.txt 는 임시 산출물 — 삭제 가능
 
 ## 2026-07-14 — 신규 컨셉 8종(y2k~goods) 배선 완료 + era·petcostume 칩 버그 수리
 - 한 일: 신규 14종 중 Gemini 8종 전부 배선(y2k·roman·clay·luxe·homecafe·travel·halloween·goods, 각 4파일 커밋) + era·petcostume 칩 UI 복구(옵션 setter 미호출로 항상 기본값만 생성되던 버그, 전수 스캔 결과 이 2개뿐)
