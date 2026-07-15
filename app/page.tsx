@@ -391,8 +391,13 @@ export default function Home() {
   const [showAllConcepts, setShowAllConcepts] = useState(false);
   const [allConceptsCat, setAllConceptsCat] = useState("all");
   const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
-  // 뒤로가기 → 컨셉 상세 모달만 닫기 (앱 이탈 방지)
+  // 뒤로가기 → 열린 오버레이만 한 겹씩 닫기 (앱 이탈 방지, 겹침은 열린 순서대로)
   useBackClose(!!detail, () => setDetail(null));
+  useBackClose(showSettings, () => setShowSettings(false));
+  useBackClose(showAllConcepts, () => setShowAllConcepts(false));
+  useBackClose(!!historyView, () => setHistoryView(null));
+  useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
+  useBackClose(showMakeScreen, () => setShowMakeScreen(false));
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
     fetch("/api/usage")
@@ -448,8 +453,8 @@ export default function Home() {
     };
     img.src = b64;
   });
-  const handleLogin = () => { window.location.href = "/api/auth/kakao"; };
-  const handleLogout = () => { window.location.href = "/api/auth/logout"; };
+  const handleLogin = () => { window.location.replace("/api/auth/kakao"); };
+  const handleLogout = () => { window.location.replace("/api/auth/logout"); };
   const handlePayment = useCallback(async (productId: string) => {
     if (!user) { handleLogin(); return; }
     const product = PRODUCTS.find(p => p.id === productId);
@@ -1184,11 +1189,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 필수 동의 약관 */}
             <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>필수 동의 약관</p>
             <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
-              <button onClick={() => { window.location.href = "/privacy"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+              <button onClick={() => { window.location.replace("/privacy"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>개인정보 처리방침</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
-              <button onClick={() => { window.location.href = "/terms"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
+              <button onClick={() => { window.location.replace("/terms"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>이용약관</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
@@ -1197,7 +1202,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 서비스 정보 */}
             <p style={{ fontSize: 12, fontWeight: 700, color: "#9B9B9B", margin: "8px 4px 8px" }}>서비스 정보</p>
             <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", marginBottom: 18 }}>
-              <button onClick={() => { window.location.href = "/ai-notice"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+              <button onClick={() => { window.location.replace("/ai-notice"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>AI 생성물 안내</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
@@ -1245,7 +1250,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                       // 탈퇴 성공 후에만 기기 기록 정리 (클라우드 기록은 서버가 삭제)
                       await clearHistory();
                       alert("탈퇴가 완료됐어요. 이용해 주셔서 감사합니다.");
-                      window.location.href = "/";
+                      window.location.replace("/");
                     } catch {
                       alert("탈퇴 처리에 실패했어요. 다시 시도해주세요.");
                     }
