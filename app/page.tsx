@@ -493,12 +493,13 @@ export default function Home() {
   };
   const handleShare = async () => {
     const url = results[selected];
-    const text = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\nhttps://baby-face-app-seven.vercel.app`;
+    const origin = window.location.origin; // 현재 도메인 기준 (mospic.com) — 하드코딩 금지
+    const text = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\n${origin}`;
     try {
       const blob = await (await fetch(url)).blob();
       const file = new File([blob], "babyface.png", { type: "image/png" });
       if (navigator.canShare?.({ files: [file] })) await navigator.share({ title: "우리 아기 얼굴은?", text, files: [file] });
-      else if (navigator.share) await navigator.share({ title: "우리 아기 얼굴은?", text, url: "https://baby-face-app-seven.vercel.app" });
+      else if (navigator.share) await navigator.share({ title: "우리 아기 얼굴은?", text, url: origin });
       else { await navigator.clipboard.writeText(text); toast("링크를 복사했어요"); }
     } catch (e: unknown) { if ((e as {name?:string})?.name !== "AbortError") handleDownload(); }
   };
