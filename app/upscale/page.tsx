@@ -121,6 +121,7 @@ export default function UpscalePage() {
           <div style={{ marginTop: 8 }}>
             <StepIndicator current={3} />
             <p style={{ fontSize: 16, fontWeight: 900, color: "#191919", margin: "0 0 10px", textAlign: "center" }}>✨ 4배 고화질로 변환됐어요!</p>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-4px 0 12px" }}>AI로 생성된 이미지예요</p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12, border: "1px solid #EEE" }}>
               <img src={result} alt="고화질 결과" style={{ width: "100%", display: "block" }} />
             </div>

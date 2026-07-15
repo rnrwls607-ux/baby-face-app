@@ -183,6 +183,7 @@ export default function PetreceiptPage() {
           <div>
             <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>관상 영수증 나왔어요! 🧾</p>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
               <img src={result} alt="펫 관상 영수증" style={{ width: "100%", display: "block" }} />
             </div>

@@ -121,6 +121,7 @@ export default function NukkiPage() {
           <div>
             <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요</p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", ...checker }}>
               <img src={result} alt="배경 제거 결과" style={{ width: "100%", display: "block" }} />
             </div>
