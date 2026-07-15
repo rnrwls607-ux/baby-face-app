@@ -322,7 +322,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "fashion", title: "패션 룩북", subtitle: "오늘의 착장이 화보로", emoji: "👗", accent: "#EFEAFF", badge: "NEW", tags: ["패션"], go: "fashion" },
       { id: "idol", title: "아이돌 프로필", subtitle: "오늘 데뷔하는 내 프로필", emoji: "🌟", accent: "#FFE0EC", badge: "NEW", tags: ["인생샷"], go: "idol" },
       { id: "xmas", title: "크리스마스 화보", subtitle: "따뜻한 연말 한 장", emoji: "🎄", accent: "#E7F7EA", badge: "NEW", tags: ["시즌"], go: "xmas" },
-      { id: "halloween", title: "할로윈 변신", subtitle: "뱀파이어·마녀·요정으로", emoji: "🎃", accent: "#EFEAFF", badge: "NEW", tags: ["시즌"], go: "halloween" },
+      // { id: "halloween", title: "할로윈 변신", subtitle: "뱀파이어·마녀·요정으로", emoji: "🎃", accent: "#EFEAFF", badge: "NEW", tags: ["시즌"], go: "halloween" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
       { id: "graduation", title: "AI 졸업사진", subtitle: "학사모 쓴 내 모습", emoji: "🎓", accent: "#DCEBFF", badge: "NEW", tags: ["졸업"], go: "graduation" },
       { id: "wedding", title: "웨딩 화보", subtitle: "드레스·턱시도 입은 나", emoji: "💍", accent: "#FFE0EC", badge: "NEW", tags: ["웨딩"], image: "/cards/wedding.webp", go: "wedding" },
       { id: "petstudio", title: "펫 스튜디오 화보", subtitle: "우리 애기 화보 찍는 날", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/petstudio.webp", go: "petstudio" },
@@ -331,9 +331,9 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "y2k", title: "Y2K 하이틴", subtitle: "2000년대 하이틴 스타로", emoji: "🕹️", accent: "#FCE8EF", badge: "NEW", tags: ["재미"], image: "/cards/y2k.webp", go: "y2k" },
       { id: "roman", title: "로판 웹툰 주인공", subtitle: "웹툰 표지 주인공으로", emoji: "👑", accent: "#EFEAFF", badge: "NEW", tags: ["재미"], image: "/cards/roman.webp", go: "roman" },
       { id: "clay", title: "클레이 아트", subtitle: "점토로 빚은 우리", emoji: "🧱", accent: "#FFEFD6", badge: "NEW", tags: ["재미"], image: "/cards/clay.webp", go: "clay" },
-      { id: "goods", title: "굿즈 미리보기", subtitle: "나·우리 애가 아크릴 굿즈로", emoji: "🔑", accent: "#FFE9D6", badge: "NEW", tags: ["재미"], go: "goods" },
+      // { id: "goods", title: "굿즈 미리보기", subtitle: "나·우리 애가 아크릴 굿즈로", emoji: "🔑", accent: "#FFE9D6", badge: "NEW", tags: ["재미"], go: "goods" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
       { id: "luxe", title: "럭셔리 매거진 화보", subtitle: "매거진 커버 속 나", emoji: "🖤", accent: "#E8EAED", badge: "NEW", tags: ["인생샷"], image: "/cards/luxe.webp", go: "luxe" },
-      { id: "travel", title: "여행지 프로필", subtitle: "여행지 인생샷 한 장", emoji: "✈️", accent: "#E1ECFF", badge: "NEW", tags: ["인생샷"], go: "travel" },
+      // { id: "travel", title: "여행지 프로필", subtitle: "여행지 인생샷 한 장", emoji: "✈️", accent: "#E1ECFF", badge: "NEW", tags: ["인생샷"], go: "travel" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
       { id: "petcostume", title: "펫 코스튬", subtitle: "우리 애 옷 입혀보기", emoji: "🎀", accent: "#FFE0EC", badge: "NEW", tags: ["반려동물"], go: "petcostume" },
       { id: "couple", title: "커플 스튜디오 화보", subtitle: "둘이 함께, 스튜디오 화보", emoji: "💑", accent: "#FFE0EC", badge: "NEW", tags: ["커플"], go: "couple" },
       { id: "hanbokcouple", title: "웨딩 한복 커플", subtitle: "한복 입고 둘이 한 장", emoji: "👘", accent: "#FFF1E0", badge: "NEW", tags: ["커플"], go: "hanbokcouple" },
