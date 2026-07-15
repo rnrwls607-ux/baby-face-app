@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
+import { AI_EXIF, AI_XMP } from "../../lib/aiMark";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -82,16 +83,19 @@ export async function POST(req: NextRequest) {
 
     const LIMIT = 2_900_000; // 바이너리 기준 ≈ base64 3.9MB (한도 4.5MB 아래 여유)
     let quality = 90;
-    let jpeg = await sharp(raw).jpeg({ quality }).toBuffer();
+    // AI 생성물 비가시 표시(EXIF·XMP)를 인코딩 파이프라인에 함께 넣는다
+    let jpeg = await sharp(raw).withExif(AI_EXIF).withXmp(AI_XMP).jpeg({ quality }).toBuffer();
     while (jpeg.length > LIMIT && quality > 70) {
       quality -= 5;
-      jpeg = await sharp(raw).jpeg({ quality }).toBuffer();
+      jpeg = await sharp(raw).withExif(AI_EXIF).withXmp(AI_XMP).jpeg({ quality }).toBuffer();
     }
     if (jpeg.length > LIMIT) {
       // 마지막 안전장치: 3000px(입력 1024px의 약 3배)로 줄여서라도 반드시 전달
       quality = 85;
       jpeg = await sharp(raw)
         .resize(3000, 3000, { fit: "inside", withoutEnlargement: true })
+        .withExif(AI_EXIF)
+        .withXmp(AI_XMP)
         .jpeg({ quality })
         .toBuffer();
     }

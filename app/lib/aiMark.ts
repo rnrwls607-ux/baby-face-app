@@ -15,7 +15,14 @@ import sharp from "sharp";
 //   동작이 메타데이터 제거라, crop.ts에 keepMetadata()가 함께 있어야
 //   도장이 살아남는다 (crop.ts에 적용됨).
 
-const AI_XMP = `<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+export const AI_EXIF = {
+  IFD0: {
+    Software: "MOSPIC AI",
+    ImageDescription: "AI-generated image (AI 생성 이미지) - MOSPIC",
+  },
+};
+
+export const AI_XMP = `<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
   <rdf:Description rdf:about=""
@@ -31,12 +38,7 @@ export async function stampAiMetadata(b64: string): Promise<string> {
   try {
     const buf = Buffer.from(b64, "base64");
     const stamped = await sharp(buf)
-      .withExif({
-        IFD0: {
-          Software: "MOSPIC AI",
-          ImageDescription: "AI-generated image (AI 생성 이미지) - MOSPIC",
-        },
-      })
+      .withExif(AI_EXIF)
       .withXmp(AI_XMP)
       .toBuffer();
     return `data:image/png;base64,${stamped.toString("base64")}`;

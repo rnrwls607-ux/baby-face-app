@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
     const imgRes = await fetch(outUrl);
     if (!imgRes.ok) throw new Error("결과 이미지를 불러오지 못했어요.");
     const buf = Buffer.from(await imgRes.arrayBuffer());
-    const dataUrl = `data:image/png;base64,${buf.toString("base64")}`;
+    const dataUrl = await stampAiMetadata(buf.toString("base64")); // AI 생성물 비가시 표시
 
     return NextResponse.json({ output: [dataUrl] });
   } catch (e: unknown) {

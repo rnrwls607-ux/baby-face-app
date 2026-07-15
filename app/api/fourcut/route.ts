@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -78,7 +79,7 @@ Photorealistic, high resolution. No text, no captions, no watermark. Remember th
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
-  const dataUrl = `data:image/png;base64,${b64}`;
+  const dataUrl = await stampAiMetadata(b64); // AI 생성물 비가시 표시
   // 📐 네컷: 2:3 세로 스트립 비율로 크롭
   return await cropToRatio(dataUrl, 2, 3);
 }

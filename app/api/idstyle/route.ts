@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
+import { stampAiMetadata } from "../../lib/aiMark";
 import { readFile } from "fs/promises";
 import path from "path";
 export const runtime = "nodejs";
@@ -50,7 +51,7 @@ async function cropToRatio(dataUrl: string): Promise<string> {
     const out = await img
       .extract({ left: Math.max(0, left), top: Math.max(0, top), width: cropW, height: cropH })
       .png().toBuffer();
-    return `data:image/png;base64,${out.toString("base64")}`;
+    return await stampAiMetadata(out.toString("base64")); // AI 생성물 비가시 표시
   } catch (e) {
     console.error("[idstyle] crop failed:", (e as { message?: string })?.message);
     return dataUrl;

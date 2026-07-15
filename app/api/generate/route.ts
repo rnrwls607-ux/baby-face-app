@@ -1,6 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { stampAiMetadata } from "../../lib/aiMark";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -105,7 +106,7 @@ Photorealistic, high detail.`;
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
-  return `data:image/png;base64,${b64}`;
+  return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
 
 export async function POST(request: NextRequest) {

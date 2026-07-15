@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { stampAiMetadata } from "../../lib/aiMark";
 import sharp from "sharp";
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -56,7 +57,7 @@ async function cropToRatio(dataUrl: string): Promise<string> {
       .extract({ left: Math.max(0, left), top: Math.max(0, top), width: cropW, height: cropH })
       .png()
       .toBuffer();
-    return `data:image/png;base64,${out.toString("base64")}`;
+    return await stampAiMetadata(out.toString("base64")); // AI 생성물 비가시 표시 (로컬 크롭이 벗긴 도장 재적용)
   } catch (e) {
     console.error("[id-photo] crop failed, returning original:", (e as { message?: string })?.message);
     return dataUrl; // 크롭 실패 시 원본 반환
@@ -99,7 +100,7 @@ async function generateOne(prompt: string, images: { mimeType: string; data: str
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
-  return `data:image/png;base64,${b64}`;
+  return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
 // 🔑 증명사진 생성 엔진
 async function generateIdPhotos(
