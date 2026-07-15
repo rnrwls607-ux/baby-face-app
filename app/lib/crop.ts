@@ -41,6 +41,7 @@ export async function cropToRatio(
     // 세로 크롭은 위쪽 여백을 topBias 비율로 남김 (인물이면 머리 위 공간 확보)
     const top = Math.round((h - cropH) * topBias);
     const out = await img
+      .keepMetadata() // AI 표시(EXIF·XMP) 등 메타데이터를 크롭 후에도 보존
       .extract({
         left: Math.max(0, left),
         top: Math.max(0, top),

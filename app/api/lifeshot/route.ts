@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cropToRatio } from "../../lib/crop";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-image";
@@ -79,7 +80,7 @@ Photorealistic, high resolution, no text, no watermark, no border. Remember the 
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
-  const dataUrl = `data:image/png;base64,${b64}`;
+  const dataUrl = await stampAiMetadata(b64); // AI 생성물 비가시 표시
   // 📐 인물 프로필: 3:4 세로 비율로 크롭
   return await cropToRatio(dataUrl, 3, 4);
 }
