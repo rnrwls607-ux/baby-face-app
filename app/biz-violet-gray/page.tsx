@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { toast } from "../lib/toast";
+import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
 import PreviewCard from "../components/upload/PreviewCard";
@@ -24,6 +25,8 @@ export default function BizVioletGrayPage() {
   const [results, setResults] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [elapsed, setElapsed] = useState(0);
+  // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
+  useBackClose(results.length > 0, () => setResults([]));
 
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
@@ -120,7 +123,7 @@ export default function BizVioletGrayPage() {
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <UploadGuide type="solo_face" accent={ACCENT} />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
-        <button onClick={() => { if (window.history.length > 1) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
+        <button onClick={() => { if (results.length) { setResults([]); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>바이올렛 스커트 프로필</span>
       </div>
 

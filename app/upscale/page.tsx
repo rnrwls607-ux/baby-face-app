@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { toast } from "../lib/toast";
+import { useBackClose } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
@@ -12,6 +13,8 @@ export default function UpscalePage() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
+  useBackClose(!!result, () => setResult(""));
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -82,7 +85,7 @@ export default function UpscalePage() {
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", height: 58, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
-        <button onClick={() => (window.location.href = "/")} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919" }}>‹</button>
+        <button onClick={() => { if (result) { setResult(""); return; } window.location.href = "/"; }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919" }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>고화질 변환 (4K)</span>
       </div>
 
