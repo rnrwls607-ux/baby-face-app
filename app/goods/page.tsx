@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
-import { toast } from "../lib/toast";
+import { saveImage } from "../lib/saveImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -78,13 +78,7 @@ export default function GoodsPage() {
     background: active ? "#FFEAF1" : "#fff",
     color: active ? "#FF4B7C" : "#9B9B9B",
   });
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
-    a.download = "goods.png";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("저장됐어요");
-  };
+  const handleDownload = () => { void saveImage(result, "goods.png"); };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <UploadGuide type="generic" />

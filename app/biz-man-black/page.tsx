@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
-import { toast } from "../lib/toast";
+import { saveImage } from "../lib/saveImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
@@ -111,13 +111,7 @@ export default function BizManBlackPage() {
     } finally { setLoading(false); }
   };
 
-  const handleDownload = (url: string, idx: number) => {
-    const a = document.createElement("a");
-    a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`;
-    a.download = `biz-man-black-${idx + 1}.png`;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("저장됐어요");
-  };
+  const handleDownload = (url: string, idx: number) => { void saveImage(url, `biz-man-black-${idx + 1}.png`); };
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>

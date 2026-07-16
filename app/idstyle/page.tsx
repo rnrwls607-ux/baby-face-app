@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
-import { toast } from "../lib/toast";
+import { saveImage } from "../lib/saveImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
 const STYLE_KEY = "blueshirt";
@@ -74,13 +74,7 @@ export default function IdStylePage() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-  const handleDownload = () => {
-    const a = document.createElement("a");
-    a.href = result.startsWith("data:") ? result : `/api/download?url=${encodeURIComponent(result)}`;
-    a.download = "idphoto.png";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("저장됐어요");
-  };
+  const handleDownload = () => { void saveImage(result, "idphoto.png"); };
   const canSubmit = faces.length >= MIN_FACES && !loading;
 
   return (

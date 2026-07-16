@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
-import { toast } from "../lib/toast";
+import { saveImage } from "../lib/saveImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
 // ── 디자인 토큰 (색·둥글기를 여기서 통제) ──
@@ -128,14 +128,7 @@ export default function IdPhotoPage() {
     } finally { setLoading(false); }
   };
 
-  const handleDownload = () => {
-    const url = results[selected];
-    const a = document.createElement("a");
-    a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`;
-    a.download = "id_photo.png";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("저장됐어요");
-  };
+  const handleDownload = () => { void saveImage(results[selected], "id_photo.png"); };
 
   const canSubmit = images.filter(Boolean).length > 0 && !loading;
 

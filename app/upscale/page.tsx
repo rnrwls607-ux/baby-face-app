@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { toast } from "../lib/toast";
+import { saveImage } from "../lib/saveImage";
 import { useBackClose } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -73,14 +73,7 @@ export default function UpscalePage() {
     }
   };
 
-  const handleDownload = () => {
-    if (!result) return;
-    const a = document.createElement("a");
-    a.href = result.startsWith("data:") ? result : "/api/download?url=" + encodeURIComponent(result);
-    a.download = "mospic_4k.png";
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    toast("저장됐어요");
-  };
+  const handleDownload = () => { if (!result) return; void saveImage(result, "mospic_4k.jpg"); };
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>

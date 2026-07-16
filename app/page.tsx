@@ -4,6 +4,7 @@ import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
+import { saveImage } from "./lib/saveImage";
 import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
@@ -483,13 +484,9 @@ export default function Home() {
   }, [user]);
   const handleDownload = async () => {
     const url = results[selected];
-    try {
-      const now = new Date();
-      const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}`;
-      const a = document.createElement("a"); a.href = url.startsWith("data:") ? url : `/api/download?url=${encodeURIComponent(url)}`; a.download = `mospic_${ts}.png`;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      toast("저장됐어요");
-    } catch { window.open(url, "_blank"); }
+    const now = new Date();
+    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}`;
+    await saveImage(url, `mospic_${ts}.png`);
   };
   const handleShare = async () => {
     const url = results[selected];
@@ -1021,7 +1018,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
             <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
-              <button onClick={() => { const a = document.createElement("a"); a.href = historyView.src.startsWith("data:") ? historyView.src : `/api/download?url=${encodeURIComponent(historyView.src)}`; a.download = `mospic_${historyView.id}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); toast("저장됐어요"); }}
+              <button onClick={() => { void saveImage(historyView.src, `mospic_${historyView.id}.jpg`); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
             </div>
