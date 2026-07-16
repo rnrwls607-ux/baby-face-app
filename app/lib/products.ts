@@ -30,27 +30,31 @@ export function getProduct(id: string): Product | null {
 }
 
 // ────────────────────────────────────────────────────────────
-// 코인 충전 상품 (세대교체 — 위 이용권 상품을 대체할 새 라인)
-// ★가격 전부 임시가 — 가격표 세션에서 확정 후 교체
+// 코인 충전 상품 (세대교체 — 위 이용권 상품을 대체하는 새 라인)
+// 가격표 확정 2026-07-17(MJ): 1코인=500원 정가, 단가=출력장수×3, 런칭 40% 할인
+// charge 서버의 금액 검증은 price(할인가) 기준
 // ────────────────────────────────────────────────────────────
 
 export interface CoinProduct {
-  id: string;    // 상품 키 (charge 서버와 동일해야 함)
-  name: string;  // 표시 이름
-  coins: number; // 충전되는 코인 수
-  price: number; // 가격(원)
-  tag?: string;  // 시트 라벨 (인기/베스트/최저가 등)
+  id: string;          // 상품 키 (charge 서버와 동일해야 함)
+  name: string;        // 표시 이름
+  coins: number;       // 충전되는 코인 수
+  price: number;       // 실판매가(원) — 런칭 할인 적용가
+  listPrice: number;   // 정가(원) — 취소선 표시용
+  discountPct: number; // 할인율(%)
+  badge: string;       // 할인 뱃지 문구
+  tag?: string;        // 시트 라벨 (인기/베스트/최저가 등)
 }
 
 export const COIN_PRODUCTS: Record<string, CoinProduct> = {
-  coin3:  { id: "coin3",  name: "코인 3개",  coins: 3,  price: 2900,  tag: "인기" },
-  coin10: { id: "coin10", name: "코인 10개", coins: 10, price: 6900,  tag: "베스트" },
-  coin30: { id: "coin30", name: "코인 30개", coins: 30, price: 14900, tag: "최저가" },
+  coin3:  { id: "coin3",  name: "코인 3개",  coins: 3,  price: 900,  listPrice: 1500,  discountPct: 40, badge: "런칭 기념 40%", tag: "인기" },
+  coin9:  { id: "coin9",  name: "코인 9개",  coins: 9,  price: 2700, listPrice: 4500,  discountPct: 40, badge: "런칭 기념 40%", tag: "베스트" },
+  coin30: { id: "coin30", name: "코인 30개", coins: 30, price: 9000, listPrice: 15000, discountPct: 40, badge: "런칭 기념 40%", tag: "최저가" },
 };
 
 export const COIN_PRODUCT_LIST: CoinProduct[] = [
   COIN_PRODUCTS["coin3"],
-  COIN_PRODUCTS["coin10"],
+  COIN_PRODUCTS["coin9"],
   COIN_PRODUCTS["coin30"],
 ];
 

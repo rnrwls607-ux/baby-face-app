@@ -139,6 +139,7 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
           <div style={{ position: "relative", background: "#fff", borderRadius: "24px 24px 0 0", padding: "24px 20px 40px", maxWidth: 480, width: "100%", margin: "0 auto" }}>
             <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
             <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>코인 충전</p>
+            <p style={{ fontSize: 13, color: "#FF4B7C", fontWeight: 700, margin: "0 0 2px" }}>🎉 런칭 기념 40% 할인</p>
             <p style={{ fontSize: 13, color: "#999", margin: "0 0 20px" }}>충전한 코인은 1년간 유효해요</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {COIN_PRODUCT_LIST.map((product) => (
@@ -156,7 +157,11 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
                     <p style={{ fontSize: 12, color: "#999", margin: 0 }}>코인당 {Math.round(product.price / product.coins).toLocaleString()}원</p>
                   </div>
                   <div style={{ textAlign: "right" }}>
-                    <p style={{ fontSize: 17, fontWeight: 900, color: "#111", margin: 0 }}>
+                    <p style={{ fontSize: 12, color: "#bbb", margin: "0 0 2px", textDecoration: "line-through" }}>
+                      {product.listPrice.toLocaleString()}원
+                    </p>
+                    <p style={{ fontSize: 18, fontWeight: 900, color: "#FF4B7C", margin: 0 }}>
+                      <span style={{ fontSize: 12, background: "#FFF0F3", color: "#FF4B7C", padding: "2px 6px", borderRadius: 4, fontWeight: 800, marginRight: 6, verticalAlign: "middle" }}>{product.discountPct}%</span>
                       {product.price.toLocaleString()}원
                     </p>
                   </div>

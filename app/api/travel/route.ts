@@ -172,4 +172,4 @@ async function handler(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
-export const POST = withCoin("travel", 1, handler);
+export const POST = withCoin("travel", 3, handler); // 출력 1장 × 3 (가격표 확정 2026-07-17)
