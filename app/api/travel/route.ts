@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
+import { withCoin } from "../../lib/coins";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 const GEMINI_MODEL = "gemini-3.1-flash-image";
@@ -179,7 +180,7 @@ async function generateTravel(imageDataUrl: string, destination: string): Promis
   // 📐 여행 스냅 인물: 3:4 세로 비율로 크롭
   return await cropToRatio(dataUrl, 3, 4);
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -193,3 +194,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+export const POST = withCoin("travel", 1, handler);
