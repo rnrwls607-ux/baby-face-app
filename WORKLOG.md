@@ -7,6 +7,47 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-16 — ★Capacitor 2주차 완료(하루 만에): 이미지 저장 브리지 + 조용한 실패 전면 해소
+- 한 일:
+  - [★브리지 판정] 원격 모드에서 Capacitor 브리지 주입 실측 확정 — adb+CDP Runtime.evaluate로
+    window.Capacitor {platform:"android", native:true} 확인. ★UA에 Capacitor 표식 없음 →
+    서버에서 앱/웹 구분 불가, 판별은 클라이언트 isNativePlatform()로만
+  - [플러그인 검증] @capacitor-community/media 9.1.0 셸 설치(8bb63ef) → CDP로 savePhoto 실측:
+    "Album identifier required" 확인 → getAlbums/createAlbum("MOSPIC")/albumIdentifier 지정으로
+    저장 성공. 권한 추가 0 (INTERNET만 — 저장 시 권한 팝업 없음)
+  - [⚠️정책 결정 대기] 저장 위치 = Android/media/com.mospic.app/ → 앱 삭제 시 사진 동반 삭제.
+    대안 androidGalleryMode:true는 권한 4개(READ_MEDIA_IMAGES 등 Play 민감 권한+심사 소명) 필요 →
+    헬퍼 패턴으로 결정 유보(나중에 saveImage.ts 1곳만 교체). 로그인 사용자는 클라우드 히스토리로 복구 가능
+  - [헬퍼] app/lib/saveImage.ts 신설 — 앱(Media 플러그인)/웹(기존 a.download) 분기.
+    window.Capacitor 전역 직접 호출(@capacitor/core 미설치 = 웹 번들 영향 0), 앨범 lazy 캐시,
+    http URL→프록시 fetch→dataURL 변환, 실패 시 실패 토스트(throw 금지), SSR 안전
+  - [파일럿] y2k 교체(f36ac4c) → 실기기 통과: 갤러리 저장 ✓ / fileName "y2k..." ✓ / 토스트 ✓
+  - [★벌크] 113곳 교체(bf8a101, 112파일 +231/−903): 변종A 43(perl 2-pass) + 변종B 65 + 수동
+    4곳(page.tsx 홈·히스토리 / upscale / Upscale4K silent+실패라벨). id-photo는 앵커 불일치로 수동.
+    게이트: a.download 잔존 0 · 성공토스트 잔존 0 · build 0
+  - [★조용한 실패 전면 해소] a.click() 직후 무조건 성공 토스트 구조 제거 → 결과 기반 토스트로 전환
+  - [.jpg 정리] upscale 2곳 .png→.jpg (신규 항목부터. 옛 히스토리 항목명 유지는 의도된 동작)
+  - [최종 실측 통과] 히스토리 옛 항목(http URL 경로) 저장 ✓ / 4K 대용량 저장 ✓ / 웹 회귀 ✓
+  - [부수 수리] 업스케일 결과 히스토리 미등록은 원래 없던 것(git 이력 확인, 오늘 작업 무관) →
+    addToHistory +2줄(475603a). Upscale4K 버튼은 중복 방지로 미추가 — 4K 원본 보존은 코인 Blob 과제 영역
+  - [실측 판정 2건] 공유 버튼: 웹뷰 navigator.share 파일 공유 미지원 → 링크 폴백으로 동작 중 →
+    백로그(@capacitor/share, 셸 재빌드 필요) / mailto 문의: 정상 동작
+- 다음에 할 것:
+  1. [★결정 8/14] 토스 33만원 — 재료 완성(로그인+저장 모두 실증, 2주차 1주 조기 완료)
+  2. 스토어 준비: Play Console 개인계정($25, 본인인증 며칠 소요 가능 — 조기 시작 권장) +
+     클로즈드 테스트 셋업 + AI 콘텐츠 신고 버튼(Play 요구)
+  3. [MJ 손] 테스터 12명 모집 (여전한 병목)
+  4. 셸 묶음 업데이트(다음 재빌드 때 한 번에): OS 스플래시 검정 배경 흰색화(안드12+ 테마) + @capacitor/share
+  5. 코인 시스템 설계(B) — 서버 원장 중심·수단 중립
+- 주의/메모:
+  - 저장 위치 정책(앱 삭제=사진 삭제 수용 여부) 결정 대기 — saveImage.ts 1곳 교체로 전환 가능
+  - server.url 프로덕션 비권장은 Ionic 공식 입장(주로 애플 4.7.1) — Play 정책 별도 조사 필요(5주 쓰기 전에)
+  - ★원격 모드 배포 흐름 확립: 웹 push → 앱 재시작만으로 반영(재설치 불필요). 단 새 플러그인은 셸 재빌드 필요
+  - CDP 검증 루트 확립: adb forward tcp:9222 localabstract:webview_devtools_remote_<PID> →
+    Runtime.evaluate(awaitPromise). chrome://inspect는 크롬 내장 adb가 시스템 adb와 충돌 —
+    "Discover USB devices" 끄고 시스템 adb만 쓸 것
+  - 고객센터 개선 아이디어(MJ): 메일보다 간편한 채널 → 카카오톡 채널 1:1이 한국 표준(비즈앱 전환 때 함께)
+
 ## 2026-07-15 — 신뢰 인프라 3종 + 상세페이지 73종 체제 + AI표시법 대응 + ★mospic.com 이전 + ★결제 전략 갈림길 (07-14 밤~15 통합)
 - 한 일:
   - [인프라] Gemini 안정화 — lib/gemini.ts 재시도 1회(429/500/502/503/504)+친화 에러 2종, route 109개 적용(파일럿 532c8af → 확산 a3cae57). validate-photo만 의도 제외
