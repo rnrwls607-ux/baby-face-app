@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { saveImage } from "../lib/saveImage";
+import { addToHistory } from "../lib/history";
 import { useBackClose } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -66,6 +67,7 @@ export default function UpscalePage() {
       if (!res.ok) throw new Error(data.error || "오류가 발생했어요.");
       if (!data.output?.[0]) throw new Error("결과를 받지 못했어요.");
       setResult(data.output[0]);
+      void addToHistory(data.output, "고화질 변환 (4K)");
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "오류가 발생했어요.");
     } finally {
