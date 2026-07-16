@@ -26,6 +26,23 @@
   - [원장 감사+새 규칙] MJ 계정 "충전 +15"를 coinlog ref(admin-test-topup)로 1분 추적 —
     병행 대화에서 MJ 지시로 로컬 .env.local KV 키 적립. ★로컬 KV 키=프로덕션 DB 직결 확인.
     새 규칙: 프로덕션 데이터 쓰기(Redis/Blob)는 push와 동일하게 사전 승인 후 실행
+  - [★스토어 계정 전략 확정] 조직(사업자) 계정 결정 — 개인 계정의 12명×14일 의무 면제
+    (구글 정책: 조직 계정 면제 확인). ★"테스터 12명 모집" 과제 의무 해제(자발 QA 3~5명은 선택).
+    DUNS 필수 → Apple 개발자 무료 발급(developer.apple.com/kr/support/D-U-N-S/, 범용이라
+    iOS 때 재사용) 1순위, 막히면 NICE디앤비(국내 공식, 수수료). ★영문 상호·주소 표기를 정해
+    기록 → 구글 결제 프로필과 글자 일치 필수(최다 실패 원인). 계정 유형 전환 불가 — 처음에 확정
+  - [원격 모드 정책 판정] Play 4.3 최소기능성: 순수 웹래퍼 반려, 네이티브 기능 얹은
+    Capacitor는 통과 분류 — 우리는 갤러리 저장·스플래시(+공유 예정)로 충족. ★웹뷰 안
+    웹결제로 디지털 상품 판매=밴 확인 → IAP 단일 결정 정책 재확인. 푸시 알림=보강 백로그
+  - [제출 준비도] targetSdk 36(요구 35 초과)/minSdk 24/versionCode 1/keystore 미생성
+    (Play App Signing+업로드 키 3중 백업 계획, git 금지)/AAB는 JAVA_HOME=AS JBR 지정으로
+    가능 판정. ★빠진 것 2: AI 신고 기능 0(결과화면 링크+설정 항목 구현안), 사업자 정보 표기 0
+    (설정 하단 블록, 통판번호 연동). privacy URL ✓ mospic.com/privacy
+  - [RevenueCat 스코핑] 미확인 2건 = Capacitor 8 호환 버전 / Plugins 전역 노출(셸 설치 후
+    CDP 1분 실측으로 판정). 서버 검증 1후보 = RevenueCat REST 조회(app_user_id=카카오 uid)
+  - DUNS 대기 1~4주 작업 큐: ①AI 신고 ②사업자 표기+통판 신고 ③업로드 키+AAB 시험 빌드
+    ④RevenueCat 셸 설치+실측 ⑤스토어 자산(스크린샷·512 아이콘·1024×500 피처·설명·
+    Data safety 초안). 테스터 모집 항목은 삭제
 - 다음에 할 것:
   1. 스토어 준비 착수: Play Console 계정($25, 본인인증 소요) + RevenueCat/Play Billing 스코핑
      (charge 어댑터 provider:"iap" 추가) + AI 신고 버튼 + 통신판매업 신고 요건 확인
