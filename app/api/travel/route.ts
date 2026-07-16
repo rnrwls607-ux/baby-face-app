@@ -11,128 +11,106 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — THE SINGLE MOST IMPORTANT RULE. The output must be so
-   recognizable that the person's close friends and family instantly say
-   "that's YOU — where did you travel to?!" with ZERO doubt. This is a
-   travel photo of THIS EXACT PERSON, not of someone similar.
-   Treat the clearest, most front-facing input photo as the single ground
-   truth for identity. Preserve with photographic precision:
-   - the exact face shape and width-to-length ratio, jawline and chin
-   - the exact eye size, eye shape, and eyelid type (double eyelid stays
-     double, monolid stays monolid — NEVER add or remove a crease)
-   - the exact eyebrow shape, thickness, and position
-   - the exact nose bridge width, tip shape, and nostril impression
-   - the exact philtrum length, lip shape and thickness
-   - the exact ears, hairline shape, and forehead proportion
-   - facial hair exactly as in the source (beard, stubble, mustache, or
-     clean-shaven — never added, never removed)
-   - the exact spacing between ALL features (eyes-to-eyes, eyes-to-brows,
-     nose-to-lips distances)
-   - natural asymmetries (slightly different eyes, uneven smile — these
-     make the person THEM; keep them)
-   - the apparent age and TRUE skin tone (the location's light may warm
-     the scene but must never change their actual tone)
-   The person should look like themselves on a genuinely good day —
-   well-rested, healthy glow, flattering natural light — NOT like a
-   beautified or idealized different person. Enhancing means better
-   LIGHT and MOOD on the SAME face, never a "prettier" face.
-   HARD LIMITS: no enlarging eyes, no slimming the jaw or face, no
-   raising the nose, no plumping lips, no smoothing away their real
-   facial character. Hair may move slightly in the breeze but the
-   hairstyle, hair length, and hair color stay exactly theirs.
+const RETOUCH_CORE = `You are the master retoucher and photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit before posting their travel photos. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
 
-EYEWEAR — EXACTLY ONE PAIR MAXIMUM (critical):
-- If the person wears glasses in the source photo: keep that EXACT same
-  pair on their face — same frame shape and color, rendered clear and
-  glare-free with the eyes fully visible through the lenses — and do NOT
-  add any other eyewear anywhere (no sunglasses on the head, no glasses
-  in hand, no second pair of any kind).
-- If they do NOT wear glasses in the source: do not add any glasses or
-  sunglasses at all.
-- Never render two pairs of eyewear on one person under any circumstance.
+Take the person in the photo(s) and create ONE stunning, fully-retouched travel pictorial portrait of them in the scene described below.
 
-SKIN & POLISH (make them look their absolute best — without changing who they are):
-- Clean, even, healthy skin: remove temporary blemishes (acne, pimples,
-  redness; soften under-eye darkness) while keeping permanent features
-  (dimples, eyelid type) and realistic skin texture — luminous and
-  smooth but never plastic, never blurred, never a filter look.
-- Treat shadows, contrast edges, lighting gradients, and compression
-  artifacts in the source photo as clean skin — never mistake them for
-  real marks.
-- Soften pores and fine wrinkles to about half strength — a lightly
-  retouched look that keeps the person's real age and texture, never
-  plastic and never younger.
-- MARKS: render AT MOST ONE mole in the entire face, and ONLY if it is
-  large and iconic in the source — smaller and fainter than the source.
-  Two or more marks are NEVER allowed. When in ANY doubt, render zero
-  marks: a face with no marks is always correct.
-- Well-groomed: a neat, flattering version of THEIR OWN hairstyle with
-  healthy shine (tidy, not messy), eyebrows groomed in their real shape.
-  Render the hair in its TRUE color under the scene's light — warm or
-  orange tints from the source lighting must never become the hair's
-  actual color.
-- The most flattering light on the face: soft, bright, even — no harsh
-  shadows across the face, no color cast on skin.
-- Photogenic expression: a relaxed, confident, natural smile that reads
-  well as a profile picture — warm and genuine, never an exaggerated
-  toothy grin; eyes open and engaged with the camera.
-The goal: "them on their absolute best day" — the SAME person, clearly
-at their best, through skin, grooming, light, and styling ONLY (the
-facial structure from the IDENTITY rule never moves).
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
 
-2. COMPOSITION — the output is ALWAYS a vertical CHEST-UP travel portrait — framed from the chest up so the FACE is LARGE in the frame — with the person as the clear HERO of the frame (sharpest, best-lit, largest element); the landscape is the softly blurred supporting stage. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Glasses are part of this person's identity — do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
-FACE DETAIL PRIORITY: the face is the largest, sharpest, most detailed
-element of the entire image — rendered at maximum detail. The scenery
-stays a softly blurred backdrop behind them. Scenery is the mood; the
-face is the subject — never let the landscape shrink the person.
-Render the face with its real three-dimensional contour from the source
-— never wider, flatter, or puffier than the source; cheek fullness and
-face width stay exactly as in the source photo.
-Portrait-lens perspective (~85mm) on the person — no wide-angle
-distortion that stretches, widens, or flattens the face.
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
 
-The input photos are a reference for IDENTITY ONLY (face and hairstyle) — ignore their framing, zoom, background, lighting, and clothing; the travel styling replaces them. Do NOT average the faces across photos; use the clearest, most front-facing photo as the single primary reference.
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
 
-MAKE IT A REAL TRAVEL SNAP (anti-composite rules):
-- The person is truly IN the scene: the location's ambient light wraps naturally around them (sunlight direction, sky bounce, warm reflections), with consistent shadows on the ground and matching color temperature between subject and background — never a studio-lit person pasted onto a backdrop.
-- Shot like a friend took it on a good camera: natural depth of field, a relaxed but composed, flattering pose — facing the camera, profile-picture worthy (a warm easy smile, hair neat and flattering — at most a hint of gentle breeze, never messy).
-- Travel-casual outfit that suits the person and the destination.
-- BACKGROUND HAS NO READABLE TEXT: avoid signboards, banners, and lettering entirely — keep the scenery architectural and natural (never render melted or fake letters).
-- PROFILE-READY: the face is the clear focus of the frame — well-lit, sharp, and flattering; steady clean composition that works directly as a profile picture.
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
 
-FINAL SELF-CHECK before output — do this rigorously:
-1) Place the output next to the source photo mentally. Same face shape?
-   Same eyes (size, shape, eyelid type)? Same nose? Same lips? Same
-   eyebrows? Same feature spacing? If ANY answer is "slightly different",
-   the result is WRONG — regenerate the face to match.
-2) Would this person's own mother recognize them instantly at first
-   glance? If there is any hesitation, the result is wrong.
-3) Does it look like a real travel snap (ambient light wrapping the
-   person, consistent shadows) rather than a composite? If not, fix the
-   light integration — but NEVER by altering the face.
-4) Do they look their absolute best (clean glowing skin, flattering
-   light, confident natural expression)? If they look tired, rough, or
-   unflattering, improve the skin, light, grooming, and pose — NEVER
-   the facial structure.
-5) Check the skin one more time: if the face shows two or more
-   spots/marks, or any acne or blemish, the result is wrong — the skin
-   must be clean.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup", soft natural straight brows, a coral or rosy gradient lip tint, delicate eye makeup.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, with soft natural movement as if touched by a gentle breeze (styled around the glasses naturally if they wear them).
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the warm, soft, flattering light of the scene described below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment.`;
+const FINISH_RULES = `POSE & FRAMING:
+- A natural, candid vacation pose with light, youthful energy: strolling toward the camera mid-smile, glancing back with a soft genuine smile, or leaning lightly against a wall or railing.
+- Vertical portrait, eye-level, roughly waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+
+CAMERA:
+- Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into creamy bokeh. Bright, warm, film-like color grade with clean whites. Photorealistic, high resolution.
+
+ABSOLUTELY AVOID (equally important):
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look: heavy dramatic makeup, dark bold lips, thick Western editorial brows, dated hairstyles. Never older than the input.
+- Plastic waxy skin, dead flat lighting, oversaturated HDR, muddy dark tones.
+- Crowds or other people, distorted hands, warped architecture.
+- Any text, letters, logos, watermark, or border.`;
 const TRAVEL_PROMPTS: Record<string, string> = {
-  jeju: `You are a travel snap photographer. Portray this person on a beautiful trip to Jeju Island:
-${BASE_RULE}
-Scene: a Jeju coastal path — low black basalt stone walls, emerald sea and soft horizon behind, green fields with gentle wind, bright clear daylight with a fresh breeze mood; outfit: light comfortable spring-summer travel wear in soft tones.`,
-  europe: `You are a travel snap photographer. Portray this person on a romantic trip through an old European town:
-${BASE_RULE}
-Scene: a charming cobblestone alley with pastel plastered buildings, wooden shutters, flower boxes, and warm late-afternoon golden light raking across the stone; outfit: effortless European-holiday chic (light knit or linen, tasteful and comfortable).`,
-  beach: `You are a travel snap photographer. Portray this person at a tropical resort beach:
-${BASE_RULE}
-Scene: powdery white sand, clear turquoise shallows, gentle waves and a few palm fronds entering the frame edge, brilliant vacation sunlight with a soft sea-breeze feel; outfit: breezy resort wear (light shirt or summer dress, tasteful), no sunglasses — the eyes stay fully visible.`,
-  citynight: `You are a travel snap photographer. Portray this person on a city night walk abroad:
-${BASE_RULE}
-Scene: a glowing evening street — warm bokeh of city lights and neon glow softly blurred behind (no readable signs), reflections on the pavement, cozy jacket weather; the warm ambient glow gently lighting one side of the face; outfit: smart-casual night-out travel look.`,
+  jeju: `${RETOUCH_CORE}
+
+THE SCENE — golden hour on the Jeju coast:
+- A dreamy Jeju island coastal walk at golden hour: an emerald-turquoise sea sparkling behind them, soft green grass and low volcanic stone walls along a sunlit path, a bright open sky.
+- Warm low sunlight, fresh sea-breeze atmosphere, cinematic depth — bright and airy, never dark or muddy.
+
+WARDROBE — trendy, youthful travel style:
+- Woman: a fresh flowing dress in white or a soft pastel tone, or a light knit-and-skirt set — airy and modern, the style young Korean women love for Jeju travel photos.
+- Man: a relaxed open-collar shirt or light knit in white or a soft tone with light trousers — clean and effortless.
+- Minimal tasteful accessories at most: a delicate necklace, small earrings, or a summer hat held casually. NO sunglasses anywhere in the frame.
+
+${FINISH_RULES}`,
+  europe: `${RETOUCH_CORE}
+
+THE SCENE — golden hour in a European coastal village:
+- A dreamy whitewashed coastal village at golden hour: sunlit white walls, the deep blue sea glittering on the horizon, a few softly blurred bougainvillea flowers for gentle color.
+- Warm low sunlight, glowing atmosphere, cinematic depth — bright and airy, never dark or muddy.
+
+WARDROBE — trendy, youthful resort style:
+- Woman: a fresh white or soft-toned sundress or chic light linen set — light, airy, modern, the style young Korean women love for travel photos.
+- Man: a relaxed open-collar linen shirt in white or a soft tone with light tailored trousers — clean and effortless.
+- Minimal tasteful accessories at most: a delicate necklace, small earrings, or a summer hat held casually. NO sunglasses anywhere in the frame.
+
+${FINISH_RULES}`,
+  beach: `${RETOUCH_CORE}
+
+THE SCENE — golden hour on a tropical beach:
+- A dreamy tropical beach at golden hour: powdery white sand, crystal-clear turquoise shallows glittering behind them, a few softly blurred palm fronds catching the warm light.
+- Warm low sunlight with a soft golden backlight glow, paradise-vacation atmosphere — bright and airy, never dark or muddy.
+
+WARDROBE — trendy, youthful beach-resort style:
+- Woman: an elegant flowing beach dress or a chic light resort set in white or a soft tone — airy, graceful, magazine-worthy (a tasteful vacation look, not swimwear).
+- Man: a breezy open-collar linen shirt in white or a soft tone with light shorts or trousers — clean and effortless.
+- Minimal tasteful accessories at most: a delicate necklace, small earrings, or a summer hat held casually. NO sunglasses anywhere in the frame.
+
+${FINISH_RULES}`,
+  citynight: `${RETOUCH_CORE}
+
+THE SCENE — magic-hour city night:
+- A glamorous city street at early blue hour: the sky still holding a deep twilight blue while warm street lamps, shop windows, and city lights melt into dreamy golden bokeh behind them.
+- CRITICAL LIGHTING: the person's face must stay BRIGHT and luminous — lit by a soft, warm, flattering key light as if standing near a glowing storefront, with a gentle warm rim light in the hair. Luminous glass skin against the twilight city; never murky, grainy, or harsh-flash-looking.
+
+WARDROBE — chic city-night style:
+- Woman: a chic modern evening-city look — an elegant dress or a stylish light-toned outfit that stays bright against the night, the style young Korean women love for city travel photos.
+- Man: a clean smart-casual evening look — a well-fitted shirt or light knit with tailored trousers, modern and effortless.
+- Minimal tasteful accessories at most: a delicate necklace or small earrings. NO sunglasses anywhere in the frame.
+
+${FINISH_RULES}`,
 };
 async function generateTravel(imageDataUrl: string, destination: string): Promise<string> {
   const img = parseImage(imageDataUrl);
