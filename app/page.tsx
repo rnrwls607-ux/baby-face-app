@@ -8,6 +8,7 @@ import { saveImage } from "./lib/saveImage";
 import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
+import CoinWallet from "./components/CoinWallet";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
   "눈 모양 만드는 중...",
@@ -564,7 +565,7 @@ export default function Home() {
   // ─── 하단 탭 (Mevu 스타일: 활성 탭 캡슐로 떠오름) ──────────────
   const tabs = [
     { id: "home" as Tab, Icon: Icon.Home, label: "홈" },
-    { id: "ticket" as Tab, Icon: Icon.Ticket, label: "이용권" },
+    { id: "ticket" as Tab, Icon: Icon.Ticket, label: "코인" },
     { id: "coupon" as Tab, Icon: Icon.Coupon, label: "쿠폰" },
     { id: "history" as Tab, Icon: Icon.History, label: "히스토리" },
   ];
@@ -941,8 +942,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     if (activeTab === "home" && showMakeScreen) return <MakeScreen />;
     if (activeTab === "home") return <HomeMain />;
     if (activeTab === "ticket") return (
-      // ✅ usageRemaining 사용 (bonus 포함된 실제 잔여 횟수)
-      <EmptyPage tabs={[`보유 ${usageRemaining}회`, "지난 이용권"]} emptyTitle="보유한 이용권이 없어요" emptyIcon="🎟️" />
+      <CoinWallet loggedIn={!!user} onLogin={handleLogin} />
     );
     if (activeTab === "coupon") return (
       <EmptyPage tabs={["내 쿠폰 0", "사용/만료 쿠폰"]} emptyTitle="보유한 쿠폰이 없어요" emptyIcon="🎫"
