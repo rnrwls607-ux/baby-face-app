@@ -334,7 +334,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "clay", title: "클레이 아트", subtitle: "점토로 빚은 우리", emoji: "🧱", accent: "#FFEFD6", badge: "NEW", tags: ["재미"], image: "/cards/clay.webp", go: "clay" },
       // { id: "goods", title: "굿즈 미리보기", subtitle: "나·우리 애가 아크릴 굿즈로", emoji: "🔑", accent: "#FFE9D6", badge: "NEW", tags: ["재미"], go: "goods" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
       { id: "luxe", title: "럭셔리 매거진 화보", subtitle: "매거진 커버 속 나", emoji: "🖤", accent: "#E8EAED", badge: "NEW", tags: ["인생샷"], image: "/cards/luxe.webp", go: "luxe" },
-      // { id: "travel", title: "여행지 프로필", subtitle: "여행지 인생샷 한 장", emoji: "✈️", accent: "#E1ECFF", badge: "NEW", tags: ["인생샷"], go: "travel" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
+      { id: "travel", title: "여행지 프로필", subtitle: "여행지 인생샷 한 장", emoji: "✈️", accent: "#E1ECFF", badge: "NEW", tags: ["인생샷"], image: "/cards/travel.webp", go: "travel" },
       { id: "petcostume", title: "펫 코스튬", subtitle: "우리 애 옷 입혀보기", emoji: "🎀", accent: "#FFE0EC", badge: "NEW", tags: ["반려동물"], go: "petcostume" },
       { id: "couple", title: "커플 스튜디오 화보", subtitle: "둘이 함께, 스튜디오 화보", emoji: "💑", accent: "#FFE0EC", badge: "NEW", tags: ["커플"], go: "couple" },
       { id: "hanbokcouple", title: "웨딩 한복 커플", subtitle: "한복 입고 둘이 한 장", emoji: "👘", accent: "#FFF1E0", badge: "NEW", tags: ["커플"], go: "hanbokcouple" },
