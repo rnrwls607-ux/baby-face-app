@@ -400,6 +400,13 @@ export default function Home() {
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
   useBackClose(showMakeScreen, () => setShowMakeScreen(false));
+  // 충전 완료 복귀 (?tab=coin) → 코인 탭 열고 주소 정리
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("tab") === "coin") {
+      setActiveTab("ticket");
+      window.history.replaceState(null, "", "/");
+    }
+  }, []);
   // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
   const fetchUsage = useCallback(() => {
     fetch("/api/usage")
@@ -673,7 +680,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               </p>
             </div>
             {limitReached ? (
-              <button onClick={() => setShowPaymentSheet(true)} style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "8px 16px", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>이용권 구매</button>
+              null /* 이용권 구매 버튼 봉인 — 코인 충전 개통 시 코인 탭 유도로 교체 예정 */
             ) : (
               <div style={{ display: "flex", gap: 4 }}>
                 {Array.from({ length: FREE_LIMIT }).map((_, i) => (<div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < usageCount ? "#ddd" : "#FF4B7C" }} />))}
@@ -782,10 +789,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 </div>
               ))}
             </div>
-            <button onClick={() => setShowPaymentSheet(true)}
-              style={{ width: "100%", background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
-              이용권 구매하기
-            </button>
+            {/* 이용권 구매하기 버튼 봉인 — 코인 충전 개통 시 코인 탭 유도로 교체 예정 */}
           </div>
         )}
         {/* 성별 선택 */}

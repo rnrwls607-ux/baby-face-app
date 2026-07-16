@@ -47,6 +47,20 @@ export async function getBalance(uid: string): Promise<number> {
   return (await redis.get<number>(COIN_KEY(uid))) ?? 0;
 }
 
+// 충전 게이트: COIN_ADMIN_IDS(콤마 구분)에 있거나 COIN_CHARGE_OPEN==="true"면 허용
+export function chargeAllowed(uid: string): boolean {
+  const admins = (process.env.COIN_ADMIN_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
+  return admins.includes(uid) || process.env.COIN_CHARGE_OPEN === "true";
+}
+
+// 충전 적립: INCRBY + charge 로그, 새 잔액 반환 (멱등 확인은 호출부의 order: NX가 담당)
+export async function creditCoins(uid: string, coins: number, ref: string): Promise<number> {
+  if (!redis) return 0;
+  const balance = await redis.incrby(COIN_KEY(uid), coins);
+  await pushLog(uid, { type: "charge", amount: coins, ref, at: Date.now() });
+  return balance;
+}
+
 type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<Response>;
 
 export function withCoin(conceptKey: string, cost: number, handler: RouteHandler): RouteHandler {

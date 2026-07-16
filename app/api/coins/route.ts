@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { getUserId } from "../../lib/auth";
-import { ensureWelcome, getBalance } from "../../lib/coins";
+import { chargeAllowed, ensureWelcome, getBalance } from "../../lib/coins";
 
 export const runtime = "nodejs";
 
@@ -28,5 +28,5 @@ export async function GET(request: NextRequest) {
       .filter((item) => item && typeof item === "object");
   }
 
-  return NextResponse.json({ balance: await getBalance(uid), log });
+  return NextResponse.json({ balance: await getBalance(uid), log, canCharge: chargeAllowed(uid) });
 }

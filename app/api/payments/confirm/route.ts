@@ -17,6 +17,10 @@ function getUserId(request: NextRequest): string | null {
 }
 
 export async function POST(request: NextRequest) {
+  // ⛔ 410 봉인 (2026-07-17): 이용권(bonus) 체계는 코인으로 세대교체됨 — 충전은 /api/coins/charge.
+  // 봉인 시점 bonus 실보유자는 MJ 테스트 계정 1건뿐임을 Redis 전수 조회로 확인. 테스트 키 무료 적립 구멍 차단.
+  return NextResponse.json({ error: "이용권 판매가 종료됐어요. 코인 충전을 이용해주세요." }, { status: 410 });
+  /* ── 봉인된 옛 본문 (참고용 보존 — 코인 charge 어댑터에 이식됨) ──
   try {
     const { paymentKey, orderId, amount, productId } = await request.json();
 
@@ -88,4 +92,5 @@ export async function POST(request: NextRequest) {
     console.error("결제 처리 오류:", err);
     return NextResponse.json({ error: err.message || "결제 처리 중 오류가 발생했습니다." }, { status: 500 });
   }
+  ── 봉인 끝 ── */
 }

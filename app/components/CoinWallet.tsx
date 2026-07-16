@@ -1,7 +1,10 @@
 "use client";
-// 코인 지갑 (읽기 전용 1단계): 잔액 + 최근 내역 20건. 충전은 다음 단계에서 붙는다.
+// 코인 지갑: 잔액 + 최근 내역 20건 + 충전(서버 canCharge 판정 시에만 노출 — 토스 테스트 키 동안 관리자 전용).
 import { useEffect, useState } from "react";
 import { CONCEPTS } from "../lib/concepts";
+import { COIN_PRODUCT_LIST } from "../lib/products";
+
+const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
 type CoinLogEntry = { type: "welcome" | "charge" | "spend" | "refund"; amount: number; ref?: string; at: number };
 
@@ -29,6 +32,9 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState(0);
   const [log, setLog] = useState<CoinLogEntry[]>([]);
+  const [canCharge, setCanCharge] = useState(false);
+  const [showChargeSheet, setShowChargeSheet] = useState(false);
+  const [paying, setPaying] = useState<string | null>(null);
 
   useEffect(() => {
     if (!loggedIn) { setLoading(false); return; }
@@ -38,11 +44,37 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
         if (d) {
           setBalance(typeof d.balance === "number" ? d.balance : 0);
           setLog(Array.isArray(d.log) ? d.log : []);
+          setCanCharge(d.canCharge === true);
         }
       })
       .catch(() => { /* 표시 실패해도 화면은 유지 */ })
       .finally(() => setLoading(false));
   }, [loggedIn]);
+
+  const handleCharge = async (productId: string) => {
+    const product = COIN_PRODUCT_LIST.find((p) => p.id === productId);
+    if (!product) return;
+    setPaying(productId);
+    try {
+      const { loadTossPayments } = await import("@tosspayments/payment-sdk");
+      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
+      const orderId = "coin_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+      await tossPayments.requestPayment("카드", {
+        amount: product.price,
+        orderId,
+        orderName: "MOSPIC " + product.name,
+        successUrl: window.location.origin + "/payment/success?flow=coin&productId=" + productId,
+        failUrl: window.location.origin + "/payment/fail",
+      });
+    } catch (e: unknown) {
+      const err = e as { code?: string; message?: string };
+      if (err?.code !== "USER_CANCEL") {
+        alert("결제 중 오류가 발생했어요: " + (err?.message || ""));
+      }
+    } finally {
+      setPaying(null);
+    }
+  };
 
   return (
     <div style={{ background: "#fff", minHeight: "100vh" }}>
@@ -70,6 +102,12 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
               <p style={{ fontSize: 40, fontWeight: 900, color: "#191919", margin: 0, lineHeight: 1.1 }}>
                 🪙 <span style={{ color: "#FF4B7C" }}>{balance}</span>
               </p>
+              {canCharge && (
+                <button onClick={() => setShowChargeSheet(true)}
+                  style={{ marginTop: 14, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "10px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                  충전하기
+                </button>
+              )}
             </div>
             <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "24px 2px 10px" }}>최근 내역</p>
             {log.length === 0 ? (
@@ -94,6 +132,40 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
           </>
         )}
       </div>
+      {showChargeSheet && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 100, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowChargeSheet(false); }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
+          <div style={{ position: "relative", background: "#fff", borderRadius: "24px 24px 0 0", padding: "24px 20px 40px", maxWidth: 480, width: "100%", margin: "0 auto" }}>
+            <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
+            <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>코인 충전</p>
+            <p style={{ fontSize: 13, color: "#999", margin: "0 0 20px" }}>충전한 코인은 1년간 유효해요</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {COIN_PRODUCT_LIST.map((product) => (
+                <button key={product.id}
+                  onClick={() => { setShowChargeSheet(false); handleCharge(product.id); }}
+                  disabled={paying === product.id}
+                  style={{ width: "100%", background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, padding: "16px", display: "flex", alignItems: "center", cursor: "pointer", textAlign: "left", transition: "all .2s" }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                      <span style={{ fontSize: 11, background: product.tag === "베스트" ? "#FF4B7C" : "#111", color: "#fff", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
+                        {product.tag}
+                      </span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "#111" }}>{product.name}</span>
+                    </div>
+                    <p style={{ fontSize: 12, color: "#999", margin: 0 }}>코인당 {Math.round(product.price / product.coins).toLocaleString()}원</p>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <p style={{ fontSize: 17, fontWeight: 900, color: "#111", margin: 0 }}>
+                      {product.price.toLocaleString()}원
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
