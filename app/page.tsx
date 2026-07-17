@@ -9,6 +9,7 @@ import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
+import { aiReportMailto } from "./components/AiReportLink";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
   "눈 모양 만드는 중...",
@@ -1226,6 +1227,10 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               </button>
               <button onClick={() => { window.location.href = "mailto:rnrwls159@naver.com"; }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>고객센터</span>
+                <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
+              </button>
+              <button onClick={() => { window.location.href = aiReportMailto("설정"); }} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px", background: "none", border: "none", borderBottom: "1px solid #F2F3F5", cursor: "pointer" }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>AI 생성물 신고</span>
                 <span style={{ color: "#C2C6CE", fontSize: 18 }}>›</span>
               </button>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px" }}>
