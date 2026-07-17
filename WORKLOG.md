@@ -7,6 +7,17 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-17 (3차) — 레거시 1인 컨셉 대개편: 8종 공식 이식 + 7종 완전체 오픈 + bizprofile 은퇴
+- 한 일:
+  - [공식 이식] 14532d3(+441/−181): 단일 5종(lifeshot·bizprofile·idol·xmas·graduation) = hanbok CORE 문자단위 이식 / fashion = OUTFIT LOCK(의상 잠금) 전용 / hairstyle = FACE LOCK 라이트 공식(구조 보정 금지, 표면 폴리시만) / era = B방식 5블록(시대별 방화벽: joseon 쪽머리·gyeongseong 빈티지 늙음·retro 최강 방화벽·medieval 서양 글램·future 얼굴 어둠). CRLF 앵커 불일치 2건에서 die-먼저 설계 정상 작동
+  - [공정 개선] AI Studio 검증 = 킷 애프터 생산 통합 — 앱 API 비용 0 (코드 프롬프트와 검증팩 문자 일치가 전제)
+  - [킷 2라운드 발송] lifeshot·idol·era(5시대 그리드)·fashion(착장 비포 문법)·hairstyle(A형 유틸, 편차=기능)·graduation·xmas — bizprofile 킷은 은퇴로 폐기
+  - [bizprofile 은퇴] 40ed633: 홈 카드 주석 숨김. 사유 = 증명 20종·비즈 32종과 포지션 중복(발전시킨 라인의 전신). route·page·URL·씬 블록 보존 — 수요 확인 시 biz-headshot-* 변형 부활 가능
+  - [★7종 완전체 오픈] 5f730ac: webp 14개(38.5MB→4.4MB), image+detailImage 7종 첫 연결. xmas 즉시 오픈 결정(기라이브 컨셉 — 11월 드롭 연출 대신)
+  - [안경 규칙] GLASSES RULE 전 19컨셉 탑재 확인. 위험군 3종(idol=벗김 압력 최강·era 경성=시대 안경 교체·hairstyle=헤어라인 처리) 안경 비포 검증 예약 — glasses_테스트모델 프롬프트 발급됨
+- 다음에 할 것: 폰 검증(7종 + fashion 썸네일 선명도) → goods 프롬프트 실측(킷 전에) → 리디자인 9종 → 수능 응원(10월)
+- 주의/메모: 레거시 정렬 완료 — 앱 전체 "완전체 아니면 숨김"(숨김 = goods 미완성·bizprofile 은퇴, 성격 구분). 보정 공식 19컨셉 체제. CORE 기준 원본 = hanbok route(공식 수정 시 hanbok 수정 후 재이식). fashion 썸네일 원본 55KB 유독 작음 — 선명도 확인 필요
+
 ## 2026-07-17 (후반) — y2k·halloween 이식 + ★신규 8종 + 상세페이지 10종 오픈 (93종 체제, 숨김 goods 1종)
 - 한 일:
   - [y2k 이식] 82213a1: RETRO FIREWALL(복고는 스타일링만, 얼굴은 2026 한국 기준) + 플래시 RELIGHT(디카 직광, 배경 어둑) + 밤거리 네온 씬. 타임스탬프·저화질 금지 이중 방어
