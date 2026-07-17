@@ -33,6 +33,19 @@ export async function getCloudHistory(): Promise<CloudHistoryItem[]> {
   }
 }
 
+// 로그인 사용자의 클라우드 히스토리 개별 삭제 (실패해도 로컬 삭제는 이미 끝난 상태)
+export async function deleteCloudHistoryItem(id: string): Promise<void> {
+  try {
+    await fetch("/api/history/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  } catch {
+    /* 삭제 실패는 무시 */
+  }
+}
+
 // 로그인 사용자의 클라우드 히스토리 전체 삭제 (비로그인이면 서버가 무시)
 export async function clearCloudHistory(): Promise<void> {
   try {
@@ -112,6 +125,21 @@ export async function addToHistory(srcs: string[], concept: string): Promise<num
     }
     return count;
   } catch { return 0; }
+}
+
+// 로컬(IndexedDB) 개별 삭제 — 해당 id가 없어도 조용히 통과 (멱등)
+export async function deleteHistoryItem(id: string): Promise<void> {
+  if (typeof window === "undefined" || !window.indexedDB) return;
+  try {
+    const db = await openDB();
+    await new Promise<void>((resolve) => {
+      const tx = db.transaction(STORE, "readwrite");
+      tx.objectStore(STORE).delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+      tx.onabort = () => resolve();
+    });
+  } catch { /* ignore */ }
 }
 
 export async function clearHistory(): Promise<void> {

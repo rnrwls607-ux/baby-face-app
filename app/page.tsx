@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
-import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, type HistoryItem } from "./lib/history";
+import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, deleteHistoryItem, deleteCloudHistoryItem, type HistoryItem } from "./lib/history";
 import { conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
 import { saveImage } from "./lib/saveImage";
@@ -1047,6 +1047,17 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <button onClick={() => { void shareImage(historyView.src, `mospic_${historyView.id}.jpg`, "MOSPIC에서 만든 사진이에요 · mospic.com"); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
+            </div>
+            <div style={{ marginTop: 10 }} onClick={e => e.stopPropagation()}>
+              <button onClick={async () => {
+                if (!window.confirm("이 사진을 삭제할까요? 되돌릴 수 없어요")) return;
+                const id = historyView.id;
+                await deleteHistoryItem(id);
+                if (user) await deleteCloudHistoryItem(id);
+                setHistory(h => h.filter(x => x.id !== id));
+                setHistoryView(null);
+                toast("삭제했어요");
+              }} style={{ background: "none", color: "#FF6B6B", border: "1px solid rgba(255,107,107,.55)", borderRadius: 12, padding: "10px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>삭제</button>
             </div>
           </div>
         )}
