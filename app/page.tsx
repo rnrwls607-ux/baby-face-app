@@ -408,6 +408,7 @@ export default function Home() {
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [bizInfoOpen, setBizInfoOpen] = useState(false);
   const [showAllConcepts, setShowAllConcepts] = useState(false);
   const [allConceptsCat, setAllConceptsCat] = useState("all");
   const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
@@ -1292,15 +1293,21 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               </button>
             )}
 
-            {/* 사업자 정보 (전자상거래 법정 표기) */}
+            {/* 사업자 정보 (전자상거래 법정 표기) — 접힘 기본, 탭으로 펼침 */}
             <div style={{ marginTop: 28, paddingTop: 16, paddingBottom: 8, borderTop: "1px solid #EFF0F3" }}>
-              <p style={{ fontSize: 11, color: "#BFC3CB", lineHeight: 1.9, margin: 0 }}>
-                퍼스트 컴퍼니 | 대표: 최민준<br />
-                사업자등록번호: 415-26-00922<br />
-                {/* 통신판매업신고번호: 제0000-대구달서-0000호 — 신고 완료 후 이 줄 활성화 (<br /> 포함) */}
-                대구광역시 달서구 성서로45길 29, 1층 8호 (갈산동)<br />
-                전화: 0507-1427-5058 | 이메일: rnrwls159@naver.com
-              </p>
+              <button onClick={() => setBizInfoOpen(o => !o)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: 0, cursor: "pointer" }}>
+                <span style={{ fontSize: 11, color: "#BFC3CB" }}>사업자 정보</span>
+                <span style={{ fontSize: 11, color: "#BFC3CB", transform: bizInfoOpen ? "rotate(180deg)" : "none" }}>˅</span>
+              </button>
+              {bizInfoOpen && (
+                <p style={{ fontSize: 11, color: "#BFC3CB", lineHeight: 1.9, margin: "8px 0 0" }}>
+                  퍼스트 컴퍼니 | 대표: 최민준<br />
+                  사업자등록번호: 415-26-00922<br />
+                  {/* 통신판매업신고번호: 제0000-대구달서-0000호 — 신고 완료 후 이 줄 활성화 (<br /> 포함) */}
+                  대구광역시 달서구 성서로45길 29, 1층 8호 (갈산동)<br />
+                  전화: 0507-1427-5058 | 이메일: rnrwls159@naver.com
+                </p>
+              )}
             </div>
           </div>
         </div>
