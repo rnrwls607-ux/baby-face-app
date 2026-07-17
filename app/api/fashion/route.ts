@@ -11,25 +11,47 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateFashion(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. THE PERSON AND THE OUTFIT ARE UNTOUCHABLE — same recognizable face, same body shape and proportions, same pose, and the EXACT same clothing: every garment, color, pattern, layer, shoe, and accessory must stay identical, like a photo-retouch. NEVER invent, add, swap, restyle, or replace any item. Do not slim, elongate, or reshape the body.
-2. COMPOSITION — keep the same framing and camera angle as the original photo so the full outfit remains visible exactly as shot. Only the background, lighting, and color grading change.
+  const prompt = `You are the master retoucher and fashion photographer of Seoul's most famous premium studio, shooting a brand lookbook. Transform this casual outfit photo into a polished fashion-lookbook editorial image — the outfit stays EXACTLY as it is; the person and the photo become their most stunning version.
 
-You are a professional fashion photographer shooting a brand lookbook. Transform this casual outfit photo into a polished fashion-lookbook editorial image.
+STEP 1 — Read the photo first:
+Note the person's gender, hair, skin tone, facial features, whether they are WEARING GLASSES — and every detail of their outfit and pose.
 
-PRESERVE (pixel-faithful intent):
-- The person: their recognizable face and identity — same face shape and proportions, same eye shape and eyelid type, same nose, mouth, and eyebrows, keeping natural asymmetries. Keep their TRUE skin tone (correct only the color cast from bad source lighting). Clean natural skin — do not invent moles or blemishes that are not in the source.
-- The outfit: every visible design detail — necklines, buttons, zippers, prints, logos, text on clothing (keep any lettering exactly as written), fabric type, fit, and how the clothes drape on the body. If a detail is unclear in the source, keep it neutral rather than inventing a new design.
-- The pose and body: same stance, same limb positions, same body shape.
+OUTFIT LOCK — the clothes are the product (highest priority):
+- Keep the EXACT same clothing: every garment, color, pattern, layer, shoe, and accessory must stay identical. Do NOT redesign, recolor, swap, add, or remove any item.
+- Keep the same pose and the same framing so the FULL outfit remains visible exactly as shot.
 
-LOOKBOOK TREATMENT (the only changes allowed):
-- Replace the messy or ordinary background with a clean editorial setting (studio seamless paper, minimal architectural wall, or softly blurred urban street) that complements the outfit's colors.
-- Professional fashion lighting: soft, flattering, with natural skin tones and rich, accurate fabric colors and textures — make the TRUE colors of the clothing look their best, never shift them to different colors.
-- Subtle magazine-grade color grading; crisp detail on the clothing; light cleanup of dust or wrinkles that are clearly accidental (keep intentional design creases and distressing).
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color, with clean clear lenses. Do NOT remove or swap them.
+- IF not wearing glasses: do not add glasses or sunglasses.
+- Never two pairs, never duplicated eyewear anywhere in the frame.
 
-FINAL SELF-CHECK before output: ① the owner of these clothes must be able to point at every item and say "yes, that's exactly my ○○"; ② the person must be instantly recognizable. If any garment changed design or color, the result is wrong.
+THE RETOUCH CONTRACT:
+- The result must be recognizable as the same person — friends know them instantly.
+- BUT this is a professionally RETOUCHED lookbook: visibly enhance the face and skin. Their reaction: "I look like a real model wearing my own clothes."
 
-Final look: photorealistic, high-resolution fashion lookbook photography. No text, no watermark, no border. Remember the two absolute rules: the person and outfit untouched, only the stage upgraded, in the original framing.`;
+FACE RETOUCHING (premium Korean studio standard, applied to the face only — never the outfit or body proportions):
+- A subtly smaller, more refined face: a soft elegant jawline, brighter subtly larger-looking eyes, a refined nose, lifted youthful contours — blended into ONE natural harmonious face, never warped.
+
+SKIN — flawless glass skin: poreless-smooth, even-toned, luminous with a dewy glow; blemishes, redness, and dark circles removed; alive and healthy, never plastic.
+
+BEAUTY DIRECTION — modern Korean, youthful: TODAY's young Korean celebrity aesthetic, subtly younger than the input, never older. Hair: their own hairstyle, polished and styled beautifully with natural movement — not a different cut.
+
+RELIGHT COMPLETELY:
+- Discard the original lighting. Re-light with professional fashion-editorial lighting: soft, flattering light on the face and rich, accurate light on the fabrics — true colors, crisp textile texture. The face always bright and luminous.
+
+THE SCENE — editorial backdrop swap:
+- Replace the messy or ordinary background with a clean editorial setting that complements the outfit: studio seamless paper in a flattering tone, a minimal architectural wall, or a softly blurred upscale street.
+
+FINAL LOOK:
+- Photorealistic, high-resolution brand-lookbook photography — magazine-grade color, crisp detail on the clothing, creamy background separation.
+
+ABSOLUTELY AVOID:
+- Changing, recoloring, or restyling ANY clothing item, shoe, or accessory; changing the pose or cropping the outfit.
+- Removing/adding/duplicating glasses. No sunglasses added.
+- A warped or uncanny face; making them unrecognizable; aging them.
+- Plastic waxy skin, murky lighting, oversaturated HDR.
+- Any readable text, letters, logos (beyond what is already printed on the actual clothing), watermark, or border.
+- Other people in the frame, distorted hands.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

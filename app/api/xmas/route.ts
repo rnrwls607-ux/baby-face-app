@@ -10,32 +10,69 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
+
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
+
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
+const SCENE = `THE SCENE — 크리스마스 화보 (cozy Christmas studio):
+- A beautifully decorated Christmas studio set: a glowing tree with warm fairy lights melting into soft golden bokeh, tastefully wrapped gifts, warm wooden tones, a gentle snow-like sparkle in the air — cozy and dreamy, never cluttered. All decorations completely TEXT-FREE: no letter banners, no readable characters anywhere.
+- Key light: a warm, soft, golden key light on the face blended with the fairy-light glow — the face bright, dewy, and radiant against the cozier, dimmer holiday backdrop; never murky or shadowed.
+
+WARDROBE — warm holiday charm:
+- Woman: a cozy, tasteful Christmas look — a soft knit sweater or an elegant winter dress in cream, deep red, or forest green; optionally a cute santa hat worn tilted back so the entire face stays visible.
+- Man: a warm clean holiday look — a soft knit or a neat shirt-and-sweater layer in deep winter tones; effortless and charming, never costume-cheap.
+
+POSE:
+- A warm, joyful holiday pose: a bright genuine smile toward the camera, softly holding a small wrapped gift, or leaning near the glowing tree with sparkling eyes.`;
+const FINISH = `FRAMING:
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+
+CAMERA:
+- Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
+
+ABSOLUTELY AVOID (equally important):
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the frame, distorted hands, warped architecture.
+- Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 async function generateXmas(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be instantly recognizable as the SAME person (or the SAME pet) as the input, side by side. Festive attire and the Christmas set are the transformation; the face — or the pet's face, breed, and markings — stays truly theirs. Never reshape facial features.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait as specified below, with the subject as the clear HERO of the frame. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition.
-
-You are a professional studio photographer shooting a warm Christmas portrait. Take the person (or pet) in this photo and create a cozy, festive Christmas studio portrait of them.
-
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for IDENTITY ONLY. Ignore their framing, zoom, background, lighting, and clothing completely.
-- Do NOT average across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true features.
-
-IDENTITY LOCK:
-- For a PERSON: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between all features. Keep natural asymmetries, the apparent age, and their TRUE skin tone (correct any color cast from the source lighting). Clean natural skin — do not invent moles or blemishes; light cozy grooming is welcome.
-- For a PET: the same breed, the same fur color and patterns, the same unique markings, the same eye color, the same face. The owner must instantly recognize their own pet.
-
-CHRISTMAS STYLING (the allowed transformation):
-- Dress them in cozy, tasteful Christmas attire that suits them (knit sweater, santa hat, scarf, or festive outfit — warm and charming, not costume-cheap). A santa hat must sit naturally without hiding the face: keep the hairline and face fully recognizable beneath it. For a pet, the outfit must fit naturally and look comfortable — never distorted anatomy, and the pet's face stays fully visible.
-- Background: a beautifully decorated Christmas studio set — Christmas tree with warm fairy lights, soft bokeh, wrapped gifts, warm wooden tones.
-- PROP BALANCE (important): the person/pet is the HERO and fills the frame as a portrait; the tree, lights, and gifts stay BEHIND and around them as a softly blurred backdrop. Props must never crowd, overlap, or outshine the subject.
-- Warm, soft, golden studio lighting; cozy and joyful holiday mood; natural happy expression.
-- Vertical upper-body portrait framing.
-
-FINAL SELF-CHECK before output: next to the source photo, a family member (or the pet's owner) must instantly say "same person / same pet — how festive!" If the subject is lost among the decorations or looks like someone else, the result is wrong.
-
-Final look: photorealistic, high-resolution holiday studio photography. No text, no watermark, no border. Remember the two absolute rules: the SAME subject, festive styling on top, hero of the SAME fixed composition.`;
+  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

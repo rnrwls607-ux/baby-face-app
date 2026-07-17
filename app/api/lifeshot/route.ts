@@ -10,37 +10,69 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
+
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
+
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
+const SCENE = `THE SCENE — 인생샷 프로필 (soft daylight portrait):
+- A bright, airy modern portrait setting: a clean studio backdrop in a soft warm tone, OR a softly blurred sunlit cafe window or quiet tree-lined street — chosen to flatter the person's coloring. Minimal, calm, premium.
+- Key light: soft, diffused natural daylight as if from a large window — the most flattering everyday light there is; the face bright, dewy, and dimensional with gentle soft shadows.
+
+WARDROBE — effortless daily chic:
+- Woman: a clean, trendy everyday look — a soft knit, a neat blouse, or a minimal dress in a tone that flatters her.
+- Man: a clean modern casual look — a soft knit or crisp shirt in a light or neutral tone, effortless and refined.
+
+POSE:
+- A natural, relaxed profile-picture pose: a soft gaze into the camera with a gentle smile, a light head tilt, or a candid glance — comfortable and genuine.`;
+const FINISH = `FRAMING:
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+
+CAMERA:
+- Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
+
+ABSOLUTELY AVOID (equally important):
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the frame, distorted hands, warped architecture.
+- Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 async function generateLifeshot(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. Make them look their absolute best through LIGHTING, GROOMING, and STYLING — never by reshaping facial features. "Them, on their best day," never a prettier different person.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait as specified below. The input photos' framing, zoom, crop, and angle have ZERO influence on the output composition — even an extreme close-up selfie comes out as the standard upper-body portrait.
-
-You are a high-end portrait photographer creating a trendy "lifeshot" profile photo. Take the person shown in the photo(s) and create a beautiful, natural, magazine-quality vertical portrait.
-
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for IDENTITY ONLY (face and hairstyle). Ignore their framing, zoom, background, lighting, and clothing completely.
-- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
-
-IDENTITY LOCK (highest priority — beauty comes from styling, never from changing the face):
-- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between all features. Keep natural asymmetries — they are part of the identity.
-- Do NOT enlarge eyes, slim the jaw, raise the nose, or shift facial proportions in any way.
-- Keep the apparent age and the person's TRUE skin tone (correct any color cast from the source lighting; the lighting color must never become the skin color).
-
-SKIN
-- Perfectly clean, smooth, healthy skin with a natural glow — treat shadows, contrast edges, and compression noise in the source as clean skin; do not invent moles, marks, or blemishes that are not there. Only a large, unmistakably real mole may remain, smaller and fainter. Soften pores and fine lines to about half strength — polished but real, never plastic.
-
-LIFESHOT STYLING (where the magic is allowed — go all in here):
-- Light, natural "no-makeup makeup" grooming that suits the person; neat, softly styled hair with natural shine (keep their own hairstyle and color, beautifully groomed).
-- Soft natural lighting, gentle film-like color grading, shallow depth of field with a softly blurred background.
-- Flattering but realistic; clean modern aesthetic like a Korean studio profile / SNS lifeshot.
-- Tasteful, effortlessly stylish casual outfit that suits the person.
-- Natural relaxed expression with an easy, warm micro-smile, looking toward camera.
-- Tasteful neutral background (studio paper, soft gradient, or softly blurred cafe/outdoor). Upper-body vertical framing.
-
-FINAL SELF-CHECK before output: next to the source photo, a family member must instantly say "same person — this is just a really good photo of them." If it reads as a different, prettier person, the result is wrong.
-
-Photorealistic, high resolution, no text, no watermark, no border. Remember the two absolute rules: the SAME face, beautified only through light and styling, inside the SAME fixed composition.`;
+  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

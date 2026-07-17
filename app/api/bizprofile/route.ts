@@ -10,21 +10,70 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
+
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
+
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
+const SCENE = `THE SCENE — 명함·링크드인 프로필 (clean professional headshot):
+- A premium corporate headshot setting: a clean seamless studio backdrop in soft light gray or a warm neutral tone with subtle depth — trustworthy, modern, international-standard.
+- Key light: bright, soft, even professional key light with a gentle fill — the face luminous, crisp, and approachable, with a subtle rim light for clean separation from the backdrop.
+
+WARDROBE — polished business:
+- Woman: a sharp modern business look — a tailored blazer over a neat top in navy, charcoal, or a soft light tone.
+- Man: a tailored suit jacket or a crisp dress shirt in navy or charcoal — clean, pressed, confident; tie optional and neat.
+
+POSE & FRAMING NOTE:
+- A confident, approachable headshot pose: squarely or slightly angled toward the camera, shoulders relaxed, a warm professional smile or a composed friendly expression.
+- Frame closer than a pictorial: head-and-shoulders to chest-up, the face large and clear — a premium LinkedIn profile photo.`;
+const FINISH = `FRAMING:
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+
+CAMERA:
+- Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
+
+ABSOLUTELY AVOID (equally important):
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the frame, distorted hands, warped architecture.
+- Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 async function generateBizprofile(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `You are a corporate headshot photographer creating a clean LinkedIn /
-business-card profile photo. Take the person in the photo(s) and create a
-professional, approachable upper-body portrait.
-CRITICAL — keep the exact same face and identity as the input: same facial
-features, do not turn them into a different person. Natural, subtle retouch
-only.
-Style:
-- Neat business-casual or suit attire appropriate for a professional profile.
-- Clean, evenly lit studio look; soft neutral background (light gray, soft
-  blue, or softly blurred office).
-- Confident, friendly, natural expression; looking at camera.
-- Vertical upper-body framing suitable for LinkedIn / resume / business card.
-Photorealistic, high resolution, no text, no watermark, no border.`;
+  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

@@ -12,31 +12,37 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateHairstyle(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — ONLY the hair changes. The face must remain EXACTLY the same person: this is a salon PREVIEW, so if the face changes even slightly, the preview becomes useless. No beautifying, no reshaping, no makeup changes — the person's real face under a new hairstyle.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait as specified below. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition — even an extreme close-up selfie comes out as the standard upper-body portrait.
+  const prompt = `You are the master visualization artist of Seoul's top hair salon — clients preview a new hairstyle on THEIR OWN face before committing at the salon. Take the person in the photo and show them with a fresh, trendy new hairstyle.
 
-You are a professional hair-salon visualization artist. Take the person in the photo(s) and show them with a fresh, trendy new hairstyle so they can preview a salon change before committing.
+FACE LOCK — the whole point of this preview (highest priority):
+- Keep the person's face EXACTLY as it is: same face shape, same jawline, same eyes, nose, and mouth, same facial proportions. Do NOT slim, enlarge, reshape, or structurally beautify the face in ANY way — they must be able to judge how this haircut suits THEIR real face.
+- ONLY the hair changes.
 
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for the FACE (identity) only. Ignore their framing, zoom, background, lighting, and clothing. The original hairstyle is replaced by this concept.
-- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
+SURFACE POLISH (allowed — structure untouched):
+- Clean, flattering skin: even-toned, fresh, blemish-free with a healthy natural glow — like a good-skin day. Keep believable real skin texture, never plastic.
+- Bright, well-rested eyes; healthy natural color. No structural change to any feature.
 
-FACE LOCK (highest priority — replicate, do not redesign):
-- Reproduce the face exactly as in the primary photo: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between all features. Keep natural asymmetries — they are part of the identity.
-- Keep the person's TRUE skin tone (correct any color cast from the source lighting; the lighting color must never become the skin color). Keep clean, natural skin — do not invent moles, marks, or blemishes that are not in the source; treat shadows, contrast edges, and compression noise as clean skin.
-- Keep the apparent age, expression character, glasses (if worn), and facial hair exactly as in the source.
+GLASSES RULE (check the input, then follow exactly):
+- IF wearing glasses: keep exactly ONE pair — their own frames, same shape and color, clean clear lenses. The new hair must be styled naturally around the glasses.
+- IF not wearing glasses: do not add any.
+- Never two pairs, never duplicated eyewear.
 
-THE NEW HAIR (the only transformation):
-- Apply a natural, fashionable hairstyle that suits this person's face shape (modern Korean salon style) — a style a real stylist would actually recommend for them.
-- Keep the hair realistic with natural texture, volume, and a believable hairline that matches the person's real hairline position; blend it naturally with the face and lighting. No wig-like edges, no floating hair.
-- Render the new hair in a realistic color that suits them (natural tones unless the source hair is already vividly colored).
+THE NEW HAIR — the star of this image:
+- A trendy, modern Korean salon hairstyle that genuinely suits this person's face shape and vibe — natural texture, realistic volume, and a believable hairline that blends seamlessly with their face and the lighting.
+- Render the hair in crisp realistic detail: natural strands, healthy shine, soft movement. It must look like real hair after a great salon visit — never a wig.
 
-Clean, even lighting; simple neutral background; vertical portrait framing, upper body. Photorealistic, high resolution, no text, no watermark, no border.
+RELIGHT — clean salon light:
+- Soft, even, flattering studio-like lighting on the face and hair; a simple clean neutral background so nothing distracts from the hairstyle.
 
-FINAL SELF-CHECK before output: cover the hair with your hand — the face alone must be instantly identifiable as this exact person. If not, the result is wrong.
+FRAMING:
+- Vertical portrait, head-and-shoulders, the full hairstyle visible including the ends. Photorealistic, high resolution.
 
-Remember the two absolute rules: the SAME face, ONLY the hair changed, inside the SAME fixed composition.`;
+ABSOLUTELY AVOID:
+- ANY change to face structure, proportions, or features; ANY slimming or reshaping.
+- A warped or unnatural hairline; wig-like or helmet-like hair; a dated style that ages them.
+- Removing/adding/duplicating glasses. No sunglasses.
+- Plastic skin, harsh lighting, busy backgrounds.
+- Any text, letters, watermark, or border. No other people.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();

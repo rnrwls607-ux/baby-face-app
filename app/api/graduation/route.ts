@@ -10,34 +10,69 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
+const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
+
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
+
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
+const SCENE = `THE SCENE — AI 졸업사진 (proud graduation studio):
+- A bright, elegant graduation studio: a clean soft backdrop in a light warm tone, OR a softly blurred sunlit campus scene — proud, hopeful, polished.
+- Key light: bright, soft, celebratory studio light — the face luminous and fresh, eyes bright with pride.
+
+WARDROBE — graduation day:
+- A classic graduation gown fitting naturally, with neat attire visible at the collar; holding a diploma scroll or a small bouquet below the chest line.
+- MORTARBOARD RULE (critical): the cap sits back on the head with the board angled UP so it NEVER shadows or covers the forehead, eyes, or any part of the face — the face stays fully lit and visible. Hair styled modern and youthful around the cap.
+
+POSE:
+- A proud, happy graduation pose: standing tall with the diploma or bouquet, a bright genuine smile — the photo parents frame on the wall.`;
+const FINISH = `FRAMING:
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+
+CAMERA:
+- Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
+
+ABSOLUTELY AVOID (equally important):
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the frame, distorted hands, warped architecture.
+- Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 async function generateGraduation(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. This is a graduation KEEPSAKE the family will frame — the face must be truly theirs. Enhance through grooming, lighting, and attire only; NEVER reshape facial features.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait as specified below. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition — even an extreme close-up selfie comes out as the standard upper-body portrait.
-
-You are a professional studio photographer shooting a graduation portrait. Take the person in this photo and create a proud, polished graduation photo of them.
-
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for IDENTITY ONLY (face and hairstyle). Ignore their framing, zoom, background, lighting, and clothing completely.
-- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
-
-IDENTITY LOCK (highest priority):
-- Reproduce the facial structure faithfully: the same face shape and width-to-length ratio, the same jaw and chin, the same cheek fullness, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing between all features. Keep natural asymmetries — they are part of the identity.
-- Keep the apparent age and the person's TRUE skin tone (correct any color cast from the source lighting; the lighting color must never become the skin color).
-- Clean, natural skin: treat shadows, contrast edges, and compression noise as clean skin; do not invent moles or blemishes. Light, natural grooming only — this is a keepsake, not a fashion editorial.
-
-GRADUATION STYLING:
-- Dress them in a CLASSIC, universal graduation gown and mortarboard cap — timeless black academic dress with a simple neutral stole or collar, fitting naturally, with neat attire visible underneath. Do NOT imitate any specific school's official gown, crest, or colors — keep it elegant and generic.
-- The mortarboard sits naturally on the head: keep their real hairline and hairstyle visible and natural beneath it — the face under the cap must remain 100% the same person.
-- They may hold a diploma scroll or a small bouquet — if hands are visible, render them naturally with the correct number of fingers; if a hand would look awkward, keep it relaxed and simple or out of frame.
-- Background: a clean graduation studio setting — soft neutral backdrop or a softly blurred campus scene with elegant, bright tones.
-- Clean, soft, professional studio lighting; proud, happy, natural expression.
-- Vertical upper-body portrait framing.
-
-FINAL SELF-CHECK before output: next to the source photo, a family member must instantly say "same person — look at them graduating!" If not, the result is wrong.
-
-Final look: photorealistic, high-resolution graduation studio photography. No text, no watermark, no border. Remember the two absolute rules: the SAME face under the cap, inside the SAME fixed composition.`;
+  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
