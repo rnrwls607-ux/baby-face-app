@@ -7,6 +7,23 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-18 (3차) — id-photo 폐기 + 릴리즈 서명·AAB 첫 빌드 + RevenueCat 실측 = ★기술 미확인 0
+- [id-photo 폐기] 3장화(5bc69cc) 직후 MJ 결정으로 컨셉 제거(cbf83d9) — 스타일드 증명
+  32종 단일 체계로 통일. 배선 6곳+고아 자산 5개 제거, 배너는 이미 스타일드 연결이라
+  재배선 0. 단가표 정정: 9코인 65종, 총 120 route
+- [업로드 키+AAB] (셸 449956e) keytool 업로드 키(CN=MOSPIC, RSA2048, ~2053) →
+  keystore.properties 분리+gitignore(*.jks) / build.gradle 조건부 서명 /
+  gradlew bundleRelease 성공 — app-release.aab 3.9MB, 서명 주체 검증 ✓.
+  ★MJ 3중 백업 완료(USB+개인 클라우드). ★함정 발견: "Hello G.BOX" 프로필 경로가
+  Java 루프백 소켓 생성까지 파괴 — _JAVA_OPTIONS로 temp를 C:/mospic-app/tmp로 우회
+- [RevenueCat] (셸 e34b4bb) purchases-capacitor 13.2.3(core>=8 요구, 8.4.2 호환 ✓)
+  설치 → CDP 실측: window.Capacitor.Plugins.Purchases 전역 노출 ✓(메서드 25종) →
+  셸 브리지 코드 불필요. IAP는 웹 lib/purchases.ts 헬퍼(관례: 전역 호출+지역 타입,
+  @capacitor 웹 미설치)만. configure/API 키는 DUNS·계정 개설 후
+- ★기술 미확인 리스크 0 — 남은 대기줄 = DUNS(MJ 손, 미착수)
+- 다음: 스토어 자산(피처 그래픽·리스팅 문구·Data safety 초안 = STORE-LISTING.md) /
+  402 충전 시트 UX / [MJ] DUNS 신청
+
 ## 2026-07-18 (2차) — ★코인 단가표 100% 확정 (MJ 검수 완료)
 - 단가 원칙: 코인 = 출력 장수 × 3 / 1코인 = 500원 정가 / 런칭 40% 할인
 - 3코인(1장, 정가 1,500·런칭 900) = 52종: 일반 50 + 홈 아기얼굴(generate — 구 FREE_LIMIT
