@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "soon";
+  start: "baby" | "idphoto" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "soon";
   tags?: string[];
   resultCount?: number;
   heroImage?: string;
@@ -288,6 +288,118 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "travel",
     detailImage: "/details/travel.webp",
+  },
+  hanbok: {
+    key: "hanbok",
+    title: "한복 화보",
+    subtitle: "고궁 노을빛, 기품 있는 나",
+    emoji: "🌸",
+    accent: "#FCE8EF",
+    description: "고궁 노을빛 아래 프리미엄 한복 화보를 만들어드려요. 헤어·조명까지 스튜디오급 보정으로, 기품 있는 나를 만나보세요.",
+    examples: [
+      { emoji: "🌸", accent: "#FCE8EF" },
+      { emoji: "🏯", accent: "#FFEFD6" },
+      { emoji: "🎀", accent: "#FFE0EC" },
+    ],
+    start: "hanbok",
+  },
+  retro90: {
+    key: "retro90",
+    title: "90년대 사진관",
+    subtitle: "그때 그 사진관 감성",
+    emoji: "📼",
+    accent: "#FFEFD6",
+    description: "90년대 사진관 감성 그대로 — 필름 색감과 캔버스 배경 앞에서 찍은 듯한 레트로 인생샷을 만들어드려요. 얼굴은 지금의 나로 예쁘게.",
+    examples: [
+      { emoji: "📼", accent: "#FFEFD6" },
+      { emoji: "📷", accent: "#E8EAED" },
+      { emoji: "🎞️", accent: "#DCEBFF" },
+    ],
+    start: "retro90",
+  },
+  hocance: {
+    key: "hocance",
+    title: "호캉스 화보",
+    subtitle: "5성급 풀사이드 바이브",
+    emoji: "🏝️",
+    accent: "#DCEBFF",
+    description: "5성급 호텔 풀사이드에서 찍은 듯한 호캉스 화보를 만들어드려요. 여름 햇살과 리조트 룩까지 완벽하게.",
+    examples: [
+      { emoji: "🏝️", accent: "#DCEBFF" },
+      { emoji: "🍹", accent: "#FFEFD6" },
+      { emoji: "☀️", accent: "#FFF1E0" },
+    ],
+    start: "hocance",
+  },
+  redcarpet: {
+    key: "redcarpet",
+    title: "레드카펫 화보",
+    subtitle: "오늘 밤의 주인공",
+    emoji: "✨",
+    accent: "#E8EAED",
+    description: "시상식 레드카펫 위 오늘 밤의 주인공이 되어보세요. 드레스·턱시도와 포토월 조명까지 스타처럼.",
+    examples: [
+      { emoji: "✨", accent: "#E8EAED" },
+      { emoji: "🏆", accent: "#FFEFD6" },
+      { emoji: "📸", accent: "#EFEAFF" },
+    ],
+    start: "redcarpet",
+  },
+  birthday: {
+    key: "birthday",
+    title: "생일 화보",
+    subtitle: "일 년 중 가장 빛나는 날",
+    emoji: "🎂",
+    accent: "#FFE0EC",
+    description: "일 년 중 가장 빛나는 날을 화보로 — 풍선과 케이크, 따뜻한 조명 속 생일 주인공 사진을 만들어드려요.",
+    examples: [
+      { emoji: "🎂", accent: "#FFE0EC" },
+      { emoji: "🎈", accent: "#DCEBFF" },
+      { emoji: "🎉", accent: "#FFEFD6" },
+    ],
+    start: "birthday",
+  },
+  job: {
+    key: "job",
+    title: "직업 변신",
+    subtitle: "파일럿·의사·CEO로 변신",
+    emoji: "💼",
+    accent: "#EFEAFF",
+    description: "파일럿·의사·CEO — 원하는 직업으로 변신한 프로페셔널 화보를 만들어드려요. 사진 한 장이면 충분해요.",
+    examples: [
+      { emoji: "✈️", accent: "#DCEBFF" },
+      { emoji: "🩺", accent: "#E7F7EA" },
+      { emoji: "🏙️", accent: "#E8EAED" },
+    ],
+    start: "job",
+  },
+  sporty: {
+    key: "sporty",
+    title: "스포티 화보",
+    subtitle: "테니스·골프 올드머니 룩",
+    emoji: "🎾",
+    accent: "#E7F7EA",
+    description: "테니스·골프 올드머니 룩의 스포티 화보를 만들어드려요. 코트와 필드의 햇살까지 그대로.",
+    examples: [
+      { emoji: "🎾", accent: "#E7F7EA" },
+      { emoji: "⛳", accent: "#DCEBFF" },
+      { emoji: "🏆", accent: "#FFEFD6" },
+    ],
+    start: "sporty",
+  },
+  flower: {
+    key: "flower",
+    title: "플라워 화보",
+    subtitle: "꽃에 둘러싸인 순간",
+    emoji: "💐",
+    accent: "#FCE8EF",
+    description: "꽃에 둘러싸인 순간 — 파스텔 블룸 가득한 플라워 스튜디오 화보를 만들어드려요.",
+    examples: [
+      { emoji: "💐", accent: "#FFE0EC" },
+      { emoji: "🌷", accent: "#FCE8EF" },
+      { emoji: "🌿", accent: "#E7F7EA" },
+    ],
+    start: "flower",
   },
   halloween: {
     key: "halloween",
@@ -1764,6 +1876,14 @@ export function conceptForGo(go: string): Concept {
   if (go === "luxe") return CONCEPTS.luxe;
   if (go === "homecafe") return CONCEPTS.homecafe;
   if (go === "travel") return CONCEPTS.travel;
+  if (go === "hanbok") return CONCEPTS.hanbok;
+  if (go === "retro90") return CONCEPTS.retro90;
+  if (go === "hocance") return CONCEPTS.hocance;
+  if (go === "redcarpet") return CONCEPTS.redcarpet;
+  if (go === "birthday") return CONCEPTS.birthday;
+  if (go === "job") return CONCEPTS.job;
+  if (go === "sporty") return CONCEPTS.sporty;
+  if (go === "flower") return CONCEPTS.flower;
   if (go === "halloween") return CONCEPTS.halloween;
   if (go === "goods") return CONCEPTS.goods;
   if (go === "bizprofile") return CONCEPTS.bizprofile;
