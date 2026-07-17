@@ -197,6 +197,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#FFE0EC" },
       { emoji: "🌸", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/lifeshot.webp",
     start: "lifeshot",
   },
   y2k: {
@@ -464,6 +465,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💁", accent: "#EFEAFF" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/hairstyle.webp",
     start: "hairstyle",
   },
   illust: {
@@ -1128,6 +1130,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "👟", accent: "#DCEBFF" },
       { emoji: "📸", accent: "#FFE0EC" },
     ],
+    detailImage: "/details/fashion.webp",
     start: "fashion",
   },
   idol: {
@@ -1142,6 +1145,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎤", accent: "#EFEAFF" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/idol.webp",
     start: "idol",
   },
   xmas: {
@@ -1156,6 +1160,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎁", accent: "#FFE0EC" },
       { emoji: "✨", accent: "#FFF1E0" },
     ],
+    detailImage: "/details/xmas.webp",
     start: "xmas",
   },
   graduation: {
@@ -1170,6 +1175,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "📜", accent: "#FFF1E0" },
       { emoji: "💐", accent: "#FFE0EC" },
     ],
+    detailImage: "/details/graduation.webp",
     start: "graduation",
   },
   wedding: {
@@ -1228,6 +1234,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎩", accent: "#FFF1E0" },
       { emoji: "🤖", accent: "#DCEBFF" },
     ],
+    detailImage: "/details/era.webp",
     start: "era",
   },
   petcostume: {
