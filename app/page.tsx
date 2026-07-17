@@ -260,7 +260,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], image: "/cards/interior.webp", go: "interior" },
       { id: "illust", title: "AI 일러스트", subtitle: "사진이 그림 한 장으로", emoji: "🎨", accent: "#EFEAFF", image: "/cards/illust.webp", badge: "NEW", tags: ["일러스트"], go: "illust" },
       { id: "lifeshot2", title: "인생샷 프로필", subtitle: "감성 프로필 한 장", emoji: "📸", accent: "#EFEAFF", badge: "NEW", tags: ["인생샷"], go: "lifeshot" },
-      { id: "bizprofile", title: "명함·링크드인 프로필", subtitle: "비즈니스 프로필", emoji: "💼", accent: "#DCEBFF", badge: "NEW", tags: ["비즈니스"], go: "bizprofile" },
+      // { id: "bizprofile", title: "명함·링크드인 프로필", subtitle: "비즈니스 프로필", emoji: "💼", accent: "#DCEBFF", badge: "NEW", tags: ["비즈니스"], go: "bizprofile" }, // 홈 노출 숨김 — 증명·비즈프로필 라인과 중복 (파일·URL 직접 접근은 유지)
       { id: "hairstyle", title: "헤어 체인지", subtitle: "미용실 가기 전", emoji: "💇", accent: "#FFE0EC", badge: "NEW", tags: ["헤어"], go: "hairstyle" },
       { id: "idskyblue", title: "하늘빛 블루 셔츠", subtitle: "맑고 산뜻한 첫인상", emoji: "📷", accent: "#EAF3FF", image: "/cards/idskyblue.webp", badge: "NEW", tags: ["증명사진"], go: "idskyblue" },
       { id: "biznavy", title: "네이비 정장 프로필", subtitle: "신뢰를 더하는 프로페셔널", emoji: "💼", accent: "#EAF3FF", image: "/cards/biznavy.webp", badge: "NEW", tags: ["비즈니스"], go: "biznavy" },
