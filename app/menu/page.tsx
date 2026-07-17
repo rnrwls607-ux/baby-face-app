@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
+import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -152,6 +153,7 @@ export default function MenuPage() {
             </div>
             <button onClick={handleShare}
               style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
+            <Upscale4K image={result} />
             <div style={{ background: "#fff", borderRadius: 18, padding: "18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
               <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "0 0 4px" }}>다른 스타일로 더 만들어볼까요?</p>
               <p style={{ fontSize: 12, color: "#9B9B9B", margin: "0 0 12px" }}>같은 사진으로 배경 스타일만 바꿔서 다시 만들어드려요.</p>

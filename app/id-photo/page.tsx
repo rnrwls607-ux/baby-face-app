@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
+import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
 // ── 디자인 토큰 (색·둥글기를 여기서 통제) ──
@@ -242,6 +243,7 @@ export default function IdPhotoPage() {
             </div>
             <button onClick={handleShare}
               style={{ width: "100%", marginTop: 10, background: UI.surface, color: UI.text, border: `1.5px solid ${UI.line}`, borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
+            <Upscale4K image={results[selected]} />
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>
               ※ AI 생성물로, 여권 등 공적 증명용으로는 사용할 수 없어요.
             </p>

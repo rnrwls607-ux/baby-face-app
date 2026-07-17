@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
+import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
@@ -184,6 +185,7 @@ export default function BizRibbonGrayPage() {
                     style={{ width: "100%", background: ACCENT, color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.3)" }}>이 사진 저장하기</button>
                   <button onClick={() => handleShare(url, idx)}
                     style={{ width: "100%", marginTop: 8, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
+                  <Upscale4K image={url} />
                 </div>
               ))}
             </div>
