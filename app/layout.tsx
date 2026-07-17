@@ -3,8 +3,21 @@ import "./globals.css";
 import Toast from "./components/Toast";
 
 export const metadata: Metadata = {
-  title: "MOSPIC",
-  description: "AI로 다양한 사진을 만들어보세요 — 아기 얼굴, 증명사진 등",
+  metadataBase: new URL("https://mospic.com"),
+  title: "MOSPIC — 셀카 한 장이, 작품이 되다",
+  description: "AI 프로필 · 증명사진 · 화보. 셀카 한 장으로 스튜디오급 사진을 만들어보세요.",
+  openGraph: {
+    title: "MOSPIC — 셀카 한 장이, 작품이 되다",
+    description: "AI 프로필 · 증명사진 · 화보. 셀카 한 장으로 스튜디오급 사진을 만들어보세요.",
+    url: "https://mospic.com",
+    siteName: "MOSPIC",
+    images: [{ url: "/og.png", width: 1200, height: 630 }],
+    locale: "ko_KR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
   manifest: "/manifest.json",
   icons: {
     icon: "/icon-192.png",
