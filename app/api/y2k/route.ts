@@ -12,31 +12,71 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 async function generateY2k(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must still be unmistakably the SAME person, fully transformed into early-2000s "Y2K high-teen" style. The goal is "them, as a teen-magazine pop star in 2002" — never a different person and never a generic Y2K model. Transform through MAKEUP, HAIR, FASHION, ACCESSORIES, and PHOTO MOOD at full strength; NEVER by reshaping the facial features themselves.
-2. COMPOSITION — the output is ALWAYS a vertical upper-body portrait. The input photo's framing, zoom, crop, and angle have ZERO influence on the output composition — even an extreme close-up selfie comes out as the standard upper-body portrait.
+  const prompt = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio, shooting a Y2K retro concept pictorial — the way today's top K-pop idols shoot their nostalgic "year 2000" concept photobooks: retro styling and retro camera mood, but the face held to TODAY's beauty standards. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
 
-You are a Y2K-era teen-magazine photographer and stylist. Take the person in this photo and shoot their "2000s high-teen pop star" pictorial — kitschy, glossy, and nostalgic.
+Take the person in the photo(s) and create ONE stunning, fully-retouched Y2K concept portrait of them.
 
-HOW TO USE THE INPUT PHOTOS
-- The inputs are a reference for IDENTITY ONLY (facial structure and features). Ignore their framing, zoom, background, lighting, clothing, and current grooming — the Y2K styling below replaces it.
-- Do NOT average the faces across photos. Treat the clearest, most front-facing photo as the single primary reference; use the others only to confirm the true shape and proportions of the same features.
+STEP 1 — Read the person first:
+Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
 
-IDENTITY FOUNDATION (styling is built ON TOP of this, never instead of it):
-- The same face shape and width-to-length ratio, the same jawline and chin, the same eye size/shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrow SHAPE and position (style the brows groomed and glossy, but never thin them into the "Y2K skinny brow" if that changes their real brow shape), and the same spacing between all features. Keep natural asymmetries and the apparent age.
-- HARD LIMITS: no enlarging eyes, no slimming the jaw, no raising the nose, no shifting proportions. Makeup creates the ILLUSION only.
-- TRUE skin tone (correct source color cast; never lighten or darken their actual tone).
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
-FULL Y2K STYLING (go all in — this is the product):
-- Makeup: glossy lip, shimmer/frosted eyeshadow, dewy highlighted skin, a few tiny rhinestone accents near the eyes — visible as playful makeup on clean skin.
-- Hair: a Y2K style that suits them — crimped strands, butterfly clips, tiny front braids, high pigtails or zigzag part for feminine looks; gelled spiky or curtain style for masculine looks. Restyling the hair IS encouraged; keep a natural hairline.
-- Fashion & props: early-2000s fashion (velour tracksuit, baby tee, denim-on-denim, cargo, chunky rhinestone jewelry, star/heart chokers). Tinted sunglasses may appear ONLY pushed up on the head or worn low on the nose — the EYES must stay fully visible. A classic flip phone or wired earbuds as a cute prop is welcome.
-- Set & photo mood: a kitschy 2000s studio backdrop (soft gradient with star/heart motifs, sticker-frame vibe using graphic shapes only — no letters or numbers), direct on-camera flash look, slightly saturated early-digital color grading with a hint of soft grain. IMPORTANT: apply the retro digicam vibe to COLOR and BACKGROUND only — the face itself stays sharp, clean, and fully recognizable, never blurred or degraded.
-- Expression: playful, confident pop-star attitude, engaging the camera.
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
 
-FINAL SELF-CHECK before output: friends must react "no way, is that YOU in 2002?!" — surprising (full Y2K transformation) AND instantly recognizable (same person). If it reads as a different person or a generic Y2K model, the result is wrong.
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes with crisp flash catchlights (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
 
-Photorealistic, high resolution, no text, no letters, no watermark, no border. Remember the two absolute rules: the SAME facial structure underneath, FULL Y2K styling on top, inside the SAME fixed composition.`;
+RETRO FIREWALL — Y2K the styling, NOT the face (CRITICAL):
+- The Y2K retro treatment applies ONLY to fashion, accessories, background, and camera mood.
+- The FACE is beautified to TODAY's young Korean celebrity standard — fresh, youthful, modern. They must look subtly YOUNGER than the input photo, never older.
+- Woman: modern dewy Korean makeup with only playful Y2K accents — glossy lips, a subtle shimmer on the eyelids or cheekbones. NEVER actual 2000s makeup: no thin plucked brows, no dark lip liner, no flat matte foundation, no heavy smoky eyes.
+- Man: clean modern K-drama actor grooming — neat natural brows, fresh clear skin, effortless. No dated styling on the face.
+- Hair: a trendy modern Korean hairstyle with a playful Y2K twist that suits them — soft layered waves with tiny claw clips or thin face-framing braids for a woman; a fresh modern cut with natural, softly tousled texture for a man. Never a dated 2000s haircut that ages them.
+
+SKIN — flawless glass skin under flash:
+- Poreless-smooth, even-toned, luminous glass skin — top-tier beauty retouching. Under the direct flash it must look glossy and dewy in the most flattering way: soft bright highlights on the cheekbones, nose bridge, and lips.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Never plastic, waxy, greasy-looking, or blown-out white.
+
+FLASH RELIGHT (this creates the Y2K digicam magic):
+- Discard the lighting of the original photo entirely. Re-light the person with a direct on-camera FLASH, as if shot on an early-2000s compact digital camera: the person bright, crisp, and glossy in the flash, with a soft flash shadow falling behind them; the background settling into a dimmer, moodier exposure.
+- The flash must FLATTER: bright, even light on the face, sparkling catchlights in the eyes, glossy highlights on the glass skin — never harsh, washed-out, or unflattering.
+
+THE SCENE — Y2K night flash snap:
+- A nostalgic city night: the person flash-lit against a softly blurred street glowing with colorful neon signs and city lights melting into bokeh — the "friend snapped this with a digicam on a fun night out" moment, but perfected.
+- The background stays dimmer and moodier than the flash-lit person, with a subtle cool blue-cyan night cast contrasting the bright flash on the subject — that authentic early-2000s digicam color feel.
+
+WARDROBE — Y2K fashion, worn like today's idols:
+- Woman: an iconic Y2K look styled the modern way — a baby tee or cropped cardigan with low-rise or straight denim, a pleated mini with a fitted zip-up, or a velour track set; playful chunky accessories (a beaded necklace or choker, a tiny shoulder bag, colorful hair clips). Cute and fashionable, never costume-cheap.
+- Man: 2000s street style worn clean — an oversized graphic tee or open short-sleeve shirt layered over a tee, baggy or straight-leg jeans, a chain necklace or a retro track jacket. Effortless, never sloppy.
+- NO sunglasses or tinted glasses anywhere in the frame.
+
+POSE & FRAMING:
+- A playful, candid Y2K snapshot pose with youthful energy: a peace sign near the face, a candid laugh, glancing back mid-moment, or a confident close-to-camera stance.
+- Vertical portrait, roughly chest-up to waist-up — the small refined flash-lit face clearly the hero of the frame.
+
+CAMERA — digicam MOOD, modern QUALITY:
+- The look of an early-2000s compact digital camera with direct flash: slightly punchy contrast, a whisper of fine film-like grain, a subtle vignette, nostalgic digicam color — but rendered CRISP and high-resolution, the person tack-sharp.
+- Never actually low-quality: no blur, no heavy noise, no pixelation, no motion smear.
+
+ABSOLUTELY AVOID (equally important):
+- Any dated 2000s face: thin plucked brows, dark lip liner, matte cakey foundation, heavy smoky eyes, or hairstyles that age them. They must NEVER look older than the input.
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- Plastic waxy skin, a blown-out overexposed face, harsh unflattering flash.
+- Actual low resolution, heavy grain, pixelation, or motion blur.
+- Timestamp or date stamp of any kind, any text, letters, logos, watermark, or border.
+- Crowds or other people in the frame, distorted hands, warped signage.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000);
   const t0 = Date.now();
