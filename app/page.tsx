@@ -9,7 +9,7 @@ import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
-import { aiReportMailto } from "./components/AiReportLink";
+import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
   "눈 모양 만드는 중...",
@@ -900,6 +900,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 </span>
               )}
             </div>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", marginBottom: 12 }}>
               <img src={results[selected]} style={{ width: "100%", display: "block" }} alt="AI 아기 얼굴" />
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 12, padding: "4px 10px", borderRadius: 20, fontWeight: 600 }}>
