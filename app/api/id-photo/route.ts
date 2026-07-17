@@ -7,7 +7,7 @@ export const maxDuration = 60;
 // 🔑 모델 격리 지점: 나중에 모델을 바꾸려면 이 두 줄과 generateOne 함수만 손대면 됨
 // 현재: Google Gemini "Nano Banana Pro"
 const GEMINI_MODEL = "gemini-3.1-flash-image"; // 빠름 (Pro는 50초 초과 위험)
-const NUM_OUTPUTS = 1; // 우선 1장 (응답 용량 안전 + Pro 품질 확인용). 나중에 늘릴 수 있음
+const NUM_OUTPUTS = 3; // 다른 증명 31종과 동일한 1회 3장 — 독립 병렬 3회 (연속 생성은 결과가 비슷해짐)
 // 📐 증명사진 규격 비율 (가로:세로 = 3.5 : 4.5). 여기 숫자만 바꾸면 비율 변경됨
 const RATIO_W = 3.5;
 const RATIO_H = 4.5;
