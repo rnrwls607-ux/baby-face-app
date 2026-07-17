@@ -1289,6 +1289,17 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 카카오 로그인
               </button>
             )}
+
+            {/* 사업자 정보 (전자상거래 법정 표기) */}
+            <div style={{ marginTop: 28, paddingTop: 16, paddingBottom: 8, borderTop: "1px solid #EFF0F3" }}>
+              <p style={{ fontSize: 11, color: "#BFC3CB", lineHeight: 1.9, margin: 0 }}>
+                퍼스트 컴퍼니 | 대표: 최민준<br />
+                사업자등록번호: 415-26-00922<br />
+                {/* 통신판매업신고번호: 제0000-대구달서-0000호 — 신고 완료 후 이 줄 활성화 (<br /> 포함) */}
+                대구광역시 달서구 성서로45길 29, 1층 8호 (갈산동)<br />
+                전화: 0507-1427-5058 | 이메일: rnrwls159@naver.com
+              </p>
+            </div>
           </div>
         </div>
       )}
