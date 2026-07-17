@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -68,6 +69,7 @@ export default function AgePage() {
     } finally { setLoading(false); }
   };
   const handleDownload = () => { void saveImage(result, "age.png"); };
+  const handleShare = () => { void shareImage(result, "age.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const chipStyle = (active: boolean) => ({
     flex: 1, padding: "13px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
     border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
@@ -134,6 +136,8 @@ export default function AgePage() {
               <button onClick={() => { setResult(""); setImage(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
             </div>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
           </div>
         )}
       </div>

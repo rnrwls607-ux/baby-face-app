@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
@@ -113,6 +114,7 @@ export default function BizManCharcoalPage() {
   };
 
   const handleDownload = (url: string, idx: number) => { void saveImage(url, `biz-man-charcoal-${idx + 1}.png`); };
+  const handleShare = (url: string, idx: number) => { void shareImage(url, `biz-man-charcoal-${idx + 1}.png`, "MOSPIC에서 만든 사진이에요 · mospic.com"); };
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
@@ -180,6 +182,8 @@ export default function BizManCharcoalPage() {
                   </div>
                   <button onClick={() => handleDownload(url, idx)}
                     style={{ width: "100%", background: "#3B5BA5", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(59,91,165,0.3)" }}>이 사진 저장하기</button>
+                  <button onClick={() => handleShare(url, idx)}
+                    style={{ width: "100%", marginTop: 8, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
                 </div>
               ))}
             </div>

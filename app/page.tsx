@@ -1037,6 +1037,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
               <button onClick={() => { void saveImage(historyView.src, `mospic_${historyView.id}.jpg`); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
+              <button onClick={() => { void shareImage(historyView.src, `mospic_${historyView.id}.jpg`, "MOSPIC에서 만든 사진이에요 · mospic.com"); }}
+                style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
             </div>
           </div>

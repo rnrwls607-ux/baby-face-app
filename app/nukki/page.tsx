@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -67,6 +68,7 @@ export default function NukkiPage() {
     } finally { setLoading(false); }
   };
   const handleDownload = () => { void saveImage(result, "nukki.png"); };
+  const handleShare = () => { void shareImage(result, "nukki.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const checker = {
     backgroundImage: "linear-gradient(45deg,#dfe2e7 25%,transparent 25%),linear-gradient(-45deg,#dfe2e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#dfe2e7 75%),linear-gradient(-45deg,transparent 75%,#dfe2e7 75%)",
     backgroundSize: "20px 20px",
@@ -127,6 +129,8 @@ export default function NukkiPage() {
               <button onClick={() => { setResult(""); setImage(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다른 사진</button>
             </div>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
           </div>
         )}
       </div>

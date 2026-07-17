@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
 const STYLE_KEY = "blueshirt";
@@ -76,6 +77,7 @@ export default function IdStylePage() {
     } finally { setLoading(false); }
   };
   const handleDownload = () => { void saveImage(result, "idphoto.png"); };
+  const handleShare = () => { void shareImage(result, "idphoto.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const canSubmit = faces.length >= MIN_FACES && !loading;
 
   return (
@@ -184,6 +186,8 @@ export default function IdStylePage() {
               <button onClick={() => { setResult(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
             </div>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
           </div>
         )}
       </div>

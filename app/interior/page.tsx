@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
@@ -78,6 +79,7 @@ export default function InteriorPage() {
     } finally { setLoading(false); }
   };
   const handleDownload = () => { void saveImage(result, "interior.png"); };
+  const handleShare = () => { void shareImage(result, "interior.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const chipStyle = (active: boolean) => ({
     padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
     border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
@@ -146,6 +148,8 @@ export default function InteriorPage() {
               <button onClick={() => { setResult(""); setImage(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>새 사진으로</button>
             </div>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
               <p style={{ fontSize: 13, fontWeight: 800, color: "#191919", margin: "0 0 12px" }}>다른 스타일로 더 만들어볼까요?</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 14 }}>

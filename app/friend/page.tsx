@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
 export default function FriendPage() {
@@ -64,6 +65,7 @@ export default function FriendPage() {
     } finally { setLoading(false); }
   };
   const handleDownload = () => { void saveImage(result, "friend.png"); };
+  const handleShare = () => { void shareImage(result, "friend.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const canSubmit = !!images[0] && !!images[1] && !loading;
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
@@ -125,6 +127,8 @@ export default function FriendPage() {
               <button onClick={() => { setResult(""); }}
                 style={{ flex: 1, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
             </div>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>※ 사진은 유지돼요. &quot;다시 만들기&quot;를 누르면 같은 사진으로 또 만들 수 있어요.</p>
           </div>
         )}

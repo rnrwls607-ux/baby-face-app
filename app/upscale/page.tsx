@@ -2,6 +2,7 @@
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { saveImage } from "../lib/saveImage";
+import { shareImage } from "../lib/shareImage";
 import { addToHistory } from "../lib/history";
 import { useBackClose } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
@@ -77,6 +78,7 @@ export default function UpscalePage() {
   };
 
   const handleDownload = () => { if (!result) return; void saveImage(result, "mospic_4k.jpg"); };
+  const handleShare = () => { if (!result) return; void shareImage(result, "mospic_4k.jpg", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff" }}>
@@ -129,6 +131,10 @@ export default function UpscalePage() {
             <button onClick={() => { setImage(""); setResult(""); setError(""); }}
               style={{ width: "100%", background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "13px 0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
               다른 사진 변환하기
+            </button>
+            <button onClick={handleShare}
+              style={{ width: "100%", marginTop: 10, background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "13px 0", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>
+              공유하기
             </button>
           </div>
         )}
