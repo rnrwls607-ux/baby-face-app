@@ -302,6 +302,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎀", accent: "#FFE0EC" },
     ],
     start: "hanbok",
+    detailImage: "/details/hanbok.webp",
   },
   retro90: {
     key: "retro90",
@@ -316,6 +317,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎞️", accent: "#DCEBFF" },
     ],
     start: "retro90",
+    detailImage: "/details/retro90.webp",
   },
   hocance: {
     key: "hocance",
@@ -330,6 +332,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "☀️", accent: "#FFF1E0" },
     ],
     start: "hocance",
+    detailImage: "/details/hocance.webp",
   },
   redcarpet: {
     key: "redcarpet",
@@ -344,6 +347,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "📸", accent: "#EFEAFF" },
     ],
     start: "redcarpet",
+    detailImage: "/details/redcarpet.webp",
   },
   birthday: {
     key: "birthday",
@@ -358,6 +362,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎉", accent: "#FFEFD6" },
     ],
     start: "birthday",
+    detailImage: "/details/birthday.webp",
   },
   job: {
     key: "job",
@@ -372,6 +377,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🏙️", accent: "#E8EAED" },
     ],
     start: "job",
+    detailImage: "/details/job.webp",
   },
   sporty: {
     key: "sporty",
@@ -386,6 +392,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🏆", accent: "#FFEFD6" },
     ],
     start: "sporty",
+    detailImage: "/details/sporty.webp",
   },
   flower: {
     key: "flower",
@@ -400,6 +407,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌿", accent: "#E7F7EA" },
     ],
     start: "flower",
+    detailImage: "/details/flower.webp",
   },
   halloween: {
     key: "halloween",
@@ -414,6 +422,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧚", accent: "#E7F7EA" },
     ],
     start: "halloween",
+    detailImage: "/details/halloween.webp",
   },
   goods: {
     key: "goods",
