@@ -6,6 +6,7 @@ import { conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
 import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
+import { getFavorites, toggleFavorite } from "./lib/favorites";
 import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
@@ -226,6 +227,7 @@ const GO_CATEGORIES: Record<string, string[]> = {
   fourcutcouple: ["fun", "family"],
 };
 const HOME_PILLS = [
+  { label: "⭐ 즐겨찾기", value: "favs" },
   { label: "전체", value: "all" },
   { label: "인기 🔥", value: "hot" },
   { label: "증명사진", value: "idcard" },
@@ -407,6 +409,8 @@ export default function Home() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
   const [detail, setDetail] = useState<Concept | null>(null);
+  const [favs, setFavs] = useState<string[]>([]);
+  useEffect(() => { setFavs(getFavorites()); }, []);
   const [showSettings, setShowSettings] = useState(false);
   const [bizInfoOpen, setBizInfoOpen] = useState(false);
   const [showAllConcepts, setShowAllConcepts] = useState(false);
@@ -609,7 +613,7 @@ export default function Home() {
   );
 // ─── 홈 메인 (Mevu 스타일 카탈로그) ──────────────────────────
   const HomeMain = () => {
-    const [pill, setPill] = useState(0);
+    const [pill, setPill] = useState(1); // 기본 "전체" (0번은 ⭐ 즐겨찾기)
     const [heroIdx, setHeroIdx] = useState(0);
     const heroRef = useRef<HTMLDivElement>(null);
  // 카드 탭 → 상세 페이지 열기
@@ -653,7 +657,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           })}
         </div>
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
-        {pill === 0 && (
+        {HOME_PILLS[pill].value === "all" && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
           {HOME_HERO.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
@@ -676,7 +680,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         </div>
         )}
         {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
-        {pill === 0 && HOME_HERO.length > 1 && (
+        {HOME_PILLS[pill].value === "all" && HOME_HERO.length > 1 && (
         <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
           {HOME_HERO.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
@@ -702,7 +706,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           </div>
         )}
         {/* 섹션들 — 전체(pill 0)는 기존 섹션 미리보기, 그 외 칩은 2열 그리드 */}
-        {pill === 0 ? HOME_SECTIONS.map(section => {
+        {HOME_PILLS[pill].value === "all" ? HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
           const cat = HOME_PILLS[pill].value;
           // "인기"는 badge가 BEST/NEW인 카드만, 나머지는 카테고리 매칭
@@ -756,12 +760,14 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           const cat = HOME_PILLS[pill].value;
           const list = cat === "hot"
             ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+            : cat === "favs"
+            ? all.filter(it => favs.includes(conceptForGo(it.go).key))
             : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
           if (list.length === 0) {
             return (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12 }}>
-                <span style={{ fontSize: 48, opacity: 0.15 }}>🪄</span>
-                <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0 }}>이 카테고리는 준비 중이에요</p>
+                <span style={{ fontSize: 48, opacity: 0.15 }}>{cat === "favs" ? "⭐" : "🪄"}</span>
+                <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0, textAlign: "center", lineHeight: 1.6, padding: "0 30px", whiteSpace: "pre-line" }}>{cat === "favs" ? "아직 즐겨찾기한 컨셉이 없어요.\n컨셉 상세에서 ⭐를 눌러 추가해보세요" : "이 카테고리는 준비 중이에요"}</p>
               </div>
             );
           }
@@ -1095,6 +1101,12 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {/* 헤더 */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", flexShrink: 0, position: "relative", zIndex: 2 }}>
               <button onClick={() => setDetail(null)} style={{ background: "rgba(255,255,255,0.9)", border: "none", width: 38, height: 38, borderRadius: "50%", fontSize: 22, cursor: "pointer", color: "#191919", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>‹</button>
+              {detail.key !== "soon" && (
+                <button onClick={() => { const added = toggleFavorite(detail.key); setFavs(getFavorites()); toast(added ? "즐겨찾기에 추가했어요" : "즐겨찾기에서 뺐어요"); }}
+                  style={{ marginLeft: "auto", background: "rgba(255,255,255,0.9)", border: "none", width: 40, height: 40, borderRadius: "50%", fontSize: 22, cursor: "pointer", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.06)", color: favs.includes(detail.key) ? "#FF4B7C" : "#D6D9DF" }}>
+                  {favs.includes(detail.key) ? "★" : "☆"}
+                </button>
+              )}
             </div>
 
             <div style={{ flex: 1, overflowY: "auto", marginTop: -58 }}>
@@ -1351,13 +1363,15 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 ? all
                 : cat === "hot"
                 ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+                : cat === "favs"
+                ? all.filter(it => favs.includes(conceptForGo(it.go).key))
                 : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
 
               if (list.length === 0) {
                 return (
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12 }}>
-                    <span style={{ fontSize: 48, opacity: 0.15 }}>🪄</span>
-                    <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0 }}>이 카테고리는 준비 중이에요</p>
+                    <span style={{ fontSize: 48, opacity: 0.15 }}>{cat === "favs" ? "⭐" : "🪄"}</span>
+                    <p style={{ fontSize: 14, color: "#9B9B9B", margin: 0, textAlign: "center", lineHeight: 1.6, padding: "0 30px", whiteSpace: "pre-line" }}>{cat === "favs" ? "아직 즐겨찾기한 컨셉이 없어요.\n컨셉 상세에서 ⭐를 눌러 추가해보세요" : "이 카테고리는 준비 중이에요"}</p>
                   </div>
                 );
               }
