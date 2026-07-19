@@ -12,6 +12,7 @@ import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import AdBanner from "../components/AdBanner";
 
 export default function NukkiPage() {
   const router = useRouter();
@@ -85,6 +86,7 @@ export default function NukkiPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && !loading && (
           <>
+            <AdBanner slot="nukki-upload" />
             <PreviewCard image="/details/nukki.webp" caption="배경 제거, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
@@ -116,6 +118,7 @@ export default function NukkiPage() {
         )}
         {result && (
           <div>
+            <AdBanner slot="nukki-result" />
             <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>

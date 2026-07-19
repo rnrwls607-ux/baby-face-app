@@ -10,6 +10,7 @@ import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
+import AdBanner from "../components/AdBanner";
 
 export default function UpscalePage() {
   const [image, setImage] = useState("");
@@ -90,6 +91,7 @@ export default function UpscalePage() {
       <div style={{ padding: "8px 20px 100px" }}>
         {!result && (
           <>
+            <AdBanner slot="upscale-upload" />
             <PreviewCard image="/details/upscale.webp" caption="고화질 변환, 미리 만나보세요" />
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
@@ -117,6 +119,7 @@ export default function UpscalePage() {
 
         {result && (
           <div style={{ marginTop: 8 }}>
+            <AdBanner slot="upscale-result" />
             <StepIndicator current={3} />
             <p style={{ fontSize: 16, fontWeight: 900, color: "#191919", margin: "0 0 10px", textAlign: "center" }}>✨ 4배 고화질로 변환됐어요!</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-4px 0 12px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
