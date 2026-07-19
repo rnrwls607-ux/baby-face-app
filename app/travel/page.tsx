@@ -89,7 +89,7 @@ export default function TravelPage() {
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
       const destLabel = DESTINATION_OPTIONS.find(o => o.key === destination)?.label || "여행지";
-      void addToHistory(data.output, `여행지 프로필 ${destLabel}`);
+      void addToHistory(data.output, `여행지 프로필 ${destLabel}`, Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

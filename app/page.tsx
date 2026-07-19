@@ -465,7 +465,7 @@ export default function Home() {
  const loadHistory = useCallback(async () => {
    if (user) {
      const cloud = await getCloudHistory();
-     setHistory(cloud.map(c => ({ id: c.id, src: c.url, concept: c.concept, createdAt: c.createdAt })));
+     setHistory(cloud.map(c => ({ id: c.id, src: c.url, concept: c.concept, createdAt: c.createdAt, originalUrl: c.originalUrl })));
    } else {
      setHistory(await getHistory());
    }
@@ -1042,6 +1042,10 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
               <button onClick={() => { void saveImage(historyView.src, `mospic_${historyView.id}.jpg`); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
+              {historyView.originalUrl && (
+                <button onClick={() => { void saveImage(historyView.originalUrl!, `mospic_${historyView.id}_original.png`); }}
+                  style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>원본 저장</button>
+              )}
               <button onClick={() => { void shareImage(historyView.src, `mospic_${historyView.id}.jpg`, "MOSPIC에서 만든 사진이에요 · mospic.com"); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>

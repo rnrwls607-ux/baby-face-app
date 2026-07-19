@@ -32,10 +32,12 @@ export async function POST(request: NextRequest) {
 
   let src: unknown;
   let concept: unknown;
+  let originalUrl: unknown;
   try {
     const body = await request.json();
     src = body.src;
     concept = body.concept;
+    originalUrl = body.originalUrl; // 유료 원본 Blob 주소 (옵션 — 없으면 기존 동작 그대로)
   } catch {
     return NextResponse.json({ saved: false });
   }
@@ -68,6 +70,7 @@ export async function POST(request: NextRequest) {
       url: blob.url,
       concept: typeof concept === "string" ? concept : "",
       createdAt: Date.now(),
+      ...(typeof originalUrl === "string" && originalUrl.startsWith("https://") ? { originalUrl } : {}),
     };
     await redis.lpush(key, item);
     await redis.ltrim(key, 0, MAX_ITEMS - 1);

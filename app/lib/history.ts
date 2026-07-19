@@ -1,20 +1,21 @@
 // 생성 결과를 브라우저(IndexedDB)에 안정적으로 저장하는 히스토리
-export type HistoryItem = { id: string; src: string; concept: string; createdAt: number };
+// originalUrl: 유료 생성물의 원본 Blob 주소 (표시=축소본·다운로드=원본 이원화)
+export type HistoryItem = { id: string; src: string; concept: string; createdAt: number; originalUrl?: string };
 
 // 로그인 사용자의 클라우드(Blob+Redis) 히스토리 항목
-export type CloudHistoryItem = { id: string; url: string; concept: string; createdAt: number };
+export type CloudHistoryItem = { id: string; url: string; concept: string; createdAt: number; originalUrl?: string };
 
 const DB_NAME = "photoAppDB";
 const STORE = "history";
 
 // 로그인 상태면 클라우드(Blob+Redis)에도 저장 시도.
 // 비로그인·오프라인·서버 미설정이면 서버가 조용히 무시하므로 기존 동작에 영향 없음.
-async function saveToCloud(src: string, concept: string): Promise<void> {
+async function saveToCloud(src: string, concept: string, originalUrl?: string): Promise<void> {
   try {
     await fetch("/api/history/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ src, concept }),
+      body: JSON.stringify({ src, concept, originalUrl }),
     });
   } catch {
     /* 저장 실패는 무시 (로컬 IndexedDB 저장은 이미 끝난 상태) */
@@ -100,7 +101,7 @@ export async function getHistory(): Promise<HistoryItem[]> {
   } catch { return []; }
 }
 
-export async function addToHistory(srcs: string[], concept: string): Promise<number> {
+export async function addToHistory(srcs: string[], concept: string, originalUrls?: string[]): Promise<number> {
   if (typeof window === "undefined" || !window.indexedDB || !srcs?.length) return 0;
   try {
     const db = await openDB();
@@ -111,6 +112,7 @@ export async function addToHistory(srcs: string[], concept: string): Promise<num
       const item: HistoryItem = {
         id: `${now}_${i}_${Math.random().toString(36).slice(2, 7)}`,
         src: small, concept, createdAt: now + i,
+        ...(originalUrls?.[i] ? { originalUrl: originalUrls[i] } : {}),
       };
       await new Promise<void>((resolve) => {
         const tx = db.transaction(STORE, "readwrite");
@@ -120,7 +122,7 @@ export async function addToHistory(srcs: string[], concept: string): Promise<num
         tx.onabort = () => resolve();
       });
       // 로컬 저장 후, 로그인 상태면 클라우드에도 저장 (실패해도 기존 동작 유지)
-      await saveToCloud(small, concept);
+      await saveToCloud(small, concept, originalUrls?.[i]);
       count++;
     }
     return count;
