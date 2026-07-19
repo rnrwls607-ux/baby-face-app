@@ -28,22 +28,28 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const items = await redis.lrange<{ url: string }>(`history:${userId}`, 0, -1);
+    const items = await redis.lrange<{ url: string; originalUrl?: string }>(`history:${userId}`, 0, -1);
     const urls = (Array.isArray(items) ? items : [])
-      .map((i) => i?.url)
+      .flatMap((i) => [i?.url, i?.originalUrl])
       .filter((u): u is string => typeof u === "string" && u.length > 0);
 
+    // 유료 원본 인덱스(originals:{uid})의 urls도 수집 — 히스토리 항목과 연결이 끊긴 원본까지 파기
+    const oItems = await redis.lrange<{ urls?: string[] }>(`originals:${userId}`, 0, -1);
+    const oUrls = (Array.isArray(oItems) ? oItems : []).flatMap((o) => (Array.isArray(o?.urls) ? o.urls : []));
+    const allUrls = [...new Set([...urls, ...oUrls])];
+
     // 1) Blob 파일 삭제 (실패해도 목록 삭제는 진행)
-    if (urls.length && process.env.BLOB_READ_WRITE_TOKEN) {
+    if (allUrls.length && process.env.BLOB_READ_WRITE_TOKEN) {
       try {
-        await del(urls);
+        await del(allUrls);
       } catch {
         /* Blob 삭제 실패는 무시 */
       }
     }
 
-    // 2) Redis 목록 삭제
+    // 2) Redis 목록 삭제 (히스토리 + 원본 인덱스)
     await redis.del(`history:${userId}`);
+    await redis.del(`originals:${userId}`);
 
     return NextResponse.json({ cleared: true });
   } catch {
