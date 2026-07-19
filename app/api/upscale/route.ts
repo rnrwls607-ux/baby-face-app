@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { AI_EXIF, AI_XMP } from "../../lib/aiMark";
+import { withDailyFree } from "../../lib/coins";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -19,7 +20,7 @@ async function getLatestVersion(token: string): Promise<string> {
   return v;
 }
 
-export async function POST(req: NextRequest) {
+async function handler(req: NextRequest) {
   try {
     const { image, scale } = await req.json();
     if (!image) return NextResponse.json({ error: "이미지가 없어요." }, { status: 400 });
@@ -108,3 +109,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
+export const POST = withDailyFree("upscale", 5, handler); // 무료+로그인+일 5회 KST (07-20 MJ 확정)

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stampAiMetadata } from "../../lib/aiMark";
+import { withDailyFree } from "../../lib/coins";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
@@ -18,7 +19,7 @@ async function getLatestVersion(token: string): Promise<string> {
   return v;
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -64,3 +65,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+export const POST = withDailyFree("nukki", 5, handler); // 무료+로그인+일 5회 KST (07-20 MJ 확정)

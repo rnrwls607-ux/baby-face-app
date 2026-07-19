@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, deleteHistoryItem, deleteCloudHistoryItem, type HistoryItem } from "./lib/history";
-import { conceptForGo, type Concept } from "./lib/concepts";
+import { CONCEPTS, conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
 import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
@@ -639,6 +639,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             {item.image ? <img src={item.image} alt={item.title} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
           </div>
           {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
+          {CONCEPTS[item.go]?.coinCost === 0 && <span style={{ position: "absolute", left: 10, top: 10, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>}
         </div>
         <p style={{ margin: "11px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
         <p style={{ margin: "0 2px", fontSize: 16, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
@@ -1406,6 +1407,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                           {item.image ? <img src={item.image} alt={item.title} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
                         </div>
                         {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
+          {CONCEPTS[item.go]?.coinCost === 0 && <span style={{ position: "absolute", left: 10, top: 10, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>}
                       </div>
                       <p style={{ margin: "10px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
                       <p style={{ margin: "0 2px", fontSize: 15, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>

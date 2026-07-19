@@ -104,7 +104,7 @@ export default function UpscalePage() {
             <PrivacyLine />
             <button onClick={handleRun} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `변환 중... (${elapsed}초)` : "고화질로 변환하기 ✨"}
+              {loading ? `변환 중... (${elapsed}초)` : <>고화질로 변환하기 ✨<span style={{ fontSize: 13, fontWeight: 700, opacity: 0.85 }}> · 무료 · 오늘 5회</span></>}
             </button>
           </>
         )}

@@ -80,6 +80,48 @@ export async function creditCoins(uid: string, coins: number, ref: string): Prom
 
 type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<Response>;
 
+// 무료+로그인+일 5회 KST (07-20 MJ 확정) — withCoin의 자매 래퍼: 로그인 강제·inflight 락(같은 키)은 공유,
+// 차감·원본 저장 경로는 타지 않는다. 용도: 0코인 셀링포인트 route(upscale·nukki)의 실비 누수 차단.
+export function withDailyFree(conceptKey: string, dailyLimit: number, handler: RouteHandler): RouteHandler {
+  return async (request: NextRequest, ...args: unknown[]): Promise<Response> => {
+    if (!redis) {
+      console.warn(`[coins] Redis 미설정 — ${conceptKey} 무료 한도 skip`);
+      return handler(request, ...args);
+    }
+
+    const uid = getUserId(request);
+    if (!uid) return NextResponse.json({ error: "로그인이 필요해요" }, { status: 401 });
+
+    await ensureWelcome(uid);
+
+    const locked = await redis.set(INFLIGHT_KEY(uid), 1, { nx: true, ex: 90 });
+    if (locked !== "OK") {
+      return NextResponse.json({ error: "진행 중인 생성이 끝나면 다시 시도해주세요" }, { status: 429 });
+    }
+
+    try {
+      // KST 날짜가 키에 박혀 자정 경계는 키 교체로 자동 리셋 (서버는 UTC — +9h 보정)
+      const kstDate = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
+      const key = `free:${conceptKey}:${uid}:${kstDate}`;
+      const used = await redis.incr(key); // INCR 선행 — 재시도 남발에도 안전
+      await redis.expire(key, 172800);
+      if (used > dailyLimit) {
+        return NextResponse.json(
+          { error: `오늘 무료 ${dailyLimit}회를 모두 사용했어요. 내일 0시에 다시 열려요.`, remaining: 0 },
+          { status: 429 }
+        );
+      }
+      return await handler(request, ...args);
+    } catch (e: unknown) {
+      const err = e as { message?: string };
+      console.error(`[coins] ${conceptKey} handler 오류:`, err?.message);
+      return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
+    } finally {
+      await redis.del(INFLIGHT_KEY(uid));
+    }
+  };
+}
+
 export function withCoin(conceptKey: string, cost: number, handler: RouteHandler): RouteHandler {
   return async (request: NextRequest, ...args: unknown[]): Promise<Response> => {
     if (!redis) {

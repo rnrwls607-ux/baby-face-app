@@ -99,7 +99,7 @@ export default function NukkiPage() {
 
             <button onClick={handleSubmit} disabled={!image}
               style={{ width: "100%", marginTop: 18, background: !image ? "#E8E9ED" : "#FF4B7C", color: !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: !image ? "not-allowed" : "pointer", boxShadow: !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              배경 지우기 ✨
+              배경 지우기 ✨<span style={{ fontSize: 13, fontWeight: 700, opacity: 0.85 }}> · 무료 · 오늘 5회</span>
             </button>
           </>
         )}
