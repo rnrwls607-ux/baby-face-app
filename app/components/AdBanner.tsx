@@ -6,17 +6,12 @@ export default function AdBanner({ slot }: { slot: string }) {
     <div
       data-ad-slot={slot}
       onClick={() => { window.location.href = "/"; }}
-      style={{ position: "relative", width: "100%", height: 76, borderRadius: 18, overflow: "hidden", cursor: "pointer", background: "linear-gradient(120deg, #191919 0%, #3A3A3A 100%)", marginBottom: 14 }}>
-      {/* 이미지 실패 시 display:none → 그라데이션 폴백 (텍스트 유지) */}
-      <img src="/hero/hero_biz.jpg" alt="" loading="lazy" decoding="async"
-        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 50%" }} />
-      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.38)" }} />
+      style={{ position: "relative", width: "100%", height: 76, borderRadius: 18, overflow: "hidden", cursor: "pointer", background: "#FAFAF8", border: "1px solid #EFF0F3", marginBottom: 14 }}>
       <div style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)" }}>
-        <p style={{ margin: 0, fontSize: 10.5, color: "rgba(255,255,255,0.85)", fontWeight: 700, letterSpacing: 1 }}>MOSPIC STUDIO</p>
-        <p style={{ margin: "3px 0 0", fontSize: 14.5, color: "#fff", fontWeight: 800 }}>사진관 안 가도, 사진관보다 잘 나오게.</p>
+        <p style={{ margin: 0, fontSize: 10.5, color: "#8A8F98", fontWeight: 700, letterSpacing: 1 }}>MOSPIC STUDIO</p>
+        <p style={{ margin: "3px 0 0", fontSize: 14.5, color: "#191919", fontWeight: 800 }}>사진관 안 가도, 사진관보다 잘 나오게.</p>
       </div>
-      <span style={{ position: "absolute", right: 8, top: 8, background: "rgba(0,0,0,0.35)", color: "rgba(255,255,255,0.8)", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 8 }}>AD</span>
+      <span style={{ position: "absolute", right: 8, top: 8, background: "rgba(0,0,0,0.06)", color: "#8A8F98", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 8 }}>AD</span>
     </div>
   );
 }
