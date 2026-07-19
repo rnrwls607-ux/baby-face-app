@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CONCEPTS } from "../lib/concepts";
 import { COIN_PRODUCT_LIST } from "../lib/products";
+import CoinIcon from "./CoinIcon";
 
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
@@ -13,6 +14,14 @@ const TYPE_LABEL: Record<CoinLogEntry["type"], string> = {
   spend: "사용",
   charge: "충전",
   refund: "반환",
+};
+
+// 내역 행 좌측 원형 아이콘칩 — 이모지 금지, 텍스트 글리프만 (충전↑핑크 / 사용↓회색 / 웰컴✦민트 / 반환↺회색)
+const TYPE_CHIP: Record<CoinLogEntry["type"], { bg: string; color: string; glyph: string }> = {
+  charge: { bg: "#FFF0F3", color: "#FF4B7C", glyph: "↑" },
+  spend: { bg: "#F3F4F6", color: "#8A8F98", glyph: "↓" },
+  welcome: { bg: "#E9F6F5", color: "#4FA8A2", glyph: "✦" },
+  refund: { bg: "#F3F4F6", color: "#8A8F98", glyph: "↺" },
 };
 
 function entryLabel(e: CoinLogEntry): string {
@@ -84,48 +93,54 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
       <div style={{ padding: "16px 16px 100px" }}>
         {!loggedIn ? (
           <div style={{ background: "#FFFBE6", border: "1px solid #FEE500", borderRadius: 18, padding: 24, textAlign: "center", marginTop: 8 }}>
-            <span style={{ fontSize: 40 }}>🪙</span>
+            <CoinIcon size={40} />
             <p style={{ fontWeight: 700, color: "#111", margin: "10px 0 12px", fontSize: 15 }}>로그인하고 웰컴 코인 3개 받기</p>
             <button onClick={onLogin} style={{ background: "#FEE500", border: "none", borderRadius: 24, padding: "10px 28px", fontWeight: 700, fontSize: 14, cursor: "pointer", color: "#111" }}>
               카카오로 시작하기
             </button>
           </div>
         ) : loading ? (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12 }}>
-            <span style={{ fontSize: 32, opacity: 0.3 }}>🪙</span>
-            <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>불러오는 중...</p>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: 300, gap: 12, opacity: 0.5 }}>
+            <CoinIcon size={32} />
+            <p style={{ fontSize: 13, color: "#8A8F98", margin: 0 }}>불러오는 중...</p>
           </div>
         ) : (
           <>
-            <div style={{ background: "#FFF5F8", border: "1px solid #FFE0EC", borderRadius: 18, padding: "24px 20px", textAlign: "center" }}>
-              <p style={{ fontSize: 13, color: "#999", margin: "0 0 6px", fontWeight: 600 }}>보유 코인</p>
-              <p style={{ fontSize: 40, fontWeight: 900, color: "#191919", margin: 0, lineHeight: 1.1 }}>
-                🪙 <span style={{ color: "#FF4B7C" }}>{balance}</span>
-              </p>
+            {/* 잔액 카드 — 흰 카드·정돈 톤, 핑크는 충전하기 버튼 한 곳만 */}
+            <div style={{ background: "#fff", border: "1px solid #EFF0F3", borderRadius: 18, padding: "16px 16px", display: "flex", alignItems: "center", gap: 12 }}>
+              <CoinIcon size={40} />
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 12, color: "#8A8F98", margin: "0 0 2px", fontWeight: 600 }}>내 코인</p>
+                <p style={{ fontSize: 30, fontWeight: 800, color: "#191919", margin: 0, lineHeight: 1.1 }}>{balance}</p>
+              </div>
               {/* 충전 입구는 전원 노출 — 결제 가능 여부는 시트 안에서 정직하게 안내 (canCharge) */}
               <button onClick={() => setShowChargeSheet(true)}
-                style={{ marginTop: 14, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "10px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "10px 24px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                 충전하기
               </button>
             </div>
-            <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "24px 2px 10px" }}>최근 내역</p>
+            <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "24px 2px 8px" }}>최근 내역</p>
             {log.length === 0 ? (
               <div style={{ textAlign: "center", padding: "40px 0" }}>
-                <p style={{ fontSize: 13, color: "#bbb", margin: 0 }}>아직 내역이 없어요</p>
+                <p style={{ fontSize: 13, color: "#8A8F98", margin: 0 }}>아직 내역이 없어요</p>
               </div>
             ) : (
-              <div style={{ background: "#fff", border: "1px solid #F0F0F0", borderRadius: 18, overflow: "hidden" }}>
-                {log.map((e, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderBottom: i < log.length - 1 ? "1px solid #F5F5F5" : "none" }}>
-                    <div>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: "#333", margin: 0 }}>{entryLabel(e)}</p>
-                      <p style={{ fontSize: 12, color: "#bbb", margin: "2px 0 0" }}>{formatDate(e.at)}</p>
+              <div style={{ background: "#fff", border: "1px solid #EFF0F3", borderRadius: 18, overflow: "hidden" }}>
+                {log.map((e, i) => {
+                  const chip = TYPE_CHIP[e.type] ?? TYPE_CHIP.spend;
+                  return (
+                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 16px", borderBottom: i < log.length - 1 ? "1px solid #F5F5F6" : "none" }}>
+                      <span style={{ width: 28, height: 28, borderRadius: "50%", background: chip.bg, color: chip.color, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 800, flexShrink: 0 }}>{chip.glyph}</span>
+                      <p style={{ flex: 1, fontSize: 14, fontWeight: 600, color: "#191919", margin: 0 }}>{entryLabel(e)}</p>
+                      <div style={{ textAlign: "right" }}>
+                        <p style={{ fontSize: 15, fontWeight: 800, color: e.amount > 0 ? "#FF4B7C" : "#8A8F98", margin: 0 }}>
+                          {e.amount > 0 ? `+${e.amount}` : `−${Math.abs(e.amount)}`}
+                        </p>
+                        <p style={{ fontSize: 11, color: "#B6BAC2", margin: "1px 0 0" }}>{formatDate(e.at)}</p>
+                      </div>
                     </div>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: e.amount > 0 ? "#FF4B7C" : "#666" }}>
-                      {e.amount > 0 ? `+${e.amount}` : `−${Math.abs(e.amount)}`}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </>

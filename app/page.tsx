@@ -11,6 +11,7 @@ import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
+import CoinIcon from "./components/CoinIcon";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -698,7 +699,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         {/* 코인 현황 카드 (무료체험 카드 교체 — usage API·FREE_LIMIT 로직은 무접촉, 스위치 날 폐기 예정) */}
         {!userLoading && !user && (
           <div style={{ margin: "16px 18px 0", background: "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}>🪙 로그인하면 웰컴 코인 3개를 드려요</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}><CoinIcon size={15} /> 로그인하면 웰컴 코인 3개를 드려요</p>
             <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 18, padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#111", whiteSpace: "nowrap" }}>카카오 로그인</button>
           </div>
         )}
@@ -706,7 +707,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           <button onClick={() => setActiveTab("ticket")} style={{ width: "calc(100% - 36px)", margin: "16px 18px 0", background: "#FFF5F8", border: "1px solid #FFE0EC", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
             <div style={{ textAlign: "left" }}>
               <p style={{ fontSize: 11, color: "#888", margin: "0 0 2px" }}>내 코인</p>
-              <p style={{ fontSize: 16, fontWeight: 800, color: "#191919", margin: 0 }}>🪙 <span style={{ color: "#FF4B7C" }}>{homeCoinBalance}</span></p>
+              <p style={{ fontSize: 16, fontWeight: 800, color: "#191919", margin: 0 }}><CoinIcon size={18} /> <span style={{ color: "#FF4B7C" }}>{homeCoinBalance}</span></p>
             </div>
             <span style={{ fontSize: 13, fontWeight: 700, color: "#FF4B7C" }}>충전·내역 ›</span>
           </button>
