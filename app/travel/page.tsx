@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
+import { openCoinSheet } from "../lib/coinSheet";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
@@ -66,6 +67,8 @@ export default function TravelPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지) — ★스위치 날 120곳 벌크 앵커 원형
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
