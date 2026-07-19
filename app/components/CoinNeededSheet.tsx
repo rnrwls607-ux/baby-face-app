@@ -92,7 +92,7 @@ export default function CoinNeededSheet() {
         </div>
         {!canCharge && (
           <div style={{ marginTop: 16, textAlign: "center" }}>
-            <p style={{ fontSize: 13, color: "#999", margin: "0 0 10px", fontWeight: 600 }}>충전은 곧 열릴 예정이에요</p>
+            <p style={{ fontSize: 13, color: "#999", margin: "0 0 10px", fontWeight: 600 }}>충전은 앱 정식 출시와 함께 열려요 🚀</p>
             <button onClick={() => { window.location.replace("/?tab=coin"); }}
               style={{ width: "100%", background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
               코인 지갑 보기

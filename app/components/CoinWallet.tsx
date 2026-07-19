@@ -102,12 +102,11 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
               <p style={{ fontSize: 40, fontWeight: 900, color: "#191919", margin: 0, lineHeight: 1.1 }}>
                 🪙 <span style={{ color: "#FF4B7C" }}>{balance}</span>
               </p>
-              {canCharge && (
-                <button onClick={() => setShowChargeSheet(true)}
-                  style={{ marginTop: 14, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "10px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
-                  충전하기
-                </button>
-              )}
+              {/* 충전 입구는 전원 노출 — 결제 가능 여부는 시트 안에서 정직하게 안내 (canCharge) */}
+              <button onClick={() => setShowChargeSheet(true)}
+                style={{ marginTop: 14, background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 20, padding: "10px 28px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                충전하기
+              </button>
             </div>
             <p style={{ fontSize: 14, fontWeight: 800, color: "#191919", margin: "24px 2px 10px" }}>최근 내역</p>
             {log.length === 0 ? (
@@ -144,9 +143,9 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {COIN_PRODUCT_LIST.map((product) => (
                 <button key={product.id}
-                  onClick={() => { setShowChargeSheet(false); handleCharge(product.id); }}
-                  disabled={paying === product.id}
-                  style={{ width: "100%", background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, padding: "16px", display: "flex", alignItems: "center", cursor: "pointer", textAlign: "left", transition: "all .2s" }}>
+                  onClick={() => { if (canCharge) { setShowChargeSheet(false); handleCharge(product.id); } }}
+                  disabled={!canCharge || paying === product.id}
+                  style={{ width: "100%", background: "#fff", border: "1.5px solid #F0F0F0", borderRadius: 16, padding: "16px", display: "flex", alignItems: "center", cursor: canCharge ? "pointer" : "default", textAlign: "left", transition: "all .2s", opacity: canCharge ? 1 : 0.55 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                       <span style={{ fontSize: 11, background: product.tag === "베스트" ? "#FF4B7C" : "#111", color: "#fff", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>
@@ -168,6 +167,9 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
                 </button>
               ))}
             </div>
+            {!canCharge && (
+              <p style={{ fontSize: 13, color: "#999", fontWeight: 600, textAlign: "center", margin: "16px 0 0" }}>충전은 앱 정식 출시와 함께 열려요 🚀</p>
+            )}
           </div>
         </div>
       )}

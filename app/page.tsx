@@ -421,6 +421,15 @@ export default function Home() {
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
   useBackClose(showMakeScreen, () => setShowMakeScreen(false));
+  // 홈 코인 현황 카드용 잔액 1회 캐시 (실패 시 null 유지 → 카드 숨김, 에러 미표출)
+  const [homeCoinBalance, setHomeCoinBalance] = useState<number | null>(null);
+  useEffect(() => {
+    if (!user) { setHomeCoinBalance(null); return; }
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setHomeCoinBalance(d.balance); })
+      .catch(() => { /* 실패 시 카드 숨김 */ });
+  }, [user]);
   // 충전 완료 복귀 (?tab=coin) → 코인 탭 열고 주소 정리
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("tab") === "coin") {
@@ -685,23 +694,21 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           ))}
         </div>
         )}
-        {/* 무료 횟수 (기존 기능 유지) */}
-        {user && (
-          <div style={{ margin: "16px 18px 0", background: limitReached ? "#FFF0F3" : "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <p style={{ fontSize: 11, color: limitReached ? "#FF4B7C" : "#888", margin: "0 0 2px" }}>무료 체험 현황</p>
-              <p style={{ fontSize: 14, fontWeight: 700, color: limitReached ? "#FF4B7C" : "#111", margin: 0 }}>
-                {limitReached ? "이용권이 필요해요" : `${usageRemaining}회 남았어요`}
-              </p>
-            </div>
-            {limitReached ? (
-              null /* 이용권 구매 버튼 봉인 — 코인 충전 개통 시 코인 탭 유도로 교체 예정 */
-            ) : (
-              <div style={{ display: "flex", gap: 4 }}>
-                {Array.from({ length: FREE_LIMIT }).map((_, i) => (<div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: i < usageCount ? "#ddd" : "#FF4B7C" }} />))}
-              </div>
-            )}
+        {/* 코인 현황 카드 (무료체험 카드 교체 — usage API·FREE_LIMIT 로직은 무접촉, 스위치 날 폐기 예정) */}
+        {!userLoading && !user && (
+          <div style={{ margin: "16px 18px 0", background: "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}>🪙 로그인하면 웰컴 코인 3개를 드려요</p>
+            <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 18, padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#111", whiteSpace: "nowrap" }}>카카오 로그인</button>
           </div>
+        )}
+        {user && homeCoinBalance !== null && (
+          <button onClick={() => setActiveTab("ticket")} style={{ width: "calc(100% - 36px)", margin: "16px 18px 0", background: "#FFF5F8", border: "1px solid #FFE0EC", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+            <div style={{ textAlign: "left" }}>
+              <p style={{ fontSize: 11, color: "#888", margin: "0 0 2px" }}>내 코인</p>
+              <p style={{ fontSize: 16, fontWeight: 800, color: "#191919", margin: 0 }}>🪙 <span style={{ color: "#FF4B7C" }}>{homeCoinBalance}</span></p>
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#FF4B7C" }}>충전·내역 ›</span>
+          </button>
         )}
         {/* 섹션들 — 전체(pill 0)는 기존 섹션 미리보기, 그 외 칩은 2열 그리드 */}
         {HOME_PILLS[pill].value === "all" ? HOME_SECTIONS.map(section => {
