@@ -1040,15 +1040,16 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           <div onClick={() => setHistoryView(null)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.85)", zIndex: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <img src={historyView.src} alt="" style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 14, objectFit: "contain" }} />
             <div style={{ display: "flex", gap: 10, marginTop: 18 }} onClick={e => e.stopPropagation()}>
-              <button onClick={() => { void saveImage(historyView.src, `mospic_${historyView.id}.jpg`); }}
+              {/* 저장·공유는 항상 최고 화질(원본 있으면 원본, 없으면 축소본) — "원본 저장" 별도 버튼 없음 */}
+              <button onClick={() => { const s = historyView.originalUrl ?? historyView.src; const ext = /\.png(\?|$)/.test(s) || s.startsWith("data:image/png") ? "png" : "jpg"; void saveImage(s, `mospic_${historyView.id}.${ext}`); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>저장하기</button>
-              {historyView.originalUrl && (
-                <button onClick={() => { void saveImage(historyView.originalUrl!, `mospic_${historyView.id}_original.png`); }}
-                  style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>원본 저장</button>
-              )}
-              <button onClick={() => { void shareImage(historyView.src, `mospic_${historyView.id}.jpg`, "MOSPIC에서 만든 사진이에요 · mospic.com"); }}
+              <button onClick={() => { const s = historyView.originalUrl ?? historyView.src; const ext = /\.png(\?|$)/.test(s) || s.startsWith("data:image/png") ? "png" : "jpg"; void shareImage(s, `mospic_${historyView.id}.${ext}`, "MOSPIC에서 만든 사진이에요 · mospic.com"); }}
                 style={{ background: "#fff", color: "#111", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>공유하기</button>
               <button onClick={() => setHistoryView(null)} style={{ background: "rgba(255,255,255,.2)", color: "#fff", border: "none", borderRadius: 12, padding: "12px 22px", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>닫기</button>
+            </div>
+            {/* 4K 업스케일 — 원본 있으면 원본 기준. 축소본(src) 입력이면 업스케일 품질에 한계가 있고, 투명 PNG는 JPEG 재인코딩 특성상 배경이 채워질 수 있음 */}
+            <div style={{ marginTop: 4, width: "100%", maxWidth: 360 }} onClick={e => e.stopPropagation()}>
+              <Upscale4K image={historyView.originalUrl ?? historyView.src} />
             </div>
             <div style={{ marginTop: 10 }} onClick={e => e.stopPropagation()}>
               <button onClick={async () => {
