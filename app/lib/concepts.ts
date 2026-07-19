@@ -9,6 +9,7 @@ export type Concept = {
   examples: ConceptExample[];
   start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "soon";
   tags?: string[];
+  coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   resultCount?: number;
   heroImage?: string;
   heroImages?: string[];
@@ -17,9 +18,13 @@ export type Concept = {
   inputRule?: "solo_face" | "multi_face" | "pet" | "none";
 };
 
+// 코인 게이트 라이브 컨셉 — 스위치 날 여기에 전체 키를 넣는 것으로 일괄 전환 (단일 지점)
+export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
+
 export const CONCEPTS: Record<string, Concept> = {
   baby: {
     key: "baby",
+    coinCost: 3,
     title: "우리 아기 얼굴은?",
     subtitle: "엄마·아빠 닮은 아기를 미리 만나요",
     emoji: "👶",
@@ -34,6 +39,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   voxel: {
     key: "voxel",
+    coinCost: 3,
     title: "복셀 아트",
     subtitle: "사진을 3D 블록 세상으로",
     emoji: "🧊",
@@ -50,6 +56,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   food: {
     key: "food",
+    coinCost: 3,
     title: "음식 사진 보정",
     subtitle: "메뉴판·광고용으로 변신",
     emoji: "🍽️",
@@ -65,6 +72,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   factory: {
     key: "factory",
+    coinCost: 3,
     title: "공장 리모델링",
     subtitle: "리모델링 후 모습 미리보기",
     emoji: "🏭",
@@ -80,6 +88,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   pet: {
     key: "pet",
+    coinCost: 3,
     title: "반려동물 증명사진",
     subtitle: "정장 입은 우리 아이",
     emoji: "🐶",
@@ -95,6 +104,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   product: {
     key: "product",
+    coinCost: 3,
     title: "상품 사진 보정",
     subtitle: "쇼핑몰·중고거래용 깔끔샷",
     emoji: "📦",
@@ -110,6 +120,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   restore: {
     key: "restore",
+    coinCost: 3,
     title: "옛날 사진 복원",
     subtitle: "빛바랜 추억을 선명하게",
     emoji: "🖼️",
@@ -125,6 +136,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   realestate: {
     key: "realestate",
+    coinCost: 3,
     title: "부동산 매물 정리",
     subtitle: "매물 사진 깔끔하게",
     emoji: "🏠",
@@ -140,6 +152,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   interior: {
     key: "interior",
+    coinCost: 3,
     title: "인테리어 비포/애프터",
     subtitle: "빈 방에 가구를 채워요",
     emoji: "🛋️",
@@ -155,6 +168,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   car: {
     key: "car",
+    coinCost: 3,
     title: "중고차 사진 보정",
     subtitle: "판매용 깔끔샷",
     emoji: "🚗",
@@ -170,6 +184,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   lifeshot: {
     key: "lifeshot",
+    coinCost: 3,
     title: "인생샷 프로필",
     subtitle: "감성 프로필 한 장",
     emoji: "📸",
@@ -185,6 +200,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   y2k: {
     key: "y2k",
+    coinCost: 3,
     title: "Y2K 하이틴",
     subtitle: "2000년대 하이틴 스타로",
     emoji: "🕹️",
@@ -200,6 +216,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   roman: {
     key: "roman",
+    coinCost: 3,
     title: "로판 웹툰 주인공",
     subtitle: "웹툰 표지 주인공으로",
     emoji: "👑",
@@ -215,6 +232,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   clay: {
     key: "clay",
+    coinCost: 3,
     title: "클레이 아트",
     subtitle: "점토로 빚은 우리",
     emoji: "🧱",
@@ -230,6 +248,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   luxe: {
     key: "luxe",
+    coinCost: 3,
     title: "럭셔리 매거진 화보",
     subtitle: "매거진 커버 속 나",
     emoji: "🖤",
@@ -245,6 +264,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   homecafe: {
     key: "homecafe",
+    coinCost: 3,
     title: "홈카페 감성 사진",
     subtitle: "인스타 감성 한 장",
     emoji: "☕",
@@ -260,6 +280,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   travel: {
     key: "travel",
+    coinCost: 3,
     title: "여행지 프로필",
     subtitle: "여행지 인생샷 한 장",
     emoji: "✈️",
@@ -275,6 +296,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   hanbok: {
     key: "hanbok",
+    coinCost: 3,
     title: "한복 화보",
     subtitle: "고궁 노을빛, 기품 있는 나",
     emoji: "🌸",
@@ -290,6 +312,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   retro90: {
     key: "retro90",
+    coinCost: 3,
     title: "90년대 사진관",
     subtitle: "그때 그 사진관 감성",
     emoji: "📼",
@@ -305,6 +328,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   hocance: {
     key: "hocance",
+    coinCost: 3,
     title: "호캉스 화보",
     subtitle: "5성급 풀사이드 바이브",
     emoji: "🏝️",
@@ -320,6 +344,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   redcarpet: {
     key: "redcarpet",
+    coinCost: 3,
     title: "레드카펫 화보",
     subtitle: "오늘 밤의 주인공",
     emoji: "✨",
@@ -335,6 +360,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   birthday: {
     key: "birthday",
+    coinCost: 3,
     title: "생일 화보",
     subtitle: "일 년 중 가장 빛나는 날",
     emoji: "🎂",
@@ -350,6 +376,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   job: {
     key: "job",
+    coinCost: 3,
     title: "직업 변신",
     subtitle: "파일럿·의사·CEO로 변신",
     emoji: "💼",
@@ -365,6 +392,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   sporty: {
     key: "sporty",
+    coinCost: 3,
     title: "스포티 화보",
     subtitle: "테니스·골프 올드머니 룩",
     emoji: "🎾",
@@ -380,6 +408,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   flower: {
     key: "flower",
+    coinCost: 3,
     title: "플라워 화보",
     subtitle: "꽃에 둘러싸인 순간",
     emoji: "💐",
@@ -395,6 +424,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   halloween: {
     key: "halloween",
+    coinCost: 3,
     title: "할로윈 변신",
     subtitle: "뱀파이어·마녀·요정으로",
     emoji: "🎃",
@@ -410,6 +440,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   goods: {
     key: "goods",
+    coinCost: 3,
     title: "굿즈 미리보기",
     subtitle: "나·우리 애가 아크릴 굿즈로",
     emoji: "🔑",
@@ -424,6 +455,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   bizprofile: {
     key: "bizprofile",
+    coinCost: 3,
     title: "명함·링크드인 프로필",
     subtitle: "비즈니스 프로필",
     emoji: "💼",
@@ -438,6 +470,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   hairstyle: {
     key: "hairstyle",
+    coinCost: 3,
     title: "헤어 체인지",
     subtitle: "미용실 가기 전 미리보기",
     emoji: "💇",
@@ -453,6 +486,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   illust: {
     key: "illust",
+    coinCost: 3,
     title: "AI 일러스트",
     subtitle: "사진이 그림 한 장으로",
     emoji: "🎨",
@@ -468,6 +502,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
    idskyblue: {
        key: "idskyblue",
+     coinCost: 9,
        title: "하늘빛 블루 셔츠",
        subtitle: "맑고 산뜻한 첫인상",
        emoji: "📷",
@@ -484,6 +519,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
        biznavy: {
        key: "biznavy",
+         coinCost: 9,
        title: "네이비 정장 프로필",
        subtitle: "신뢰를 더하는 프로페셔널",
        emoji: "💼",
@@ -500,6 +536,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmnavy: {
        key: "bizmnavy",
+       coinCost: 9,
        title: "남성 네이비 정장",
        subtitle: "믿음직한 프로페셔널",
        emoji: "💼",
@@ -516,6 +553,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmcharcoal: {
        key: "bizmcharcoal",
+       coinCost: 9,
        title: "남성 차콜 정장",
        subtitle: "비즈니스 스탠다드",
        emoji: "💼",
@@ -532,6 +570,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmblack: {
        key: "bizmblack",
+       coinCost: 9,
        title: "남성 블랙 정장",
        subtitle: "격식 있는 클래식",
        emoji: "🖤",
@@ -548,6 +587,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmlightgray: {
        key: "bizmlightgray",
+       coinCost: 9,
        title: "남성 라이트그레이 정장",
        subtitle: "밝고 부드러운 인상",
        emoji: "🤵",
@@ -564,6 +604,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmvest: {
        key: "bizmvest",
+       coinCost: 9,
        title: "남성 쓰리피스 (조끼)",
        subtitle: "무게감 있는 임원룩",
        emoji: "💼",
@@ -580,6 +621,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmbeige: {
        key: "bizmbeige",
+       coinCost: 9,
        title: "남성 베이지 정장",
        subtitle: "따뜻하고 친근한",
        emoji: "🧥",
@@ -596,6 +638,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmblazer: {
        key: "bizmblazer",
+       coinCost: 9,
        title: "남성 네이비 블레이저",
        subtitle: "노타이 비즈캐주얼",
        emoji: "🧥",
@@ -612,6 +655,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmturtle: {
        key: "bizmturtle",
+       coinCost: 9,
        title: "남성 블레이저 터틀넥",
        subtitle: "모던 미니멀",
        emoji: "⬛",
@@ -628,6 +672,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmdb: {
        key: "bizmdb",
+       coinCost: 9,
        title: "남성 더블브레스티드",
        subtitle: "존재감 있는 실루엣",
        emoji: "🤵",
@@ -644,6 +689,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizmknittie: {
        key: "bizmknittie",
+       coinCost: 9,
        title: "남성 니트타이 재킷",
        subtitle: "젊은 전문직 세미포멀",
        emoji: "👔",
@@ -660,6 +706,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
       bizblack: {
        key: "bizblack",
+        coinCost: 9,
        title: "블랙 정장 프로필",
        subtitle: "격식을 갖춘 클래식",
        emoji: "🖤",
@@ -676,6 +723,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizwhite: {
        key: "bizwhite",
+       coinCost: 9,
        title: "화이트 셔츠 프로필",
        subtitle: "편안하고 단정한 전문가",
        emoji: "🤍",
@@ -692,6 +740,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizribbon: {
        key: "bizribbon",
+       coinCost: 9,
        title: "리본 블라우스 프로필",
        subtitle: "우아하고 단정한 여성 프로필",
        emoji: "🎀",
@@ -708,6 +757,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizbeige: {
        key: "bizbeige",
+       coinCost: 9,
        title: "베이지 정장 프로필",
        subtitle: "부드럽고 따뜻한 전문가",
        emoji: "🤎",
@@ -724,6 +774,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizlavender: {
        key: "bizlavender",
+       coinCost: 9,
        title: "라벤더 정장 프로필",
        subtitle: "화사하고 부드러운 첫인상",
        emoji: "💜",
@@ -740,6 +791,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizgray: {
        key: "bizgray",
+       coinCost: 9,
        title: "그레이 정장 프로필",
        subtitle: "차분하고 전문적인 인상",
        emoji: "🩶",
@@ -756,6 +808,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizknit: {
        key: "bizknit",
+       coinCost: 9,
        title: "니트 가디건 프로필",
        subtitle: "친근하고 단정한 분위기",
        emoji: "🧶",
@@ -772,6 +825,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizchiffon: {
        key: "bizchiffon",
+       coinCost: 9,
        title: "쉬폰 블라우스 프로필",
        subtitle: "밝고 화사한 여성 프로필",
        emoji: "🌸",
@@ -788,6 +842,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizpinkjacket: {
        key: "bizpinkjacket",
+       coinCost: 9,
        title: "핑크 트위드 재킷 프로필",
        subtitle: "우아하고 화사한 셋업",
        emoji: "🌷",
@@ -804,6 +859,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizcreamdress: {
        key: "bizcreamdress",
+       coinCost: 9,
        title: "크림 원피스 프로필",
        subtitle: "은은하고 우아한 여성 프로필",
        emoji: "🎀",
@@ -820,6 +876,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      biznavyblouse: {
        key: "biznavyblouse",
+       coinCost: 9,
        title: "네이비 블라우스 프로필",
        subtitle: "단정하고 클래식한 조합",
        emoji: "💙",
@@ -836,6 +893,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizskyblouse: {
        key: "bizskyblouse",
+       coinCost: 9,
        title: "스카이블루 블라우스 프로필",
        subtitle: "맑고 산뜻한 첫인상",
        emoji: "🩵",
@@ -852,6 +910,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizpinktweed: {
        key: "bizpinktweed",
+       coinCost: 9,
        title: "핑크 트위드 원피스 프로필",
        subtitle: "격식 있는 우아한 원피스",
        emoji: "🌸",
@@ -868,6 +927,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizshirring: {
        key: "bizshirring",
+       coinCost: 9,
        title: "셔링 블라우스 프로필",
        subtitle: "우아하고 고급스러운 무드",
        emoji: "🎀",
@@ -884,6 +944,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizviolet: {
        key: "bizviolet",
+       coinCost: 9,
        title: "바이올렛 스커트 프로필",
        subtitle: "차분하고 세련된 분위기",
        emoji: "💜",
@@ -900,6 +961,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizblueskirt: {
        key: "bizblueskirt",
+       coinCost: 9,
        title: "블루 스커트 프로필",
        subtitle: "깨끗하고 산뜻한 느낌",
        emoji: "💙",
@@ -916,6 +978,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizburgundy: {
        key: "bizburgundy",
+       coinCost: 9,
        title: "버건디 슬랙스 프로필",
        subtitle: "자신감과 열정을 드러내는",
        emoji: "🍷",
@@ -932,6 +995,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizkhaki: {
        key: "bizkhaki",
+       coinCost: 9,
        title: "카키 수트 프로필",
        subtitle: "모던하고 세련된 무드",
        emoji: "🫒",
@@ -948,6 +1012,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizblackdress: {
        key: "bizblackdress",
+       coinCost: 9,
        title: "블랙 원피스 프로필",
        subtitle: "시크하고 세련된 무드",
        emoji: "🖤",
@@ -964,6 +1029,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizbluegray: {
        key: "bizbluegray",
+       coinCost: 9,
        title: "블루&그레이 미니원피스 프로필",
        subtitle: "발랄하고 산뜻한 인상",
        emoji: "💙",
@@ -980,6 +1046,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizpinstripe: {
        key: "bizpinstripe",
+       coinCost: 9,
        title: "핀스트라이프 수트 프로필",
        subtitle: "클래식하고 자신감 있는",
        emoji: "📏",
@@ -996,6 +1063,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizcheck: {
        key: "bizcheck",
+       coinCost: 9,
        title: "체크 블레이저 수트 프로필",
        subtitle: "우아하고 클래식한 패턴",
        emoji: "🏁",
@@ -1012,6 +1080,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
      bizknitdress: {
        key: "bizknitdress",
+       coinCost: 9,
        title: "카멜 니트 원피스 프로필",
        subtitle: "따뜻하면서 단정한 무드",
        emoji: "🐫",
@@ -1028,6 +1097,7 @@ export const CONCEPTS: Record<string, Concept> = {
      },
   figure: {
     key: "figure",
+    coinCost: 3,
     title: "미니어처 피규어",
     subtitle: "내 사진이 피규어로",
     emoji: "🧸",
@@ -1043,6 +1113,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   age: {
     key: "age",
+    coinCost: 3,
     title: "노년·베이비 변환",
     subtitle: "시간을 거슬러 보는 내 모습",
     emoji: "⏳",
@@ -1058,6 +1129,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   menu: {
     key: "menu",
+    coinCost: 3,
     title: "메뉴판 비주얼",
     subtitle: "메뉴판에 바로 쓰는 사진",
     emoji: "📋",
@@ -1073,6 +1145,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   nukki: {
     key: "nukki",
+    coinCost: 0,
     title: "배경 제거",
     subtitle: "누끼 따서 투명 PNG로",
     emoji: "✂️",
@@ -1088,6 +1161,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   upscale: {
     key: "upscale",
+    coinCost: 0,
     title: "고화질 변환",
     subtitle: "흐린 사진을 4배 또렷하게",
     emoji: "🔍",
@@ -1103,6 +1177,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   fashion: {
     key: "fashion",
+    coinCost: 3,
     title: "패션 룩북",
     subtitle: "오늘의 착장이 화보로",
     emoji: "👗",
@@ -1118,6 +1193,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idol: {
     key: "idol",
+    coinCost: 3,
     title: "아이돌 프로필",
     subtitle: "오늘 데뷔하는 내 프로필",
     emoji: "🌟",
@@ -1133,6 +1209,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   xmas: {
     key: "xmas",
+    coinCost: 3,
     title: "크리스마스 화보",
     subtitle: "따뜻한 연말 한 장",
     emoji: "🎄",
@@ -1148,6 +1225,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   graduation: {
     key: "graduation",
+    coinCost: 3,
     title: "AI 졸업사진",
     subtitle: "학사모 쓴 내 모습",
     emoji: "🎓",
@@ -1163,6 +1241,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   wedding: {
     key: "wedding",
+    coinCost: 3,
     title: "웨딩 화보",
     subtitle: "드레스·턱시도 입은 나",
     emoji: "💍",
@@ -1178,6 +1257,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petstudio: {
     key: "petstudio",
+    coinCost: 3,
     title: "펫 스튜디오 화보",
     subtitle: "우리 애기 화보 찍는 날",
     emoji: "🐶",
@@ -1193,6 +1273,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petreceipt: {
     key: "petreceipt",
+    coinCost: 3,
     title: "펫 관상 영수증",
     subtitle: "우리 애 관상, 영수증으로",
     emoji: "🧾",
@@ -1207,6 +1288,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   era: {
     key: "era",
+    coinCost: 3,
     title: "시대·복장 변신",
     subtitle: "다른 시대에 태어났다면?",
     emoji: "🕰️",
@@ -1222,6 +1304,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petcostume: {
     key: "petcostume",
+    coinCost: 3,
     title: "펫 코스튬",
     subtitle: "우리 애 옷 입혀보기",
     emoji: "🎀",
@@ -1236,6 +1319,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   couple: {
     key: "couple",
+    coinCost: 3,
     title: "커플 스튜디오 화보",
     subtitle: "둘이 함께, 스튜디오 화보",
     emoji: "💑",
@@ -1250,6 +1334,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   hanbokcouple: {
     key: "hanbokcouple",
+    coinCost: 3,
     title: "웨딩 한복 커플",
     subtitle: "한복 입고 둘이 한 장",
     emoji: "👘",
@@ -1264,6 +1349,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   friend: {
     key: "friend",
+    coinCost: 3,
     title: "우정 스냅",
     subtitle: "베프랑 같이 찍은 한 장",
     emoji: "👯",
@@ -1278,6 +1364,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   family: {
     key: "family",
+    coinCost: 3,
     title: "가족 스튜디오 화보",
     subtitle: "온 가족이 한 장에",
     emoji: "👨‍👩‍👧‍👦",
@@ -1292,6 +1379,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   familyhanbok: {
     key: "familyhanbok",
+    coinCost: 3,
     title: "한복 명절 가족사진",
     subtitle: "명절에 꺼내 쓰는 한 장",
     emoji: "🏮",
@@ -1306,6 +1394,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   familypet: {
     key: "familypet",
+    coinCost: 3,
     title: "반려동물과 가족사진",
     subtitle: "우리 애도 가족이니까",
     emoji: "🐾",
@@ -1320,6 +1409,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   fourcut: {
     key: "fourcut",
+    coinCost: 3,
     title: "인생네컷",
     subtitle: "나 혼자 네컷 한 장",
     emoji: "📸",
@@ -1334,6 +1424,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   fourcutillust: {
     key: "fourcutillust",
+    coinCost: 3,
     title: "인생네컷 (일러스트)",
     subtitle: "그림체 네컷 한 장",
     emoji: "🎨",
@@ -1348,6 +1439,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   fourcutcouple: {
     key: "fourcutcouple",
+    coinCost: 3,
     title: "커플 네컷",
     subtitle: "둘이 함께 네컷 한 장",
     emoji: "📸",
@@ -1362,6 +1454,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idblack: {
     key: "idblack",
+    coinCost: 9,
     title: "블랙 정장 증명사진",
     subtitle: "취업·이력서용 깔끔한 정석",
     emoji: "🖤",
@@ -1378,6 +1471,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idnavy: {
     key: "idnavy",
+    coinCost: 9,
     title: "네이비 정장 증명사진",
     subtitle: "신뢰감을 주는 면접용",
     emoji: "💙",
@@ -1394,6 +1488,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idcharcoal: {
     key: "idcharcoal",
+    coinCost: 9,
     title: "차콜그레이 정장 증명사진",
     subtitle: "차분하고 전문적인 인상",
     emoji: "🩶",
@@ -1410,6 +1505,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idwhiteshirt: {
     key: "idwhiteshirt",
+    coinCost: 9,
     title: "화이트셔츠 증명사진",
     subtitle: "깔끔한 학생증·사원증용",
     emoji: "🤍",
@@ -1426,6 +1522,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idbeige: {
     key: "idbeige",
+    coinCost: 9,
     title: "베이지 정장 증명사진",
     subtitle: "부드럽고 따뜻한 인상",
     emoji: "🧸",
@@ -1442,6 +1539,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idblacktie: {
     key: "idblacktie",
+    coinCost: 9,
     title: "블랙정장+넥타이 증명사진",
     subtitle: "격식을 갖춘 면접·서류용",
     emoji: "🤵",
@@ -1458,6 +1556,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idblouse: {
     key: "idblouse",
+    coinCost: 9,
     title: "아이보리 블라우스 증명사진",
     subtitle: "편안하고 단정한 여성 느낌",
     emoji: "🤍",
@@ -1474,6 +1573,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idknit: {
     key: "idknit",
+    coinCost: 9,
     title: "니트 가디건 증명사진",
     subtitle: "부드럽고 친근한 분위기",
     emoji: "🧶",
@@ -1490,6 +1590,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idturtleneck: {
     key: "idturtleneck",
+    coinCost: 9,
     title: "터틀넥 증명사진",
     subtitle: "모던하고 미니멀한 인상",
     emoji: "🖤",
@@ -1506,6 +1607,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idglasses: {
     key: "idglasses",
+    coinCost: 9,
     title: "정장+안경 증명사진",
     subtitle: "안경을 깔끔하게 살린 정장",
     emoji: "👓",
@@ -1522,6 +1624,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idoffshoulder: {
     key: "idoffshoulder",
+    coinCost: 9,
     title: "단발 오프숄더 증명사진",
     subtitle: "청초하고 자연스러운 무드",
     emoji: "💜",
@@ -1538,6 +1641,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idupdo: {
     key: "idupdo",
+    coinCost: 9,
     title: "올림머리 블라우스 증명사진",
     subtitle: "정돈된 이미지를 주는",
     emoji: "🤍",
@@ -1554,6 +1658,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idlonghair: {
     key: "idlonghair",
+    coinCost: 9,
     title: "긴머리 블라우스 증명사진",
     subtitle: "우아하고 자연스러운",
     emoji: "🌸",
@@ -1570,6 +1675,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idtweed: {
     key: "idtweed",
+    coinCost: 9,
     title: "반묶음 트위드 증명사진",
     subtitle: "포멀한 러블리 무드",
     emoji: "🎀",
@@ -1586,6 +1692,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idwavebob: {
     key: "idwavebob",
+    coinCost: 9,
     title: "물결 단발 증명사진",
     subtitle: "발랄하고 상큼한 C컬",
     emoji: "💛",
@@ -1602,6 +1709,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idponytail: {
     key: "idponytail",
+    coinCost: 9,
     title: "로우 포니테일 증명사진",
     subtitle: "깔끔하고 프로페셔널한",
     emoji: "💙",
@@ -1618,6 +1726,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idgarma: {
     key: "idgarma",
+    coinCost: 9,
     title: "가르마컷 블랙정장 증명사진",
     subtitle: "신뢰감 있는 첫인상",
     emoji: "🖤",
@@ -1634,6 +1743,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   iddropcut: {
     key: "iddropcut",
+    coinCost: 9,
     title: "드랍컷 블루셔츠 증명사진",
     subtitle: "차분한 리더의 이미지",
     emoji: "💙",
@@ -1650,6 +1760,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idperm: {
     key: "idperm",
+    coinCost: 9,
     title: "페릭컷 화이트티 증명사진",
     subtitle: "기본에 충실한 산뜻함",
     emoji: "🤍",
@@ -1666,6 +1777,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idpomade: {
     key: "idpomade",
+    coinCost: 9,
     title: "포마드 레트로정장 증명사진",
     subtitle: "그 시절 감성의 클래식",
     emoji: "🕶️",
@@ -1682,6 +1794,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idwarmbob: {
     key: "idwarmbob",
+    coinCost: 9,
     title: "웜브라운 단발 증명사진",
     subtitle: "따뜻하고 포근한 무드",
     emoji: "🤎",
@@ -1698,6 +1811,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idhime: {
     key: "idhime",
+    coinCost: 9,
     title: "밀크브라운 히메컷 증명사진",
     subtitle: "러블리하고 부드러운",
     emoji: "🎀",
@@ -1714,6 +1828,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idashwave: {
     key: "idashwave",
+    coinCost: 9,
     title: "애쉬 웨이브 증명사진",
     subtitle: "세련되고 몽환적인",
     emoji: "🩶",
@@ -1730,6 +1845,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idlowbun: {
     key: "idlowbun",
+    coinCost: 9,
     title: "로우번 터틀넥 증명사진",
     subtitle: "시크하고 세련된 무드",
     emoji: "🖤",
@@ -1746,6 +1862,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idburgundy: {
     key: "idburgundy",
+    coinCost: 9,
     title: "버건디 오프숄더 프로필",
     subtitle: "우아하고 여성스러운 화보",
     emoji: "🍷",
@@ -1762,6 +1879,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   iddandy: {
     key: "iddandy",
+    coinCost: 9,
     title: "댄디 베스트 증명사진",
     subtitle: "시원하고 댄디한 무드",
     emoji: "🩵",
@@ -1778,6 +1896,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   iddownperm: {
     key: "iddownperm",
+    coinCost: 9,
     title: "다운펌 화이트셔츠 증명사진",
     subtitle: "청량하고 산뜻한 첫인상",
     emoji: "🩵",
@@ -1794,6 +1913,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idnavysuit: {
     key: "idnavysuit",
+    coinCost: 9,
     title: "가르마 네이비수트 증명사진",
     subtitle: "신뢰감 있는 프로페셔널",
     emoji: "💙",
@@ -1810,6 +1930,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idbeigeblazer: {
     key: "idbeigeblazer",
+    coinCost: 9,
     title: "소프트펌 베이지 증명사진",
     subtitle: "세련되고 따뜻한 무드",
     emoji: "🤎",
@@ -1826,6 +1947,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   idhenley: {
     key: "idhenley",
+    coinCost: 9,
     title: "투블럭 헨리넥 증명사진",
     subtitle: "감각적이고 모던한",
     emoji: "🌿",

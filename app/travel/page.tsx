@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { openCoinSheet } from "../lib/coinSheet";
+import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
@@ -26,6 +27,19 @@ export default function TravelPage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
   const [destination, setDestination] = useState<string>("");
+  // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin) — ★스위치 날 벌크 앵커 원형
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("travel");
+  const COIN_COST = CONCEPTS.travel?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -54,6 +68,8 @@ export default function TravelPage() {
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
+    // 즉시 부족 체크(캐시 기준, 서버 호출 전) — ★스위치 날 벌크 앵커 원형
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
@@ -120,7 +136,7 @@ export default function TravelPage() {
             <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image || !destination}
               style={{ width: "100%", marginTop: 18, background: loading || !image || !destination ? "#E8E9ED" : "#FF4B7C", color: loading || !image || !destination ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image || !destination ? "not-allowed" : "pointer", boxShadow: loading || !image || !destination ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "여행 사진 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : <>여행 사진 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.85 }}> · 🪙 {COIN_COST}</span>}</>}
             </button>
           </>
         )}
