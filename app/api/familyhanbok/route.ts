@@ -14,7 +14,7 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 // 성별은 사용자 확정값("female"|"male") → 프롬프트 표기(FEMALE|MALE)
 const G = (g: string) => (g === "male" ? "MALE" : "FEMALE");
 const TWOSHOT_CORE = (G1: string, G2: string) => `TASK
-You are RETOUCHING two real photographs of two real people — NOT generating new people. You are given 2 input images: Image 1 shows Person 1, Image 2 shows Person 2. These two people came to Seoul's most famous premium photo studio TOGETHER for the pictorial described in THE SCENE below. Your craft as the studio's master retoucher: everyone walks out looking like THEMSELVES on the best day of their life — flawless skin, perfect light, beautifully styled — visibly upgraded, never altered. Edit their photos into ONE single stunning portrait of the two of them together. THE HIGHEST PRIORITY, above everything else: each output face must be instantly recognizable as the SAME person side by side with their own source image.
+You are RETOUCHING two real photographs of two real people — NOT generating new people. You are given 2 input images: Image 1 shows Person 1, Image 2 shows Person 2. These two people came to Seoul's most famous premium photo studio TOGETHER for the pictorial described in THE SCENE below. Your craft as the studio's master retoucher: everyone walks out looking like THEMSELVES on the best day of their life — flawless skin, perfect light, beautifully styled — visibly upgraded, never altered. Edit their photos into ONE single stunning portrait of the two of them together. THE HIGHEST PRIORITY, above everything else: each output face must be instantly recognizable as the SAME person side by side with their own source image. The output must be THESE two specific people — never a generic stock model face.
 
 STEP 1 — ROLL CALL (do this before generating anything):
 Study each input image and build a locked identity profile:
@@ -27,6 +27,7 @@ IDENTITY LAW — the absolute rules (never violate):
 - GENDER LOCK (user-confirmed, absolute): Person 1 is ${G1}. Person 2 is ${G2}. Render each person's gender EXACTLY as confirmed — never swap, never reinterpret, never masculinize or feminize anyone against their confirmed gender. Styling, attire, hair, and makeup follow each person's confirmed gender.
 - Each face is retouched from THEIR OWN source image alone. NEVER mix, blend, swap, or average features between the two.
 - ANTI-CLONE RULE: after retouching, the two faces must remain exactly as DIFFERENT from each other as they are in the sources.
+- HAIR IDENTITY LAW: each person keeps their OWN hair — same color, same length category, same overall silhouette as their source. Styling may polish, add shine, and softly arrange THEIR hair for the scene, but NEVER a different haircut, NEVER a dramatic updo, NEVER added hairpieces or ornaments. Hair is part of identity — if the hair silhouette changes, the person stops looking like themselves.
 - AGE LAW (one rule for everyone): each person's age impression stays their own — a younger person looks fresh and well-rested (never older), an older person stays gracefully and clearly their own generation (never made younger). Elegantly gray hair stays elegantly gray, beautifully styled.
 - GLASSES per person: if a person wears glasses in their input, they wear the SAME glasses (same frames) — exactly one pair, worn normally. If they don't, add none. Never move glasses between the two, never duplicate a pair.
 
@@ -55,13 +56,13 @@ COMPOSITION BASE — tight two-shot, faces first:
 const SCENE = `THE SCENE — 명절 한복 2인 (traditional holiday hanbok):
 - The mood: a warm, festive premium holiday portrait — the photo two close people (a couple, friends, siblings, or parent and child) send to family for Chuseok or Lunar New Year.
 - WARDROBE: an exquisite fine-silk hanbok for each person, appropriate to their confirmed gender and age — for a female person, a luminous jeogori with a gracefully flowing chima, delicate embroidery, and a neatly tied goreum; for a male person, a refined jeogori and baji with an elegant silk vest or durumagi in deep tasteful tones. COLOR HARMONY: the two hanbok are DIFFERENT colors that harmonize beautifully together — festive, luminous, complementary tones; never identical "couple uniform" hanbok, never clashing, never all-dark. Crisp collar lines (dongjeong), clean goreum knots, no tangled or distorted fabric.
-- HAIR RULE (critical): a female person — soft, flattering styling (loose elegant waves, a low soft bun with a delicate binyeo accent, or her own style beautifully finished) — NEVER a severe tightly-pulled traditional braided updo that ages her. A male person — his own hair neatly and handsomely styled; no hats or headpieces that shadow the face.
+- HAIR RULE (critical): each person's OWN hair exactly as the HAIR IDENTITY LAW — their own color, length, and silhouette, softly polished with healthy shine and beautifully finished. A female person's hair flatteringly refined but NEVER restyled into a severe tightly-pulled traditional braided updo. A male person — his own hair neatly styled; no hats or headpieces that shadow the face.
 - WARMTH: close and affectionate in a way that fits ANY relationship — side by side, gently leaning in, a light hand on an arm; bright, genuinely happy holiday expressions.
 - BACKDROP: a graceful hanok at golden hour — warm wooden beams and hanji paper doors softly blurred, soft foliage or drifting petals for color. Dignified, warm, festive — never busy. All elements completely TEXT-FREE.
 - KEY LIGHT MOOD: warm, soft, low golden sunlight — both faces bright and glowing.`;
 const FINISH = (G1: string, G2: string) => `STEP 2 — FINAL ROLL CALL (before finishing):
 Compare the finished portrait against the sources, check by check:
-- Side by side with Image 1, is Person 1 instantly the same person — same eyes, same nose, same face, just glowing? Side by side with Image 2, is Person 2?
+- Side by side with Image 1, is Person 1 instantly the same person — same eyes, same nose, same face, SAME hair silhouette, just glowing? Side by side with Image 2, is Person 2?
 - GENDER CHECK: is Person 1 clearly ${G1} as confirmed? Is Person 2 clearly ${G2} as confirmed? A swap = failed edit.
 - SKIN CHECK: do both faces and necks show one perfectly even, flawless luminous finish — zero moles, spots, or marks anywhere? If anything interrupts the clean finish, cover it before finishing.
 - Exactly two people? Two faces still clearly different from each other? No blended features, no moved glasses? No one made younger or older?
@@ -71,6 +72,8 @@ FRAMING:
 - A tight two-person portrait from roughly the chest up, both faces large and tack-sharp. Shot on an 85mm lens at f/2.8, the backdrop melting into soft creamy bokeh. Photorealistic, high resolution.
 
 ABSOLUTELY AVOID (equally important):
+- Replacing either face with a generic stock-model face — the output must be THESE two people.
+- Changing anyone's haircut, hair length, or hair color; any added hairpieces, ornaments, or dramatic updos.
 - Rendering anyone's gender against the user's confirmation; swapping the two people's genders or styling.
 - Reshaping ANY feature beyond the subtle jawline refinement: no enlarged eyes, no changed noses, no new face shapes — for anyone, at any age.
 - Any mole, spot, or mark interrupting the flawless skin on either face or neck.
