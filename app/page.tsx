@@ -1144,7 +1144,10 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 /* 통이미지 상세페이지: 풀폭 이미지 한 장만 (BA_LIVE 컨셉은 위에 비포/애프터 라이브) */
                 <>
                   {BA_LIVE.includes(detail.key) && (
-                    <BeforeAfterHero pairs={[1, 2, 3].map(n => ({ before: `/examples/ba/${detail.key}-before.webp`, after: `/examples/ba/${detail.key}-after-${n}.webp` }))} />
+                    <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                      { before: `/examples/ba/${detail.key}-before-${n}.webp`, after: `/examples/ba/${detail.key}-after-${n}.webp` },
+                      { before: `/examples/ba/${detail.key}-before.webp`, after: `/examples/ba/${detail.key}-after-${n}.webp` },
+                    ])} />
                   )}
                   <img src={detail.detailImage} alt={detail.title} loading="lazy" decoding="async" style={{ width: "100%", display: "block", background: "#F1F2F6", minHeight: 240 }} />
                 </>

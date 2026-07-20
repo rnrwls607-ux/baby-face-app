@@ -1,7 +1,8 @@
 "use client";
 // 상세 화면 비포/애프터 라이브 예시 — 2.5초 간격 크로스페이드(0.6s), 쌍 여럿이면 순환.
-// 자산 규칙: public/examples/ba/{key}-before.webp, {key}-after-1.webp (-2…) — 768×1024(3:4), scripts/ba-prep.mjs로 규격화.
-// 자산이 없거나 로드 실패한 쌍은 제외하고, 유효 쌍이 0이면 아무것도 렌더하지 않는다 (기존 화면 무변화 폴백).
+// 자산 규칙(다쌍): public/examples/ba/{key}-before-N.webp + {key}-after-N.webp (쌍별 before)
+// 하위호환(단쌍): {key}-before.webp 1장 + {key}-after-N.webp — 768×1024(3:4), scripts/ba-prep.mjs로 규격화.
+// 자산이 없거나 로드 실패한 쌍은 제외하고(같은 after 중복은 첫 유효 후보만), 유효 쌍이 0이면 아무것도 렌더하지 않는다.
 import { useEffect, useRef, useState } from "react";
 
 type Pair = { before: string; after: string };
@@ -22,7 +23,13 @@ export default function BeforeAfterHero({ pairs }: { pairs: Pair[] }) {
       im.src = src;
     });
     Promise.all(pairs.map(async (p) => (await check(p.before)) && (await check(p.after)) ? p : null))
-      .then((r) => { if (alive) setValid(r.filter((p): p is Pair => !!p)); });
+      .then((r) => {
+        if (!alive) return;
+        // 같은 after를 가리키는 후보(신규 before-N / 하위호환 before 공유)가 둘 다 유효하면 앞선 것만
+        const seen = new Set<string>();
+        const deduped = r.filter((p): p is Pair => !!p && !seen.has(p.after) && !!seen.add(p.after));
+        setValid(deduped);
+      });
     return () => { alive = false; };
   }, [pairs]);
 
