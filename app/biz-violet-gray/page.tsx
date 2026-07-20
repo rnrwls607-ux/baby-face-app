@@ -10,6 +10,8 @@ import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
 import GateBadge from "../components/GateBadge";
 import PreviewCard from "../components/upload/PreviewCard";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -128,7 +130,15 @@ export default function BizVioletGrayPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizviolet.webp" caption="바이올렛 스커트 프로필, 미리 만나보세요" accent={ACCENT} />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("bizviolet") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/bizviolet-before-${n}.webp`, after: `/examples/ba/bizviolet-after-${n}.webp` },
+                { before: `/examples/ba/bizviolet-before.webp`, after: `/examples/ba/bizviolet-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/bizviolet.webp" caption="바이올렛 스커트 프로필, 미리 만나보세요" accent={ACCENT} />
+            )}
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"
