@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, deleteHistoryItem, deleteCloudHistoryItem, type HistoryItem } from "./lib/history";
-import { BA_LIVE, CONCEPTS, conceptForGo, type Concept } from "./lib/concepts";
+import { CONCEPTS, conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
 import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
@@ -12,7 +12,6 @@ import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
 import CoinIcon from "./components/CoinIcon";
-import BeforeAfterHero from "./components/BeforeAfterHero";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
 const LOADING_MESSAGES = [
   "아기 얼굴 윤곽 그리는 중...",
@@ -1141,16 +1140,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
 
             <div style={{ flex: 1, overflowY: "auto", marginTop: -58 }}>
               {detail.detailImage ? (
-                /* 통이미지 상세페이지: 풀폭 이미지 한 장만 (BA_LIVE 컨셉은 위에 비포/애프터 라이브) */
-                <>
-                  {BA_LIVE.includes(detail.key) && (
-                    <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
-                      { before: `/examples/ba/${detail.key}-before-${n}.webp`, after: `/examples/ba/${detail.key}-after-${n}.webp` },
-                      { before: `/examples/ba/${detail.key}-before.webp`, after: `/examples/ba/${detail.key}-after-${n}.webp` },
-                    ])} />
-                  )}
-                  <img src={detail.detailImage} alt={detail.title} loading="lazy" decoding="async" style={{ width: "100%", display: "block", background: "#F1F2F6", minHeight: 240 }} />
-                </>
+                /* 통이미지 상세페이지: 풀폭 이미지 한 장만 */
+                <img src={detail.detailImage} alt={detail.title} loading="lazy" decoding="async" style={{ width: "100%", display: "block", background: "#F1F2F6", minHeight: 240 }} />
               ) : (
               <>
               {/* 대표 이미지 (heroImages 여러장 스와이프 > heroImage 1장 > 이모지) */}

@@ -13,6 +13,8 @@ import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
 import AdBanner from "../components/AdBanner";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 
 export default function NukkiPage() {
   const router = useRouter();
@@ -87,7 +89,17 @@ export default function NukkiPage() {
         {!result && !loading && (
           <>
             <AdBanner slot="nukki-upload" />
-            <PreviewCard image="/details/nukki.webp" caption="배경 제거, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("nukki") ? (
+              <div style={{ marginBottom: 8 }}>
+                <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                  { before: `/examples/ba/nukki-before-${n}.webp`, after: `/examples/ba/nukki-after-${n}.webp` },
+                  { before: `/examples/ba/nukki-before.webp`, after: `/examples/ba/nukki-after-${n}.webp` },
+                ])} />
+              </div>
+            ) : (
+              <PreviewCard image="/details/nukki.webp" caption="배경 제거, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"
