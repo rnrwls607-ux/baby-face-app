@@ -46,7 +46,7 @@ export default function CouplePage() {
     if (!genders[0] || !genders[1]) { setError("두 분의 성별을 선택해주세요."); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 110000);
+    const tid = setTimeout(() => ctrl.abort(), 145000); // 서버 내부 컷 140초 + 여유 5초 (Pro 추론형)
     try {
       const [c1, c2] = await Promise.all([compress(images[0]), compress(images[1])]);
       const res = await fetch("/api/couple", {
