@@ -3,7 +3,7 @@ import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 150; // Pro 추론형 대응 — Fluid Compute 전제 (실측 로그로 확인)
 // 2인 라인 파일럿 — 나노바나나 Pro (couple만. 다른 route는 전부 flash 유지)
 const GEMINI_MODEL = "gemini-3-pro-image-preview";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
@@ -27,14 +27,15 @@ IDENTITY LAW — the absolute rules (never violate):
 - GENDER LOCK (user-confirmed, absolute): Person 1 is ${G1}. Person 2 is ${G2}. Render each person's gender EXACTLY as confirmed — never swap, never reinterpret, never masculinize or feminize anyone against their confirmed gender. Styling, attire, hair, and makeup follow each person's confirmed gender.
 - Each face is retouched from THEIR OWN source image alone. NEVER mix, blend, swap, or average features between the two.
 - ANTI-CLONE RULE: after retouching, the two faces must remain exactly as DIFFERENT from each other as they are in the sources.
-- AGE LAW (one rule for everyone): each person's age impression stays their own — a younger person looks fresh and well-rested (never older), an older person stays gracefully and clearly their own generation (never made younger, never reshaped). Elegantly gray hair stays elegantly gray, beautifully styled.
+- AGE LAW (one rule for everyone): each person's age impression stays their own — a younger person looks fresh and well-rested (never older), an older person stays gracefully and clearly their own generation (never made younger). Elegantly gray hair stays elegantly gray, beautifully styled.
 - GLASSES per person: if a person wears glasses in their input, they wear the SAME glasses (same frames) — exactly one pair, worn normally. If they don't, add none. Never move glasses between the two, never duplicate a pair.
 
-FACE — one gentle standard for everyone (no exceptions, no modes):
-1. JAWLINE ONLY: you may refine each person's OWN jawline and under-chin into a subtly softer, cleaner line — a light, natural slimming that reduces heaviness and double-chin shadows. So subtle that their friends couldn't name what changed — they just look great. Their face shape remains unmistakably theirs.
+FACE — one standard for everyone (no modes):
+1. SMALL FACE: slim each person's OWN jawline into a soft, elegant version of itself — reduce cheek fullness and facial width so each face reads about 10% smaller and more compact than their input, with clean head-to-shoulder proportions. A refinement of THEIR jaw, never a new jaw — their face shape remains unmistakably theirs. For a visibly older person, apply this gently — refined and lifted, never artificially tight.
 2. EYES: SAME size, SAME shape, SAME eyelid type as the source — enhanced only through light and freshness: bright, awake, lively, with clean sparkling catchlights (clearly visible through lenses if they wear glasses).
-3. EVERYTHING ELSE LOCKED: nose, mouth, facial proportions, and bone structure stay EXACTLY as in each person's source. No reshaping of any feature, for anyone, at any age.
-4. HARMONY: the few adjustments blend invisibly — each face reads as "them, on their absolute best day," never as altered.
+3. CONTOURS: softly lifted, youthful contours and a clean jaw-to-neck line with no double chin — for both.
+4. NOSE & MOUTH LOCKED: nose, mouth, and overall facial proportions stay EXACTLY as in each person's source — no reshaping of any other feature, for anyone, at any age.
+5. HARMONY: every adjustment blends into ONE natural, harmonious face per person — the "expensive photoshop" look, never warped, stretched, or uncanny.
 
 SKIN — the star of this retouch (this is where the beauty lives — absolute):
 - Both faces wear a professional camera-ready makeup base: poreless-smooth, perfectly even-toned skin with a dewy luminous glow — soft highlights on the cheekbones and nose bridge, a gentle healthy blush, a healthy warm undertone. Radiant and alive, never plastic, waxy, or matte-caked.
@@ -87,7 +88,7 @@ async function generateCouple(image1DataUrl: string, image2DataUrl: string, gend
   const img2 = parseImage(image2DataUrl);
   const prompt = buildPrompt(gender1, gender2);
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 50000);
+  const timer = setTimeout(() => ctrl.abort(), 140000);
   const t0 = Date.now();
   let res: Response;
   try {
@@ -110,7 +111,7 @@ async function generateCouple(image1DataUrl: string, image2DataUrl: string, gend
     );
   } catch (e: unknown) {
     clearTimeout(timer);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 50초를 넘겨 중단했어요. 다시 시도해주세요.");
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 140초를 넘겨 중단했어요. 다시 시도해주세요.");
     throw e;
   }
   clearTimeout(timer);
