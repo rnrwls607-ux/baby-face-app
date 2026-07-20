@@ -8,10 +8,11 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
-export default function FamilypetPage() {
+export default function CoupletravelPage() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
   const [genders, setGenders] = useState<string[]>(["", ""]); // "female" | "male" — 사용자 확정값
+  const [scene, setScene] = useState(""); // 여행지 칩 — 미선택 시 버튼 비활성
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -42,17 +43,18 @@ export default function FamilypetPage() {
     setImages(prev => { const next = [...prev]; next[index] = b64; return next; });
   };
   const handleSubmit = async () => {
-    if (!images[0] || !images[1] || !images[2]) { setError("두 분과 반려동물의 사진을 모두 올려주세요."); return; }
+    if (!images[0] || !images[1]) { setError("두 분의 사진을 모두 올려주세요."); return; }
     if (!genders[0] || !genders[1]) { setError("두 분의 성별을 선택해주세요."); return; }
+    if (!scene) { setError("여행지를 선택해주세요."); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 145000); // 서버 내부 컷 140초 + 여유 5초 (Pro 추론형)
     try {
-      const [c1, c2, c3] = await Promise.all([compress(images[0]), compress(images[1]), compress(images[2])]);
-      const res = await fetch("/api/familypet", {
+      const [c1, c2] = await Promise.all([compress(images[0]), compress(images[1])]);
+      const res = await fetch("/api/coupletravel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image1: c1, image2: c2, image3: c3, gender1: genders[0], gender2: genders[1] }),
+        body: JSON.stringify({ image1: c1, image2: c2, gender1: genders[0], gender2: genders[1], scene }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -60,16 +62,16 @@ export default function FamilypetPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "반려가족 사진");
+      void addToHistory(data.output, "커플 여행 스냅");
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-  const handleDownload = () => { void saveImage(result, "familypet.png"); };
-  const handleShare = () => { void shareImage(result, "familypet.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
-  const canSubmit = !!images[0] && !!images[1] && !!images[2] && !!genders[0] && !!genders[1] && !loading;
+  const handleDownload = () => { void saveImage(result, "coupletravel.png"); };
+  const handleShare = () => { void shareImage(result, "coupletravel.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
+  const canSubmit = !!images[0] && !!images[1] && !!genders[0] && !!genders[1] && !!scene && !loading;
   const chipStyle = (active: boolean) => ({
     flex: 1, padding: "9px 0", borderRadius: 12, fontSize: 13, fontWeight: 800, cursor: "pointer",
     border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
@@ -80,53 +82,58 @@ export default function FamilypetPage() {
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (result) { setResult(""); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>반려가족 사진</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>커플 여행 스냅</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🐾 우리 애까지, 반려가족 사진</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>두 분과 반려동물의 사진을 한 장씩 올리면 셋이 함께 찍은 가족사진을 만들어드려요. 두 분 얼굴도, 우리 애 생김새도 모두 그대로예요.</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>✈️ 둘이 함께, 여행 스냅</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>두 사람의 사진을 한 장씩 올리고 여행지를 고르면 함께 떠난 듯한 커플 여행 스냅을 만들어드려요. 따로 찍은 사진도 OK예요.</p>
         </div>
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 분 + 반려동물 사진 (각 1장)</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 분 사진 (각 1장) + 성별 선택</p>
               <div style={{ display: "flex", gap: 10 }}>
-                {[0, 1, 2].map(i => (
+                {[0, 1].map(i => (
                   <div key={i} style={{ flex: 1 }}>
                     <label style={{ display: "block", cursor: "pointer" }}>
                       <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: images[i] ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: images[i] ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 3 }}>
                         {images[i]
                           ? <img src={images[i]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                          : <><span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>{i === 0 ? "첫 번째 분" : i === 1 ? "두 번째 분" : "반려동물 🐾"}</span></>}
+                          : <><span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>{i === 0 ? "첫 번째 분" : "두 번째 분"}</span></>}
                       </div>
                       <input type="file" accept="image/*" style={{ display: "none" }}
                         onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0], i); }} />
                     </label>
-                    {/* 성별 칩 — 사람 슬롯에만. label 밖 배치(파일 선택 오작동 방지), setter 실호출 (era 버그 전례 방지) */}
-                    {i < 2 && (
-                      <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
-                        {([["female", "👩 여성"], ["male", "👨 남성"]] as const).map(([v, l]) => (
-                          <button key={v} onClick={() => setGenders(prev => { const next = [...prev]; next[i] = v; return next; })}
-                            style={chipStyle(genders[i] === v)}>{l}</button>
-                        ))}
-                      </div>
-                    )}
+                    {/* 성별 칩 — label 밖 배치(파일 선택 오작동 방지), setter 실호출 (era 버그 전례 방지) */}
+                    <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                      {([["female", "👩 여성"], ["male", "👨 남성"]] as const).map(([v, l]) => (
+                        <button key={v} onClick={() => setGenders(prev => { const next = [...prev]; next[i] = v; return next; })}
+                          style={chipStyle(genders[i] === v)}>{l}</button>
+                      ))}
+                    </div>
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: 11.5, color: "#BFC3CB", margin: "12px 2px 0", lineHeight: 1.5 }}>💡 각자 얼굴이 정면으로 잘 보이는 밝은 사진일수록 잘 나와요. 반려동물도 얼굴이 잘 보이는 사진이 좋아요.</p>
+              {/* 여행지 칩 — setter 실호출 (era 버그 전례 방지) */}
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", margin: "16px 0 8px" }}>여행지 선택</p>
+              <div style={{ display: "flex", gap: 6 }}>
+                {([["jeju", "✈️ 제주"], ["europe", "🏰 유럽"], ["beach", "🏖️ 해변"], ["citynight", "🌃 도시 야경"]] as const).map(([v, l]) => (
+                  <button key={v} onClick={() => setScene(v)} style={{ ...chipStyle(scene === v), fontSize: 12 }}>{l}</button>
+                ))}
+              </div>
+              <p style={{ fontSize: 11.5, color: "#BFC3CB", margin: "12px 2px 0", lineHeight: 1.5 }}>💡 각자 얼굴이 정면으로 잘 보이는 밝은 사진일수록 잘 나와요.</p>
             </div>
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "반려가족 사진 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : "여행 스냅 만들기 ✨"}
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 52 }}>🐾</div>
-            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 세 가족을 한 장에 담고 있어요...</p>
+            <div style={{ fontSize: 52 }}>✈️</div>
+            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 두 사람을 여행지로 데려가고 있어요...</p>
           </div>
         )}
         {error && (
@@ -139,7 +146,7 @@ export default function FamilypetPage() {
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
-              <img src={result} alt="반려가족 사진" style={{ width: "100%", display: "block" }} />
+              <img src={result} alt="커플 여행 스냅" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
