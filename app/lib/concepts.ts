@@ -21,6 +21,9 @@ export type Concept = {
 // 코인 게이트 라이브 컨셉 — 스위치 날 여기에 전체 키를 넣는 것으로 일괄 전환 (단일 지점)
 export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
 
+// 비포/애프터 라이브 컨셉 — 자산(public/examples/ba/{key}-*.webp) 준비된 키만 (확산 단일 지점, LIVE_COIN 패턴)
+export const BA_LIVE: string[] = [];
+
 export const CONCEPTS: Record<string, Concept> = {
   baby: {
     key: "baby",
