@@ -8,6 +8,8 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -80,7 +82,15 @@ export default function ProductPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/product.webp" caption="상품 사진 보정, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("product") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/product-before-${n}.webp`, after: `/examples/ba/product-after-${n}.webp` },
+                { before: `/examples/ba/product-before.webp`, after: `/examples/ba/product-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/product.webp" caption="상품 사진 보정, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="제품 사진"

@@ -1,4 +1,4 @@
-// 비포/애프터 자산 규격화 — 768×1024(3:4) 피사체 가중 크롭, webp q85 → public/examples/ba/
+// 비포/애프터 자산 규격화 — 768×960(4:5 = BeforeAfterHero 16:10 카드의 반쪽 패널 실효 비율) 피사체 가중 크롭, webp q85 → public/examples/ba/
 //
 // 사용법 (리포 루트에서):
 //   node scripts/ba-prep.mjs nukki-before-1="C:/원본/셀카.jpg" nukki-after-1="C:/원본/결과1.png"
@@ -12,7 +12,7 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 
 const OUT_DIR = path.join(process.cwd(), "public", "examples", "ba");
-const W = 768, H = 1024;
+const W = 768, H = 960;
 
 const args = process.argv.slice(2);
 if (args.length === 0) {

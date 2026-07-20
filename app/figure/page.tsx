@@ -8,6 +8,8 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -80,7 +82,15 @@ export default function FigurePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/figure.webp" caption="미니어처 피규어, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("figure") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/figure-before-${n}.webp`, after: `/examples/ba/figure-after-${n}.webp` },
+                { before: `/examples/ba/figure-before.webp`, after: `/examples/ba/figure-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/figure.webp" caption="미니어처 피규어, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"
