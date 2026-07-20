@@ -11,6 +11,7 @@ import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 export default function CouplePage() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
+  const [genders, setGenders] = useState<string[]>(["", ""]); // "female" | "male" — 사용자 확정값
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +30,7 @@ export default function CouplePage() {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement("canvas");
-      const M = 1024; let { width: w, height: h } = img;
+      const M = 1536; let { width: w, height: h } = img; // Pro 참조 품질(1024px+) 대응 — couple만 상향
       if (w > h) { if (w > M) { h = h * M / w; w = M; } } else { if (h > M) { w = w * M / h; h = M; } }
       c.width = w; c.height = h; c.getContext("2d")!.drawImage(img, 0, 0, w, h);
       res(c.toDataURL("image/jpeg", 0.9));
@@ -41,7 +42,8 @@ export default function CouplePage() {
     setImages(prev => { const next = [...prev]; next[index] = b64; return next; });
   };
   const handleSubmit = async () => {
-    if (!images[0] || !images[1]) { setError("두 사람의 사진을 모두 올려주세요."); return; }
+    if (!images[0] || !images[1]) { setError("두 분의 사진을 모두 올려주세요."); return; }
+    if (!genders[0] || !genders[1]) { setError("두 분의 성별을 선택해주세요."); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
@@ -50,7 +52,7 @@ export default function CouplePage() {
       const res = await fetch("/api/couple", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image1: c1, image2: c2 }),
+        body: JSON.stringify({ image1: c1, image2: c2, gender1: genders[0], gender2: genders[1] }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -67,7 +69,13 @@ export default function CouplePage() {
   };
   const handleDownload = () => { void saveImage(result, "couple.png"); };
   const handleShare = () => { void shareImage(result, "couple.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
-  const canSubmit = !!images[0] && !!images[1] && !loading;
+  const canSubmit = !!images[0] && !!images[1] && !!genders[0] && !!genders[1] && !loading;
+  const chipStyle = (active: boolean) => ({
+    flex: 1, padding: "9px 0", borderRadius: 12, fontSize: 13, fontWeight: 800, cursor: "pointer",
+    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
+    background: active ? "#FFEAF1" : "#fff",
+    color: active ? "#FF4B7C" : "#9B9B9B",
+  });
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
@@ -82,18 +90,27 @@ export default function CouplePage() {
         {!result && (
           <>
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 사람 사진 (각 1장)</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 분 사진 (각 1장) + 성별 선택</p>
               <div style={{ display: "flex", gap: 10 }}>
                 {[0, 1].map(i => (
-                  <label key={i} style={{ flex: 1, cursor: "pointer" }}>
-                    <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: images[i] ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: images[i] ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 3 }}>
-                      {images[i]
-                        ? <img src={images[i]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        : <><span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>{i === 0 ? "첫 번째 사람" : "두 번째 사람"}</span></>}
+                  <div key={i} style={{ flex: 1 }}>
+                    <label style={{ display: "block", cursor: "pointer" }}>
+                      <div style={{ width: "100%", aspectRatio: "1", borderRadius: 14, border: images[i] ? "1.5px solid #FF4B7C" : "1.5px dashed #D9DCE2", background: images[i] ? "#fff" : "#F1F2F6", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", overflow: "hidden", gap: 3 }}>
+                        {images[i]
+                          ? <img src={images[i]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          : <><span style={{ fontSize: 26, color: "#C2C6CE" }}>＋</span><span style={{ fontSize: 12, color: "#9B9B9B", fontWeight: 600 }}>{i === 0 ? "첫 번째 분" : "두 번째 분"}</span></>}
+                      </div>
+                      <input type="file" accept="image/*" style={{ display: "none" }}
+                        onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0], i); }} />
+                    </label>
+                    {/* 성별 칩 — label 밖 배치(파일 선택 오작동 방지), setter 실호출 (era 버그 전례 방지) */}
+                    <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                      {([["female", "👩 여성"], ["male", "👨 남성"]] as const).map(([v, l]) => (
+                        <button key={v} onClick={() => setGenders(prev => { const next = [...prev]; next[i] = v; return next; })}
+                          style={chipStyle(genders[i] === v)}>{l}</button>
+                      ))}
                     </div>
-                    <input type="file" accept="image/*" style={{ display: "none" }}
-                      onChange={async e => { if (e.target.files?.[0]) await handleUpload(e.target.files[0], i); }} />
-                  </label>
+                  </div>
                 ))}
               </div>
               <p style={{ fontSize: 11.5, color: "#BFC3CB", margin: "12px 2px 0", lineHeight: 1.5 }}>💡 각자 얼굴이 정면으로 잘 보이는 밝은 사진일수록 잘 나와요.</p>
