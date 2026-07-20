@@ -52,12 +52,12 @@ RELIGHT COMPLETELY (the biggest transformation — this makes it look real):
 
 COMPOSITION BASE — tight two-shot, faces first:
 - The two are close together, framed from roughly the CHEST UP so both faces are as LARGE in the frame as possible. Both faces fully visible, unobstructed, angled toward the camera. Correct relative heights and body scale. Hands natural and relaxed — correct fingers. The warmth and pose follow THE SCENE below.`;
-const SCENE = `THE SCENE — 우정 스냅 (best-friends studio snap):
-- The mood: a fun, bright premium friendship photoshoot — the photo best friends take together and both set as their profile picture.
-- WARDROBE: trendy coordinated casual — clean tones of white, cream, denim, and soft pastels that flatter each person's build and confirmed gender; effortless and current, never matching uniforms, no visible logos or readable text.
-- WARMTH: playful friendly closeness — shoulder to shoulder, arms lightly linked or a casual arm around a shoulder; expressions bright, laughing or grinning naturally — genuine fun, ZERO romance.
-- BACKDROP: a clean modern studio backdrop in a soft bright tone (warm white or a soft pastel seamless) with gentle depth — fresh and current, never busy.
-- KEY LIGHT MOOD: bright, crisp, cheerful studio light — both faces glowing.`;
+const SCENE = `THE SCENE — 둘이서 가족사진 (two-person family portrait):
+- The mood: a warm, timeless family portrait for two — mother and daughter, father and son, siblings, grandparent and grandchild, or any two family members; the photo that goes in a frame at home.
+- WARDROBE: a coordinated premium family-studio look in harmonious tones of soft white, cream, beige, and light denim-blue — neat knits, shirts, and blouses that flatter each person's age, build, and confirmed gender. Elegant and timeless, like a luxury family photo package. Never matching uniforms, no visible logos or readable text.
+- WARMTH: tender family closeness — seated or standing close, a gentle hand on a shoulder or arms softly linked; expressions warm, proud, genuinely happy — family love, not romance.
+- BACKDROP: a clean, timeless studio backdrop in a soft warm tone (light beige or warm ivory seamless paper) with gentle depth — classic, elegant, never busy.
+- KEY LIGHT MOOD: bright, soft, warm family-studio light — both faces equally luminous.`;
 const FINISH = (G1: string, G2: string) => `STEP 2 — FINAL ROLL CALL (before finishing):
 Compare the finished portrait against the sources, check by check:
 - Side by side with Image 1, is Person 1 instantly the same person — same eyes, same nose, same face, just glowing? Side by side with Image 2, is Person 2?
@@ -83,7 +83,7 @@ ABSOLUTELY AVOID (equally important):
 function buildPrompt(g1: string, g2: string): string {
   return TWOSHOT_CORE(G(g1), G(g2)) + "\n\n" + SCENE + "\n\n" + FINISH(G(g1), G(g2));
 }
-async function generateFriend(image1DataUrl: string, image2DataUrl: string, gender1: string, gender2: string): Promise<string> {
+async function generateDuofamily(image1DataUrl: string, image2DataUrl: string, gender1: string, gender2: string): Promise<string> {
   const img1 = parseImage(image1DataUrl);
   const img2 = parseImage(image2DataUrl);
   const prompt = buildPrompt(gender1, gender2);
@@ -107,7 +107,7 @@ async function generateFriend(image1DataUrl: string, image2DataUrl: string, gend
         }),
         signal: ctrl.signal,
       },
-      "friend"
+      "duofamily"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -115,7 +115,7 @@ async function generateFriend(image1DataUrl: string, image2DataUrl: string, gend
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[friend] model=${GEMINI_MODEL} g1=${gender1} g2=${gender2} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[duofamily] model=${GEMINI_MODEL} g1=${gender1} g2=${gender2} status=${res.status} ${Date.now() - t0}ms`);
   if (!res.ok) throw new Error(await geminiFriendlyError(res, "couple"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
@@ -139,11 +139,11 @@ export async function POST(request: NextRequest) {
     const gender1: string = typeof body?.gender1 === "string" ? body.gender1 : "female";
     const gender2: string = typeof body?.gender2 === "string" ? body.gender2 : "male";
     if (!image1 || !image2) return NextResponse.json({ error: "두 사람의 사진을 모두 올려주세요." }, { status: 400 });
-    const output = await generateFriend(image1, image2, gender1, gender2);
+    const output = await generateDuofamily(image1, image2, gender1, gender2);
     return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("friend error:", err?.message);
+    console.error("duofamily error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }

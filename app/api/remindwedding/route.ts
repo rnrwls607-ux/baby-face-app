@@ -52,12 +52,14 @@ RELIGHT COMPLETELY (the biggest transformation — this makes it look real):
 
 COMPOSITION BASE — tight two-shot, faces first:
 - The two are close together, framed from roughly the CHEST UP so both faces are as LARGE in the frame as possible. Both faces fully visible, unobstructed, angled toward the camera. Correct relative heights and body scale. Hands natural and relaxed — correct fingers. The warmth and pose follow THE SCENE below.`;
-const SCENE = `THE SCENE — 우정 스냅 (best-friends studio snap):
-- The mood: a fun, bright premium friendship photoshoot — the photo best friends take together and both set as their profile picture.
-- WARDROBE: trendy coordinated casual — clean tones of white, cream, denim, and soft pastels that flatter each person's build and confirmed gender; effortless and current, never matching uniforms, no visible logos or readable text.
-- WARMTH: playful friendly closeness — shoulder to shoulder, arms lightly linked or a casual arm around a shoulder; expressions bright, laughing or grinning naturally — genuine fun, ZERO romance.
-- BACKDROP: a clean modern studio backdrop in a soft bright tone (warm white or a soft pastel seamless) with gentle depth — fresh and current, never busy.
-- KEY LIGHT MOOD: bright, crisp, cheerful studio light — both faces glowing.`;
+const WEDDING_ATTIRE_MIXED = `The female person wears an elegant wedding dress in ivory or soft white — a graceful silhouette with delicate lace or clean satin, a refined neckline with tasteful coverage, softly holding a bouquet of cream and blush flowers; romantic and luminous, never costume-like, never overly revealing. The male person wears a perfectly fitted classic tuxedo in black or midnight navy — a crisp white shirt, a neat bow tie or tie, and a small boutonniere matching the bouquet; sharp and impeccably groomed.`;
+const WEDDING_ATTIRE_SAME = `Dress each person in exquisite wedding attire that suits THEM individually — each may wear a graceful wedding dress in ivory or soft white, OR a perfectly fitted tuxedo in black, midnight navy, or ivory, whichever flatters that person and their confirmed gender. The two outfits are DIFFERENT in design yet beautifully coordinated as one wedding. One softly holds a bouquet of cream and blush flowers. Romantic, tasteful, never costume-like, never overly revealing.`;
+const SCENE = (ATTIRE: string) => `THE SCENE — 리마인드 웨딩 (remind wedding — a couple married for decades):
+- The mood: a couple married for many years retakes their wedding photo, gifted by their children — dignified, moving, radiant. THE AGE LAW APPLIES AT FULL STRENGTH here: their true generation is the beauty of this portrait — never de-age them, never erase decades; elegantly gray hair stays elegantly gray, beautifully styled. Their children must tear up saying "that's exactly Mom and Dad, more beautiful than ever."
+- WARDROBE: ${ATTIRE}
+- WARMTH: a lifetime of love — standing close, one hand resting on the other's arm or hands gently joined over the bouquet; expressions warm, genuinely moved, softly smiling — two people who would choose each other all over again.
+- BACKDROP: an airy, romantic wedding studio — soft white and cream tones, elegant drapery, delicate floral arrangements melting into dreamy soft-focus depth. Classic, expensive, timeless — never busy. All decorations completely TEXT-FREE.
+- KEY LIGHT MOOD: bright, soft, romantic wedding-studio light — both faces equally luminous and warm.`;
 const FINISH = (G1: string, G2: string) => `STEP 2 — FINAL ROLL CALL (before finishing):
 Compare the finished portrait against the sources, check by check:
 - Side by side with Image 1, is Person 1 instantly the same person — same eyes, same nose, same face, just glowing? Side by side with Image 2, is Person 2?
@@ -81,9 +83,10 @@ ABSOLUTELY AVOID (equally important):
 - Plastic waxy skin, matte caked makeup, murky lighting, uneven shadows on one face, oversaturated HDR.
 - Any text, letters, logos, watermark, or border.`;
 function buildPrompt(g1: string, g2: string): string {
-  return TWOSHOT_CORE(G(g1), G(g2)) + "\n\n" + SCENE + "\n\n" + FINISH(G(g1), G(g2));
+  const attire = G(g1) === G(g2) ? WEDDING_ATTIRE_SAME : WEDDING_ATTIRE_MIXED;
+  return TWOSHOT_CORE(G(g1), G(g2)) + "\n\n" + SCENE(attire) + "\n\n" + FINISH(G(g1), G(g2));
 }
-async function generateFriend(image1DataUrl: string, image2DataUrl: string, gender1: string, gender2: string): Promise<string> {
+async function generateRemindwedding(image1DataUrl: string, image2DataUrl: string, gender1: string, gender2: string): Promise<string> {
   const img1 = parseImage(image1DataUrl);
   const img2 = parseImage(image2DataUrl);
   const prompt = buildPrompt(gender1, gender2);
@@ -107,7 +110,7 @@ async function generateFriend(image1DataUrl: string, image2DataUrl: string, gend
         }),
         signal: ctrl.signal,
       },
-      "friend"
+      "remindwedding"
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -115,7 +118,7 @@ async function generateFriend(image1DataUrl: string, image2DataUrl: string, gend
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[friend] model=${GEMINI_MODEL} g1=${gender1} g2=${gender2} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[remindwedding] model=${GEMINI_MODEL} g1=${gender1} g2=${gender2} status=${res.status} ${Date.now() - t0}ms`);
   if (!res.ok) throw new Error(await geminiFriendlyError(res, "couple"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
@@ -139,11 +142,11 @@ export async function POST(request: NextRequest) {
     const gender1: string = typeof body?.gender1 === "string" ? body.gender1 : "female";
     const gender2: string = typeof body?.gender2 === "string" ? body.gender2 : "male";
     if (!image1 || !image2) return NextResponse.json({ error: "두 사람의 사진을 모두 올려주세요." }, { status: 400 });
-    const output = await generateFriend(image1, image2, gender1, gender2);
+    const output = await generateRemindwedding(image1, image2, gender1, gender2);
     return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };
-    console.error("friend error:", err?.message);
+    console.error("remindwedding error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }

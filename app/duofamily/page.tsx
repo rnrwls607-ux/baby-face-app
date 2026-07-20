@@ -8,7 +8,7 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 
-export default function HanbokcouplePage() {
+export default function DuofamilyPage() {
   const router = useRouter();
   const [images, setImages] = useState<string[]>([]);
   const [genders, setGenders] = useState<string[]>(["", ""]); // "female" | "male" — 사용자 확정값
@@ -49,7 +49,7 @@ export default function HanbokcouplePage() {
     const tid = setTimeout(() => ctrl.abort(), 145000); // 서버 내부 컷 140초 + 여유 5초 (Pro 추론형)
     try {
       const [c1, c2] = await Promise.all([compress(images[0]), compress(images[1])]);
-      const res = await fetch("/api/hanbokcouple", {
+      const res = await fetch("/api/duofamily", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image1: c1, image2: c2, gender1: genders[0], gender2: genders[1] }),
@@ -60,15 +60,15 @@ export default function HanbokcouplePage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "웨딩 한복 커플");
+      void addToHistory(data.output, "둘이서 가족사진");
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-  const handleDownload = () => { void saveImage(result, "hanbokcouple.png"); };
-  const handleShare = () => { void shareImage(result, "hanbokcouple.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
+  const handleDownload = () => { void saveImage(result, "duofamily.png"); };
+  const handleShare = () => { void shareImage(result, "duofamily.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const canSubmit = !!images[0] && !!images[1] && !!genders[0] && !!genders[1] && !loading;
   const chipStyle = (active: boolean) => ({
     flex: 1, padding: "9px 0", borderRadius: 12, fontSize: 13, fontWeight: 800, cursor: "pointer",
@@ -80,12 +80,12 @@ export default function HanbokcouplePage() {
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (result) { setResult(""); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>웨딩 한복 커플</span>
+        <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>둘이서 가족사진</span>
       </div>
       <div style={{ padding: "18px 18px 100px" }}>
         <div style={{ background: "#FFEAF1", borderRadius: 16, padding: "16px 18px", marginBottom: 22 }}>
-          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>👘 웨딩 한복, 둘이 한 장</p>
-          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>두 분의 사진을 한 장씩 올리면 웨딩 한복을 입고 찍은 전통 혼례 화보를 만들어드려요.</p>
+          <p style={{ fontSize: 14, fontWeight: 800, color: "#FF4B7C", margin: "0 0 5px" }}>🏠 둘이서, 가족사진</p>
+          <p style={{ fontSize: 12.5, color: "#B36B85", margin: 0, lineHeight: 1.55 }}>가족 두 분의 사진을 한 장씩 올리면 액자에 걸 가족사진을 만들어드려요. 엄마와 딸, 아빠와 아들, 조부모님과도.</p>
         </div>
         {!result && (
           <>
@@ -117,14 +117,14 @@ export default function HanbokcouplePage() {
             </div>
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "웨딩 한복 화보 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : "가족사진 만들기 ✨"}
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 28, textAlign: "center" }}>
-            <div style={{ fontSize: 52 }}>👘</div>
-            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 웨딩 한복 화보를 준비하고 있어요...</p>
+            <div style={{ fontSize: 52 }}>🏠</div>
+            <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 가족사진을 준비하고 있어요...</p>
           </div>
         )}
         {error && (
@@ -137,7 +137,7 @@ export default function HanbokcouplePage() {
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
-              <img src={result} alt="웨딩 한복 커플" style={{ width: "100%", display: "block" }} />
+              <img src={result} alt="둘이서 가족사진" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
