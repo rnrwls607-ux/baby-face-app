@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { openCoinSheet } from "../lib/coinSheet";
-import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import CoinIcon from "../components/CoinIcon";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
+import BeforeAfterHero from "../components/BeforeAfterHero";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -115,7 +116,17 @@ export default function TravelPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard placeholder="✈️" caption="여행지 인생샷, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("travel") ? (
+              <div style={{ marginBottom: 8 }}>
+                <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                  { before: `/examples/ba/travel-before-${n}.webp`, after: `/examples/ba/travel-after-${n}.webp` },
+                  { before: `/examples/ba/travel-before.webp`, after: `/examples/ba/travel-after-${n}.webp` },
+                ])} />
+              </div>
+            ) : (
+              <PreviewCard placeholder="✈️" caption="여행지 인생샷, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어디로 떠날까요?</p>

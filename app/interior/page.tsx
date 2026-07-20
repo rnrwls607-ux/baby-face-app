@@ -8,6 +8,8 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -97,7 +99,17 @@ export default function InteriorPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard image="/details/interior.webp" caption="달라진 우리 집, 미리 만나보세요" placeholder="🛋️" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("interior") ? (
+              <div style={{ marginBottom: 8 }}>
+                <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                  { before: `/examples/ba/interior-before-${n}.webp`, after: `/examples/ba/interior-after-${n}.webp` },
+                  { before: `/examples/ba/interior-before.webp`, after: `/examples/ba/interior-after-${n}.webp` },
+                ])} />
+              </div>
+            ) : (
+              <PreviewCard image="/details/interior.webp" caption="달라진 우리 집, 미리 만나보세요" placeholder="🛋️" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 스타일로 꾸밀까요?</p>

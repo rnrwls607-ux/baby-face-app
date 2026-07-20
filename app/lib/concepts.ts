@@ -22,7 +22,7 @@ export type Concept = {
 export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
 
 // 비포/애프터 라이브 컨셉 — 자산(public/examples/ba/{key}-*.webp) 준비된 키만 (확산 단일 지점, LIVE_COIN 패턴)
-export const BA_LIVE: string[] = ["nukki"];
+export const BA_LIVE: string[] = ["nukki", "y2k", "idtweed", "bizpinkjacket", "travel", "restore", "interior"];
 
 export const CONCEPTS: Record<string, Concept> = {
   baby: {
