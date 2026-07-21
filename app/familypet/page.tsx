@@ -94,11 +94,13 @@ export default function FamilypetPage() {
   const handleDownload = () => { void saveImage(result, "familypet.png"); };
   const handleShare = () => { void shareImage(result, "familypet.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   const canSubmit = !!images[0] && !!images[1] && !!images[2] && !!genders[0] && !!genders[1] && !loading;
-  const chipStyle = (active: boolean) => ({
-    flex: 1, padding: "9px 0", borderRadius: 12, fontSize: 13, fontWeight: 800, cursor: "pointer",
-    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
-    background: active ? "#FFEAF1" : "#fff",
-    color: active ? "#FF4B7C" : "#9B9B9B",
+  // 성별 칩 전용 — 여=핑크·남=스카이 컬러 코딩 (이모지 없이 색으로 구분)
+  const genderChipStyle = (v: "female" | "male", active: boolean) => ({
+    flex: 1, padding: "10px 0", borderRadius: 999, fontSize: 15, fontWeight: 600, letterSpacing: -0.3, cursor: "pointer",
+    border: "none", transition: "background 0.15s ease, color 0.15s ease",
+    background: v === "female" ? (active ? "#FF4B7C" : "#FFF0F5") : (active ? "#5AA7EA" : "#EBF5FE"),
+    color: active ? "#FFFFFF" : v === "female" ? "#E9548A" : "#4E96DC",
+    boxShadow: active ? (v === "female" ? "0 3px 10px rgba(255,75,124,0.28)" : "0 3px 10px rgba(90,167,234,0.28)") : "none",
   });
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
@@ -149,9 +151,9 @@ export default function FamilypetPage() {
                     {/* 성별 칩 — 사람 슬롯에만. label 밖 배치(파일 선택 오작동 방지), setter 실호출 (era 버그 전례 방지) */}
                     {i < 2 && (
                       <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
-                        {([["female", "👩 여성"], ["male", "👨 남성"]] as const).map(([v, l]) => (
+                        {([["female", "여성"], ["male", "남성"]] as const).map(([v, l]) => (
                           <button key={v} onClick={() => setGenders(prev => { const next = [...prev]; next[i] = v; return next; })}
-                            style={chipStyle(genders[i] === v)}>{l}</button>
+                            style={genderChipStyle(v, genders[i] === v)}>{l}</button>
                         ))}
                       </div>
                     )}
