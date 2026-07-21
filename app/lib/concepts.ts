@@ -439,6 +439,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🤍", accent: "#E8EAED" },
     ],
     start: "remindwedding",
+    detailImage: "/details/remindwedding.webp",
   },
   selfwedding: {
     key: "selfwedding",
@@ -454,6 +455,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "👰", accent: "#FFF1E0" },
     ],
     start: "selfwedding",
+    detailImage: "/details/selfwedding.webp",
   },
   duofamily: {
     key: "duofamily",
@@ -469,6 +471,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🤎", accent: "#F5E9DC" },
     ],
     start: "duofamily",
+    detailImage: "/details/duofamily.webp",
   },
   coupletravel: {
     key: "coupletravel",
@@ -484,6 +487,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌃", accent: "#EFEAFF" },
     ],
     start: "coupletravel",
+    detailImage: "/details/coupletravel.webp",
   },
   halloween: {
     key: "halloween",
@@ -1394,6 +1398,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💕", accent: "#FFF1E0" },
     ],
     start: "couple",
+    detailImage: "/details/couple.webp",
   },
   hanbokcouple: {
     key: "hanbokcouple",
@@ -1409,6 +1414,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💒", accent: "#E7F7EA" },
     ],
     start: "hanbokcouple",
+    detailImage: "/details/hanbokcouple.webp",
   },
   friend: {
     key: "friend",
@@ -1424,6 +1430,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎞️", accent: "#EFEAFF" },
     ],
     start: "friend",
+    detailImage: "/details/friend.webp",
   },
   family: {
     key: "family",
@@ -1454,6 +1461,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎎", accent: "#EFEAFF" },
     ],
     start: "familyhanbok",
+    detailImage: "/details/familyhanbok.webp",
   },
   familypet: {
     key: "familypet",
@@ -1469,6 +1477,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "👨‍👩‍👧", accent: "#E7F7EA" },
     ],
     start: "familypet",
+    detailImage: "/details/familypet.webp",
   },
   fourcut: {
     key: "fourcut",
