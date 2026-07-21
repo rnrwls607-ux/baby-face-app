@@ -425,6 +425,10 @@ export default function Home() {
   const [allConceptsCat, setAllConceptsCat] = useState("all");
   const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
   // 뒤로가기 → 열린 오버레이만 한 겹씩 닫기 (앱 이탈 방지, 겹침은 열린 순서대로)
+  // 하단 탭도 표준 편입: 홈 외 탭에서 뒤로 = 홈 탭 복귀. ★오버레이들보다 먼저 등록해
+  // 동시 오픈 시에도 탭이 스택 바닥(오버레이 먼저 닫힘 → 마지막에 탭이 홈으로).
+  // 홈 탭에서는 조건 false → 칸을 안 쌓아 정상 종료 흐름 보존.
+  useBackClose(activeTab !== "home", () => setActiveTab("home"));
   useBackClose(!!detail, () => setDetail(null));
   useBackClose(showSettings, () => setShowSettings(false));
   useBackClose(showAllConcepts, () => setShowAllConcepts(false));
