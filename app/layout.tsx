@@ -54,6 +54,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif",
         }}
       >
+        {/* 뒤로가기 재연 프리하이드레이션 가드 — 하이드레이션 전 서버 HTML(빈 홈) 노출 차단.
+            ctx는 peek만(소비는 React 복원 몫). replaceState는 착지 유령 칸의 __backClose를 중화해
+            useBackClose 좌초 자동 통과(back 발사)와 복원의 경합을 제거. 1200ms 백스톱 타이머로
+            복원 실패 시에도 빈 화면에 갇히지 않음. ctx 없으면 완전 무동작. */}
+        <style dangerouslySetInnerHTML={{ __html: "html[data-mospic-restoring] body::before{content:'';position:fixed;inset:0;background:#FAFAF8;z-index:9999}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{if(sessionStorage.getItem('mospic_back_ctx')){document.documentElement.setAttribute('data-mospic-restoring','1');history.replaceState({},'',location.href);setTimeout(function(){document.documentElement.removeAttribute('data-mospic-restoring')},1200)}}catch(e){}" }} />
         {children}
         <Toast />
         <CoinNeededSheet />

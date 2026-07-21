@@ -453,27 +453,28 @@ export default function Home() {
   // ★즉시 removeItem = 1회 소비 원칙: 새로고침·앞으로가기·딥링크 홈 직행에선 컨텍스트가 없어 무동작.
   // 전체보기 경유였다면 전체보기를 먼저 열고(가짜 칸 depth1), 상세는 다음 틱에 열어(depth2 = 스택 위)
   // "뒤로 = 상세 닫힘 → 전체보기 → 뒤로 = 홈" 순서를 보장한다 (동시 오픈이면 등록 순서상 역전됨).
-  // useIsoLayoutEffect: 첫 페인트 전에 실행 → home·favs 경로는 상세가 첫 프레임에 포함(깜빡임 0).
-  // all 경로만 두 틱이 필수(동시 오픈 depth 역전 방지)라 그 틱 간극을 restoring 커버로 가린다.
-  const [restoring, setRestoring] = useState(false);
+  // 커버는 layout 인라인 스크립트가 서버 페인트 순간부터 세움(data-mospic-restoring) —
+  // 하이드레이션 전 빈 홈 노출을 원천 차단. 여기서는 복원을 수행하고 오버레이 오픈 완료 시
+  // 커버를 즉시 해제한다(인라인 1200ms 백스톱 타이머보다 먼저). ctx 소비도 여기 1곳뿐.
   useIsoLayoutEffect(() => {
+    const uncover = () => document.documentElement.removeAttribute("data-mospic-restoring");
     try {
       const raw = sessionStorage.getItem("mospic_back_ctx");
       if (!raw) return;
       sessionStorage.removeItem("mospic_back_ctx");
       const ctx = JSON.parse(raw) as { detail?: string; from?: string; cat?: string };
-      if (!ctx?.detail) return;
+      if (!ctx?.detail) { uncover(); return; }
       const key = ctx.detail;
       if (ctx.from === "all") {
-        setRestoring(true); // 전체보기→상세 사이 한 프레임을 커버로 가림
         setShowAllConcepts(true);
         if (ctx.cat) setAllConceptsCat(ctx.cat);
-        setTimeout(() => { setDetail(conceptForGo(key)); setRestoring(false); }, 0);
+        setTimeout(() => { setDetail(conceptForGo(key)); uncover(); }, 0);
       } else {
         if (ctx.from === "favs") persistedHomePill = 0; // ⭐ 즐겨찾기 칩 복원 — HomeMain lazy init이 읽음
         setDetail(conceptForGo(key));
+        uncover();
       }
-    } catch { /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
+    } catch { uncover(); /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // 충전 완료 복귀 (?tab=coin) → 코인 탭 열고 주소 정리
@@ -1165,8 +1166,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       {!showMakeScreen && <Header />}
       <main style={{ paddingBottom: 80 }}>
         {renderContent()}
-        {/* 복원 재연 중 커버 — all 경로의 전체보기→상세 틱 간극 한 프레임을 가림 (zIndex 150 = 최상위) */}
-        {restoring && <div style={{ position: "fixed", inset: 0, zIndex: 150, background: "#F7F8FA" }} />}
         {detail && (
           // zIndex 136: 전체보기(135) 위에 겹침 — 상세 뒤로 = 상세만 닫혀 전체보기 복귀. 설정(140)보다는 아래
           <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 136, display: "flex", flexDirection: "column", maxWidth: 480, margin: "0 auto" }}>
