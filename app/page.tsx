@@ -370,9 +370,10 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "family", title: "가족 스튜디오 화보", subtitle: "온 가족이 한 장에", emoji: "👨‍👩‍👧‍👦", accent: "#E7F7EA", badge: "NEW", tags: ["가족"], go: "family" },
       { id: "familyhanbok", title: "명절 한복 2인", subtitle: "둘이 함께, 명절 한복", emoji: "🏮", accent: "#FFF1E0", badge: "NEW", tags: ["가족"], image: "/cards/familyhanbok.webp", go: "familyhanbok" },
       { id: "familypet", title: "반려가족 사진", subtitle: "우리 애도 가족이니까", emoji: "🐾", accent: "#DCEBFF", badge: "NEW", tags: ["가족"], image: "/cards/familypet.webp", go: "familypet" },
-      { id: "fourcut", title: "인생네컷", subtitle: "나 혼자 네컷 한 장", emoji: "📸", accent: "#FFE0EC", badge: "NEW", tags: ["네컷"], go: "fourcut" },
-      { id: "fourcutillust", title: "인생네컷 (일러스트)", subtitle: "그림체 네컷 한 장", emoji: "🎨", accent: "#EFEAFF", badge: "NEW", tags: ["네컷"], go: "fourcutillust" },
-      { id: "fourcutcouple", title: "커플 네컷", subtitle: "둘이 함께 네컷 한 장", emoji: "📸", accent: "#DCEBFF", badge: "NEW", tags: ["네컷"], go: "fourcutcouple" },
+      // 네컷 라인 — 스트립 품질 검증 후 복귀 예정 (URL·route·concepts는 보존)
+      // { id: "fourcut", title: "인생네컷", subtitle: "나 혼자 네컷 한 장", emoji: "📸", accent: "#FFE0EC", badge: "NEW", tags: ["네컷"], go: "fourcut" },
+      // { id: "fourcutillust", title: "인생네컷 (일러스트)", subtitle: "그림체 네컷 한 장", emoji: "🎨", accent: "#EFEAFF", badge: "NEW", tags: ["네컷"], go: "fourcutillust" },
+      // { id: "fourcutcouple", title: "커플 네컷", subtitle: "둘이 함께 네컷 한 장", emoji: "📸", accent: "#DCEBFF", badge: "NEW", tags: ["네컷"], go: "fourcutcouple" },
     ],
   },
   {

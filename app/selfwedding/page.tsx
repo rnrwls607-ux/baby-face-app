@@ -7,9 +7,29 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
+import { openCoinSheet } from "../lib/coinSheet";
+import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import CoinIcon from "../components/CoinIcon";
+import StepIndicator from "../components/upload/StepIndicator";
+import TipChips from "../components/upload/TipChips";
+import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 
 export default function SelfweddingPage() {
   const router = useRouter();
+  // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin) — ★스위치 날 벌크 앵커
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("selfwedding");
+  const COIN_COST = CONCEPTS.selfwedding?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [images, setImages] = useState<string[]>([]);
   const [genders, setGenders] = useState<string[]>(["", ""]); // "female" | "male" — 사용자 확정값
   const [loading, setLoading] = useState(false);
@@ -44,6 +64,8 @@ export default function SelfweddingPage() {
   const handleSubmit = async () => {
     if (!images[0] || !images[1]) { setError("두 분의 사진을 모두 올려주세요."); return; }
     if (!genders[0] || !genders[1]) { setError("두 분의 성별을 선택해주세요."); return; }
+    // 즉시 부족 체크(캐시 기준, 서버 호출 전) — ★스위치 날 벌크 앵커
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 145000); // 서버 내부 컷 140초 + 여유 5초 (Pro 추론형)
@@ -57,6 +79,8 @@ export default function SelfweddingPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지) — ★스위치 날 벌크 앵커
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
@@ -78,6 +102,7 @@ export default function SelfweddingPage() {
   });
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="family" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (result) { setResult(""); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
         <span style={{ fontSize: 16, fontWeight: 800, color: "#191919" }}>셀프웨딩 화보</span>
@@ -89,6 +114,23 @@ export default function SelfweddingPage() {
         </div>
         {!result && (
           <>
+            {/* 결과 예시 — 각자 셀카 → 함께 화보 (2인 라인 전용 구성) */}
+            <div style={{ background: "#fff", borderRadius: 20, padding: 14, marginBottom: 8, boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, position: "relative" }}>
+                  <span style={{ position: "absolute", left: 6, top: 6, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>Before</span>
+                  <img src="/examples/selfwedding_b1.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
+                  <img src="/examples/selfwedding_b2.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
+                </div>
+                <span style={{ fontSize: 20, color: "#FF4B7C", fontWeight: 800, flexShrink: 0 }}>→</span>
+                <div style={{ flex: 2, position: "relative" }}>
+                  <span style={{ position: "absolute", left: 8, top: 8, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>After</span>
+                  <img src="/examples/selfwedding_a.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 14, display: "block" }} />
+                </div>
+              </div>
+              <p style={{ fontSize: 11.5, color: "#9B9B9B", textAlign: "center", margin: "10px 0 2px", fontWeight: 600 }}>각자 찍은 사진 두 장이, 셀프웨딩 화보로</p>
+            </div>
+            <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 분 사진 (각 1장) + 성별 선택</p>
               <div style={{ display: "flex", gap: 10 }}>
@@ -113,11 +155,12 @@ export default function SelfweddingPage() {
                   </div>
                 ))}
               </div>
-              <p style={{ fontSize: 11.5, color: "#BFC3CB", margin: "12px 2px 0", lineHeight: 1.5 }}>💡 각자 얼굴이 정면으로 잘 보이는 밝은 사진일수록 잘 나와요.</p>
             </div>
+            <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않기" }]} />
+            <PrivacyLine />
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "셀프웨딩 화보 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : <>셀프웨딩 화보 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}
@@ -134,6 +177,7 @@ export default function SelfweddingPage() {
         )}
         {result && (
           <div>
+            <StepIndicator current={3} />
             <p style={{ fontSize: 19, fontWeight: 900, color: "#191919", textAlign: "center", margin: "4px 0 18px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ borderRadius: 20, overflow: "hidden", marginBottom: 14, boxShadow: "0 4px 20px rgba(0,0,0,0.08)" }}>
