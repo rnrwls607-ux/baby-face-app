@@ -1133,7 +1133,8 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       <main style={{ paddingBottom: 80 }}>
         {renderContent()}
         {detail && (
-          <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 130, display: "flex", flexDirection: "column", maxWidth: 480, margin: "0 auto" }}>
+          {/* zIndex 136: 전체보기(135) 위에 겹침 — 상세 뒤로 = 상세만 닫혀 전체보기 복귀. 설정(140)보다는 아래 */}
+          <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 136, display: "flex", flexDirection: "column", maxWidth: 480, margin: "0 auto" }}>
             {/* 헤더 */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", flexShrink: 0, position: "relative", zIndex: 2 }}>
               <button onClick={() => setDetail(null)} style={{ background: "rgba(255,255,255,0.9)", border: "none", width: 38, height: 38, borderRadius: "50%", fontSize: 22, cursor: "pointer", color: "#191919", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.06)" }}>‹</button>
@@ -1415,7 +1416,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               return (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
                   {list.map(item => (
-                    <div key={item.id} className="pressable" onClick={() => { setShowAllConcepts(false); setDetail(conceptForGo(item.go)); }} style={{ cursor: "pointer" }}>
+                    <div key={item.id} className="pressable" onClick={() => { setDetail(conceptForGo(item.go)); }} style={{ cursor: "pointer" }}>
                       <div style={{ position: "relative" }}>
                         <div style={{ aspectRatio: "3 / 4", borderRadius: HOME.radius, overflow: "hidden", background: `linear-gradient(155deg, ${item.accent} 0%, #ffffff 135%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 48 }}>
                           {item.image ? <img src={item.image} alt={item.title} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : item.emoji}
