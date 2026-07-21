@@ -1133,7 +1133,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       <main style={{ paddingBottom: 80 }}>
         {renderContent()}
         {detail && (
-          {/* zIndex 136: 전체보기(135) 위에 겹침 — 상세 뒤로 = 상세만 닫혀 전체보기 복귀. 설정(140)보다는 아래 */}
+          // zIndex 136: 전체보기(135) 위에 겹침 — 상세 뒤로 = 상세만 닫혀 전체보기 복귀. 설정(140)보다는 아래
           <div style={{ position: "fixed", inset: 0, background: "#fff", zIndex: 136, display: "flex", flexDirection: "column", maxWidth: 480, margin: "0 auto" }}>
             {/* 헤더 */}
             <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 12px", flexShrink: 0, position: "relative", zIndex: 2 }}>
