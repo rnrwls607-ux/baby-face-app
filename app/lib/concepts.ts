@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   resultCount?: number;
@@ -548,6 +548,66 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐾", accent: "#DCEBFF" },
     ],
     start: "petgraduation",
+  },
+  petminhwa: {
+    key: "petminhwa",
+    coinCost: 2,
+    title: "조선 민화 초상",
+    subtitle: "우리 아이를 민화 명작으로",
+    emoji: "🖼️",
+    accent: "#FFF3E2",
+    description: "반려동물 사진 한 장이면 한지에 그린 조선 민화 초상으로 만들어드려요. 그림체는 민화, 생김새는 우리 아이 그대로예요.",
+    examples: [
+      { emoji: "🖼️", accent: "#FFF3E2" },
+      { emoji: "🎨", accent: "#EFEAFF" },
+      { emoji: "🐕", accent: "#E7F7EA" },
+    ],
+    start: "petminhwa",
+  },
+  petroyal: {
+    key: "petroyal",
+    coinCost: 2,
+    title: "로얄 유화 초상",
+    subtitle: "왕의 초상이 된 우리 아이",
+    emoji: "👑",
+    accent: "#F3E8DC",
+    description: "반려동물 사진 한 장이면 왕실 초상화처럼 웅장한 유화 작품으로 만들어드려요. 붓터치는 명화, 생김새는 우리 아이 그대로예요.",
+    examples: [
+      { emoji: "👑", accent: "#F3E8DC" },
+      { emoji: "🖌️", accent: "#EFEAFF" },
+      { emoji: "🐈", accent: "#E8EAED" },
+    ],
+    start: "petroyal",
+  },
+  pettwo: {
+    key: "pettwo",
+    coinCost: 3,
+    title: "펫 둘이서",
+    subtitle: "두 아이를 한 장에",
+    emoji: "🐾",
+    accent: "#DCEBFF",
+    description: "따로 찍은 두 아이의 사진을 한 장씩 올리면 함께 찍은 듯한 스튜디오 화보를 만들어드려요. 두 아이 생김새 모두 그대로예요.",
+    examples: [
+      { emoji: "🐾", accent: "#DCEBFF" },
+      { emoji: "🐶", accent: "#FFF1E0" },
+      { emoji: "🐱", accent: "#FFE0EC" },
+    ],
+    start: "pettwo",
+  },
+  petjob: {
+    key: "petjob",
+    coinCost: 2,
+    title: "펫 직업 변신",
+    subtitle: "우리 아이의 첫 출근",
+    emoji: "🩺",
+    accent: "#E1ECFF",
+    description: "반려동물 사진 한 장이면 의사·소방관·경찰·셰프 유니폼을 갖춘 출근 화보를 만들어드려요. 직업을 골라보세요.",
+    examples: [
+      { emoji: "🩺", accent: "#E1ECFF" },
+      { emoji: "🚒", accent: "#FFE0EC" },
+      { emoji: "👨‍🍳", accent: "#FFF1E0" },
+    ],
+    start: "petjob",
   },
   halloween: {
     key: "halloween",
@@ -2221,6 +2281,10 @@ export function conceptForGo(go: string): Concept {
   if (go === "petmemorial") return CONCEPTS.petmemorial;
   if (go === "petceo") return CONCEPTS.petceo;
   if (go === "petgraduation") return CONCEPTS.petgraduation;
+  if (go === "petminhwa") return CONCEPTS.petminhwa;
+  if (go === "petroyal") return CONCEPTS.petroyal;
+  if (go === "pettwo") return CONCEPTS.pettwo;
+  if (go === "petjob") return CONCEPTS.petjob;
   if (go === "petreceipt") return CONCEPTS.petreceipt;
   if (go === "era") return CONCEPTS.era;
   if (go === "petcostume") return CONCEPTS.petcostume;
