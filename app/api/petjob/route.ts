@@ -16,6 +16,7 @@ Transform the input pet photo into a premium "pet at work" portrait — THIS pet
 
 PET IDENTITY (absolute):
 - The pet is the EXACT animal from the input photo: same species, same breed, same size impression, same coat colors, same distinctive markings in the SAME places, same ear shape, same eye color, same face. The owner must instantly recognize their baby on the job.
+- COAT COLOR LOCK (critical): reproduce the pet's EXACT natural coat color at its real brightness and saturation. The costume, clothing, background, and lighting colors must NEVER bleed into or tint the fur. A gray or blue-gray coat (British Shorthair, Russian Blue, Chartreux, Korat, silver tabby) stays a natural cool GRAY — NEVER turned vivid blue. A cream coat stays cream, white stays white, black stays black, orange stays orange, brown stays brown. Any artistic or painting style may add soft shading, but must NEVER shift the actual hue of the fur away from its real-life color — the fur keeps its true color while the outfit and scene keep theirs.
 - Freshly groomed: clean healthy coat with natural shine, bright confident eyes, a proud capable expression natural to this animal.
 
 BODY TRUTH (critical):

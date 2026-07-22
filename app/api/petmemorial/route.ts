@@ -18,6 +18,7 @@ You are creating a serene memorial portrait of the beloved pet in the input phot
 
 PET IDENTITY (absolute — more sacred here than anywhere else):
 - The pet is the EXACT animal from the input photo: same species, same breed, same size impression, same coat colors, same distinctive markings in the SAME places, same ear shape, same eye color, same face. Every unique detail the family remembers must be preserved.
+- COAT COLOR LOCK (critical): reproduce the pet's EXACT natural coat color at its real brightness and saturation. The costume, clothing, background, and lighting colors must NEVER bleed into or tint the fur. A gray or blue-gray coat (British Shorthair, Russian Blue, Chartreux, Korat, silver tabby) stays a natural cool GRAY — NEVER turned vivid blue. A cream coat stays cream, white stays white, black stays black, orange stays orange, brown stays brown. Any artistic or painting style may add soft shading, but must NEVER shift the actual hue of the fur away from its real-life color — the fur keeps its true color while the outfit and scene keep theirs.
 - Show the pet HEALTHY and at ease — a gentle restoration to its bright-eyed, well-groomed best (soft clean coat, clear eyes), while keeping its true age and character. If the source shows a senior pet, it remains gracefully senior — dignified and comfortable, never de-aged into a puppy or kitten, never a different life stage.
 - The family's test, through tears: "that's exactly our baby — and they look so peaceful." Never a generic angelic animal.
 

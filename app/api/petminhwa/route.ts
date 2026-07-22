@@ -18,6 +18,8 @@ Transform the input pet photo into a traditional Korean folk painting (Joseon mi
 
 PET IDENTITY THROUGH THE PAINTING (most important):
 - The painted pet is the EXACT pet from the input photo: same species, same breed, same coat colors, same distinctive markings in the SAME places, same ear shape, same eye color, same face impression — all faithfully translated into painted form.
+- COAT COLOR LOCK (critical): reproduce the pet's EXACT natural coat color at its real brightness and saturation. The costume, clothing, background, and lighting colors must NEVER bleed into or tint the fur. A gray or blue-gray coat (British Shorthair, Russian Blue, Chartreux, Korat, silver tabby) stays a natural cool GRAY — NEVER turned vivid blue. A cream coat stays cream, white stays white, black stays black, orange stays orange, brown stays brown. Any artistic or painting style may add soft shading, but must NEVER shift the actual hue of the fur away from its real-life color — the fur keeps its true color while the outfit and scene keep theirs.
+- The flat mineral-pigment coloring applies to the costume, background, and motifs — never to replace the fur's real color (a gray cat stays gray, not indigo or jade).
 - Stylize the RENDERING, never the IDENTITY: fur texture may simplify into brushwork, but every patch, stripe, spot, and color stays exactly where it is on THIS animal. A cream pet stays cream; a striped pet keeps its exact stripes.
 - The owner's test: "someone painted a masterpiece of MY baby" — never "a generic animal painting."
 
