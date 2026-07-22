@@ -79,10 +79,14 @@ ABSOLUTELY AVOID:
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
   const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
+  // 진단 로그 — 200 응답인데 이미지가 없을 때(안전 필터·토큰 중단 등) 원인을 남긴다
+  const cand = data?.candidates?.[0];
+  console.log(`[petminhwa] finish=${cand?.finishReason || "-"} block=${data?.promptFeedback?.blockReason || "-"} parts=${respParts.length} img=${imgParts.length} ${Date.now() - t0}ms`);
   const chosen = (finalParts.length ? finalParts : imgParts).pop();
   const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
   if (!b64) {
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
+    console.error(`[petminhwa] 이미지 없음 — finish=${cand?.finishReason || "-"} text=${(txt || "").slice(0, 500)}`);
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
   const dataUrl = await stampAiMetadata(b64); // AI 생성물 비가시 표시
