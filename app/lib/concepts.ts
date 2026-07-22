@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   resultCount?: number;
@@ -488,6 +488,66 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "coupletravel",
     detailImage: "/details/coupletravel.webp",
+  },
+  petbirthday: {
+    key: "petbirthday",
+    coinCost: 2,
+    title: "펫 생일 파티",
+    subtitle: "우리 아이 생일, 화보로",
+    emoji: "🎂",
+    accent: "#FFE8F0",
+    description: "반려동물 사진 한 장이면 파티 모자와 케이크가 있는 생일 화보를 만들어드려요. 우리 아이 생김새는 그대로예요.",
+    examples: [
+      { emoji: "🎂", accent: "#FFE8F0" },
+      { emoji: "🎈", accent: "#E1ECFF" },
+      { emoji: "🐶", accent: "#FFF1E0" },
+    ],
+    start: "petbirthday",
+  },
+  petmemorial: {
+    key: "petmemorial",
+    coinCost: 2,
+    title: "무지개다리 초상",
+    subtitle: "소중한 아이를 오래 간직하는 초상",
+    emoji: "🌈",
+    accent: "#EFEAFF",
+    description: "사진 한 장으로 평온하고 건강한 모습의 추모 초상을 만들어드려요. 아이의 생김새를 그대로 담아, 오래 간직하실 수 있도록 정성껏 그려드립니다.",
+    examples: [
+      { emoji: "🌈", accent: "#EFEAFF" },
+      { emoji: "🤍", accent: "#E8EAED" },
+      { emoji: "🕊️", accent: "#EAF3FF" },
+    ],
+    start: "petmemorial",
+  },
+  petceo: {
+    key: "petceo",
+    coinCost: 2,
+    title: "펫 CEO 출근",
+    subtitle: "오늘부터 우리 아이가 회장님",
+    emoji: "👔",
+    accent: "#E8EAED",
+    description: "반려동물 사진 한 장이면 넥타이 매고 집무실에 앉은 회장님 화보를 만들어드려요. 몸은 그대로 동물, 표정만 진지하게.",
+    examples: [
+      { emoji: "👔", accent: "#E8EAED" },
+      { emoji: "💼", accent: "#FFF1E0" },
+      { emoji: "🐱", accent: "#DCEBFF" },
+    ],
+    start: "petceo",
+  },
+  petgraduation: {
+    key: "petgraduation",
+    coinCost: 2,
+    title: "펫 졸업사진",
+    subtitle: "유치원 졸업을 축하하며",
+    emoji: "🎓",
+    accent: "#E7F7EA",
+    description: "반려동물 사진 한 장이면 학사모와 졸업 가운을 갖춘 졸업사진을 만들어드려요. 우리 아이 생김새는 그대로예요.",
+    examples: [
+      { emoji: "🎓", accent: "#E7F7EA" },
+      { emoji: "📜", accent: "#FFF1E0" },
+      { emoji: "🐾", accent: "#DCEBFF" },
+    ],
+    start: "petgraduation",
   },
   halloween: {
     key: "halloween",
@@ -2157,6 +2217,10 @@ export function conceptForGo(go: string): Concept {
   if (go === "graduation") return CONCEPTS.graduation;
   if (go === "wedding") return CONCEPTS.wedding;
   if (go === "petstudio") return CONCEPTS.petstudio;
+  if (go === "petbirthday") return CONCEPTS.petbirthday;
+  if (go === "petmemorial") return CONCEPTS.petmemorial;
+  if (go === "petceo") return CONCEPTS.petceo;
+  if (go === "petgraduation") return CONCEPTS.petgraduation;
   if (go === "petreceipt") return CONCEPTS.petreceipt;
   if (go === "era") return CONCEPTS.era;
   if (go === "petcostume") return CONCEPTS.petcostume;
