@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# BA 원료(비포/애프터 원본 PNG) — 규격화 산출물만 public/examples/ba 에 커밋
+/examples/
