@@ -148,7 +148,7 @@ export default function TravelPage() {
             <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image || !destination}
               style={{ width: "100%", marginTop: 18, background: loading || !image || !destination ? "#E8E9ED" : "#FF4B7C", color: loading || !image || !destination ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image || !destination ? "not-allowed" : "pointer", boxShadow: loading || !image || !destination ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : <>여행 사진 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} /> {COIN_COST}</span>}</>}
+              {loading ? `만드는 중... (${elapsed}초)` : <>여행 사진 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}

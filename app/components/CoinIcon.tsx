@@ -1,29 +1,33 @@
-// 브랜드 코인 아이콘 — 로고 팔레트(코랄→민트) 정원 + 흰색 조리개 6엽 심볼.
-// 14px에서도 또렷하도록 세부 디테일 없이 굵은 획만 사용, 흰 내부 링으로 경계 확보.
-export default function CoinIcon({ size = 16 }: { size?: number }) {
-  const blades = Array.from({ length: 6 }, (_, k) => {
-    const a1 = (k * 60 * Math.PI) / 180;
-    const a2 = ((k * 60 + 28) * Math.PI) / 180;
-    return {
-      x1: +(12 + 3.1 * Math.cos(a1)).toFixed(2),
-      y1: +(12 + 3.1 * Math.sin(a1)).toFixed(2),
-      x2: +(12 + 6.9 * Math.cos(a2)).toFixed(2),
-      y2: +(12 + 6.9 * Math.sin(a2)).toFixed(2),
-    };
-  });
+// 브랜드 코인 아이콘 — 앱 아이콘(검정 타일·흰 M)과 한 가족인 솔리드 각인형.
+// 그라데이션·광택 없이 원반 + M 모노그램 한 획만 써서 14px에서도 또렷하게 읽힌다.
+//
+// onColor: 컬러 버튼 위에 얹는 경우(핑크 CTA 등). 원반이 글자색(currentColor)을 따르고
+// M은 뚫린 구멍이라 버튼 배경이 비쳐 보인다 → 활성(흰 원반·핑크 M)·비활성(회색) 양쪽에서
+// 라벨과 같은 톤으로 자동 정렬된다. 기본값(밝은 배경)은 검정 원반 + 흰 M.
+export default function CoinIcon({ size = 16, onColor = false }: { size?: number; onColor?: boolean }) {
+  const M_PATH = "M28 72 L28 34 L50 56 L72 34 L72 72";
+  const common = {
+    width: size,
+    height: size,
+    viewBox: "0 0 100 100",
+    "aria-hidden": true as const,
+    style: { display: "inline-block", verticalAlign: "-0.15em", flexShrink: 0 } as const,
+  };
+  if (onColor) {
+    return (
+      <svg {...common}>
+        <mask id="mospicCoinCut">
+          <rect width="100" height="100" fill="#fff" />
+          <path d={M_PATH} fill="none" stroke="#000" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
+        </mask>
+        <circle cx="50" cy="50" r="50" fill="currentColor" mask="url(#mospicCoinCut)" />
+      </svg>
+    );
+  }
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" style={{ display: "inline-block", verticalAlign: "-0.15em", flexShrink: 0 }}>
-      <defs>
-        <linearGradient id="mospicCoinGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#F2A48C" />
-          <stop offset="1" stopColor="#8FD0CC" />
-        </linearGradient>
-      </defs>
-      <circle cx="12" cy="12" r="12" fill="url(#mospicCoinGrad)" />
-      <circle cx="12" cy="12" r="10.7" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1" />
-      {blades.map((b, i) => (
-        <line key={i} x1={b.x1} y1={b.y1} x2={b.x2} y2={b.y2} stroke="#fff" strokeWidth="2.1" strokeLinecap="round" />
-      ))}
+    <svg {...common}>
+      <circle cx="50" cy="50" r="50" fill="#191919" />
+      <path d={M_PATH} fill="none" stroke="#FFFFFF" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

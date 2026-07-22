@@ -131,7 +131,7 @@ export default function PettwoPage() {
 
             <button onClick={handleSubmit} disabled={loading || !image1 || !image2}
               style={{ width: "100%", marginTop: 18, background: loading || !image1 || !image2 ? "#E8E9ED" : "#FF4B7C", color: loading || !image1 || !image2 ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image1 || !image2 ? "not-allowed" : "pointer", boxShadow: loading || !image1 || !image2 ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : <>둘이서 화보 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} /> {COIN_COST}</span>}</>}
+              {loading ? `만드는 중... (${elapsed}초)` : <>둘이서 화보 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}
