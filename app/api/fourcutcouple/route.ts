@@ -4,7 +4,7 @@ import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
 export const maxDuration = 150; // Pro 추론형 대응 — Fluid Compute 전제 (실측 로그로 확인)
 // 2인 라인 Wave 2 — 나노바나나 Pro + 네컷 스트립 수술 4곳 (2인 CORE 기준 원본 = couple, 공식 수정 시 couple 고치고 재이식)
-const GEMINI_MODEL = "gemini-3-pro-image-preview";
+const GEMINI_MODEL = "gemini-3-pro-image";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };

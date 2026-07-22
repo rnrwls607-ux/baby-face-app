@@ -5,7 +5,7 @@ import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
 // 펫 라운드 — 나노바나나 Pro (다른 flash route 무영향)
-const GEMINI_MODEL = "gemini-3-pro-image-preview";
+const GEMINI_MODEL = "gemini-3-pro-image";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
