@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
-export const maxDuration = 60;
-const GEMINI_MODEL = "gemini-3.1-flash-lite";
+export const maxDuration = 240; // 2단 Pro 포스터 생성 대응 — Fluid Compute 전제
+const GEMINI_MODEL = "gemini-3.1-flash-lite"; // 1단 — 관상 텍스트(JSON)
+const POSTER_MODEL = "gemini-3-pro-image"; // 2단 — 포스터 이미지
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
@@ -118,13 +120,106 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
     return FALLBACK;
   }
 }
+// ═══ 2단 — 관상 포스터 이미지(Pro). 1단 결과를 {{ }} 자리에 문자열로 주입한다.
+const POSTER_PROMPT = `TASK
+You are creating ONE vertical "pet face reading" (관상) analysis poster from the input pet photo. The pet's ID-style portrait sits in the center, and thin elegant callout lines point from specific facial features to short Korean label chips arranged around it. A premium, playful, clean Korean infographic.
+
+PET IDENTITY (absolute):
+- The pet in the poster is the EXACT pet from the input photo: same species, breed, coat color, markings in the same places, ear shape, eye color, face. The owner must instantly recognize their pet.
+- COAT COLOR LOCK: reproduce the pet's exact real coat color — a gray cat stays cool gray (never blue), white stays white, orange stays orange. The background must not tint the fur.
+- Render the pet as a clean ID-photo-style portrait: facing camera, head and upper chest, freshly groomed, bright eyes, on a soft solid pale-blue studio background, inside a rounded-rectangle frame at the poster's center. If the input shows a medical cone or collar, omit it and show the pet's face clean and clear.
+
+POSTER LAYOUT (follow exactly):
+- Vertical poster, soft warm ivory background (#F8F2E6), generous margins, premium minimal Korean design.
+- TOP: title 「우리 애 관상 보고서」 in bold clean modern Korean typography, dark ink color. Directly below, a smaller subtitle 「AI 관상 분석」 in gray.
+- CENTER: the pet ID portrait in its rounded frame (about 45% of poster width), soft shadow.
+- AROUND the portrait: exactly FIVE callouts, one per feature. Each callout = a thin elegant gold line starting AT that exact facial feature on the pet, ending at a small rounded chip with Korean text: a bold feature name and a smaller reading below:
+  1. NOSE (코) → 「{{nose_name}}」 / 「{{nose_desc}}」
+  2. EYES (눈) → 「{{eyes_name}}」 / 「{{eyes_desc}}」
+  3. EARS (귀) → 「{{ears_name}}」 / 「{{ears_desc}}」
+  4. FOREHEAD (이마) → 「{{forehead_name}}」 / 「{{forehead_desc}}」
+  5. CHEEK (광대) → 「{{cheek_name}}」 / 「{{cheek_desc}}」
+- ONE-TO-ONE LAW: exactly ONE callout per feature — nose, eyes, ears, forehead, cheek. FIVE callouts and FIVE chips, no more, no less. Never two on one feature, never repeat a chip, never add unlisted callouts (no neck, mouth, chin, body, paws).
+- Place chips in the empty side margins (2-3 left, 2-3 right), with clear space so NO chip or text overlaps the pet portrait. Lines start at the correct feature, stay thin and non-crossing, never cover the face. Every chip fully inside the poster with clear margin — no text touching the photo or the poster edge.
+- BOTTOM: one wide rounded band with 「총점 {{score}}점 · {{summary}}」 in bold.
+
+EXACT TEXT LAW (critical):
+- Render ONLY the Korean strings written above, EXACTLY character for character. Do not invent, add, translate, or alter ANY text. No hanja, no English, no numbers except {{score}}.
+- Every Korean character perfectly formed, correctly spelled, crisply legible in clean modern sans-serif. No melted, garbled, mirrored, broken, or invented characters. Nothing cut off by the photo or edge.
+- If any area would need text not listed, leave it clean empty design.
+
+STYLE:
+- Premium minimal Korean design: soft ivory ground, ink-dark text, warm gold accent for lines and chip borders, gentle pink accent sparingly. Cute but classy. Everything flat graphic design EXCEPT the pet portrait, which stays fully photographic and realistic.
+
+SELF-CHECK: exactly 5 callouts one each on nose/eyes/ears/forehead/cheek? No duplicated or cut-off text? Every Hangul perfect? Pet unmistakably the input pet, true coat color, face clear (no cone)? Only then complete.
+
+ABSOLUTELY AVOID:
+- More/fewer than five callouts; two on one feature; repeated text; callouts on neck/mouth/chin/paws/body.
+- Any garbled, misspelled, melted, cut-off, or invented text; text not specified; hanja or random English.
+- A different pet; changed breed/color/markings; a cartoon/illustrated pet (portrait stays photographic); keeping a medical cone.
+- Lines to wrong features; crossing lines; chips or text overlapping the face or edge; cluttered layout; watermarks, borders.`;
+function buildPoster(d: ReceiptData): string {
+  const map: Record<string, string> = { score: String(d.total), summary: d.summary };
+  for (const it of d.items) { map[`${it.feature}_name`] = it.name; map[`${it.feature}_desc`] = it.desc; }
+  return POSTER_PROMPT.replace(/\{\{(\w+)\}\}/g, (_m, k: string) => map[k] ?? "");
+}
+async function generatePoster(imageDataUrl: string, d: ReceiptData): Promise<string> {
+  const img = parseImage(imageDataUrl);
+  const prompt = buildPoster(d);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 230000);
+  const t0 = Date.now();
+  let res: Response;
+  try {
+    res = await fetchGeminiWithRetry(
+      `https://generativelanguage.googleapis.com/v1beta/models/${POSTER_MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { text: prompt },
+            { inline_data: { mime_type: img.mimeType, data: img.data } },
+          ] }],
+          generationConfig: { responseModalities: ["IMAGE"] },
+        }),
+        signal: ctrl.signal,
+      },
+      "petreceipt-poster",
+      0 // ★재시도 없음 — Pro 생성은 1회가 길어 두 시도가 예산을 나누면 재시도 중 타임아웃
+    );
+  } catch (e: unknown) {
+    clearTimeout(timer);
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
+    throw e;
+  }
+  clearTimeout(timer);
+  console.log(`[petreceipt-poster] model=${POSTER_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "petreceipt-poster", "포스터를 만들지 못했어요. 다른 사진으로 다시 시도해주세요."));
+  const data = await res.json();
+  const respParts = data?.candidates?.[0]?.content?.parts || [];
+  const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
+  const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
+  const cand = data?.candidates?.[0];
+  console.log(`[petreceipt-poster] finish=${cand?.finishReason || "-"} block=${data?.promptFeedback?.blockReason || "-"} parts=${respParts.length} img=${imgParts.length}`);
+  const chosen = (finalParts.length ? finalParts : imgParts).pop();
+  const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
+  if (!b64) {
+    const txt = respParts.find((p: { text?: string }) => p.text)?.text;
+    console.error(`[petreceipt-poster] 이미지 없음 — finish=${cand?.finishReason || "-"} text=${(txt || "").slice(0, 500)}`);
+    throw new Error("포스터를 만들지 못했어요. 다른 사진으로 다시 시도해주세요.");
+  }
+  // ★크롭 없음 — 모델이 세로 포스터로 그리므로 비율을 그대로 보존한다
+  return await stampAiMetadata(b64); // AI 생성물 비가시 표시
+}
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
     if (!image) return NextResponse.json({ error: "사진을 올려주세요." }, { status: 400 });
-    const result = await analyzePet(image);
-    return NextResponse.json({ result });
+    const result = await analyzePet(image); // 1단 — 관상 텍스트
+    const output = await generatePoster(image, result); // 2단 — 포스터 이미지
+    return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };
     console.error("petreceipt error:", err?.message);
