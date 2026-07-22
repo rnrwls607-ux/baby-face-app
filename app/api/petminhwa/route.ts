@@ -3,7 +3,7 @@ import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
-export const maxDuration = 150; // Pro 추론형 대응 — Fluid Compute 전제
+export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
 // 펫 라운드 — 나노바나나 Pro (다른 flash route 무영향)
 const GEMINI_MODEL = "gemini-3-pro-image-preview";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
@@ -47,7 +47,7 @@ ABSOLUTELY AVOID:
 - Over-decoration crowding the pet; motifs covering the face or body.
 - Watermarks, borders, frames.`;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 140000);
+  const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
   let res: Response;
   try {
@@ -69,7 +69,7 @@ ABSOLUTELY AVOID:
     );
   } catch (e: unknown) {
     clearTimeout(timer);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 140초를 넘겨 중단했어요. 다시 시도해주세요.");
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
     throw e;
   }
   clearTimeout(timer);

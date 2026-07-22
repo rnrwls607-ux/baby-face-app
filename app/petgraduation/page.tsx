@@ -66,7 +66,7 @@ export default function PetgraduationPage() {
     if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 145000); // 서버 내부 컷 140초 + 여유 5초 (Pro 추론형)
+    const tid = setTimeout(() => ctrl.abort(), 235000); // 서버 내부 컷 230초 + 여유 5초 (생성 계열 — 배경·소품까지 새로 그림)
     try {
       const compressed = await compress(image);
       const res = await fetch("/api/petgraduation", {
