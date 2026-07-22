@@ -718,18 +718,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     );
     return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
-        {/* 카테고리 칩 */}
-        <div className="hide-scrollbar" style={{ display: "flex", gap: 18, overflowX: "auto", padding: "8px 18px 10px" }}>
-          {HOME_PILLS.map((p, i) => {
-            const on = pill === i;
-            return (
-              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "3px 2px 8px", cursor: "pointer", fontSize: 14, fontWeight: on ? 800 : 600, background: "none", border: "none", borderBottom: on ? "2px solid #FF4B7C" : "2px solid transparent", color: on ? "#191919" : "#8A8F98" }}>
-                {p.label}
-              
-              </button>
-            );
-          })}
-        </div>
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
         {HOME_PILLS[pill].value === "all" && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
@@ -761,6 +749,18 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           ))}
         </div>
         )}
+        {/* 카테고리 칩 */}
+        <div className="hide-scrollbar" style={{ display: "flex", gap: 18, overflowX: "auto", padding: "16px 18px 10px" }}>
+          {HOME_PILLS.map((p, i) => {
+            const on = pill === i;
+            return (
+              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "3px 2px 8px", cursor: "pointer", fontSize: 14, fontWeight: on ? 800 : 600, background: "none", border: "none", borderBottom: on ? "2px solid #FF4B7C" : "2px solid transparent", color: on ? "#191919" : "#8A8F98" }}>
+                {p.label}
+              
+              </button>
+            );
+          })}
+        </div>
         {/* 코인 현황 카드 (무료체험 카드 교체 — usage API·FREE_LIMIT 로직은 무접촉, 스위치 날 폐기 예정) */}
         {!userLoading && !user && (
           <div style={{ margin: "16px 18px 0", background: "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
