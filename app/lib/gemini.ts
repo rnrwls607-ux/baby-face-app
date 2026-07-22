@@ -9,6 +9,10 @@
 //   1회에 100~200초 걸리는 route는 두 시도가 예산을 나눠 쓰면 재시도 도중
 //   타임아웃으로 죽는다 → 그런 route는 retries=0으로 단일 호출(첫 시도에 전량 배정).
 //   기본값 1이라 인자를 넘기지 않는 기존 호출부는 동작이 그대로다.
+// - ★retryWindowMs: "빨리 떨어진 과부하만 재시도"하는 안전장치. 첫 시도가 이 시간 안에
+//   실패했을 때만 재시도한다(503/429는 보통 수십 초 안에 즉시 떨어짐). 오래 끌다 실패한
+//   건은 재시도해봐야 호출부 예산을 넘겨 죽으므로 그대로 반환한다.
+//   기본값 Infinity라 인자를 넘기지 않는 호출부는 역시 동작이 그대로다.
 // - init.body는 반드시 문자열(JSON.stringify)이어야 두 번째 fetch에 재사용 가능.
 //   스트림이면 재사용이 불가능하므로 재시도 없이 1회만 호출한다(방어).
 
@@ -26,14 +30,21 @@ function sleep(ms: number, signal?: AbortSignal | null): Promise<void> {
 }
 
 // Gemini fetch + 일시 오류 1회 자동 재시도.
-export async function fetchGeminiWithRetry(url: string, init: RequestInit, label = "gemini", retries = 1): Promise<Response> {
+export async function fetchGeminiWithRetry(url: string, init: RequestInit, label = "gemini", retries = 1, retryWindowMs = Infinity): Promise<Response> {
   if (typeof init.body !== "string") {
     console.warn(`[${label}] retry 불가: init.body가 문자열이 아니라 재사용할 수 없음 — 단일 호출로 진행`);
     return fetch(url, init);
   }
   if (retries < 1) return fetch(url, init); // 단일 호출 — 시간 예산을 첫 시도에 전량 배정
+  const startedAt = Date.now();
   const first = await fetch(url, init);
   if (!TRANSIENT_STATUSES.has(first.status)) return first;
+  const elapsed = Date.now() - startedAt;
+  if (elapsed > retryWindowMs) {
+    // 오래 끌다 난 일시 오류 — 재시도하면 호출부 예산을 넘겨 죽는다. 본문은 읽지 않고 그대로 반환.
+    console.warn(`[${label}] Gemini 일시 오류 ${first.status}이지만 첫 시도가 ${Math.round(elapsed / 1000)}초 소요 → 재시도 생략(시간 예산 보호)`);
+    return first;
+  }
   const reason = await first.text().then(t => t.slice(0, 300)).catch(() => "(본문 읽기 실패)");
   console.warn(`[${label}] Gemini 일시 오류 ${first.status} → 1초 후 재시도. 사유: ${reason}`);
   await sleep(1000, init.signal);

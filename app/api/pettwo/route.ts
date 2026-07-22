@@ -82,7 +82,8 @@ ABSOLUTELY AVOID:
         signal: ctrl.signal,
       },
       "pettwo",
-      0 // ★재시도 없음 — Pro 생성은 1회 100~200초라 두 시도가 예산을 나누면 재시도 중 타임아웃
+      1, // 과부하(503/429) 1회 재시도
+      60000 // ★단 첫 시도가 60초 안에 떨어진 경우만 — 오래 끌다 실패한 건은 재시도 생략(230초 예산 보호)
     );
   } catch (e: unknown) {
     clearTimeout(timer);
