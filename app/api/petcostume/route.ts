@@ -10,53 +10,62 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const BASE_RULE = `TWO ABSOLUTE RULES (these override everything else):
-1. THE PET'S IDENTITY IS UNTOUCHABLE — the exact same pet: the same breed, the same size class and body proportions for that breed, the same fur color, pattern, length, and texture, the same unique markings in the same places, the same eye color, the same ear shape, the same face. The owner must instantly recognize their own pet — never a different animal, never a different individual, never a generic animal of the breed. Do NOT invent markings or colors that are not in the source. The costume is worn ON TOP of the real pet — it must fit the pet's actual body naturally and look comfortable, with correct animal anatomy: never distorted, humanized, stretched, or doll-like. The pet's FACE and head markings stay fully visible — no costume piece may cover or reshape the face.
-2. COMPOSITION — the output is ALWAYS a vertical portrait centered on the pet, regardless of the input photo's framing, zoom, crop, or angle, with the ears, head, and any hat never cropped at the top.
+const BASE_RULE = `TASK
+Transform the input pet photo into an adorable premium costume portrait — THIS pet dressed in the complete outfit described below, photographed like a luxury pet studio's costume package. Charming, polished, and unmistakably the owner's own pet.
 
-The input photo is a reference for the PET'S IDENTITY ONLY — ignore its framing, zoom, background, lighting, and any existing accessories. Render the fur in its TRUE color under the scene's lighting; color casts from the source photo must not become the fur's actual color.
+PET IDENTITY (absolute):
+- The pet is the EXACT animal from the input photo: same species, same breed, same size impression, same coat colors, same distinctive markings in the SAME places, same ear shape, same eye color, same face. The owner must gasp "that's OUR baby" at first glance.
+- Freshly groomed: clean, fluffy, healthy coat with natural shine, bright sparkling eyes, a happy relaxed expression natural to this animal. Groom and brighten ONLY — never alter breed traits, markings, colors, or proportions.
 
-Premium studio lighting, photorealistic, high resolution, sharp fur detail.
-FINAL SELF-CHECK: the owner must instantly say "that's MY pet in a costume!" — same breed, markings, size, and eyes. If it reads as a different or generic animal, or the anatomy looks unnatural, the result is wrong.
-No text, no watermark, no border, no human.`;
+BODY TRUTH (critical):
+- The pet keeps its OWN natural animal body, proportions, and posture — sitting or lying the way a real animal does. NEVER a human body with a pet head, never human arms, never standing on two legs.
+
+FULL COSTUME LAW (critical):
+- Dress the pet in the COMPLETE outfit described below — covering chest, back, and shoulders as tailored premium pet-wear, properly and fully worn, not just a single accessory. It fits naturally over the anatomy: comfortable, believable, never tight, never distorting the body.
+- HAT GRAMMAR: any hat, crown, or headpiece sits small and lightly BETWEEN or BEHIND the ears, tilted charmingly back — both eyes and BOTH ears stay fully visible at all times. If it would cover the ears, tilt it further back or make it smaller.
+- If the pet wears its own collar in the source, it may remain beneath the costume; never remove it, never add unlisted accessories.
+
+TEXT BAN:
+- Absolutely NO letters or numbers anywhere: no writing on patches, tags, or props — all patches and emblems are plain shapes only. If a spot begs for lettering, leave it plain.
+
+LIGHT & FINISH:
+- Premium soft studio lighting suited to the scene below — the pet's face perfectly lit, a delicate rim light on the fur.
+- Photorealistic, high resolution, sharp fur detail, gentle depth of field. NOT a cartoon, NOT an illustration.
+- Vertical portrait framing centered on the pet, face large and clear.
+
+SELF-CHECK before finishing:
+- Same pet as the input — markings in the same places, same face? Own animal body? Costume COMPLETE and properly worn (not one accessory)? Headpiece small, both eyes and ears fully visible? Zero letters anywhere? Premium studio look? Only then complete.
+
+ABSOLUTELY AVOID:
+- A different or generic animal; changed breed, colors, or marking placement; a human or humanoid body; two-legged standing.
+- A half-worn outfit or a lone accessory instead of the full costume; anything covering ears or eyes; distorted anatomy.
+- Any letters, numbers, or lettered patches; cheap costume-party look; cartoon style; plastic fur; extra or missing paws, ears, tails; watermarks, borders.`;
 const COSTUME_PROMPTS: Record<string, string> = {
-  royal: `You are a luxury pet costume photographer. Take the pet in this photo
-and dress them as adorable royalty — a tiny king, queen, prince, or
-princess.
-${BASE_RULE}
-Costume: an elegant miniature royal outfit — a velvet cape with gold
-trim, a small jeweled crown sitting naturally on their head, and a regal
-collar. Background: a grand palace-style studio set with rich drapery in
-deep warm tones. Majestic but cute mood.`,
-  hanbok: `You are a luxury pet costume photographer. Take the pet in this photo
-and dress them in a beautiful traditional Korean hanbok.
-${BASE_RULE}
-Costume: an adorable well-fitted pet hanbok with bright traditional
-colors (saekdong sleeves or elegant silk), optionally a tiny traditional
-hat. Background: a tasteful traditional Korean studio set with hanji
-tones and subtle dancheong accents. Festive holiday mood, like a Lunar
-New Year greeting photo.`,
-  santa: `You are a luxury pet costume photographer. Take the pet in this photo
-and dress them in a cozy Santa Claus outfit.
-${BASE_RULE}
-Costume: a soft red Santa suit or cape with white fluffy trim and a
-little Santa hat sitting naturally on their head. Background: a warm
-Christmas studio set — tree with fairy lights, gifts, soft golden bokeh.
-Cozy, joyful holiday mood.`,
-  wizard: `You are a luxury pet costume photographer. Take the pet in this photo
-and dress them as an adorable little wizard.
-${BASE_RULE}
-Costume: a tiny wizard robe and a pointed wizard hat that fits naturally,
-with subtle star or moon details; optionally a small magic wand prop
-beside them. Background: a magical study with old books, candles, and
-soft floating light particles. Whimsical, enchanting mood.`,
-  astronaut: `You are a luxury pet costume photographer. Take the pet in this photo
-and dress them as a cute astronaut.
-${BASE_RULE}
-Costume: a well-fitted white astronaut suit with mission patches; the
-helmet is OFF or worn open so the pet's full face stays clearly visible.
-Background: a clean spacecraft interior or starry space backdrop with
-soft cinematic lighting. Adventurous, adorable mood.`,
+  royal: `${BASE_RULE}
+
+THE COSTUME — royal:
+- A miniature royal outfit worn completely: a rich velvet cape in deep red or royal blue with gold trim and soft fur edging, draped fully over chest, back, and shoulders; a small jeweled crown per the HAT GRAMMAR; optionally a fine jeweled collar.
+- SCENE: a grand palace studio set — deep warm drapery, a hint of gold, soft regal lighting. Majestic but adorable.`,
+  hanbok: `${BASE_RULE}
+
+THE COSTUME — hanbok:
+- An adorable well-fitted pet hanbok worn completely: a luminous silk jeogori with bright saekdong (rainbow-striped) sleeves covering chest and back, neatly tied goreum; optionally a tiny traditional hat per the HAT GRAMMAR.
+- SCENE: a tasteful traditional Korean studio set — warm hanji tones, subtle dancheong accents, soft festive lighting. Like a Lunar New Year greeting photo.`,
+  santa: `${BASE_RULE}
+
+THE COSTUME — santa:
+- A cozy Santa outfit worn completely: a soft red suit or cape with white fluffy trim covering chest, back, and shoulders, with a matching belt detail; a little Santa hat per the HAT GRAMMAR.
+- SCENE: a warm Christmas studio set — a softly blurred tree with golden fairy lights, wrapped plain gifts, cozy bokeh. Joyful holiday warmth.`,
+  wizard: `${BASE_RULE}
+
+THE COSTUME — wizard:
+- An enchanting wizard outfit worn completely: a flowing wizard robe with subtle star-and-moon shapes (plain shapes, no characters) covering chest and back; a pointed wizard hat per the HAT GRAMMAR; a small magic wand resting beside its paws.
+- SCENE: a magical study — old books (blank spines), warm candlelight, soft floating light particles. Whimsical and enchanting.`,
+  astronaut: `${BASE_RULE}
+
+THE COSTUME — astronaut:
+- A well-fitted white astronaut suit worn completely over chest, back, and shoulders, with plain shape patches only; the helmet is OFF, resting beside the pet, so the full face and both ears stay clearly visible.
+- SCENE: a clean spacecraft interior or a starry space backdrop with soft cinematic lighting. Adventurous and adorable.`,
 };
 async function generatePetcostume(imageDataUrl: string, costume: string): Promise<string> {
   const img = parseImage(imageDataUrl);
