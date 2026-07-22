@@ -719,11 +719,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
         {/* 카테고리 칩 */}
-        <div className="hide-scrollbar" style={{ display: "flex", gap: 7, overflowX: "auto", padding: "8px 18px 10px" }}>
+        <div className="hide-scrollbar" style={{ display: "flex", gap: 18, overflowX: "auto", padding: "8px 18px 10px" }}>
           {HOME_PILLS.map((p, i) => {
             const on = pill === i;
             return (
-              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "9px 18px", borderRadius: 22, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: on ? "1.5px solid #191919" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
+              <button key={p.label} onClick={() => setPill(i)} style={{ position: "relative", flexShrink: 0, padding: "3px 2px 8px", cursor: "pointer", fontSize: 14, fontWeight: on ? 800 : 600, background: "none", border: "none", borderBottom: on ? "2px solid #FF4B7C" : "2px solid transparent", color: on ? "#191919" : "#8A8F98" }}>
                 {p.label}
               
               </button>
@@ -1422,11 +1422,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           </div>
 
           {/* 칩 필터 */}
-          <div className="hide-scrollbar" style={{ display: "flex", gap: 7, overflowX: "auto", padding: "12px 16px", flexShrink: 0, borderBottom: "1px solid #F4F5F7" }}>
+          <div className="hide-scrollbar" style={{ display: "flex", gap: 18, overflowX: "auto", padding: "12px 16px 2px", flexShrink: 0, borderBottom: "1px solid #F4F5F7" }}>
             {HOME_PILLS.map(p => {
               const on = allConceptsCat === p.value;
               return (
-                <button key={p.value} onClick={() => setAllConceptsCat(p.value)} style={{ flexShrink: 0, padding: "9px 16px", borderRadius: 22, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: on ? "1.5px solid #191919" : "1.5px solid #EAEBED", background: on ? HOME.text : "#fff", color: on ? "#fff" : "#7E848C" }}>
+                <button key={p.value} onClick={() => setAllConceptsCat(p.value)} style={{ flexShrink: 0, padding: "3px 2px 10px", cursor: "pointer", fontSize: 14, fontWeight: on ? 800 : 600, background: "none", border: "none", borderBottom: on ? "2px solid #FF4B7C" : "2px solid transparent", color: on ? "#191919" : "#8A8F98" }}>
                   {p.label}
                 </button>
               );
