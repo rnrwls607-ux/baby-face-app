@@ -13,6 +13,10 @@ import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import { openCoinSheet } from "../lib/coinSheet";
+import CoinIcon from "../components/CoinIcon";
 
 const COSTUME_OPTIONS = [
   { key: "royal", label: "👑 임금님·공주" },
@@ -24,6 +28,19 @@ const COSTUME_OPTIONS = [
 
 export default function PetcostumePage() {
   const router = useRouter();
+  // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin) — ★스위치 날 벌크 앵커
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("petcostume");
+  const COIN_COST = CONCEPTS.petcostume?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [image, setImage] = useState<string>("");
   const [costume, setCostume] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -54,6 +71,8 @@ export default function PetcostumePage() {
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
+    // 즉시 부족 체크(캐시 기준, 서버 호출 전) — ★스위치 날 벌크 앵커
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
@@ -67,6 +86,8 @@ export default function PetcostumePage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지) — ★스위치 날 벌크 앵커
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
@@ -96,7 +117,15 @@ export default function PetcostumePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard placeholder="🐾" caption="펫 코스튬, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("petcostume") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/petcostume-before-${n}.webp`, after: `/examples/ba/petcostume-after-${n}.webp` },
+                { before: `/examples/ba/petcostume-before.webp`, after: `/examples/ba/petcostume-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard placeholder="🐾" caption="펫 코스튬, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 코스튬을 입힐까요?</p>
@@ -118,7 +147,7 @@ export default function PetcostumePage() {
 
             <button onClick={handleSubmit} disabled={loading || !image || !costume}
               style={{ width: "100%", marginTop: 18, background: loading || !image || !costume ? "#E8E9ED" : "#FF4B7C", color: loading || !image || !costume ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image || !costume ? "not-allowed" : "pointer", boxShadow: loading || !image || !costume ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "코스튬 입히기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : <>코스튬 입히기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}
