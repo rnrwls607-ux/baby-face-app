@@ -8,8 +8,48 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-type ReceiptItem = { name: string; desc: string; score: number };
+// feature는 렌더가 콜아웃 위치를 잡는 키 — 5부위 고정(순서도 고정)
+type ReceiptItem = { feature: string; name: string; desc: string; score: number };
 type ReceiptData = { petType: string; items: ReceiptItem[]; total: number; summary: string };
+const FEATURES = ["nose", "eyes", "ears", "forehead", "cheek"] as const;
+// 생성물이 형식을 벗어났을 때의 안전 폴백 — 앱이 죽지 않게 (내용은 무난한 덕담)
+const FALLBACK: ReceiptData = {
+  petType: "반려동물",
+  items: [
+    { feature: "nose", name: "복코", desc: "복이 모이는 코", score: 98 },
+    { feature: "eyes", name: "보석 눈망울", desc: "사랑받는 눈빛", score: 99 },
+    { feature: "ears", name: "장수 귀", desc: "귀 복이 넉넉해요", score: 97 },
+    { feature: "forehead", name: "대박 이마", desc: "앞날이 훤해요", score: 96 },
+    { feature: "cheek", name: "애교 광대", desc: "웃음이 떠나지 않아요", score: 98 },
+  ],
+  total: 97,
+  summary: "사랑복이 가득한 귀한 관상이에요",
+};
+// 5부위 정렬·결측 보충·점수 범위 보정 (렌더가 항상 5칸을 채울 수 있게)
+function normalize(p: Partial<ReceiptData> | null): ReceiptData {
+  const src = Array.isArray(p?.items) ? p!.items : [];
+  const clamp = (n: unknown, d: number) => {
+    const v = Math.round(Number(n));
+    return Number.isFinite(v) && v >= 95 && v <= 100 ? v : d;
+  };
+  const items = FEATURES.map((f, i) => {
+    const hit = src.find(it => it?.feature === f) || src[i];
+    const fb = FALLBACK.items[i];
+    return {
+      feature: f,
+      name: String(hit?.name || fb.name).slice(0, 8),
+      desc: String(hit?.desc || fb.desc).slice(0, 16),
+      score: clamp(hit?.score, fb.score),
+    };
+  });
+  const avg = Math.round(items.reduce((n, it) => n + it.score, 0) / items.length);
+  return {
+    petType: String(p?.petType || FALLBACK.petType).slice(0, 20),
+    items,
+    total: clamp(p?.total, avg),
+    summary: String(p?.summary || FALLBACK.summary).slice(0, 30),
+  };
+}
 async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
   const img = parseImage(imageDataUrl);
   const prompt = `당신은 따뜻하고 재치있는 한국의 반려동물 관상 전문가입니다.
@@ -18,18 +58,23 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
 [형식 절대 규칙 — 최우선]
 응답은 JSON 객체 하나뿐입니다. 첫 글자는 { 이고 마지막 글자는 } 입니다.
 마크다운 코드펜스, 인사말, 설명, 이모지, JSON 밖의 어떤 텍스트도 절대 금지.
-모든 키와 문자열은 큰따옴표 사용, 후행 쉼표 금지, 아래 스키마의 키 이름을 정확히 그대로 사용:
-{"petType":"강아지/고양이 등 동물 종류(품종이 보이면 품종까지, 예: 강아지(비숑))","items":[{"name":"관상 항목 이름","desc":"한 줄 풀이 (18자 이내)","score":92}],"total":95,"summary":"따뜻하고 귀여운 한 줄 총평 (35자 이내)"}
+모든 키와 문자열은 큰따옴표 사용, 후행 쉼표 금지, 아래 스키마의 키 이름을 정확히 그대로:
+{"petType":"강아지/고양이 등 동물 종류(품종이 보이면 품종까지, 예: 강아지(비숑))","items":[{"feature":"nose","name":"복코","desc":"복이 모이는 코","score":98}],"total":97,"summary":"따뜻하고 복스러운 한 줄 총평"}
 
-[개인화 규칙 — 이 아이만의 풀이]
-- 사진에서 실제로 보이는 특징을 근거로 항목을 만드세요: 귀 모양, 눈매와 눈빛, 코 색과 크기, 털 색·무늬·복슬함, 수염, 입매·미소, 이마, 표정.
-- 아무 반려동물에나 쓸 수 있는 범용 문구는 금지 — desc에 그 특징이 드러나서 주인이 "우리 애 얘기네!" 하고 느끼게.
-- 항목 이름은 실제 관상 용어 느낌으로 재치있게 (복코, 재물눈, 장수 귀, 금전수염, 대박 이마, 애교 광대 등).
+[부위 고정 규칙 — 절대]
+- items는 정확히 5개이며, feature 값은 이 순서 그대로: nose, eyes, ears, forehead, cheek
+- feature는 반드시 영문 소문자 그대로 쓰세요(nose/eyes/ears/forehead/cheek). 다른 부위를 추가하거나 빠뜨리지 마세요.
+- name: 4~6자의 긍정적인 관상 이름 (복코, 보석 눈망울, 장수 귀, 대박 이마, 애교 광대 같은 느낌)
+- desc: 10자 내외의 한 줄 풀이
+- score: 95~100 사이 정수, 항목마다 다른 값으로
+- total: 95~100 사이 정수 (5개 score 평균 근처)
+- summary: 25자 이내의 복스럽고 따뜻한 총평 한 줄
 
-[내용 규칙]
-- items는 정확히 5개. score는 80~100 사이 정수. total은 5개 score의 평균을 반올림한 정수.
+[개인화·다양성 규칙]
+- 사진에서 실제로 보이는 특징(코 색과 크기, 눈매와 눈빛, 귀 모양, 이마, 볼살, 털 색과 무늬)을 근거로 쓰세요.
+- 아무 반려동물에나 쓸 수 있는 범용 문구 금지 — 주인이 "우리 애 얘기네!" 하고 느끼게.
+- 매번 다른 표현을 쓰고, 같은 문구를 반복하지 마세요.
 - 전부 긍정적이고 사랑스럽게. 부정적 표현, 건강·질병 관련 언급, 진단성 표현 절대 금지 — 이것은 재미를 위한 덕담입니다.
-- desc는 18자 이내, summary는 35자 이내. 모든 텍스트는 한국어.
 
 다시 한번 — 출력은 위 스키마의 JSON 객체 하나뿐, 다른 글자는 하나도 없습니다.`;
   const ctrl = new AbortController();
@@ -63,19 +108,16 @@ async function analyzePet(imageDataUrl: string): Promise<ReceiptData> {
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const txt: string = respParts.find((p: { text?: string }) => p.text)?.text || "";
-  if (!txt) throw new Error("분석 결과를 받지 못했습니다.");
+  // 이 아래는 전부 폴백 경로 — 형식이 어긋나도 앱이 죽지 않고 안전한 기본 세트로 나간다
   const clean = txt.replace(/```json|```/g, "").trim();
   const start = clean.indexOf("{");
   const end = clean.lastIndexOf("}");
-  if (start === -1 || end === -1) throw new Error("분석 결과 형식이 올바르지 않아요. 다시 시도해주세요.");
-  let parsed: ReceiptData;
+  if (start === -1 || end === -1) return FALLBACK;
   try {
-    parsed = JSON.parse(clean.slice(start, end + 1));
+    return normalize(JSON.parse(clean.slice(start, end + 1)));
   } catch {
-    throw new Error("분석 결과를 읽지 못했어요. 다시 시도해주세요.");
+    return FALLBACK;
   }
-  if (!Array.isArray(parsed?.items) || parsed.items.length === 0) throw new Error("관상 항목을 받지 못했어요. 다시 시도해주세요.");
-  return parsed;
 }
 export async function POST(request: NextRequest) {
   try {

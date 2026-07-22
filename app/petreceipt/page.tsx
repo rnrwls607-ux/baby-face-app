@@ -13,70 +13,130 @@ import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
 
-type ReceiptItem = { name: string; desc: string; score: number };
+type ReceiptItem = { feature?: string; name?: string; desc?: string; score?: number };
 type ReceiptData = { petType?: string; items?: ReceiptItem[]; total?: number; summary?: string };
 
-function drawReceipt(d: ReceiptData): string {
+// 관상 보고서 포스터 — Canvas로 직접 그린다(글자를 코드가 그리므로 한글이 100% 정확).
+// 가운데 펫 사진 + 부위별 콜아웃 5개(칩 + 얇은 골드 라인) + 하단 총점 밴드.
+const KO = "'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif";
+// 콜아웃 배치: 좌 3 / 우 2, 사진 위 목표점은 실제 부위 방향(0~1 비율)
+const LAYOUT: Record<string, { side: "L" | "R"; slot: number; tx: number; ty: number }> = {
+  forehead: { side: "L", slot: 0, tx: 0.46, ty: 0.17 },
+  eyes:     { side: "L", slot: 1, tx: 0.34, ty: 0.39 },
+  cheek:    { side: "L", slot: 2, tx: 0.26, ty: 0.63 },
+  ears:     { side: "R", slot: 0, tx: 0.80, ty: 0.14 },
+  nose:     { side: "R", slot: 1, tx: 0.52, ty: 0.56 },
+};
+
+function loadImg(src: string): Promise<HTMLImageElement> {
+  return new Promise((res, rej) => {
+    const im = new Image();
+    im.onload = () => res(im);
+    im.onerror = () => rej(new Error("이미지를 불러오지 못했어요."));
+    im.src = src;
+  });
+}
+
+async function drawReport(d: ReceiptData, photo: string): Promise<string> {
   const items = (d.items || []).slice(0, 5);
-  const wrap = (t: string, n: number): string[] => {
-    const out: string[] = []; let s = (t || "").trim();
-    while (s.length > n) { out.push(s.slice(0, n)); s = s.slice(n); }
-    if (s) out.push(s);
-    return out.length ? out : [""];
-  };
-  const sumLines = wrap(d.summary || "", 20);
-  const W = 480;
-  const H = 240 + items.length * 78 + 92 + sumLines.length * 30 + 130;
+  const W = 1080, H = 1360;
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const ctx = c.getContext("2d")!;
-  ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, W, H);
-  const dash = (y: number) => {
-    ctx.save(); ctx.strokeStyle = "#D9DCE2"; ctx.lineWidth = 1.5; ctx.setLineDash([7, 7]);
-    ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(W - 30, y); ctx.stroke(); ctx.restore();
+  const IVORY = "#FBF6EC", INK = "#2A2723", GOLD = "#C9A227", PINK = "#FF4B7C", GRAY = "#8C867C";
+
+  // 둥근 사각형 경로 (roundRect 미지원 환경 대비 직접 구현)
+  const rr = (x: number, y: number, w: number, h: number, r: number) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
   };
-  let y = 64;
-  ctx.textAlign = "center"; ctx.fillStyle = "#191919";
-  ctx.font = "900 30px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillText("MOSPIC PET", W / 2, y); y += 38;
-  ctx.font = "800 21px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillStyle = "#FF4B7C";
-  ctx.fillText(`${d.petType || "반려동물"} 관상 영수증`, W / 2, y); y += 30;
-  ctx.font = "500 13px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillStyle = "#9B9B9B";
-  const now = new Date();
-  ctx.fillText(`${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, "0")}.${String(now.getDate()).padStart(2, "0")}  NO.${String(Math.floor(Math.random() * 9000) + 1000)}`, W / 2, y);
-  y += 24; dash(y); y += 44;
+  const wrap = (t: string, n: number): string[] => {
+    const out: string[] = []; let v = (t || "").trim();
+    while (v.length > n) { out.push(v.slice(0, n)); v = v.slice(n); }
+    if (v) out.push(v);
+    return out.length ? out : [""];
+  };
+
+  ctx.fillStyle = IVORY; ctx.fillRect(0, 0, W, H);
+
+  // 헤더
+  ctx.textAlign = "center";
+  ctx.fillStyle = INK; ctx.font = `900 58px ${KO}`;
+  ctx.fillText("우리 애 관상 보고서", W / 2, 118);
+  ctx.fillStyle = GRAY; ctx.font = `600 27px ${KO}`;
+  ctx.fillText("AI 관상 분석", W / 2, 166);
+
+  // 중앙 펫 사진 — 연블루 바탕 + 둥근 프레임 + 옅은 그림자
+  const PW = 470, PH = 470, PX = (W - PW) / 2, PY = 240;
+  ctx.save();
+  ctx.shadowColor = "rgba(0,0,0,0.10)"; ctx.shadowBlur = 26; ctx.shadowOffsetY = 8;
+  ctx.fillStyle = "#E8F1FB"; rr(PX, PY, PW, PH, 40); ctx.fill();
+  ctx.restore();
+  try {
+    const im = await loadImg(photo);
+    ctx.save();
+    rr(PX, PY, PW, PH, 40); ctx.clip();
+    const k = Math.max(PW / im.width, PH / im.height);
+    const sw = PW / k, sh = PH / k;
+    ctx.drawImage(im, (im.width - sw) / 2, (im.height - sh) / 2, sw, sh, PX, PY, PW, PH);
+    ctx.restore();
+  } catch { /* 사진 로드 실패 — 연블루 프레임만 남기고 계속 그린다 */ }
+  ctx.strokeStyle = GOLD; ctx.lineWidth = 2; rr(PX, PY, PW, PH, 40); ctx.stroke();
+
+  // 콜아웃 5개 — 칩(이름+풀이+점수) + 부위로 향하는 얇은 골드 라인
+  const CW = 268, CH = 116, LX = 34, RX = W - 34 - CW;
+  const slotY = [PY + 6, PY + 172, PY + 338];
   for (const it of items) {
-    ctx.textAlign = "left"; ctx.fillStyle = "#191919";
-    ctx.font = "800 18px 'Apple SD Gothic Neo', sans-serif";
-    ctx.fillText(String(it.name || ""), 36, y);
-    ctx.textAlign = "right"; ctx.fillStyle = "#FF4B7C";
-    ctx.font = "900 18px 'Apple SD Gothic Neo', sans-serif";
-    ctx.fillText(`${Number(it.score) || 0}점`, W - 36, y);
-    y += 26;
-    ctx.textAlign = "left"; ctx.fillStyle = "#9B9B9B";
-    ctx.font = "500 14px 'Apple SD Gothic Neo', sans-serif";
-    ctx.fillText(String(it.desc || ""), 36, y);
-    y += 52;
+    const L = LAYOUT[String(it.feature || "")];
+    if (!L) continue;
+    const x = L.side === "L" ? LX : RX;
+    const y = slotY[L.slot];
+    // 라인: 칩 안쪽 모서리 → 사진 위 목표점
+    const fromX = L.side === "L" ? x + CW : x;
+    const fromY = y + CH / 2;
+    const toX = PX + PW * L.tx, toY = PY + PH * L.ty;
+    ctx.strokeStyle = GOLD; ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.moveTo(fromX, fromY);
+    ctx.lineTo(L.side === "L" ? PX - 14 : PX + PW + 14, fromY);
+    ctx.lineTo(toX, toY); ctx.stroke();
+    ctx.fillStyle = GOLD;
+    ctx.beginPath(); ctx.arc(toX, toY, 5, 0, Math.PI * 2); ctx.fill();
+    // 칩
+    ctx.fillStyle = "#FFFFFF"; rr(x, y, CW, CH, 22); ctx.fill();
+    ctx.strokeStyle = GOLD; ctx.lineWidth = 1.6; rr(x, y, CW, CH, 22); ctx.stroke();
+    ctx.textAlign = "left";
+    ctx.fillStyle = INK; ctx.font = `900 30px ${KO}`;
+    ctx.fillText(String(it.name || ""), x + 22, y + 46);
+    ctx.fillStyle = GRAY; ctx.font = `600 21px ${KO}`;
+    ctx.fillText(String(it.desc || ""), x + 22, y + 82);
+    ctx.textAlign = "right";
+    ctx.fillStyle = PINK; ctx.font = `900 22px ${KO}`;
+    ctx.fillText(`${Number(it.score) || 0}점`, x + CW - 20, y + 46);
   }
-  y -= 22; dash(y); y += 46;
-  ctx.textAlign = "left"; ctx.fillStyle = "#191919";
-  ctx.font = "900 21px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillText("관상 총점", 36, y);
-  ctx.textAlign = "right"; ctx.fillStyle = "#FF4B7C";
-  ctx.font = "900 26px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillText(`${Number(d.total) || 0}점`, W - 36, y);
-  y += 26; dash(y); y += 40;
-  ctx.textAlign = "center"; ctx.fillStyle = "#191919";
-  ctx.font = "700 16px 'Apple SD Gothic Neo', sans-serif";
-  for (const line of sumLines) { ctx.fillText(line, W / 2, y); y += 30; }
-  y += 8; dash(y); y += 36;
-  ctx.fillStyle = "#9B9B9B";
-  ctx.font = "italic 800 16px sans-serif";
-  ctx.fillText("mospic ✦", W / 2, y); y += 24;
-  ctx.font = "500 12px 'Apple SD Gothic Neo', sans-serif";
-  ctx.fillText("* 재미로 보는 관상이에요", W / 2, y);
+
+  // 하단 총점 밴드
+  const sum = wrap(String(d.summary || ""), 22);
+  const BY = PY + PH + 150, BH = 128 + (sum.length - 1) * 34;
+  ctx.fillStyle = "#FFF7E6"; rr(60, BY, W - 120, BH, 40); ctx.fill();
+  ctx.strokeStyle = GOLD; ctx.lineWidth = 2; rr(60, BY, W - 120, BH, 40); ctx.stroke();
+  ctx.textAlign = "center";
+  ctx.fillStyle = INK; ctx.font = `900 42px ${KO}`;
+  ctx.fillText(`총점 ${Number(d.total) || 0}점`, W / 2, BY + 60);
+  ctx.fillStyle = PINK; ctx.font = `800 26px ${KO}`;
+  let sy = BY + 104;
+  for (const line of sum) { ctx.fillText(line, W / 2, sy); sy += 34; }
+
+  // 푸터
+  ctx.fillStyle = GRAY;
+  ctx.font = "italic 800 24px sans-serif";
+  ctx.fillText("mospic ✦", W / 2, H - 96);
+  ctx.font = `600 20px ${KO}`;
+  ctx.fillText("* 재미로 보는 관상이에요", W / 2, H - 56);
   return c.toDataURL("image/png");
 }
 
@@ -126,7 +186,7 @@ export default function PetreceiptPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.result?.items?.length) throw new Error("분석 결과를 받지 못했습니다.");
-      const png = drawReceipt(data.result as ReceiptData);
+      const png = await drawReport(data.result as ReceiptData, image);
       setResult(png);
       void addToHistory([png], "펫 관상 영수증");
     } catch (e: unknown) {
