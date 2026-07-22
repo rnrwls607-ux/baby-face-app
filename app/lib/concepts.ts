@@ -503,6 +503,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐶", accent: "#FFF1E0" },
     ],
     start: "petbirthday",
+    detailImage: "/details/petbirthday.webp",
   },
   petmemorial: {
     key: "petmemorial",
@@ -518,6 +519,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🕊️", accent: "#EAF3FF" },
     ],
     start: "petmemorial",
+    detailImage: "/details/petmemorial.webp",
   },
   petceo: {
     key: "petceo",
@@ -533,6 +535,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐱", accent: "#DCEBFF" },
     ],
     start: "petceo",
+    detailImage: "/details/petceo.webp",
   },
   petgraduation: {
     key: "petgraduation",
@@ -548,6 +551,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐾", accent: "#DCEBFF" },
     ],
     start: "petgraduation",
+    detailImage: "/details/petgraduation.webp",
   },
   petminhwa: {
     key: "petminhwa",
@@ -563,6 +567,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐕", accent: "#E7F7EA" },
     ],
     start: "petminhwa",
+    detailImage: "/details/petminhwa.webp",
   },
   petroyal: {
     key: "petroyal",
@@ -578,6 +583,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐈", accent: "#E8EAED" },
     ],
     start: "petroyal",
+    detailImage: "/details/petroyal.webp",
   },
   pettwo: {
     key: "pettwo",
@@ -593,6 +599,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🐱", accent: "#FFE0EC" },
     ],
     start: "pettwo",
+    detailImage: "/details/pettwo.webp",
   },
   petjob: {
     key: "petjob",
@@ -608,6 +615,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "👨‍🍳", accent: "#FFF1E0" },
     ],
     start: "petjob",
+    detailImage: "/details/petjob.webp",
   },
   halloween: {
     key: "halloween",
@@ -1472,6 +1480,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🔮", accent: "#EFEAFF" },
     ],
     start: "petreceipt",
+    detailImage: "/details/petreceipt.webp",
   },
   era: {
     key: "era",
@@ -1503,6 +1512,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🚀", accent: "#DCEBFF" },
     ],
     start: "petcostume",
+    detailImage: "/details/petcostume.webp",
   },
   couple: {
     key: "couple",
