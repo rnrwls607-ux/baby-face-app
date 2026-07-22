@@ -21,6 +21,9 @@ export type Concept = {
 // 코인 게이트 라이브 컨셉 — 스위치 날 여기에 전체 키를 넣는 것으로 일괄 전환 (단일 지점)
 export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
 
+// 홈 "인기" 칩에 노출할 엄선 20종 — 배열 순서가 곧 표시 순서(홈 카드가 있는 키만)
+export const POPULAR_KEYS: string[] = ["idblack", "idnavy", "biznavy", "bizgray", "lifeshot", "y2k", "luxe", "idol", "travel", "couple", "friend", "family", "petstudio", "petcostume", "clay", "figure", "roman", "wedding", "graduation", "hairstyle"];
+
 // 비포/애프터 라이브 컨셉 — 자산(public/examples/ba/{key}-*.webp) 준비된 키만 (확산 단일 지점, LIVE_COIN 패턴)
 export const BA_LIVE: string[] = ["nukki", "y2k", "idtweed", "bizpinkjacket", "travel", "restore", "interior", "idashwave", "idbeige", "idbeigeblazer", "idblack", "idblacktie", "idblouse", "idburgundy", "idcharcoal", "iddandy", "iddownperm", "iddropcut", "idgarma", "idhenley", "idhime", "idknit", "idlonghair", "idlowbun", "idnavy", "idnavysuit", "idoffshoulder", "idperm", "idpomade", "idponytail", "idturtleneck", "idupdo", "idwarmbob", "idwavebob", "idwhiteshirt", "bizblackdress", "bizbluegray", "bizblueskirt", "bizburgundy", "bizcheck", "bizkhaki", "bizknitdress", "bizpinstripe", "bizviolet", "bizgray", "biznavy", "biznavyblouse", "bizlavender", "bizbeige", "bizskyblouse", "bizchiffon", "bizcreamdress", "bizpinktweed", "idskyblue", "birthday", "clay", "flower", "graduation", "hanbok", "hocance", "homecafe", "lifeshot", "luxe", "redcarpet", "retro90", "roman", "xmas", "fashion", "hairstyle", "era", "halloween", "job", "sporty", "wedding", "pet", "petstudio", "illust", "realestate", "car", "figure", "product", "petbirthday", "petceo", "petcostume", "petgraduation", "petjob", "petmemorial", "petminhwa", "petreceipt", "petroyal", "pettwo"];
 

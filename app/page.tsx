@@ -2,7 +2,7 @@
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, Fragment } from "react";
 import { PRODUCT_LIST as PRODUCTS } from "./lib/products";
 import { addToHistory, getHistory, getCloudHistory, clearHistory, clearCloudHistory, deleteHistoryItem, deleteCloudHistoryItem, type HistoryItem } from "./lib/history";
-import { CONCEPTS, conceptForGo, type Concept } from "./lib/concepts";
+import { CONCEPTS, POPULAR_KEYS, conceptForGo, type Concept } from "./lib/concepts";
 import { toast } from "./lib/toast";
 import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
@@ -242,8 +242,9 @@ const GO_CATEGORIES: Record<string, string[]> = {
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 // 홈 칩(pill) 지속화 — HomeMain이 인라인 컴포넌트라 리렌더마다 리마운트되며 state가 리셋됨.
 // 모듈 변수로 미러해 상세를 열었다 닫아도, 만들기 복귀 재연에서도 칩이 유지된다 (문서 세션 한정).
-let persistedHomePill = 1; // 기본 "전체" (0번은 ⭐ 즐겨찾기)
+let persistedHomePill = 0; // 기본 "홈"(랜딩) — 0 홈 / 1 ⭐즐겨찾기 / 2 전체 / 3 인기
 const HOME_PILLS = [
+  { label: "홈", value: "home" },
   { label: "⭐ 즐겨찾기", value: "favs" },
   { label: "전체", value: "all" },
   { label: "인기 🔥", value: "hot" },
@@ -488,7 +489,7 @@ export default function Home() {
         if (ctx.cat) setAllConceptsCat(ctx.cat);
         setTimeout(() => { setDetail(found); uncover(); }, 0);
       } else {
-        if (ctx.from === "favs") persistedHomePill = 0; // ⭐ 즐겨찾기 칩 복원 — HomeMain lazy init이 읽음
+        if (ctx.from === "favs") persistedHomePill = 1; // ⭐ 즐겨찾기 칩 복원(홈 칩 신설로 0→1) — HomeMain lazy init이 읽음
         setDetail(found);
         uncover();
       }
@@ -719,7 +720,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     return (
       <div style={{ background: "#fff", minHeight: "100vh" }}>
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
-        {HOME_PILLS[pill].value === "all" && (
+        {HOME_PILLS[pill].value === "home" && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
           {HOME_HERO.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
@@ -742,7 +743,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         </div>
         )}
         {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
-        {HOME_PILLS[pill].value === "all" && HOME_HERO.length > 1 && (
+        {HOME_PILLS[pill].value === "home" && HOME_HERO.length > 1 && (
         <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
           {HOME_HERO.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
@@ -778,11 +779,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           </button>
         )}
         {/* 섹션들 — 전체(pill 0)는 기존 섹션 미리보기, 그 외 칩은 2열 그리드 */}
-        {HOME_PILLS[pill].value === "all" ? HOME_SECTIONS.map(section => {
+        {HOME_PILLS[pill].value === "home" ? HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
           const cat = HOME_PILLS[pill].value;
           // "인기"는 badge가 BEST/NEW인 카드만, 나머지는 카테고리 매칭
-          const filteredItems = cat === "all"
+          const filteredItems = cat === "home"
             ? section.items
             : cat === "hot"
             ? section.items.filter(it => it.badge === "BEST" || it.badge === "NEW")
@@ -796,7 +797,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 14, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
                   <p style={{ margin: 0, fontSize: 24, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}<span style={{ color: "#FF4B7C" }}>.</span></p>
                 </div>
-                <button onClick={() => { setAllConceptsCat(HOME_PILLS[pill].value); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
+                <button onClick={() => { const v = HOME_PILLS[pill].value; setAllConceptsCat(v === "home" ? "all" : v); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
               </div>
               {isGrid ? (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 18px" }}>
@@ -830,8 +831,11 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             }
           }
           const cat = HOME_PILLS[pill].value;
-          const list = cat === "hot"
-            ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+          // 전체 = 노출 컨셉 전량 나열 / 인기 = POPULAR_KEYS 20종을 배열 순서 그대로
+          const list = cat === "all"
+            ? all
+            : cat === "hot"
+            ? POPULAR_KEYS.filter(k => CONCEPTS[k]).map(k => all.find(it => it.go === k)).filter((it): it is HomeCardItem => !!it)
             : cat === "favs"
             ? all.filter(it => favs.includes(conceptForGo(it.go).key))
             : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
@@ -1423,7 +1427,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
 
           {/* 칩 필터 */}
           <div className="hide-scrollbar" style={{ display: "flex", gap: 18, overflowX: "auto", padding: "12px 16px 2px", flexShrink: 0, borderBottom: "1px solid #F4F5F7" }}>
-            {HOME_PILLS.map(p => {
+            {HOME_PILLS.filter(p => p.value !== "home").map(p => {
               const on = allConceptsCat === p.value;
               return (
                 <button key={p.value} onClick={() => setAllConceptsCat(p.value)} style={{ flexShrink: 0, padding: "3px 2px 10px", cursor: "pointer", fontSize: 14, fontWeight: on ? 800 : 600, background: "none", border: "none", borderBottom: on ? "2px solid #FF4B7C" : "2px solid transparent", color: on ? "#191919" : "#8A8F98" }}>
@@ -1451,7 +1455,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               const list = cat === "all"
                 ? all
                 : cat === "hot"
-                ? all.filter(it => it.badge === "BEST" || it.badge === "NEW")
+                ? POPULAR_KEYS.filter(k => CONCEPTS[k]).map(k => all.find(it => it.go === k)).filter((it): it is HomeCardItem => !!it)
                 : cat === "favs"
                 ? all.filter(it => favs.includes(conceptForGo(it.go).key))
                 : all.filter(it => (GO_CATEGORIES[it.go] || []).includes(cat));
