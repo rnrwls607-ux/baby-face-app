@@ -84,7 +84,8 @@ async function generatePetjob(imageDataUrl: string, job: string): Promise<string
         }),
         signal: ctrl.signal,
       },
-      "petjob"
+      "petjob",
+      0 // ★재시도 없음 — Pro 생성은 1회 100~200초라 두 시도가 예산을 나누면 재시도 중 타임아웃
     );
   } catch (e: unknown) {
     clearTimeout(timer);
@@ -93,7 +94,7 @@ async function generatePetjob(imageDataUrl: string, job: string): Promise<string
   }
   clearTimeout(timer);
   console.log(`[petjob] model=${GEMINI_MODEL} job=${job} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error(await geminiFriendlyError(res, "petjob"));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "petjob", "생성에 실패했어요. 다른 사진으로 다시 시도해주세요."));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
