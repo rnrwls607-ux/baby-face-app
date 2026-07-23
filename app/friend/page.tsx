@@ -1,4 +1,5 @@
 "use client";
+import BeforeAfterHero from "../components/BeforeAfterHero";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -8,7 +9,7 @@ import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import { openCoinSheet } from "../lib/coinSheet";
-import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import CoinIcon from "../components/CoinIcon";
 import StepIndicator from "../components/upload/StepIndicator";
 import TipChips from "../components/upload/TipChips";
@@ -117,21 +118,30 @@ export default function FriendPage() {
         {!result && (
           <>
             {/* 결과 예시 — 각자 셀카 → 함께 화보 (2인 라인 전용 구성) */}
-            <div style={{ background: "#fff", borderRadius: 20, padding: 14, marginBottom: 8, boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, position: "relative" }}>
-                  <span style={{ position: "absolute", left: 6, top: 6, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>Before</span>
-                  <img src="/examples/friend_b1.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
-                  <img src="/examples/friend_b2.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
+            {BA_LIVE.includes("friend") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/friend-before-${n}.webp`, after: `/examples/ba/friend-after-${n}.webp` },
+                { before: `/examples/ba/friend-before.webp`, after: `/examples/ba/friend-after-${n}.webp` },
+              ])} />
+            ) : (
+              <>
+              <div style={{ background: "#fff", borderRadius: 20, padding: 14, marginBottom: 8, boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, position: "relative" }}>
+                    <span style={{ position: "absolute", left: 6, top: 6, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>Before</span>
+                    <img src="/examples/friend_b1.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
+                    <img src="/examples/friend_b2.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 10, display: "block" }} />
+                  </div>
+                  <span style={{ fontSize: 20, color: "#FF4B7C", fontWeight: 800, flexShrink: 0 }}>→</span>
+                  <div style={{ flex: 2, position: "relative" }}>
+                    <span style={{ position: "absolute", left: 8, top: 8, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>After</span>
+                    <img src="/examples/friend_a.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 14, display: "block" }} />
+                  </div>
                 </div>
-                <span style={{ fontSize: 20, color: "#FF4B7C", fontWeight: 800, flexShrink: 0 }}>→</span>
-                <div style={{ flex: 2, position: "relative" }}>
-                  <span style={{ position: "absolute", left: 8, top: 8, zIndex: 1, background: "rgba(0,0,0,0.4)", color: "#fff", fontSize: 9.5, fontWeight: 800, padding: "2px 7px", borderRadius: 9, letterSpacing: 0.4 }}>After</span>
-                  <img src="/examples/friend_a.webp" alt="" loading="lazy" decoding="async" style={{ width: "100%", aspectRatio: "4/5", objectFit: "cover", borderRadius: 14, display: "block" }} />
-                </div>
+                <p style={{ fontSize: 11.5, color: "#9B9B9B", textAlign: "center", margin: "10px 0 2px", fontWeight: 600 }}>각자 찍은 사진 두 장이, 우정 스냅으로</p>
               </div>
-              <p style={{ fontSize: 11.5, color: "#9B9B9B", textAlign: "center", margin: "10px 0 2px", fontWeight: 600 }}>각자 찍은 사진 두 장이, 우정 스냅으로</p>
-            </div>
+              </>
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "20px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)" }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>두 분 사진 (각 1장) + 성별 선택</p>

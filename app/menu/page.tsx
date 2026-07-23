@@ -1,4 +1,6 @@
 "use client";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -102,7 +104,15 @@ export default function MenuPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && !loading && (
           <>
-            <PreviewCard image="/details/menu.webp" caption="메뉴판 비주얼, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("menu") ? (
+              <BeforeAfterHero pairs={[1, 2, 3, 4, 5, 6].flatMap(n => [
+                { before: `/examples/ba/menu-before-${n}.webp`, after: `/examples/ba/menu-after-${n}.webp` },
+                { before: `/examples/ba/menu-before.webp`, after: `/examples/ba/menu-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/menu.webp" caption="메뉴판 비주얼, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>배경 스타일</p>

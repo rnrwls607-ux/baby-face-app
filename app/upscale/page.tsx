@@ -1,4 +1,6 @@
 "use client";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { saveImage } from "../lib/saveImage";
@@ -92,7 +94,15 @@ export default function UpscalePage() {
         {!result && (
           <>
             <AdBanner slot="upscale-upload" />
-            <PreviewCard image="/details/upscale.webp" caption="고화질 변환, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("upscale") ? (
+              <BeforeAfterHero pairs={[1, 2, 3, 4, 5].flatMap(n => [
+                { before: `/examples/ba/upscale-before-${n}.webp`, after: `/examples/ba/upscale-after-${n}.webp` },
+                { before: `/examples/ba/upscale-before.webp`, after: `/examples/ba/upscale-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/upscale.webp" caption="고화질 변환, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="사진"
