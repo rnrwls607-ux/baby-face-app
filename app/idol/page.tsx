@@ -7,6 +7,8 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
@@ -80,7 +82,15 @@ export default function IdolPage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {!result && (
           <>
-            <PreviewCard placeholder="👤" caption="아이돌 프로필, 미리 만나보세요" />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("idol") ? (
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                { before: `/examples/ba/idol-before-${n}.webp`, after: `/examples/ba/idol-after-${n}.webp` },
+                { before: `/examples/ba/idol-before.webp`, after: `/examples/ba/idol-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard placeholder="👤" caption="아이돌 프로필, 미리 만나보세요" />
+            )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
               label="내 사진"
