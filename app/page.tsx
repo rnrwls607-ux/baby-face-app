@@ -389,7 +389,8 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "selfwedding", title: "셀프웨딩 화보", subtitle: "우리끼리, 웨딩 화보", emoji: "💍", accent: "#FCE8EF", badge: "NEW", tags: ["커플"], image: "/cards/selfwedding.webp", go: "selfwedding" },
       { id: "duofamily", title: "둘이서 가족사진", subtitle: "둘이서 남기는 가족사진", emoji: "🏠", accent: "#E7F7EA", badge: "NEW", tags: ["가족"], image: "/cards/duofamily.webp", go: "duofamily" },
       { id: "coupletravel", title: "커플 여행 스냅", subtitle: "둘이 함께, 여행 스냅", emoji: "✈️", accent: "#DFF3FF", badge: "NEW", tags: ["커플"], image: "/cards/coupletravel.webp", go: "coupletravel" },
-      { id: "family", title: "가족 스튜디오 화보", subtitle: "온 가족이 한 장에", emoji: "👨‍👩‍👧‍👦", accent: "#E7F7EA", badge: "NEW", tags: ["가족"], go: "family" },
+      // 가족 스튜디오 화보 — 3인 이상 다중인물 신원 유지 구현 난이도로 숨김 (해법 확보 시 복구, route·URL은 보존)
+      // { id: "family", title: "가족 스튜디오 화보", subtitle: "온 가족이 한 장에", emoji: "👨‍👩‍👧‍👦", accent: "#E7F7EA", badge: "NEW", tags: ["가족"], go: "family" },
       { id: "familyhanbok", title: "명절 한복 2인", subtitle: "둘이 함께, 명절 한복", emoji: "🏮", accent: "#FFF1E0", badge: "NEW", tags: ["가족"], image: "/cards/familyhanbok.webp", go: "familyhanbok" },
       { id: "familypet", title: "반려가족 사진", subtitle: "우리 애도 가족이니까", emoji: "🐾", accent: "#DCEBFF", badge: "NEW", tags: ["가족"], image: "/cards/familypet.webp", go: "familypet" },
       // 네컷 라인 — 스트립 품질 검증 후 복귀 예정 (URL·route·concepts는 보존)
