@@ -42,6 +42,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧸", accent: "#E7F7EA" },
     ],
     start: "baby",
+    detailImage: "/details/baby.webp",
   },
   voxel: {
     key: "voxel",
@@ -59,6 +60,7 @@ export const CONCEPTS: Record<string, Concept> = {
     heroImage: "/examples/voxel-hero.jpg",
     exampleImages: ["/examples/voxel-1.jpg", "/examples/voxel-2.jpg", "/examples/voxel-3.jpg", "/examples/voxel-4.jpg"],
     start: "voxel",
+    detailImage: "/details/voxel.webp",
   },
   food: {
     key: "food",

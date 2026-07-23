@@ -274,7 +274,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
   {
     id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진", layout: "scroll",
     items: [
-      { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.jpg" },
+      { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.webp" },
       { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.webp" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
