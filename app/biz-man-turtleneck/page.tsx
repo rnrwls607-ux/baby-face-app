@@ -1,4 +1,6 @@
 "use client";
+import BeforeAfterHero from "../components/BeforeAfterHero";
+import { BA_LIVE } from "../lib/concepts";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -128,7 +130,15 @@ export default function BizManTurtlePage() {
       <div style={{ padding: "18px 18px 100px" }}>
         {results.length === 0 && (
           <>
-            <PreviewCard image="/details/bizmturtle.webp" caption="남성 블레이저 터틀넥, 미리 만나보세요" accent={ACCENT} />
+            {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
+            {BA_LIVE.includes("bizmturtle") ? (
+              <BeforeAfterHero pairs={[1, 2, 3, 4, 5, 6].flatMap(n => [
+                { before: `/examples/ba/bizmturtle-before-${n}.webp`, after: `/examples/ba/bizmturtle-after-${n}.webp` },
+                { before: `/examples/ba/bizmturtle-before.webp`, after: `/examples/ba/bizmturtle-after-${n}.webp` },
+              ])} />
+            ) : (
+              <PreviewCard image="/details/bizmturtle.webp" caption="남성 블레이저 터틀넥, 미리 만나보세요" accent={ACCENT} />
+            )}
             <StepIndicator current={results.length > 0 ? 3 : loading ? 2 : 1} accent={ACCENT} />
             <UploadZone
               label="정면 사진"
