@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 
 export const runtime = "nodejs";
-export const maxDuration = 240; // Pro 생성 계열 대응 — Fluid Compute 전제
+export const maxDuration = 240; // GPT 이미지 편집 — 장면 전체 재구성이라 여유 있게
 
-// 복셀 — 나노바나나 Pro GA (다른 flash route 무영향)
-const GEMINI_MODEL = "gemini-3-pro-image";
+// 🔑 모델 격리 지점: 복셀은 GPT 이미지 모델 사용 (블록 세계 표현이 Gemini보다 우수)
+const OPENAI_MODEL = "gpt-image-2";
 
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
@@ -49,53 +48,52 @@ If any check fails, the result is wrong.
 
 High detail, bold, clean. No watermark, no border. Remember the two absolute rules: the person untouched, the world rebuilt in blocks, in the original composition.`;
 
+  // multipart/form-data 구성 (idstyle과 동일 패턴 — Web FormData + Blob)
+  const form = new FormData();
+  form.append("model", OPENAI_MODEL);
+  form.append("prompt", prompt);
+  form.append("size", "auto"); // ★원본 구도 보존이 절대 규칙 — 모델이 입력 비율에 맞춰 선택
+  form.append("quality", "medium");
+  form.append("n", "1");
+  const bytes = new Uint8Array(Buffer.from(img.data, "base64"));
+  form.append("image[]", new Blob([bytes], { type: img.mimeType }), "photo.png");
+
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
   let res: Response;
   try {
-    res = await fetchGeminiWithRetry(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [
-            { text: prompt },
-            { inline_data: { mime_type: img.mimeType, data: img.data } },
-          ] }],
-          generationConfig: { responseModalities: ["IMAGE"] },
-        }),
-        signal: ctrl.signal,
-      },
-      "voxel",
-      0 // ★재시도 없음 — Pro 생성은 1회가 길어 두 시도가 예산을 나누면 재시도 중 타임아웃
-    );
+    res = await fetch("https://api.openai.com/v1/images/edits", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY || ""}` },
+      body: form,
+      signal: ctrl.signal,
+    });
   } catch (e: unknown) {
     clearTimeout(timer);
     if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[voxel] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-
-  if (!res.ok) throw new Error(await geminiFriendlyError(res, "voxel"));
-
-  const data = await res.json();
-  const respParts = data?.candidates?.[0]?.content?.parts || [];
-  const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
-  const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
-  const chosen = (finalParts.length ? finalParts : imgParts).pop();
-  const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
-  if (!b64) {
-    const txt = respParts.find((p: { text?: string }) => p.text)?.text;
-    throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
+  console.log(`[voxel] model=${OPENAI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  if (!res.ok) {
+    const errText = (await res.text()).slice(0, 300);
+    console.error(`[voxel] OpenAI 오류 ${res.status}: ${errText}`);
+    if (res.status === 429) throw new Error("지금 이용자가 많아요. 잠시 후 다시 시도해주세요. 🙏");
+    throw new Error("이미지를 만들지 못했어요. 잠시 후 다시 시도해주세요.");
   }
+  const data = await res.json();
+  const b64 = data?.data?.[0]?.b64_json;
+  if (!b64) throw new Error("이미지를 받지 못했습니다. 다시 시도해주세요.");
+  // ★크롭 없음 — 원본 구도 보존이 이 컨셉의 절대 규칙
   return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
 
 export async function POST(request: NextRequest) {
   try {
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json({ error: "서버 설정 오류(OPENAI_API_KEY 없음)" }, { status: 500 });
+    }
     const body = await request.json();
     const image: string = body?.image;
     const target: string = body?.target || "all";
