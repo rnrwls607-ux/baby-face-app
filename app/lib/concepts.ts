@@ -636,6 +636,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "📜", accent: "#FFF3E2" },
     ],
     start: "pendrawing",
+    detailImage: "/details/pendrawing.webp",
   },
   oilportrait: {
     key: "oilportrait",
@@ -651,6 +652,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🕯️", accent: "#FFF1E0" },
     ],
     start: "oilportrait",
+    detailImage: "/details/oilportrait.webp",
   },
   softanime: {
     key: "softanime",
@@ -666,6 +668,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎞️", accent: "#FFF1E0" },
     ],
     start: "softanime",
+    detailImage: "/details/softanime.webp",
   },
   retroanime: {
     key: "retroanime",
@@ -681,6 +684,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎞️", accent: "#EFEAFF" },
     ],
     start: "retroanime",
+    detailImage: "/details/retroanime.webp",
   },
   popart: {
     key: "popart",
@@ -696,6 +700,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🔵", accent: "#E1ECFF" },
     ],
     start: "popart",
+    detailImage: "/details/popart.webp",
     inputRule: "solo_face",
   },
   marble: {
@@ -712,6 +717,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🕯️", accent: "#F3E8DC" },
     ],
     start: "marble",
+    detailImage: "/details/marble.webp",
     inputRule: "solo_face",
   },
   chibifigure: {
@@ -728,6 +734,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "📦", accent: "#FFF3E2" },
     ],
     start: "chibifigure",
+    detailImage: "/details/chibifigure.webp",
     inputRule: "solo_face",
   },
   clayfigure: {
@@ -744,6 +751,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌿", accent: "#E7F1E4" },
     ],
     start: "clayfigure",
+    detailImage: "/details/clayfigure.webp",
     inputRule: "solo_face",
   },
   stitchart: {
@@ -760,6 +768,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌸", accent: "#FDE9F1" },
     ],
     start: "stitchart",
+    detailImage: "/details/stitchart.webp",
   },
   pixelart: {
     key: "pixelart",
@@ -775,6 +784,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌤️", accent: "#E4F3FF" },
     ],
     start: "pixelart",
+    detailImage: "/details/pixelart.webp",
     inputRule: "solo_face",
   },
   stainedglass: {
@@ -791,6 +801,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🕯️", accent: "#FBF0DF" },
     ],
     start: "stainedglass",
+    detailImage: "/details/stainedglass.webp",
   },
   neonsign: {
     key: "neonsign",
@@ -806,6 +817,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#F4E8FF" },
     ],
     start: "neonsign",
+    detailImage: "/details/neonsign.webp",
     inputRule: "solo_face",
   },
   paperart: {
@@ -822,6 +834,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖼️", accent: "#F3E8DC" },
     ],
     start: "paperart",
+    detailImage: "/details/paperart.webp",
   },
   stickerpack: {
     key: "stickerpack",
@@ -837,6 +850,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✌️", accent: "#FDE9F1" },
     ],
     start: "stickerpack",
+    detailImage: "/details/stickerpack.webp",
     inputRule: "solo_face",
   },
   toon3d: {
@@ -853,6 +867,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌟", accent: "#FFF6E0" },
     ],
     start: "toon3d",
+    detailImage: "/details/toon3d.webp",
     inputRule: "solo_face",
   },
   halloween: {
