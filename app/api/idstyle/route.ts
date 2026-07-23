@@ -1,3 +1,12 @@
+// ⛔ 은퇴 — 홈 노출 없음, 앱 내 링크 0 (URL 직접 접근만 가능). 증명사진 55종이 이 영역을 대체.
+//    gpt-image-1은 2026-10-23 OpenAI 종료 예정 → 그 이후 이 route는 동작하지 않음.
+//    삭제하지 않고 보존하는 이유: "견본 템플릿에 얼굴만 교체"하는 방식의 유일한 참고 구현
+//    (얼굴 여러 장 + 스타일 견본을 image[]로 함께 보내 신원만 옮기는 패턴).
+//    되살리려면 아래 4가지가 필요:
+//      ① gpt-image-2 이전 (모델명은 바로 아래 OPENAI_MODEL 한 줄이 유일한 격리 지점)
+//      ② 파라미터 3개 실측 — input_fidelity 지원 여부 / 다중 image[] 입력 / size 고정값("1024x1536") 수용 여부
+//      ③ 배선 8지점 (concepts.ts 유니온·CONCEPTS 블록·conceptForGo, page.tsx GO_CATEGORIES·홈 카드·detail onClick, route, page)
+//      ④ 타임아웃 사슬 교정 — 현재 maxDuration 60 < 내부 90s < 클라 100s 로 역전되어 있음(60초에서 함수가 끊김)
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { stampAiMetadata } from "../../lib/aiMark";

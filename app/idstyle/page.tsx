@@ -1,4 +1,10 @@
 "use client";
+// ⛔ 은퇴 — 홈 노출 없음, 앱 내 링크 0 (URL 직접 접근만 가능). 증명사진 55종이 이 영역을 대체.
+//    호출하는 /api/idstyle 이 gpt-image-1을 쓰는데, 이 모델은 2026-10-23 OpenAI 종료 예정
+//    → 그 이후 이 화면에서 생성 버튼을 눌러도 실패함.
+//    삭제하지 않고 보존하는 이유: "견본 템플릿에 얼굴만 교체"하는 방식의 유일한 참고 구현
+//    (얼굴 2~6장을 함께 올려 신원 정확도를 높이는 다중 업로드 UI 포함).
+//    되살리는 절차는 app/api/idstyle/route.ts 상단 주석 참고 (모델 이전·파라미터 실측·배선 8지점·타임아웃 교정).
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
