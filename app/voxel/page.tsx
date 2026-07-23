@@ -47,7 +47,7 @@ export default function VoxelPage() {
     if (!image) { setError("사진을 올려주세요."); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 110000);
+    const tid = setTimeout(() => ctrl.abort(), 235000); // 서버 내부 컷 230초 + 여유 5초 (Pro 생성 계열)
     try {
       const compressed = await compress(image);
       const res = await fetch("/api/voxel", {

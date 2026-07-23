@@ -35,30 +35,44 @@ async function generateBaby(
   const mom = parseImage(momDataUrl);
   const dad = parseImage(dadDataUrl);
   const childWord = isBoy ? "son (a baby boy)" : "daughter (a baby girl)";
-  const prompt = `You are a professional, photorealistic portrait artist. Image 1 is the MOTHER and Image 2 is the FATHER. Generate one photorealistic portrait of their future child — a ${childWord}, around 2 to 3 years old.
+  const prompt = `TASK
+Image 1 is the MOTHER. Image 2 is the FATHER. Create ONE photorealistic portrait of their future child — a ${childWord}, about 2 to 3 years old. The parents must look at this photo and immediately feel "that's OUR child" — a believable genetic mix of the two specific people in the input, rendered as a real toddler.
 
-STEP 1 — Read both parents first:
-Look carefully at each parent's face: eye shape and eye color, nose, mouth and lips, eyebrows, overall face shape, skin tone, and hair color/texture. Note the ethnicity of both parents.
+STEP 1 — READ BOTH PARENTS CAREFULLY (do this before drawing):
+For EACH parent separately, note: eye shape (single/double eyelid, roundness, tilt), eye color, nose shape and bridge, mouth and lip shape, eyebrow shape and thickness, overall face shape and jawline, skin tone, hair color and texture, and any distinctive marks (dimples, prominent cheekbones, a distinctive philtrum). Note the ethnicity of both parents.
 
-STEP 2 — Blend the two faces believably (MOST IMPORTANT):
-- The child's face must look like a natural genetic mix of BOTH parents — clearly taking some features from the mother (image 1) and some from the father (image 2).
-- Inherit, don't copy: blend the eyes, nose, mouth, eyebrows, and face shape so the child resembles each parent in part. Do NOT just clone one parent's face, and do NOT produce a blurry "average" that resembles neither.
-- Keep the child's ethnicity and skin tone a natural blend of the parents'.
+FEATURE ALLOCATION LAW (the heart of this task — prevents a generic "average baby"):
+- The child must inherit CLEARLY IDENTIFIABLE features from EACH parent, not a blurred average of the two. Distribute the six key features — eye shape, eye color, nose, mouth/lips, eyebrows, face shape — so that at least TWO come recognizably from the mother and at least TWO come recognizably from the father. The remaining features may blend.
+- Each inherited feature must be VISIBLE AT A GLANCE: someone who knows both parents should be able to point and say "those are her eyes" and "that's his nose."
+- Do NOT clone one parent's face onto a child. Do NOT produce a soft "average" face that resembles neither parent. Do NOT default to a generic idealized cute baby face — the parents' actual distinctive features are the point, even when they are unusual.
+- Inherit distinctive marks where natural (dimples, double or single eyelids, a widow's peak).
+- Ethnicity and skin tone: a natural blend of the two parents. NEVER change the child's ethnicity to something neither parent has, and never lighten or darken away from the parents' natural range.
+- Hair: color and texture drawn from the parents (soft and possibly sparse, as is natural for a toddler).
 
-STEP 3 — Render a real, healthy toddler (about 2–3 years old):
-- True toddler proportions: a rounder face with full cheeks, larger eyes relative to the face, a small soft nose, soft baby skin, and soft (possibly sparse) baby hair with a color drawn from the parents. This must look like a REAL toddler — never an adult face shrunk down.
-- A cute, cheerful, natural expression.
+TODDLER ANATOMY LAW (this must be a REAL toddler, not a shrunken adult):
+- True 2-3 year old proportions: a rounder face with full soft cheeks, a proportionally larger cranium, larger eyes relative to the face, a small soft button nose with a low bridge, a small chin and soft undefined jawline, short neck, soft baby skin with no defined bone structure.
+- The inherited adult features must be TRANSLATED into toddler form, not pasted on: an adult's sharp nose becomes a small soft nose with the same character; an adult's strong jaw becomes a rounder face with the same impression.
+- ABSOLUTELY never an adult face scaled down, never adult proportions, never a defined adult jaw or cheekbones on a baby.
 
-STEP 4 — Photo look:
-Soft natural daylight, candid lifestyle photo in a bright, cozy, sunlit room, shallow depth of field, warm cheerful mood.
+EXPRESSION & PHOTO LOOK:
+- A bright, cheerful, natural toddler expression — a genuine soft smile or a curious open look. Alive and candid, never a stiff studio pose.
+- Soft natural daylight in a bright, cozy, sunlit room; candid family lifestyle photography; shallow depth of field with a gently blurred background; warm, joyful mood.
+- Vertical framing, head and upper body, the child filling most of the frame.
+- Photorealistic, high resolution — a real photograph of a real child.
+
+OUTPUT LAW:
+- EXACTLY ONE child in EXACTLY ONE image. Never two children, never a collage, never multiple panels, never the parents in the frame.
+
+SELF-CHECK before finishing:
+- Can I point to at least two features that clearly came from the mother, and at least two from the father? Is this a real toddler's anatomy (not a small adult)? Is the skin tone and ethnicity a believable blend of these two specific parents? Is there exactly one child? Only then is it complete.
 
 ABSOLUTELY AVOID:
-- Copying only one parent (the child must clearly resemble BOTH).
-- An uncanny "tiny adult" look, or distorted/unnatural features.
-- Any cartoon or illustration style, text, letters, watermark, or border.
-- More than one child — output exactly ONE single image of the child.
-
-Photorealistic, high detail.`;
+- A generic pretty baby that resembles neither parent; a blurred average face; a copy of only one parent.
+- An uncanny "tiny adult" — adult proportions, an adult jawline, or a shrunken adult face.
+- Changed ethnicity or skin tone outside the parents' natural range; beautifying away the parents' real distinctive features.
+- More than one child; the parents appearing in the image; collages or split panels.
+- Cartoon or illustration style; distorted features; extra or missing fingers.
+- Any text, letters, numbers, watermark, or border.`;
 
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 50000); // 50초 넘으면 중단
