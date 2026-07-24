@@ -124,6 +124,13 @@ export function withDailyFree(conceptKey: string, dailyLimit: number, handler: R
 
 export function withCoin(conceptKey: string, cost: number, handler: RouteHandler): RouteHandler {
   return async (request: NextRequest, ...args: unknown[]): Promise<Response> => {
+    // 💤 휴면 모드: cost 0이면 로그인 확인·inflight 락·잔액체크(402)·차감·Blob 저장을 전부 건너뛰고
+    //    핸들러로 바로 통과 → 이 래퍼가 붙어도 라이브 동작은 wrapping 전과 100% 동일하다.
+    //    IAP 롤아웃 D-day에 cost를 실가격(예: 3·9)으로 바꾸면 위 게이트 전부가 한꺼번에 켜진다.
+    //    (cost > 0 경로는 아래 기존 로직 그대로 — 이 조기 반환은 cost === 0에서만 작동.)
+    if (cost === 0) {
+      return handler(request, ...args);
+    }
     if (!redis) {
       console.warn(`[coins] Redis 미설정 — ${conceptKey} 코인 로직 skip`);
       return handler(request, ...args);

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { stampAiMetadata } from "../../lib/aiMark";
 
 export const runtime = "nodejs";
@@ -89,7 +90,7 @@ High detail, bold, clean. No watermark, no border. Remember the two absolute rul
   return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({ error: "서버 설정 오류(OPENAI_API_KEY 없음)" }, { status: 500 });
@@ -106,3 +107,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("voxel", 0, handler); // COIN_DORMANT: 실가격 3
