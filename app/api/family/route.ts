@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
@@ -83,7 +84,7 @@ Vertical framing with every person clearly visible from the waist up. Photoreali
   // 📐 커플·가족: 4:5 세로 비율로 크롭
   return await cropToRatio(dataUrl, 4, 5);
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const images: string[] = Array.isArray(body?.images) ? body.images.filter(Boolean) : [];
@@ -97,3 +98,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("family", 0, handler); // COIN_DORMANT: 실가격 3

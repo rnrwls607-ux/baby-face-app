@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
@@ -83,7 +84,7 @@ High resolution. No text, no captions, no watermark, no signature. Remember the 
   // 📐 네컷: 2:3 세로 스트립 비율로 크롭
   return await cropToRatio(dataUrl, 2, 3);
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -96,3 +97,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("fourcutillust", 0, handler); // COIN_DORMANT: 실가격 3

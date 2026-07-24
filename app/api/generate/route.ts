@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 
@@ -123,7 +124,7 @@ ABSOLUTELY AVOID:
   return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
 
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({ error: "서버 설정 오류(GEMINI_API_KEY 없음)" }, { status: 500 });
@@ -151,3 +152,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("baby", 0, handler); // COIN_DORMANT: 실가격 3

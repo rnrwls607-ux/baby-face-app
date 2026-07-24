@@ -12,6 +12,9 @@ import StepIndicator from "../components/upload/StepIndicator";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import { openCoinSheet } from "../lib/coinSheet";
+import CoinIcon from "../components/CoinIcon";
 
 const SLOT_LABELS = ["가족 1 (필수)", "가족 2 (필수)", "가족 3 (선택)", "가족 4 (선택)"];
 const MIN_PHOTOS = 2;
@@ -22,6 +25,18 @@ export default function FamilyPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("family");
+  const COIN_COST = CONCEPTS.family?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [elapsed, setElapsed] = useState(0);
   // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
   useBackClose(!!result, () => setResult(""));
@@ -51,6 +66,7 @@ export default function FamilyPage() {
   const validCount = images.filter(Boolean).length;
   const handleSubmit = async () => {
     if (validCount < MIN_PHOTOS) { setError(`사진을 ${MIN_PHOTOS}장 이상 올려주세요.`); return; }
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
@@ -65,6 +81,7 @@ export default function FamilyPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
@@ -111,7 +128,7 @@ export default function FamilyPage() {
             <PrivacyLine />
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "가족 화보 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : <>가족 화보 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}
