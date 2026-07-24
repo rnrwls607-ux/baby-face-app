@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
@@ -84,7 +85,7 @@ DO NOT INCLUDE: no text, no watermark, no logo, no border, no human, no extra pr
   // 📐 반려동물 증명사진: 3.5:4.5 비율로 크롭 (증명사진 규격)
   return await cropToRatio(dataUrl, 3.5, 4.5);
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -96,4 +97,6 @@ export async function POST(request: NextRequest) {
     console.error("pet error:", err?.message);
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
-} 
+}
+
+export const POST = withCoin("pet", 0, handler); // COIN_DORMANT: 실가격 3

@@ -1,6 +1,8 @@
 "use client";
 import BeforeAfterHero from "../components/BeforeAfterHero";
-import { BA_LIVE } from "../lib/concepts";
+import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
+import { openCoinSheet } from "../lib/coinSheet";
+import CoinIcon from "../components/CoinIcon";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -23,6 +25,18 @@ export default function AgePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("age");
+  const COIN_COST = CONCEPTS.age?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [elapsed, setElapsed] = useState(0);
   // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
   useBackClose(!!result, () => setResult(""));
@@ -48,6 +62,7 @@ export default function AgePage() {
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
@@ -61,6 +76,7 @@ export default function AgePage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
@@ -118,7 +134,7 @@ export default function AgePage() {
             <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : mode === "baby" ? "아기 모습 보기 ✨" : "노년 모습 보기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : mode === "baby" ? "아기 모습 보기 ✨" : <>노년 모습 보기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}

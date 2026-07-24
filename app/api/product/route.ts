@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
@@ -79,7 +80,7 @@ FINAL LOOK: ultra-photorealistic, high-resolution commercial product photography
   }
   return await stampAiMetadata(b64); // AI 생성물 비가시 표시
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -92,3 +93,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("product", 0, handler); // COIN_DORMANT: 실가격 3

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
@@ -151,7 +152,7 @@ async function generateEra(imageDataUrl: string, era: string): Promise<string> {
   // 📐 인물 프로필: 3:4 세로 비율로 크롭
   return await cropToRatio(dataUrl, 3, 4);
 }
-export async function POST(request: NextRequest) {
+async function handler(request: NextRequest) {
   try {
     const body = await request.json();
     const image: string = body?.image;
@@ -165,3 +166,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
   }
 }
+
+export const POST = withCoin("era", 0, handler); // COIN_DORMANT: 실가격 3
