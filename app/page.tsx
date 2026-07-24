@@ -13,17 +13,6 @@ import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
 import CoinIcon from "./components/CoinIcon";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
-const LOADING_MESSAGES = [
-  "아기 얼굴 윤곽 그리는 중...",
-  "눈 모양 만드는 중...",
-  "코 모양 다듬는 중...",
-  "엄마 닮은 부분 찾는 중...",
-  "아빠 닮은 부분 찾는 중...",
-  "피부 톤 맞추는 중...",
-  "마지막 터치 중...",
-  "거의 다 됐어요!",
-];
-const FREE_LIMIT = 3;
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
 type Tab = "home" | "ticket" | "coupon" | "history";
@@ -448,23 +437,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
 export default function Home() {
   const [user, setUser] = useState<KakaoUser | null>(null);
   const [userLoading, setUserLoading] = useState(true);
-  const [usageCount, setUsageCount] = useState(0);
-  // ✅ 추가: remaining (bonus 포함한 실제 잔여 횟수)
-  const [usageRemaining, setUsageRemaining] = useState(FREE_LIMIT);
-  const [limitReached, setLimitReached] = useState(false);
-  const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("");
-  const [results, setResults] = useState<string[]>([]);
-  const [isPremiumResult, setIsPremiumResult] = useState(false);
-  const [selected, setSelected] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [step, setStep] = useState("");
-  const [gender, setGender] = useState<"girl" | "boy">("girl");
-  const [loadingMsg, setLoadingMsg] = useState("");
-  const [elapsed, setElapsed] = useState(0);
   const [activeTab, setActiveTab] = useState<Tab>("home");
-  const [showMakeScreen, setShowMakeScreen] = useState(false);
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
   const [payingProduct, setPayingProduct] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -487,7 +460,6 @@ export default function Home() {
   useBackClose(showAllConcepts, () => setShowAllConcepts(false));
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
-  useBackClose(showMakeScreen, () => setShowMakeScreen(false));
   // 홈 코인 현황 카드용 잔액 1회 캐시 (실패 시 null 유지 → 카드 숨김, 에러 미표출)
   const [homeCoinBalance, setHomeCoinBalance] = useState<number | null>(null);
   useEffect(() => {
@@ -534,39 +506,9 @@ export default function Home() {
       window.history.replaceState(null, "", "/");
     }
   }, []);
-  // ✅ usage를 fetch하는 함수 (재사용 가능하도록 분리)
-  const fetchUsage = useCallback(() => {
-    fetch("/api/usage")
-      .then(r => r.json())
-      .then(d => {
-        setUsageCount(d.count ?? 0);
-        setLimitReached(d.limitReached ?? false);
-        setUsageRemaining(d.remaining ?? FREE_LIMIT);
-      })
-      .catch(() => {});
-  }, []);
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.json()).then(d => { if (d.loggedIn) setUser(d.user); }).catch(() => {}).finally(() => setUserLoading(false));
-    fetchUsage();
-  }, [fetchUsage]);
-  // ✅ 결제 완료 후 홈 복귀 시 usage 재조회 (?refreshed=1 감지)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("refreshed") === "1") {
-      fetchUsage();
-      // URL에서 파라미터 제거 (뒤로가기 시 재실행 방지)
-      window.history.replaceState({}, "", "/");
-    }
-  }, [fetchUsage]);
-
-  useEffect(() => {
-    if (!loading) { setElapsed(0); return; }
-    setLoadingMsg(LOADING_MESSAGES[0]);
-    let idx = 0;
-    const m = setInterval(() => { idx = (idx + 1) % LOADING_MESSAGES.length; setLoadingMsg(LOADING_MESSAGES[idx]); }, 3500);
-    const t = setInterval(() => setElapsed(p => p + 1), 1000);
-    return () => { clearInterval(m); clearInterval(t); };
-  }, [loading]);
+  }, []);
  // 로그인 상태면 클라우드(Blob+Redis) 히스토리를, 비로그인이면 기존 로컬(IndexedDB)을 표시
  const loadHistory = useCallback(async () => {
    if (user) {
@@ -577,18 +519,6 @@ export default function Home() {
    }
  }, [user]);
  useEffect(() => { if (activeTab === "history") loadHistory(); }, [activeTab, loadHistory]);
-  const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => { const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej; });
-  const compress = (b64: string): Promise<string> => new Promise(res => {
-    const img = new Image();
-    img.onload = () => {
-      const c = document.createElement("canvas");
-      const M = 512; let { width: w, height: h } = img;
-      if (w > h) { if (w > M) { h = h * M / w; w = M; } } else { if (h > M) { w = w * M / h; h = M; } }
-      c.width = w; c.height = h; c.getContext("2d")!.drawImage(img, 0, 0, w, h);
-      res(c.toDataURL("image/jpeg", 0.85));
-    };
-    img.src = b64;
-  });
   const handleLogin = () => { window.location.replace("/api/auth/kakao"); };
   const handleLogout = () => { window.location.replace("/api/auth/logout"); };
   const handlePayment = useCallback(async (productId: string) => {
@@ -617,44 +547,6 @@ export default function Home() {
       setPayingProduct(null);
     }
   }, [user]);
-  const handleDownload = async () => {
-    const url = results[selected];
-    const now = new Date();
-    const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}_${String(now.getHours()).padStart(2,"0")}${String(now.getMinutes()).padStart(2,"0")}`;
-    await saveImage(url, `mospic_${ts}.png`);
-  };
-  const handleShare = async () => {
-    const url = results[selected];
-    const origin = window.location.origin; // 현재 도메인 기준 (mospic.com) — 하드코딩 금지
-    const text = `👶 AI가 예측한 ${gender === "girl" ? "딸" : "아들"} 얼굴이에요!\n${origin}`;
-    await shareImage(url, "babyface.png", text);
-  };
-  const handleSubmit = async () => {
-    if (!user) { handleLogin(); return; }
-    if (limitReached || !image1 || !image2) { if (!image1 || !image2) setError("엄마와 아빠 사진을 모두 올려주세요."); return; }
-    setLoading(true); setError(""); setResults([]); setSelected(0);
-    const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 110000);
-    try {
-      setStep("압축");
-      const [c1, c2] = await Promise.all([compress(image1), compress(image2)]);
-      setStep("전송");
-      const res = await fetch("/api/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image1: c1, image2: c2, gender }), signal: ctrl.signal });
-      clearTimeout(tid); setStep("생성");
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
-      if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
-      setIsPremiumResult(!!data.isPremium);
-      try { const ur = await fetch("/api/usage", { method: "POST" }); if (ur.ok) { const ud = await ur.json(); setUsageCount(ud.count); setLimitReached(ud.limitReached); setUsageRemaining(ud.remaining ?? FREE_LIMIT); } } catch { /* ignore */ }
-      setResults(data.output); setStep("");
-      await addToHistory(data.output, "아기 얼굴");
-      loadHistory();
-    } catch (e: unknown) {
-      clearTimeout(tid); setStep("");
-      const err = e as {name?:string;message?:string};
-      setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
-    } finally { setLoading(false); }
-  };
   // ─── 공통 헤더 ───────────────────────────────────────────────
   const Header = ({ title, onBack }: { title?: string; onBack?: () => void }) => (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 18px", height: 58, background: "#fff", position: "sticky", top: 0, zIndex: 30 }}>
@@ -703,7 +595,7 @@ export default function Home() {
         {tabs.map(({ id, Icon: I, label }) => {
           const on = activeTab === id;
           return (
-            <button key={id} onClick={() => { setActiveTab(id); setShowMakeScreen(false); }}
+            <button key={id} onClick={() => { setActiveTab(id); }}
               style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "4px 0", background: "none", border: "none", cursor: "pointer" }}>
               <span style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: on ? "7px 20px" : "7px 0", borderRadius: 18, background: on ? "#191919" : "transparent", color: on ? "#fff" : "#bbb", transition: "all .2s" }}>
                 <I />
@@ -793,7 +685,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           ))}
         </div>
         )}
-        {/* 코인 현황 카드 (무료체험 카드 교체 — usage API·FREE_LIMIT 로직은 무접촉, 스위치 날 폐기 예정) */}
+        {/* 코인 현황 카드 (구 무료체험 usage 게이트는 baby 라우트형 전환 3/3에서 폐기 완료) */}
         {!userLoading && !user && (
           <div style={{ margin: "16px 18px 0", background: "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
             <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}><CoinIcon size={15} /> 로그인하면 웰컴 코인 3개를 드려요</p>
@@ -888,165 +780,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       </div>
     );
   };
-  // ─── 아기 얼굴 만들기 화면 ────────────────────────────────────
-  const MakeScreen = () => (
-    <div style={{ background: "#fff", minHeight: "100vh" }}>
-      <Header title="아기 얼굴 예측" onBack={() => { setShowMakeScreen(false); setResults([]); setImage1(""); setImage2(""); setError(""); }} />
-      <div style={{ padding: "20px 20px 100px" }}>
-        {/* 비로그인 */}
-        {!userLoading && !user && (
-          <div style={{ background: "#FFFBE6", border: "1px solid #FEE500", borderRadius: 16, padding: 20, textAlign: "center", marginBottom: 20 }}>
-            <p style={{ fontWeight: 700, color: "#111", marginBottom: 12, fontSize: 14 }}>카카오 로그인 후 이용 가능해요</p>
-            <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 24, padding: "10px 28px", fontWeight: 700, fontSize: 14, cursor: "pointer", color: "#111" }}>
-              카카오로 시작하기
-            </button>
-          </div>
-        )}
-        {/* 결제 유도 */}
-        {limitReached && (
-          <div style={{ border: "1.5px solid #F0F0F0", borderRadius: 20, padding: 20, marginBottom: 20, textAlign: "center" }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🔒</div>
-            <p style={{ fontSize: 17, fontWeight: 900, color: "#111", margin: "0 0 6px" }}>무료 체험이 끝났어요</p>
-            <p style={{ fontSize: 13, color: "#999", margin: "0 0 16px" }}>이용권을 구매하고 계속 사용하세요</p>
-            <div style={{ background: "#F7F7F7", borderRadius: 14, padding: "12px 16px", marginBottom: 16, textAlign: "left" }}>
-              {["무제한 아기 얼굴 예측", "고화질 결과 이미지", "결과 저장 및 공유"].map(t => (
-                <div key={t} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 0", fontSize: 13, color: "#444" }}>
-                  <span style={{ color: "#FF4B7C" }}>✓</span> {t}
-                </div>
-              ))}
-            </div>
-            {/* 이용권 구매하기 버튼 봉인 — 코인 충전 개통 시 코인 탭 유도로 교체 예정 */}
-          </div>
-        )}
-        {/* 성별 선택 */}
-        <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10 }}>아기 성별</p>
-          <div style={{ display: "flex", gap: 8, background: "#F1F2F6", borderRadius: 14, padding: 4 }}>
-            {([["girl", "👧", "딸"], ["boy", "👦", "아들"]] as const).map(([g, emoji, label]) => (
-              <button key={g} onClick={() => setGender(g)}
-                style={{ flex: 1, padding: "11px 0", borderRadius: 11, border: "none", cursor: "pointer", fontWeight: 800, fontSize: 14, transition: "all .2s",
-                  background: gender === g ? "#fff" : "transparent",
-                  color: gender === g ? "#FF4B7C" : "#8A8F99",
-                  boxShadow: gender === g ? "0 2px 8px rgba(0,0,0,0.08)" : "none" }}>
-                {emoji} {label}
-              </button>
-            ))}
-          </div>
-        </div>
-        {/* 사진 업로드 */}
-        <div style={{ marginBottom: 20 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10 }}>사진 업로드</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {([
-              { state: image1, setter: setImage1, emoji: "👩", label: "엄마 사진", color: "#FFF0F5", borderColor: "#FFD6E7" },
-              { state: image2, setter: setImage2, emoji: "👨", label: "아빠 사진", color: "#F0F5FF", borderColor: "#D6E4FF" },
-            ]).map(({ state, setter, emoji, label, color, borderColor }, idx) => (
-              <label key={idx} style={{ cursor: "pointer" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 16px", borderRadius: 16, border: `1.5px ${state ? "solid" : "dashed"} ${state ? borderColor : "#E8E8E8"}`, background: state ? color : "#FAFAFA", transition: "all .2s" }}>
-                  {state ? (
-                    <img src={state} style={{ width: 52, height: 52, borderRadius: 12, objectFit: "cover", flexShrink: 0 }} alt="" />
-                  ) : (
-                    <div style={{ width: 52, height: 52, borderRadius: 12, background: "#F0F0F0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>{emoji}</div>
-                  )}
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 14, fontWeight: 700, color: "#111", margin: "0 0 2px" }}>{label}</p>
-                    <p style={{ fontSize: 12, color: "#aaa", margin: 0 }}>{state ? "사진이 선택됐어요" : "탭해서 사진 선택하기"}</p>
-                  </div>
-                  <div style={{ width: 28, height: 28, borderRadius: "50%", background: state ? "#FF4B7C" : "#F0F0F0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "#fff" }}>
-                    {state ? <Icon.Check /> : <span style={{ color: "#999", fontSize: 18, lineHeight: 1 }}>+</span>}
-                  </div>
-                </div>
-                <input type="file" accept="image/*" style={{ display: "none" }}
-                  onChange={async e => { if (e.target.files?.[0]) setter(await toBase64(e.target.files[0])); }} />
-              </label>
-            ))}
-          </div>
-        </div>
-        {/* 생성 버튼 */}
-        {!limitReached && (
-          <button onClick={handleSubmit} disabled={loading || !user}
-            style={{ width: "100%", background: loading || !user ? "#F0F0F0" : "#FF4B7C", color: loading || !user ? "#aaa" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !user ? "not-allowed" : "pointer", boxShadow: loading || !user ? "none" : "0 6px 18px rgba(255,75,124,0.32)", transition: "all .2s" }}>
-            {loading ? `예측 중... (${elapsed}초)` : !user ? "로그인 후 시작하기" : "아기 얼굴 예측하기 ✨"}
-          </button>
-        )}
-        {/* 로딩 */}
-        {loading && (
-          <div style={{ marginTop: 24, textAlign: "center" }}>
-            <div style={{ fontSize: 56, animation: "bounce 1s infinite", display: "inline-block" }}>👶</div>
-            <div style={{ background: "#F7F7F7", borderRadius: 14, padding: "14px 18px", margin: "16px 0 12px", textAlign: "left" }}>
-              <p style={{ fontSize: 13, color: "#888", margin: "0 0 4px" }}>AI 분석 중</p>
-              <p style={{ fontSize: 15, fontWeight: 700, color: "#111", margin: 0 }}>{loadingMsg}</p>
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              {["압축", "전송", "생성"].map((s, i) => {
-                const steps = ["압축","전송","생성"]; const idx = steps.indexOf(step);
-                const isActive = step === s; const isDone = idx > i;
-                return (
-                  <div key={s} style={{ flex: 1, padding: "8px 0", borderRadius: 10, fontSize: 12, fontWeight: 600, textAlign: "center", background: isActive ? "#FF4B7C" : isDone ? "#FFA9C4" : "#F0F0F0", color: isActive || isDone ? "#fff" : "#aaa", transition: "all .3s" }}>
-                    {["🗜️ 압축","📤 전송","🎨 생성"][i]}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-        {/* 에러 */}
-        {error && (
-          <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
-            <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
-          </div>
-        )}
-        {/* 결과 */}
-        {results.length > 0 && (
-          <div style={{ marginTop: 24 }} className="fade-up">
-            <div style={{ textAlign: "center", marginBottom: 16 }}>
-              <p style={{ fontSize: 18, fontWeight: 900, color: "#111", margin: "0 0 6px" }}>
-                {gender === "girl" ? "👧 우리 딸 얼굴이에요!" : "👦 우리 아들 얼굴이에요!"} 🎉
-              </p>
-              {isPremiumResult && (
-                <span style={{ fontSize: 11, background: "#FF4B7C", color: "#fff", padding: "3px 10px", borderRadius: 20, fontWeight: 700 }}>
-                  ✦ Gen-4 Premium · 엄마+아빠 동시 반영
-                </span>
-              )}
-            </div>
-            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
-            <div style={{ position: "relative", borderRadius: 20, overflow: "hidden", marginBottom: 12 }}>
-              <img src={results[selected]} style={{ width: "100%", display: "block" }} alt="AI 아기 얼굴" />
-              <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.5)", color: "#fff", fontSize: 12, padding: "4px 10px", borderRadius: 20, fontWeight: 600 }}>
-                {selected + 1} / {results.length}
-              </div>
-            </div>
-            {results.length > 1 && (
-              <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                {results.map((url, i) => (
-                  <button key={i} onClick={() => setSelected(i)}
-                    style={{ flex: 1, borderRadius: 12, overflow: "hidden", border: `3px solid ${selected === i ? "#FF4B7C" : "transparent"}`, cursor: "pointer", opacity: selected === i ? 1 : 0.5, padding: 0, transition: "all .2s" }}>
-                    <img src={url} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block" }} alt="" />
-                  </button>
-                ))}
-              </div>
-            )}
-            <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
-              <button onClick={handleDownload}
-                style={{ flex: 1, background: "#F7F7F7", color: "#111", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                <Icon.Download /> 저장하기
-              </button>
-              <button onClick={handleShare}
-                style={{ flex: 1, background: "#FEE500", color: "#111", border: "none", borderRadius: 14, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                <Icon.Share /> 공유하기
-              </button>
-            </div>
-            <Upscale4K image={results[selected]} />
-            <button onClick={() => { setResults([]); setImage1(""); setImage2(""); setSelected(0); }}
-              style={{ width: "100%", background: "#F7F7F7", color: "#666", border: "none", borderRadius: 14, padding: "13px 0", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              <Icon.Refresh /> 다시 만들기
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-  // ─── 이용권/쿠폰/히스토리 ─────────────────────────────────────
   const EmptyPage = ({ tabs: t, emptyTitle, emptyIcon, rightBtn }: { tabs: string[]; emptyTitle: string; emptyIcon: string; rightBtn?: React.ReactNode }) => {
     const [activeSubTab, setActiveSubTab] = useState(0);
     return (
@@ -1070,7 +803,6 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
     );
   };
   const renderContent = () => {
-    if (activeTab === "home" && showMakeScreen) return <MakeScreen />;
     if (activeTab === "home") return <HomeMain />;
     if (activeTab === "ticket") return (
       <CoinWallet loggedIn={!!user} onLogin={handleLogin} />
@@ -1216,7 +948,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
   );
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", position: "relative", minHeight: "100vh", background: "#fff" }}>
-      {!showMakeScreen && <Header />}
+      <Header />
       <main style={{ paddingBottom: 80 }}>
         {renderContent()}
         {detail && (

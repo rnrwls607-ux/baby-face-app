@@ -1,3 +1,7 @@
+// ⛔ 은퇴 — 구형 무료체험 게이트(아기얼굴 일 3회 usage:{uid}). 호출처 0 (baby는 /baby 라우트형 전환으로
+//    코인 게이트로 이관, 홈의 옛 MakeScreen도 3/3에서 제거됨). 코인 시스템(withCoin)이 이 역할을 대체.
+//    삭제하지 않고 보존: Redis 키 usage:{uid}·bonus:{uid} 데이터가 아직 남아 있어(자연 만료 방치),
+//    참고·롤백·데이터 조회용. 되살릴 일은 없지만 GET/POST 로직은 그대로 둔다.
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 
