@@ -496,7 +496,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petbirthday: {
     key: "petbirthday",
-    coinCost: 2,
+    coinCost: 3,
     title: "펫 생일 파티",
     subtitle: "우리 아이 생일, 화보로",
     emoji: "🎂",
@@ -512,7 +512,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petmemorial: {
     key: "petmemorial",
-    coinCost: 2,
+    coinCost: 3,
     title: "무지개다리 초상",
     subtitle: "소중한 아이를 오래 간직하는 초상",
     emoji: "🌈",
@@ -528,7 +528,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petceo: {
     key: "petceo",
-    coinCost: 2,
+    coinCost: 3,
     title: "펫 CEO 출근",
     subtitle: "오늘부터 우리 아이가 회장님",
     emoji: "👔",
@@ -544,7 +544,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petgraduation: {
     key: "petgraduation",
-    coinCost: 2,
+    coinCost: 3,
     title: "펫 졸업사진",
     subtitle: "유치원 졸업을 축하하며",
     emoji: "🎓",
@@ -560,7 +560,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petminhwa: {
     key: "petminhwa",
-    coinCost: 2,
+    coinCost: 3,
     title: "조선 민화 초상",
     subtitle: "우리 아이를 민화 명작으로",
     emoji: "🖼️",
@@ -576,7 +576,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petroyal: {
     key: "petroyal",
-    coinCost: 2,
+    coinCost: 3,
     title: "로얄 유화 초상",
     subtitle: "왕의 초상이 된 우리 아이",
     emoji: "👑",
@@ -608,7 +608,7 @@ export const CONCEPTS: Record<string, Concept> = {
   },
   petjob: {
     key: "petjob",
-    coinCost: 2,
+    coinCost: 3,
     title: "펫 직업 변신",
     subtitle: "우리 아이의 첫 출근",
     emoji: "🩺",
