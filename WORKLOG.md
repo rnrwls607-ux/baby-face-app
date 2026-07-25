@@ -7,6 +7,37 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-25 (3차) — 업로드 가이드 전면 재설계(시트 9종 · 사진 27장 · generic 소멸)
+- [문제] 12장짜리 사진 한 벌(generic)이 143곳에 광역 배선돼 있었다 — 인물 컨셉
+  19곳에서 "음식 사진"이 예시로 떴다. 시트 구분이 solo_face·generic 둘뿐이라
+  자동차·부동산·복원이 전부 같은 안내를 보고 있었던 게 근본 원인
+- [시트 9종 재편 UploadGuide.tsx] solo_face / portrait_multi / family / pet /
+  food_drink / product_obj / space / vehicle / old_photo
+  · 캡션·checks·avoid를 시트마다 새로 씀 — 그 컨셉이 실제로 겪는 실패를 적는다
+    (역광 / 플래시 반사 / 차가 잘림 / 액자 유리 반사광 / 한쪽 벽만 좁게)
+  · ★portrait_multi는 "여러 명이 함께"를 피하라고 하면 안 된다(2인 정식 지원)
+  · ★family는 반대로 "각자 따로 한 장씩" — 입력 방식 자체가 다르다
+  · old_photo는 입력이 "옛날 사진을 찍거나 스캔한 것"이라 규칙이 완전히 별종
+- [사진 27장] 좋은 예 1 + 피할 예 2 × 9시트. ★훼손 합성 폐기 — 예전엔 좋은 사진
+  하나를 어둡게·흐리게 만들어 피할 예를 찍어냈는데, 실사용자가 겪는 실패를 못 보여준다.
+  이제 전부 실제로 그렇게 찍힌 사진. scripts/guide-prep.mjs는 변환만 한다
+  (600×800 3:4 webp q85 / 사람·동물 = 피사체 가중 크롭, 사물·공간 = 중앙 크롭)
+  · 총 1.30MB · 평균 49KB · 최대 128KB(space-2)
+- [배선 143곳 → 9종 분산] 1차 18종 generic→solo_face(44bdc7f) → 시트 9종 코드(87e6b62)
+  → 2차 11종 재배선+사진(e598c36): food·menu·homecafe→food_drink /
+  product·goods·nukki→product_obj / interior·realestate·factory→space /
+  car→vehicle / restore→old_photo
+  · 최종 집계 solo_face 99 · pet 12 · family 11 · portrait_multi 10 ·
+    food_drink 3 · product_obj 3 · space 3 · old_photo 1 · vehicle 1 = 143 (generic 0)
+  · generic-*.webp 3장 제거. generic 키는 미상정 type의 안전망으로만 남아 food_drink를 가리킴
+- 커밋 메시지: feat: 업로드 가이드 2단계 — 전 시트 전용 사진 + 잔여 11곳 재배선(generic 0)
+  / docs: WORKLOG 07-25 3차 — 업로드 가이드 전면 재설계
+- 다음에 할 것: 폰에서 9시트 실물 검수(캡션 줄바꿈·캐러셀 스크롤·사진 크롭) /
+  pet-2·3 GPT 소재 도착 시 같은 파일명으로 덮어쓰기만 하면 됨(코드 변경 0)
+- 주의/메모: ★사진 원본(png/jpg)은 리포에 넣지 않는다 — C:\mospic-app\tmp\guide-src에
+  두고 guide-prep으로 변환한 webp만 커밋. ★UploadGuide의 cardsFor(null, ...)은
+  회색 자리표시를 뜻한다(사진 없는 시트를 배선해도 깨진 이미지가 안 뜬다) — 현재 0곳
+
 ## 2026-07-25 (2차) — 홈 리디자인 라운드 마감 + 업로드 가이드 리디자인
 - [칩 3역할 분리 e0abfec] "홈" 칩 신설(랜딩·기본 선택·최초 진입 기본값) / "전체"=전량
   그리드 / "인기"(value "hot")=POPULAR_KEYS 20종 상수(idblack·idnavy·biznavy·bizgray·
