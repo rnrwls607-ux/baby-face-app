@@ -282,7 +282,7 @@ const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
 // cat: 이 섹션의 "전체보기 ›"가 열 카테고리(HOME_PILLS의 value). 비우면 현재 칩을 따른다.
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[]; cat?: string }[] = [
   {
-    id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "grid",
+    id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "grid", cat: "hot",
     items: [
       { id: "pop-bizpinkjacket", title: "핑크 트위드 재킷 프로필", subtitle: "우아하고 화사한 셋업", emoji: "🌷", accent: "#FCE8EF", image: "/cards/bizpinkjacket.webp", badge: "NEW", tags: ["비즈니스"], go: "bizpinkjacket" },
       { id: "pop-bizmnavy", title: "남성 네이비 정장", subtitle: "믿음직한 프로페셔널", emoji: "💼", accent: "#EAF3FF", image: "/cards/bizmnavy.webp", badge: "NEW", tags: ["비즈니스"], go: "bizmnavy" },
@@ -463,7 +463,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
     ],
   },
   {
-    id: "bizowner", heading: "우리 가게 사진도 스튜디오급", title: "사장님 컨셉", layout: "scroll",
+    id: "bizowner", heading: "우리 가게 사진도 스튜디오급", title: "사장님 컨셉", layout: "scroll", cat: "biz",
     items: [
       { id: "food", title: "음식 사진 보정", subtitle: "메뉴판·광고용으로", emoji: "🍽️", accent: "#FFE0EC", badge: "NEW", tags: ["음식"], image: "/cards/food.webp", go: "food" },
       { id: "homecafe", title: "홈카페 감성 사진", subtitle: "인스타 감성 한 장", emoji: "☕", accent: "#F5E9DC", badge: "NEW", tags: ["음식"], image: "/cards/homecafe.webp", go: "homecafe" },
