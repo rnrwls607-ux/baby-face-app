@@ -14,6 +14,49 @@
 
 const TRANSIENT_STATUSES = new Set([429, 500, 502, 503, 504]);
 
+// ── 오류 원인 구분 (2026-07-25) ──────────────────────────────────────────────
+// 왜: 429(쿼터 소진)와 503(진짜 혼잡)이 같은 "요청이 많아요" 문구로 뭉뚱그려져
+//     원인 파악에 매번 몇 시간씩 걸렸다. 상태코드+구글 body 키워드로 4갈래로 나누고
+//     로그에 검색 가능한 태그를 붙인다. 운영자는 로그에서 [QUOTA] 하나만 찾으면 판별 끝.
+// 쿼터/과금 소진 신호 — 구글이 body에 담아 보내는 문자열들
+const QUOTA_HINTS = [
+  "RESOURCE_EXHAUSTED",
+  "quota",
+  "Quota",
+  "QUOTA",
+  "billing",
+  "Billing",
+  "BILLING",
+  "rate limit",
+  "Rate limit",
+  "rateLimitExceeded",
+  "exceeded your current quota",
+  "free tier",
+  "FreeTier",
+];
+
+export type GeminiErrorTag = "QUOTA" | "TRANSIENT" | "AUTH" | "CLIENT" | "SERVER";
+
+// 상태코드 + 구글 원문 → { tag, userMsg }
+// ★userMsg는 사용자 잘못이 아님을 전제로 한 중립 문구. 원인 노출·전문 용어 금지.
+export function classifyGeminiError(status: number, body: string): { tag: GeminiErrorTag; userMsg: string } {
+  const quotaish = QUOTA_HINTS.some(h => body.includes(h));
+  // 429 + 쿼터/과금 신호 = 우리 쪽 한도 소진. "이용자가 많아서"가 아니므로 문구를 분리한다.
+  if (status === 429 && quotaish) {
+    return { tag: "QUOTA", userMsg: "지금은 생성이 어려워요. 잠시 후 다시 시도해주세요 🙏" };
+  }
+  if (status === 401 || status === 403) {
+    return { tag: "AUTH", userMsg: "지금은 생성이 어려워요. 잠시 후 다시 시도해주세요 🙏" };
+  }
+  if (TRANSIENT_STATUSES.has(status)) {
+    return { tag: "TRANSIENT", userMsg: "지금 요청이 많아요. 잠시 후 다시 시도해주세요 🙏" };
+  }
+  if (status >= 400 && status < 500) {
+    return { tag: "CLIENT", userMsg: "" }; // 빈 문자열 = 호출부 failMsg(기존 문구) 사용
+  }
+  return { tag: "SERVER", userMsg: "" };
+}
+
 function sleep(ms: number, signal?: AbortSignal | null): Promise<void> {
   return new Promise((resolve, reject) => {
     const t = setTimeout(resolve, ms);
@@ -34,8 +77,10 @@ export async function fetchGeminiWithRetry(url: string, init: RequestInit, label
   if (retries < 1) return fetch(url, init); // 단일 호출 — 시간 예산을 첫 시도에 전량 배정
   const first = await fetch(url, init);
   if (!TRANSIENT_STATUSES.has(first.status)) return first;
-  const reason = await first.text().then(t => t.slice(0, 300)).catch(() => "(본문 읽기 실패)");
-  console.warn(`[${label}] Gemini 일시 오류 ${first.status} → 1초 후 재시도. 사유: ${reason}`);
+  // ★재시도 흐름·타이밍은 그대로. 로그만 태그 + 원문 1200자로 확장(원인 판별용).
+  const reason = await first.text().then(t => t.slice(0, 1200)).catch(() => "(본문 읽기 실패)");
+  const { tag } = classifyGeminiError(first.status, reason);
+  console.warn(`[${tag}][${label}] Gemini 1차 실패 ${first.status} → 1초 후 재시도. 구글 응답: ${reason}`);
   await sleep(1000, init.signal);
   return fetch(url, init);
 }
@@ -44,7 +89,9 @@ export async function fetchGeminiWithRetry(url: string, init: RequestInit, label
 // failMsg: 일시 오류가 아닌 실패에 쓸 문구를 route가 지정할 수 있다(미지정 시 기존 문구 그대로).
 export async function geminiFriendlyError(res: Response, label = "gemini", failMsg?: string): Promise<string> {
   const raw = await res.text().catch(() => "(본문 읽기 실패)");
-  console.error(`[${label}] Gemini 오류 ${res.status}: ${raw.slice(0, 2000)}`);
-  if (TRANSIENT_STATUSES.has(res.status)) return "지금 요청이 많아요. 잠시 후 다시 시도해주세요 🙏";
+  const { tag, userMsg } = classifyGeminiError(res.status, raw);
+  // ★로그 형식: [태그][컨셉] 상태 + 구글 원문 2000자. 운영자는 [QUOTA] 검색 한 번으로 판별.
+  console.error(`[${tag}][${label}] Gemini 오류 ${res.status}: ${raw.slice(0, 2000)}`);
+  if (userMsg) return userMsg;
   return failMsg || "이미지를 만들지 못했어요. 잠시 후 다시 시도해주세요.";
 }
