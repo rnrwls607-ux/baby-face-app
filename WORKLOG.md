@@ -35,6 +35,23 @@
 - 다음: [MJ] Play Console 본인확인(주소 증빙 서류 확보 — KB 명세서에 주소 미표시,
   통신사 청구서 청구지 변경 검토 중) / Android 기기 인증(Play Console 폰 앱 로그인) /
   스크린샷 8장
+- [★결제 정합성 감사] MJ 우려("코인을 더 많이/더 적게 주면 안 된다") 전수 감사 결과:
+  · 더 많이 주는 경로 = ✅ 이미 3중 방어 — 서버가 product.coins만 사용(클라는 coins를
+    보내지도 않음) / amount를 product.price와 검증 / 그 금액으로 토스 재승인.
+    중복은 멱등 2단(GET+parse → SET NX)과 INCRBY 원자성으로 차단
+  · 구멍은 전부 "결제됐는데 적립 안 됨" 방향(전부 사용자 손해): (A)결제 후 완전 이탈
+    (B)charge 중 오류 (F)Redis 장애 (D)coinlog 유실 (H)orderId 소유권 미검증
+- [수리 dc3c6b0] ①order:{id} 값을 영수증 객체로({uid,provider,productId,coins,amount,
+  at,status}) — 사후 감사·보정의 전제. ★하위호환 파서 6케이스 실측(옛 문자열 키도
+  "처리된 주문"으로 인식 → 과거 결제 중복 적립 0) ②success 실패 화면 재시도 UI —
+  ★예전엔 유일 버튼 "홈으로"가 URL 파라미터를 날려 영구 미적립을 만들던 구조 → 재시도·
+  문의(orderId 프리필) 앞세우고 홈은 약한 텍스트로 강등 ③POST /api/admin/grant-coins
+  (dryRun 기본·confirm:"GRANT"·orderId 중복보정 409 차단·[ADMIN] 로깅·화면 버튼 없음)
+- [판단] 토스용 웹훅·2단계 커밋 같은 큰 인프라는 짓지 않음 — charge는 관리자 게이트 뒤라
+  실사용자 노출 0이고, IAP 전환 시 구글이 복구 수단을 기본 제공(구매복원·RTDN/웹훅·
+  ★미확인 시 자동 환불 = "돈만 나가고 코인 없음"이 구조적으로 불가능)
+- [IAP 필수 설계 5종 메모리 기록] 웹훅 주도 적립 / restorePurchases 회수 /
+  영수증 서버 검증 / acknowledge·consume 처리 / 환불·차지백 시 코인 회수 정책
 
 ## 2026-07-23 — ★Play 계정 전략 전환: 조직 → 개인 (DUNS 병목 폐기)
 - [배경] 조직 계정 = DUNS 필수인데 발급 경로가 전부 막힘: 애플 무료 창구는 계정 생성
