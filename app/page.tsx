@@ -241,6 +241,30 @@ const GO_CATEGORIES: Record<string, string[]> = {
   fourcutillust: ["fun"],
   fourcutcouple: ["fun", "family"],
 };
+// ★임시 진단(제거 예정) — D6. 앱을 다시 켰을 때 Capacitor가 사라지는 현상의 원인 추적용.
+// 서비스워커가 문서를 제어 중이면 응답이 SW 캐시에서 나가고, 그러면 셸의 브리지 주입
+// (응답 가로채기 기반)을 우회해 window.Capacitor가 없는 문서가 뜰 수 있다 — 그 상관을 본다.
+// 배지 규격은 기존과 동일: 20초 소멸 · pointer-events:none · 90px부터 52px 간격 세로 적층.
+// 문서당 1회. 실패해도 호출부 로직에 영향이 없도록 통째로 try로 감싼다.
+let d6Shown = false;
+let d6Count = 0;
+function showD6() {
+  try {
+    if (d6Shown || typeof document === "undefined") return;
+    d6Shown = true;
+    const msg = "D6 SW=" + (navigator.serviceWorker?.controller ? "제어중" : "없음")
+      + " Cap=" + !!((window as { Capacitor?: unknown }).Capacitor);
+    const d = document.createElement("div");
+    d.textContent = msg;
+    d.style.cssText = "position:fixed;left:8px;right:8px;bottom:" + (90 + d6Count * 52) + "px;z-index:99999;"
+      + "background:#111;color:#0f0;font-size:12px;font-family:monospace;"
+      + "padding:10px 12px;border-radius:10px;pointer-events:none;opacity:.95;"
+      + "word-break:break-all;";
+    d6Count++;
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 20000);
+  } catch { /* 진단 실패는 무시 — 앱 동작에 영향 없음 */ }
+}
 // SSR에선 useEffect로 폴백 (useLayoutEffect 서버 경고 방지) — 복원 재연을 첫 페인트 전에 돌리기 위함
 const useIsoLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 // 홈 칩(pill) 지속화 — HomeMain이 인라인 컴포넌트라 리렌더마다 리마운트되며 state가 리셋됨.
@@ -546,6 +570,7 @@ export default function Home() {
   // 하이드레이션 전 빈 홈 노출을 원천 차단. 여기서는 복원을 수행하고 오버레이 오픈 완료 시
   // 커버를 즉시 해제한다(인라인 1200ms 백스톱 타이머보다 먼저). ctx 소비도 여기 1곳뿐.
   useIsoLayoutEffect(() => {
+    showD6(); // ★임시 진단(제거 예정) — 재실행 시 Capacitor 소실 원인 추적. 실패해도 아래 복원은 그대로 돈다.
     const uncover = () => document.documentElement.removeAttribute("data-mospic-restoring");
     try {
       const raw = sessionStorage.getItem("mospic_back_ctx");
