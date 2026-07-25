@@ -571,14 +571,19 @@ export default function Home() {
       //     {} 또는 null    → 칸 없음 → 백이 곧장 스택 바닥 → 종료 (수리 대상 확정)
       //   600ms 지연은 passive effect 플러시(=useBackClose의 pushState) 이후를 보기 위함.
       //   재연 경로에서만 실행된다 — 위 `if (!raw) return`이 정상 홈 진입을 걸러낸다.
-      //   stack 길이는 훅 모듈 내부라 밖에서 못 읽는다 → 노출 전까지 "n/a".
       //   ★window.history로 명시 — 이 컴포넌트의 history state(HistoryItem[])가 이름을 가린다.
+      //   ★console.log → 화면 표시로 전환: 원격 기기라 logcat이 안 잡혀 육안 판독으로 간다.
+      //   15초 뒤 자동 소멸 + pointer-events:none이라 조작을 막지 않는다.
       setTimeout(() => {
-        console.log("[BACKDIAG]", JSON.stringify({
-          len: window.history.length,
-          state: window.history.state,
-          stack: (window as unknown as { __mospicBackStackLen?: number }).__mospicBackStackLen ?? "n/a",
-        }));
+        const d = document.createElement("div");
+        d.textContent = "[BACKDIAG] state=" + JSON.stringify(window.history.state)
+          + " len=" + window.history.length;
+        d.style.cssText = "position:fixed;left:8px;right:8px;bottom:90px;z-index:99999;"
+          + "background:#111;color:#0f0;font-size:12px;font-family:monospace;"
+          + "padding:10px 12px;border-radius:10px;pointer-events:none;opacity:.95;"
+          + "word-break:break-all;";
+        document.body.appendChild(d);
+        setTimeout(() => d.remove(), 15000);
       }, 600);
     } catch { uncover(); /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
