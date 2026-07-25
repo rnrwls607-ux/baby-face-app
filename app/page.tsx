@@ -8,7 +8,7 @@ import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
 import { getFavorites, toggleFavorite } from "./lib/favorites";
 import { APP_VERSION } from "./lib/version";
-import { useBackClose, showDiagBadge } from "./lib/useBackClose"; // showDiagBadge = 임시 진단(제거 예정)
+import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
@@ -549,9 +549,6 @@ export default function Home() {
     const uncover = () => document.documentElement.removeAttribute("data-mospic-restoring");
     try {
       const raw = sessionStorage.getItem("mospic_back_ctx");
-      // ★임시 진단(제거 예정) — ★if (!raw) return 보다 앞. "없음"도 찍혀야
-      //   "재연을 안 탄 건지" vs "타고도 칸이 없는 건지"를 가른다.
-      showDiagBadge("D1 ctx=" + (raw ? "있음" : "없음"));
       if (!raw) return;
       sessionStorage.removeItem("mospic_back_ctx");
       const ctx = JSON.parse(raw) as { detail?: string; from?: string; cat?: string };
@@ -568,17 +565,6 @@ export default function Home() {
         setDetail(found);
         uncover();
       }
-      // ★임시 진단(제거 예정) — "복귀한 상세에서 뒤로 = 앱 종료" 원인 실측.
-      //   가짜 칸(pushState)이 실제로 쌓였는지를 state.__backClose 유무로 판별한다:
-      //     {__backClose:1} → 칸 정상 → 백은 상세만 닫음(현 동작이 설계대로)
-      //     {} 또는 null    → 칸 없음 → 백이 곧장 스택 바닥 → 종료 (수리 대상 확정)
-      //   600ms 지연은 passive effect 플러시(=useBackClose의 pushState) 이후를 보기 위함.
-      //   재연 경로에서만 실행된다 — 위 `if (!raw) return`이 정상 홈 진입을 걸러낸다.
-      //   ★window.history로 명시 — 이 컴포넌트의 history state(HistoryItem[])가 이름을 가린다.
-      setTimeout(() => {
-        showDiagBadge("D2 재연실행 state=" + JSON.stringify(window.history.state)
-          + " len=" + window.history.length);
-      }, 600);
     } catch { uncover(); /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
