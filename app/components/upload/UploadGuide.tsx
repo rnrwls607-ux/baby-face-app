@@ -28,40 +28,33 @@ function todayStr(): string {
 type Card = { kind: "good" | "bad"; caption: string; image?: string };
 type Guide = { cards: Card[]; checks: string[]; avoid: string[] };
 
+// 카드 3장은 한 원본에서 뽑는다(scripts/guide-prep.mjs) — 좋은 예 / 어둡게 / 흐릿하게.
+// 그래서 캡션도 그 세 가지로 고정이다. 나머지 주의사항은 아래 avoid 한 줄이 담는다.
+const CARD_CAPTION = ["이렇게 올려주세요", "너무 어두워요", "흐릿해요"] as const;
+const cardsFor = (type: string): Card[] => [
+  { kind: "good", caption: CARD_CAPTION[0], image: `/guide/${type}-1.webp` },
+  { kind: "bad", caption: CARD_CAPTION[1], image: `/guide/${type}-2.webp` },
+  { kind: "bad", caption: CARD_CAPTION[2], image: `/guide/${type}-3.webp` },
+];
+
 const CONTENT: Record<string, Guide> = {
   solo_face: {
-    cards: [
-      { kind: "good", caption: "정면 · 밝은 곳" },
-      { kind: "bad", caption: "얼굴 가림" },
-      { kind: "bad", caption: "너무 어두움" },
-    ],
+    cards: cardsFor("solo_face"),
     checks: ["정면 얼굴", "밝은 곳에서", "얼굴이 선명하게", "상반신이 보이게"],
     avoid: ["얼굴 가림", "너무 어두움", "여러 명이 함께", "흐릿하거나 화질 낮음"],
   },
   generic: {
-    cards: [
-      { kind: "good", caption: "크고 밝게" },
-      { kind: "bad", caption: "너무 어두움" },
-      { kind: "bad", caption: "흐릿함" },
-    ],
+    cards: cardsFor("generic"),
     checks: ["대상이 크게", "밝은 곳에서", "선명하게", "배경 단순하게"],
     avoid: ["너무 어두움", "흐릿하거나 화질 낮음", "대상이 작게", "복잡한 배경"],
   },
   pet: {
-    cards: [
-      { kind: "good", caption: "정면 · 또렷하게" },
-      { kind: "bad", caption: "흔들린 사진" },
-      { kind: "bad", caption: "얼굴이 작게" },
-    ],
+    cards: cardsFor("pet"),
     checks: ["얼굴이 또렷하게", "밝은 곳에서", "정면으로", "몸이 잘 보이게"],
     avoid: ["흔들린 사진", "너무 어두움", "얼굴이 작게", "여러 마리 함께"],
   },
   family: {
-    cards: [
-      { kind: "good", caption: "각자 정면" },
-      { kind: "bad", caption: "한 장에 여럿" },
-      { kind: "bad", caption: "너무 어두움" },
-    ],
+    cards: cardsFor("family"),
     checks: ["각자 정면 얼굴", "밝은 곳에서", "한 명씩 따로", "얼굴이 선명하게"],
     avoid: ["한 장에 여러 명", "얼굴 가림", "너무 어두움", "흐릿한 사진"],
   },
@@ -143,8 +136,10 @@ export default function UploadGuide({ type }: { type: "solo_face" | "generic" | 
             <div key={i} style={{ flex: "0 0 132px", scrollSnapAlign: "start" }}>
               <div style={{ position: "relative", aspectRatio: "3/4", borderRadius: 12, overflow: "hidden", background: c.kind === "good" ? "#E4E6EA" : "#ECEDF0" }}>
                 {c.image ? (
+                  // ★opacity를 걸지 않는다 — 사진 자체가 이미 어둡거나 흐린데 반투명까지 주면
+                  //   흰 배경과 섞여 오히려 밝아져서 "어두운 예"가 안 어두워 보인다.
                   <img src={c.image} alt={c.caption} loading="lazy" decoding="async"
-                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: c.kind === "bad" ? 0.72 : 1 }} />
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : (
                   <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.kind === "good" ? "#9AA0AA" : "#B4B9C1" }}>3:4</span>
                 )}
