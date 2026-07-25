@@ -565,6 +565,21 @@ export default function Home() {
         setDetail(found);
         uncover();
       }
+      // ★임시 진단(제거 예정) — "복귀한 상세에서 뒤로 = 앱 종료" 원인 실측.
+      //   가짜 칸(pushState)이 실제로 쌓였는지를 state.__backClose 유무로 판별한다:
+      //     {__backClose:1} → 칸 정상 → 백은 상세만 닫음(현 동작이 설계대로)
+      //     {} 또는 null    → 칸 없음 → 백이 곧장 스택 바닥 → 종료 (수리 대상 확정)
+      //   600ms 지연은 passive effect 플러시(=useBackClose의 pushState) 이후를 보기 위함.
+      //   재연 경로에서만 실행된다 — 위 `if (!raw) return`이 정상 홈 진입을 걸러낸다.
+      //   stack 길이는 훅 모듈 내부라 밖에서 못 읽는다 → 노출 전까지 "n/a".
+      //   ★window.history로 명시 — 이 컴포넌트의 history state(HistoryItem[])가 이름을 가린다.
+      setTimeout(() => {
+        console.log("[BACKDIAG]", JSON.stringify({
+          len: window.history.length,
+          state: window.history.state,
+          stack: (window as unknown as { __mospicBackStackLen?: number }).__mospicBackStackLen ?? "n/a",
+        }));
+      }, 600);
     } catch { uncover(); /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

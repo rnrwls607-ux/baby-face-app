@@ -29,6 +29,11 @@ export default function BackButtonBridge() {
     let timer: ReturnType<typeof setTimeout> | null = null;
     app.addListener("backButton", ({ canGoBack }) => {
       if (canGoBack) { window.history.back(); return; }
+      // 딥링크·직행 진입 시 하드웨어 백이 홈을 못 보고 종료되던 결함 수리
+      // (화면 내 ‹ 버튼의 기존 방어와 동작 통일).
+      // replace로 가야 홈이 새 바닥 칸이 되고 잔여 가짜 칸이 남지 않는다.
+      // pathname === "/" 가드로 무한 폴백 차단 — 홈에서는 아래 더블백 종료 그대로.
+      if (window.location.pathname !== "/") { window.location.replace("/"); return; }
       if (exitArmed) { void app.exitApp(); return; }
       exitArmed = true;
       toast("한 번 더 누르면 종료됩니다");
