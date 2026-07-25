@@ -273,7 +273,11 @@ const HOME_PILLS = [
 //   accent/emoji   image가 없을 때 쓰는 폴백
 const HERO_SLIDES = [
   { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg", objectPosition: "center 48%" },
-  { id: "biz", title: "정장 입은 나를,\n1분 만에", subtitle: "AI 비즈니스 프로필", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
+  { id: "biz", title: "첫인상은\n프로필 사진에서", subtitle: "비즈니스 프로필 34종", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
+  { id: "luxe", title: "사진관 안 가도,\n사진관보다", subtitle: "스튜디오 화보를 1분 만에", emoji: "🖤", accent: "#EDEAE6", go: "luxe", image: "/hero/luxe.webp", objectPosition: "center 50%" },
+  { id: "petstudio", title: "우리 아이도\n프로필 사진", subtitle: "펫 스튜디오 · 코스튬", emoji: "🐶", accent: "#F3EDE4", go: "petstudio", image: "/hero/petstudio.webp", objectPosition: "center 50%" },
+  { id: "couple", title: "둘이 함께,\n화보처럼", subtitle: "커플 · 웨딩 · 가족", emoji: "💑", accent: "#FBEFE9", go: "couple", image: "/hero/couple.webp", objectPosition: "center 50%" },
+  { id: "food", title: "사장님,\n사진이 매출입니다", subtitle: "음식 · 상품 · 공간 보정", emoji: "🍽️", accent: "#F6EEE6", go: "food", image: "/hero/food.webp", objectPosition: "center 50%" },
 ];
 const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
@@ -665,7 +669,10 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         if (!el || !el.clientWidth) return;
         if (document.hidden) return; // 탭 백그라운드 — 넘기지 않는다
         const cur = Math.round(el.scrollLeft / el.clientWidth);
-        const next = (cur + 1) % HERO_SLIDES.length; // 마지막 → 첫 장 순환
+        // ★항상 오른쪽으로만 간다. 마지막(6번) 다음은 배열 끝에 덧붙인 1번 클론 →
+        //   도착 즉시 onHeroScroll이 애니메이션 없이 진짜 1번으로 갈아끼운다.
+        //   덕분에 "마지막 → 첫 장"이 되감기 스윕 없이 이어진다.
+        const next = cur + 1 > HERO_SLIDES.length ? 0 : cur + 1;
         el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
       }, HERO_INTERVAL_MS);
     };
@@ -679,11 +686,23 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [heroRunnable]);
 
-    // 히어로 스크롤 시 현재 인덱스 추적 (점 인디케이터용)
+    // 히어로 스크롤 시 현재 인덱스 추적 (점 인디케이터용) + 클론 착지 처리
     const onHeroScroll = () => {
       const el = heroRef.current;
       if (!el || !el.clientWidth) return;
-      const idx = Math.round(el.scrollLeft / el.clientWidth);
+      const w = el.clientWidth;
+      const raw = Math.round(el.scrollLeft / w);
+      // ★클론(마지막+1)에 "완전히 도착"했을 때만 순간 이동. 스크롤이 멈춘 뒤여야
+      //   애니메이션과 싸우지 않는다(2px 이내 = 스냅 완료).
+      //   클론과 1번은 같은 이미지라 갈아끼워도 화면에 변화가 보이지 않는다.
+      //   자동 전환·손가락 스와이프 어느 쪽으로 도착해도 같은 경로를 탄다.
+      if (raw >= HERO_SLIDES.length && Math.abs(el.scrollLeft - raw * w) < 2) {
+        el.scrollTo({ left: 0, behavior: "auto" });
+        setHeroIdx(0);
+        startHero();
+        return;
+      }
+      const idx = raw % HERO_SLIDES.length; // 인디케이터는 클론을 세지 않는다
       setHeroIdx(idx);
       // ★수동 스와이프 직후 곧바로 자동 전환되면 뺏기는 느낌이 난다 → 타이머를 처음부터 다시.
       //   (자동 전환이 만든 스크롤에도 걸리지만, 결과는 "한 장당 5초"로 동일해 무해하다)
@@ -724,7 +743,9 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
         {HOME_PILLS[pill].value === "home" && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
-          {HERO_SLIDES.map(h => (
+          {/* 마지막에 1번 슬라이드의 복제본을 한 장 더 깐다 — 무한 루프용(위 onHeroScroll 참고).
+              슬라이드가 1장뿐이면 순환이 없으므로 클론도 만들지 않는다. */}
+          {(HERO_SLIDES.length > 1 ? [...HERO_SLIDES, { ...HERO_SLIDES[0], id: HERO_SLIDES[0].id + "-loop" }] : HERO_SLIDES).map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
               <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 270, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
