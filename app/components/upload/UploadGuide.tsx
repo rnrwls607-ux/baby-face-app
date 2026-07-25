@@ -8,8 +8,10 @@ import { useBackClose } from "../../lib/useBackClose";
 // 아래에서 올라오는 시트는 위쪽에 업로드 영역이 계속 보여 흐름이 끊기지 않는다.
 // 예시 사진은 ★가로 스크롤 캐러셀이라 장수가 늘어도 시트 높이가 그대로다.
 //
-// ★겁주지 않기: 빨간 X·경고 삼각형을 쓰지 않는다. 피할 예는 회색·저채도로만 낮춘다.
-//   (이전 버전은 초록 ✅ / 빨강 ❌ 였는데 경고문처럼 읽혔다)
+// ★2026-07-25 방침 변경: 예전엔 "겁주지 않기"로 빨간 X를 금지하고 명도로만 구분했는데,
+//   실사진 27장으로 바꾸고 나니 좋은 예와 피할 예가 둘 다 "그냥 사진"으로 보여 구분이 죽었다.
+//   이제 ✓/✕ 뱃지 + 피할 예 X 오버레이로 명시한다. 대신 겁주기는 카드 안에만 가두고,
+//   시트 본문(권장 칩·"피해요" 한 줄)은 중립 톤 그대로 둔다.
 //
 // 기본은 매번 뜨고, "오늘 하루 보지 않기" 를 누른 날에만 안 뜬다.
 // type 별로 키가 분리돼, solo_face 와 generic 은 각각 따로 관리된다.
@@ -181,16 +183,49 @@ export default function UploadGuide({ type }: { type: GuideType; accent?: string
                 ) : (
                   <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: c.kind === "good" ? "#9AA0AA" : "#B4B9C1" }}>3:4</span>
                 )}
-                {/* 좋은 예 / 피할 예 — 색이 아니라 명도로만 구분한다 */}
+                {c.kind === "bad" && (
+                  // 피할 예 마킹 — ★img에 opacity를 거는 게 아니라 검은 레이어를 위에 덮는다.
+                  //   (opacity는 흰 배경과 섞여 어두운 사진을 오히려 밝게 만들었다. 덮기는 항상 어두워진다)
+                  <>
+                    <span style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.22)", pointerEvents: "none" }} />
+                    {/* 대각선 X — 모서리 라운드(12px)에 잘리지 않게 네 귀퉁이에서 12% 안쪽을 잇는다.
+                        preserveAspectRatio="none"이라 3:4로 늘어나며, 선 굵기도 축별로 늘어난다(의도) */}
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"
+                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+                      <line x1="12" y1="12" x2="88" y2="88" stroke="#EF4444" strokeWidth={5} strokeLinecap="round" opacity={0.75} />
+                      <line x1="88" y1="12" x2="12" y2="88" stroke="#EF4444" strokeWidth={5} strokeLinecap="round" opacity={0.75} />
+                    </svg>
+                  </>
+                )}
+                {/* 좋은 예 / 피할 예 — 뱃지 오른쪽에 나란히. X 오버레이보다 위에 있어야 읽힌다 */}
                 <span style={{
-                  position: "absolute", left: 7, top: 7, fontSize: 10, fontWeight: 800, borderRadius: 999, padding: "3px 8px",
+                  position: "absolute", left: 34, top: 10, fontSize: 10, fontWeight: 800, borderRadius: 999, padding: "3px 8px",
                   background: c.kind === "good" ? "#191919" : "rgba(255,255,255,0.92)",
                   color: c.kind === "good" ? "#fff" : "#8A8F98",
+                  pointerEvents: "none",
                 }}>
                   {c.kind === "good" ? "좋은 예" : "피할 예"}
                 </span>
+                {/* ✓/✕ 뱃지 — ★img의 형제 레이어라 사진이 안 떠도(회색 자리표시) 뱃지는 남는다 */}
+                <span aria-hidden="true" style={{
+                  position: "absolute", left: 8, top: 8, width: 22, height: 22, borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none",
+                  background: c.kind === "good" ? "#22C55E" : "#EF4444",
+                  boxShadow: "0 1px 4px rgba(0,0,0,.25)",
+                }}>
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round">
+                    {c.kind === "good" ? (
+                      <polyline points="2.5,6.4 4.9,8.8 9.5,3.4" strokeLinejoin="round" />
+                    ) : (
+                      <>
+                        <line x1="3.2" y1="3.2" x2="8.8" y2="8.8" />
+                        <line x1="8.8" y1="3.2" x2="3.2" y2="8.8" />
+                      </>
+                    )}
+                  </svg>
+                </span>
               </div>
-              <p style={{ margin: "6px 0 0", fontSize: 11, fontWeight: 600, color: c.kind === "good" ? "#191919" : "#8A8F98", textAlign: "center" }}>{c.caption}</p>
+              <p style={{ margin: "6px 0 0", fontSize: 11, fontWeight: 600, color: c.kind === "good" ? "#16A34A" : "#DC2626", textAlign: "center" }}>{c.caption}</p>
             </div>
           ))}
         </div>
