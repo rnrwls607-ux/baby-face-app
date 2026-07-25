@@ -28,41 +28,80 @@ function todayStr(): string {
 type Card = { kind: "good" | "bad"; caption: string; image?: string };
 type Guide = { cards: Card[]; checks: string[]; avoid: string[] };
 
-// 카드 3장은 한 원본에서 뽑는다(scripts/guide-prep.mjs) — 좋은 예 / 어둡게 / 흐릿하게.
-// 그래서 캡션도 그 세 가지로 고정이다. 나머지 주의사항은 아래 avoid 한 줄이 담는다.
-const CARD_CAPTION = ["이렇게 올려주세요", "너무 어두워요", "흐릿해요"] as const;
-const cardsFor = (type: string): Card[] => [
-  { kind: "good", caption: CARD_CAPTION[0], image: `/guide/${type}-1.webp` },
-  { kind: "bad", caption: CARD_CAPTION[1], image: `/guide/${type}-2.webp` },
-  { kind: "bad", caption: CARD_CAPTION[2], image: `/guide/${type}-3.webp` },
-];
+// 카드 3장 = 좋은 예 1 + 피할 예 2. 캡션은 ★시트마다 다르다 —
+// 컨셉이 실제로 겪는 실패("역광"·"플래시 반사"·"차가 잘림")를 그대로 적어야 도움이 된다.
+//
+// imgType: 사진이 있는 시트만 경로를 준다. null이면 회색 자리표시가 나온다
+//   → 사진이 아직 없는 시트를 배선해도 깨진 이미지가 뜨지 않는다.
+const cardsFor = (imgType: string | null, caps: readonly [string, string, string]): Card[] =>
+  ([["good", caps[0], 1], ["bad", caps[1], 2], ["bad", caps[2], 3]] as const).map(([kind, caption, n]) => ({
+    kind: kind as "good" | "bad",
+    caption,
+    ...(imgType ? { image: `/guide/${imgType}-${n}.webp` } : {}),
+  }));
+
+export type GuideType =
+  | "solo_face" | "portrait_multi" | "family" | "pet"
+  | "food_drink" | "product_obj" | "space" | "vehicle" | "old_photo"
+  | "generic"; // 옛 키 — 아래에서 food_drink의 별칭으로 남긴다
 
 const CONTENT: Record<string, Guide> = {
-  solo_face: {
-    cards: cardsFor("solo_face"),
+  // ── 사람 ──────────────────────────────────────────────
+  solo_face: { // 증명·프로필 등 1인 전용
+    cards: cardsFor("solo_face", ["이렇게 올려주세요", "역광·너무 어두워요", "옆모습·얼굴 가림"]),
     checks: ["정면 얼굴", "밝은 곳에서", "얼굴이 선명하게", "상반신이 보이게"],
-    avoid: ["얼굴 가림", "너무 어두움", "여러 명이 함께", "흐릿하거나 화질 낮음"],
+    avoid: ["얼굴 가림", "역광·너무 어두움", "옆모습·고개 숙임", "흐릿하거나 화질 낮음"],
   },
-  generic: {
-    cards: cardsFor("generic"),
-    checks: ["대상이 크게", "밝은 곳에서", "선명하게", "배경 단순하게"],
-    avoid: ["너무 어두움", "흐릿하거나 화질 낮음", "대상이 작게", "복잡한 배경"],
+  portrait_multi: { // 1~2인(+펫) 변환 — ★"여러 명이 함께"를 피하라고 하면 안 된다(2인 정식 지원)
+    // 전용 사진 준비 전까지는 solo_face 사진을 빌려 쓴다(회색 자리표시보다 낫다)
+    cards: cardsFor("solo_face", ["이렇게 올려주세요", "너무 어두워요", "너무 멀리·얼굴이 작아요"]),
+    checks: ["얼굴이 크고 또렷하게", "밝은 곳에서", "한 명 또는 두 명", "표정이 잘 보이게"],
+    avoid: ["너무 어두움", "얼굴이 작게 나옴", "얼굴 가림", "흐릿하거나 화질 낮음"],
   },
-  pet: {
-    cards: cardsFor("pet"),
-    checks: ["얼굴이 또렷하게", "밝은 곳에서", "정면으로", "몸이 잘 보이게"],
-    avoid: ["흔들린 사진", "너무 어두움", "얼굴이 작게", "여러 마리 함께"],
-  },
-  family: {
-    cards: cardsFor("family"),
-    checks: ["각자 정면 얼굴", "밝은 곳에서", "한 명씩 따로", "얼굴이 선명하게"],
+  family: { // 2인 라인 — 각자 사진을 따로 올리는 방식
+    cards: cardsFor("family", ["각자 셀카 한 장씩", "둘이 같이 찍힌 한 장", "너무 어두워요"]),
+    checks: ["각자 정면 얼굴", "한 명씩 따로", "밝은 곳에서", "얼굴이 선명하게"],
     avoid: ["한 장에 여러 명", "얼굴 가림", "너무 어두움", "흐릿한 사진"],
   },
+  pet: {
+    cards: cardsFor("pet", ["정면 얼굴이 또렷하게", "흔들렸어요", "뒷모습·너무 멀리"]),
+    checks: ["얼굴이 또렷하게", "정면으로", "밝은 곳에서", "몸이 잘 보이게"],
+    avoid: ["흔들린 사진", "뒷모습·옆모습", "얼굴이 작게", "여러 마리 함께"],
+  },
+  // ── 사물·공간 ─────────────────────────────────────────
+  food_drink: { // 기존 generic 사진이 곧 음식 사진이라 그대로 쓴다
+    cards: cardsFor("generic", ["메뉴가 잘 보이게", "플래시가 튀고 어두워요", "너무 멀리서 찍었어요"]),
+    checks: ["음식이 크게", "밝은 곳에서", "그릇 전체 담기", "위에서 또는 45도"],
+    avoid: ["플래시 반사", "너무 어두움", "너무 멀리서", "그릇이 잘림"],
+  },
+  product_obj: { // 사진 준비 전 — 자리표시
+    cards: cardsFor(null, ["제품만 크고 또렷하게", "배경이 어수선해요", "흔들리고 어두워요"]),
+    checks: ["제품이 크게", "배경 단순하게", "밝은 곳에서", "전체가 보이게"],
+    avoid: ["어수선한 배경", "흔들린 사진", "너무 어두움", "제품이 잘림"],
+  },
+  space: {
+    cards: cardsFor(null, ["공간 전체가 보이게", "한쪽 벽만 좁게 찍혔어요", "너무 어두워요"]),
+    checks: ["공간이 넓게", "수평 맞추기", "밝은 곳에서", "모서리가 보이게"],
+    avoid: ["한쪽 벽만 찍힘", "기울어진 수평", "너무 어두움", "흐릿한 사진"],
+  },
+  vehicle: {
+    cards: cardsFor(null, ["차 전체가 밝게 보이게", "밤에 어둡게 찍혔어요", "차가 잘리거나 멀어요"]),
+    checks: ["차 전체 담기", "밝은 낮에", "수평 맞추기", "앞·옆 45도"],
+    avoid: ["밤·어두운 곳", "차가 잘림", "너무 멀리서", "흐릿한 사진"],
+  },
+  old_photo: { // 복원 — 입력이 "옛날 사진을 찍거나 스캔한 것"이라 규칙이 완전히 다르다
+    cards: cardsFor(null, ["옛 사진 정면 촬영·스캔", "액자째 비스듬히·반사광", "사진 일부만 크게"]),
+    checks: ["사진 전체 담기", "정면에서 반듯하게", "밝은 곳에서", "그림자 없이"],
+    avoid: ["비스듬한 각도", "유리 반사광", "일부만 찍힘", "손가락 가림"],
+  },
 };
+// ★옛 키 호환 — 아직 재배선하지 않은 컨셉이 type="generic"으로 들어와도 음식 시트를 본다.
+//   (배선이 끝나면 이 줄과 함께 generic을 지운다)
+CONTENT.generic = CONTENT.food_drink;
 
 // accent는 받기만 하고 쓰지 않는다 — 호출부 65곳이 넘기고 있어 시그니처는 유지하되,
 // 확인 버튼은 컨셉 색이 아니라 중립 검정으로 통일했다(핑크는 만들기 CTA 한 곳에만).
-export default function UploadGuide({ type }: { type: "solo_face" | "generic" | "pet" | "family"; accent?: string }) {
+export default function UploadGuide({ type }: { type: GuideType; accent?: string }) {
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(false); // 올라오는 애니메이션용
   const storageKey = KEY_PREFIX + type;

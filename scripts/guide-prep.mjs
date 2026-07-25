@@ -1,58 +1,67 @@
-// 업로드 가이드 예시 사진 생성 — 3:4 세로 600×800 webp q85 → public/guide/
+// 업로드 가이드 예시 사진 변환기 — 입력 폴더의 원본을 3:4 600×800 webp q85로만 바꾼다.
 //
-// 왜 "비포(입력용) 사진"을 쓰나: 이 가이드는 "이런 사진을 올려주세요"를 알려준다.
-// 완성된 결과물(애프터)을 보여주면 "저런 사진이 있어야 하나?"로 오해한다 → 반드시 입력 원본.
+// ★2026-07-25 전면 교체: 예전엔 좋은 사진 한 장을 어둡게·흐리게 "훼손"해서 피할 예를 만들었다.
+//   그 방식은 실제 사용자가 겪는 실패(역광·플래시 반사·너무 멀리·차가 잘림)를 못 보여준다.
+//   이제 좋은 예도 피할 예도 ★실제로 그렇게 찍힌 사진을 넣는다. 이 스크립트는 변환만 한다.
 //
-// 타입당 3장을 한 원본에서 만든다 (생성 API 호출 없음 — 순수 이미지 가공):
-//   1) 좋은 예   : 3:4 크롭만
-//   2) 너무 어두움: 밝기를 크게 낮춘다 ★"무드 있는 사진"이 아니라 "안 보인다"로 읽혀야 함
-//   3) 흐릿·저화질: 아주 작게 줄였다 되돌린 뒤 블러 ★"소프트포커스"가 아니라 "화질 나쁨"
+// 사용법:
+//   node scripts/guide-prep.mjs <입력폴더>
 //
-// 사용법 (리포 루트에서):
-//   node scripts/guide-prep.mjs
-//   node scripts/guide-prep.mjs --dark 0.28 --small 64   ← 열화 강도를 더 세게
+// 입력 파일명 = 출력 파일명과 같은 규칙을 요구한다: {type}-{n}.png|jpg|jpeg|webp
+//   예) solo_face-1.jpg  portrait_multi-3.png  vehicle-2.jpeg
+//   1 = 좋은 예 / 2·3 = 피할 예 (UploadGuide의 카드 순서와 같다)
+// 규칙에 안 맞는 파일은 건너뛰고 목록으로 알려준다.
 import sharp from "sharp";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, readdirSync, existsSync } from "node:fs";
 import path from "node:path";
 
 const OUT = path.join(process.cwd(), "public", "guide");
-const W = 600, H = 800;
+const W = 600, H = 800;               // 3:4 — UploadGuide 카드 규격(표시 132px, 최소 400×533)
+const TYPES = [
+  "solo_face", "portrait_multi", "family", "pet",
+  "food_drink", "product_obj", "space", "vehicle", "old_photo",
+  "generic", // 옛 키 — 재배선이 끝나면 제거
+];
 
-// CLI로 강도 조절 (검수 시트를 보고 약하면 올린다)
-const argv = process.argv.slice(2);
-const argOf = (k, d) => { const i = argv.indexOf(k); return i >= 0 ? Number(argv[i + 1]) : d; };
-const DARK = argOf("--dark", 0.34);   // 밝기 배수 (낮을수록 어둡다)
-const SMALL = argOf("--small", 72);   // 이 폭까지 줄였다 되돌린다 (작을수록 뭉갠다)
-const BLUR = argOf("--blur", 1.6);
-
-// type → 원본 경로 + 크롭 전략
-const SRC = {
-  solo_face: { file: "examples/ba/idblack/id_model_woman_2.png", pos: "attention" },
-  generic:   { file: "examples/ba/음식 사진/비포2.jpg",            pos: "centre" },
-  pet:       { file: "examples/ba/petstudio/petstudio_before_shiba.png", pos: "attention" },
-  family:    { file: "examples/ba/couple/couple_비포1b.png",       pos: "attention" },
-};
+const inDir = process.argv[2];
+if (!inDir) {
+  console.log("사용법: node scripts/guide-prep.mjs <입력폴더>");
+  console.log("  파일명 규칙: {type}-{n}.png|jpg|jpeg|webp  (n = 1 좋은 예 / 2·3 피할 예)");
+  console.log("  type: " + TYPES.join(" · "));
+  process.exit(1);
+}
+if (!existsSync(inDir)) {
+  console.error(`입력 폴더가 없습니다: ${inDir}`);
+  process.exit(1);
+}
 
 mkdirSync(OUT, { recursive: true });
 
-for (const [type, { file, pos }] of Object.entries(SRC)) {
-  const position = pos === "centre" ? "centre" : sharp.strategy.attention;
-  // 1) 좋은 예 — 크롭만
-  const base = await sharp(file).flatten({ background: "#ffffff" }).resize(W, H, { fit: "cover", position }).toBuffer();
-  await sharp(base).webp({ quality: 85 }).toFile(path.join(OUT, `${type}-1.webp`));
+const RULE = /^([a-z_]+)-([123])\.(png|jpg|jpeg|webp)$/i;
+const done = [];
+const skipped = [];
 
-  // 2) 너무 어두움 — 밝기를 크게 낮추고 대비도 살짝 죽인다(흐린 어둠 = 진짜 실패 사진)
-  await sharp(base)
-    .modulate({ brightness: DARK, saturation: 0.75 })
-    .linear(0.86, 6) // 대비 저하 — 검게 뭉개지지 않고 "안 보이는" 느낌
+for (const name of readdirSync(inDir)) {
+  const m = name.match(RULE);
+  if (!m) { skipped.push(`${name} — 파일명 규칙 불일치`); continue; }
+  const [, type, n] = m;
+  if (!TYPES.includes(type)) { skipped.push(`${name} — 알 수 없는 type "${type}"`); continue; }
+
+  const src = path.join(inDir, name);
+  const dst = path.join(OUT, `${type}-${n}.webp`);
+  // 크롭 전략: 사람·동물은 피사체 가중, 사물·공간은 중앙(구도 전체가 정보라 잘리면 안 된다)
+  const subjectWeighted = ["solo_face", "portrait_multi", "family", "pet"].includes(type);
+  await sharp(src)
+    .flatten({ background: "#ffffff" })
+    .resize(W, H, { fit: "cover", position: subjectWeighted ? sharp.strategy.attention : "centre" })
     .webp({ quality: 85 })
-    .toFile(path.join(OUT, `${type}-2.webp`));
-
-  // 3) 흐릿·저화질 — 작게 줄였다 되돌리면 디테일이 실제로 사라진다(블러만 쓰면 예쁘게 나온다)
-  const tiny = await sharp(base).resize(SMALL).jpeg({ quality: 32 }).toBuffer();
-  await sharp(tiny).resize(W, H, { kernel: "nearest" }).blur(BLUR).webp({ quality: 85 })
-    .toFile(path.join(OUT, `${type}-3.webp`));
-
-  console.log(`${type}: 3장 (원본 ${file})`);
+    .toFile(dst);
+  done.push(`${type}-${n}.webp ← ${name}`);
 }
-console.log(`완료 — 밝기 ${DARK} / 축소폭 ${SMALL}px / 블러 ${BLUR}`);
+
+console.log(`변환 ${done.length}장 → public/guide/`);
+for (const d of done) console.log("  " + d);
+if (skipped.length) {
+  console.log(`\n건너뜀 ${skipped.length}개:`);
+  for (const s of skipped) console.log("  " + s);
+}
