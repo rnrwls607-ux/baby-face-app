@@ -11,7 +11,6 @@ import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
-import CoinIcon from "./components/CoinIcon";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
@@ -494,15 +493,8 @@ export default function Home() {
     // go(-N)의 popstate는 비동기라 위 스크롤이 닫히기 전에 끝난다 → 닫힌 뒤 한 번 더.
     if (openCount > 0) setTimeout(() => window.scrollTo(0, 0), 80);
   };
-  // 홈 코인 현황 카드용 잔액 1회 캐시 (실패 시 null 유지 → 카드 숨김, 에러 미표출)
-  const [homeCoinBalance, setHomeCoinBalance] = useState<number | null>(null);
-  useEffect(() => {
-    if (!user) { setHomeCoinBalance(null); return; }
-    fetch("/api/coins")
-      .then(r => (r.ok ? r.json() : null))
-      .then(d => { if (d && typeof d.balance === "number") setHomeCoinBalance(d.balance); })
-      .catch(() => { /* 실패 시 카드 숨김 */ });
-  }, [user]);
+  // (홈 코인 잔액 캐시는 코인 카드와 함께 제거 — 이 fetch는 그 카드 전용이었고,
+  //  잔액이 필요한 코인 탭·402 시트는 각자 조회한다. 홈 진입 시 /api/coins 호출 1회 절감.)
   // 만들기 뒤로 복귀 재연 (y2k 파일럿) — 진입 때 심은 컨텍스트를 1회 소비해 상세(+전체보기·칩) 재오픈.
   // ★즉시 removeItem = 1회 소비 원칙: 새로고침·앞으로가기·딥링크 홈 직행에선 컨텍스트가 없어 무동작.
   // 전체보기 경유였다면 전체보기를 먼저 열고(가짜 칸 depth1), 상세는 다음 틱에 열어(depth2 = 스택 위)
@@ -767,28 +759,16 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         )}
         {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
         {HOME_PILLS[pill].value === "home" && HERO_SLIDES.length > 1 && (
-        <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
+        // 아래 코인 카드가 빠지면서 점이 히어로에 붙어 보여 8단위(16)로 띄웠다.
+        // 섹션 사이 간격(30)은 전 섹션 공통 리듬이라 건드리지 않는다.
+        <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 16 }}>
           {HERO_SLIDES.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
           ))}
         </div>
         )}
-        {/* 코인 현황 카드 (구 무료체험 usage 게이트는 baby 라우트형 전환 3/3에서 폐기 완료) */}
-        {!userLoading && !user && (
-          <div style={{ margin: "16px 18px 0", background: "#F7F7F9", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: "#111", margin: 0 }}><CoinIcon size={15} /> 로그인하면 웰컴 코인 3개를 드려요</p>
-            <button onClick={handleLogin} style={{ background: "#FEE500", border: "none", borderRadius: 18, padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#111", whiteSpace: "nowrap" }}>카카오 로그인</button>
-          </div>
-        )}
-        {user && homeCoinBalance !== null && (
-          <button onClick={() => setActiveTab("ticket")} style={{ width: "calc(100% - 36px)", margin: "16px 18px 0", background: "#FFF5F8", border: "1px solid #FFE0EC", borderRadius: 16, padding: "13px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
-            <div style={{ textAlign: "left" }}>
-              <p style={{ fontSize: 11, color: "#888", margin: "0 0 2px" }}>내 코인</p>
-              <p style={{ fontSize: 16, fontWeight: 800, color: "#191919", margin: 0 }}><CoinIcon size={18} /> <span style={{ color: "#FF4B7C" }}>{homeCoinBalance}</span></p>
-            </div>
-            <span style={{ fontSize: 13, fontWeight: 700, color: "#FF4B7C" }}>충전·내역 ›</span>
-          </button>
-        )}
+        {/* 코인 현황 카드는 2026-07-25에 제거 — 랜딩 최상단은 컨셉을 보여주는 자리로 양보했다.
+            잔액·충전은 하단 "코인" 탭이, 부족 안내는 402 시트가 그대로 담당한다. */}
         {/* 섹션들 — 전체(pill 0)는 기존 섹션 미리보기, 그 외 칩은 2열 그리드 */}
         {HOME_PILLS[pill].value === "home" ? HOME_SECTIONS.map(section => {
           const isGrid = section.layout === "grid";
