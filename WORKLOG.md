@@ -7,6 +7,29 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-25 (2차) — 홈 리디자인 라운드 마감 + 업로드 가이드 리디자인
+- [칩 3역할 분리 e0abfec] "홈" 칩 신설(랜딩·기본 선택·최초 진입 기본값) / "전체"=전량
+  그리드 / "인기"(value "hot")=POPULAR_KEYS 20종 상수(idblack·idnavy·biznavy·bizgray·
+  lifeshot·y2k·luxe·idol·travel·couple·friend·family·petstudio·petcostume·clay·figure·
+  roman·wedding·graduation·hairstyle — 실키 검증 완료, 교체는 배열만). 부수 수리:
+  즐겨찾기 복원 인덱스 0→1, 전체보기 오버레이 홈 칩 숨김, 오버레이 인기도 POPULAR_KEYS 통일
+- [칩 위치 왕복] 히어로 아래 이동(8140d02) → MJ 요청 원복(595601d) — 히어로가 home 칩
+  전용이라 다른 칩에서 칩이 점프하던 문제가 원위치 복귀로 구조적 해소
+- [히어로 ebaef0e→b85eccd] HERO_SLIDES 상수(id/title/subtitle/image/objectPosition/go)
+  + 5초 자동 순환(HERO_INTERVAL_MS) + ★클론 무한 루프(마지막→클론 smooth → 2px 스냅
+  확인 후 auto로 1번 순간 점프 — 되감기 스윕 제거) + 타이머 정지(홈 칩 아님·홈 탭 아님·
+  document.hidden·1장 이하) + 수동 스와이프 시 리셋. 6장 확정: ①hero_main "셀카 한 장이"
+  ②hero_biz — 카피 교체 "첫인상은\n프로필 사진에서" ③luxe ④petstudio(shiba)
+  ⑤couple(cp_애프터1) ⑥food "사장님, 사진이 매출입니다"
+  ★실측 규격: 표시 최대 480×270(16:9)·소재 960×540 webp q88·안전영역 = 가운데 81%
+  (390px 폰 좌우 45px 잘림) — 안전영역 검수에서 couple 남성 얼굴 걸침·corgi 귀 아슬 발견,
+  cp_애프터1·shiba로 교체 후 통과. scripts/hero-prep.mjs 분리(ba-prep과 규격 상이)
+- [코인 카드 제거 13851a6] MJ 요청 — 홈 랜딩 "내 코인/충전·내역" 블록 + 전용 fetch 제거
+  (홈 진입 API 1회 절감). ★트레이드오프: 비로그인 웰컴 3코인 안내가 홈 첫 화면에서 소멸
+  (잔여: 코인 탭·402 시트) — 전환 아쉬우면 히어로 슬라이드 1장을 웰컴 안내로 부활 후보
+- [업로드 가이드 29fd759] "생성 전에 확인해 주세요" 창을 MJ의 Claude Design 시안대로
+  바텀시트 리디자인 — radius 22·드래그 핸들·×, 3:4 카드 132px 예시
+
 ## 2026-07-25 — CS 인프라 3종(관리자 조회·고아 정리·만료 퍼지) + 로고 홈 복귀
 - [★관리자 도구 8ab7896] 출시 후 "사진이 없어졌어요" CS 대응 인프라 — 홈에 링크 없음,
   ★URL 직접 접근: mospic.com/admin (카카오 ID 입력 → 코인 잔액·coinlog·히스토리 개수·
