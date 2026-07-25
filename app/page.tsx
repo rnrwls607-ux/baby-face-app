@@ -279,7 +279,8 @@ const HERO_SLIDES = [
   { id: "food", title: "사장님,\n사진이 매출입니다", subtitle: "음식 · 상품 · 공간 보정", emoji: "🍽️", accent: "#F6EEE6", go: "food", image: "/hero/food.webp", objectPosition: "center 50%" },
 ];
 const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
-const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
+// cat: 이 섹션의 "전체보기 ›"가 열 카테고리(HOME_PILLS의 value). 비우면 현재 칩을 따른다.
+const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[]; cat?: string }[] = [
   {
     id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "grid",
     items: [
@@ -432,6 +433,35 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // { id: "fourcutcouple", title: "커플 네컷", subtitle: "둘이 함께 네컷 한 장", emoji: "📸", accent: "#DCEBFF", badge: "NEW", tags: ["네컷"], go: "fourcutcouple" },
     ],
   },
+  // ★아래 두 섹션의 item은 위 섹션들의 정의를 ★문자 그대로 복사한 것이다.
+  //   필드를 고치거나 새로 쓰지 않는다 — go 기준 중복 제거(all)가 145를 유지해야 하고,
+  //   같은 컨셉이 두 곳에서 다른 제목으로 보이면 안 된다. 카드 추가는 원본 정의부에서.
+  {
+    id: "idcardline", heading: "여권·이력서 규격까지 한 번에", title: "증명사진", layout: "scroll", cat: "idcard",
+    items: [
+      { id: "idblack", title: "블랙 정장 증명사진", subtitle: "취업·이력서용 정석", emoji: "🖤", accent: "#EFEFF1", image: "/cards/idblack.webp", badge: "NEW", tags: ["증명사진"], go: "idblack" },
+      { id: "idnavy", title: "네이비 정장 증명사진", subtitle: "신뢰감 주는 면접용", emoji: "💙", accent: "#EAEFF7", image: "/cards/idnavy.webp", badge: "NEW", tags: ["증명사진"], go: "idnavy" },
+      { id: "idwarmbob", title: "웜브라운 단발 증명사진", subtitle: "따뜻하고 포근한 무드", emoji: "🤎", accent: "#F5EEE4", image: "/cards/idwarmbob.webp", badge: "NEW", tags: ["증명사진"], go: "idwarmbob" },
+      { id: "iddandy", title: "댄디 베스트 증명사진", subtitle: "시원하고 댄디한 무드", emoji: "🩵", accent: "#EAEFF4", image: "/cards/iddandy.webp", badge: "NEW", tags: ["증명사진"], go: "iddandy" },
+      { id: "idashwave", title: "애쉬 웨이브 증명사진", subtitle: "세련되고 몽환적인", emoji: "🩶", accent: "#EEEEF0", image: "/cards/idashwave.webp", badge: "NEW", tags: ["증명사진"], go: "idashwave" },
+      { id: "idnavysuit", title: "가르마 네이비수트 증명사진", subtitle: "신뢰감 있는 프로페셔널", emoji: "💙", accent: "#EAEFF7", image: "/cards/idnavysuit.webp", badge: "NEW", tags: ["증명사진"], go: "idnavysuit" },
+      { id: "idburgundy", title: "버건디 오프숄더 프로필", subtitle: "우아하고 여성스러운 화보", emoji: "🍷", accent: "#F6E9E6", image: "/cards/idburgundy.webp", badge: "NEW", tags: ["증명사진"], go: "idburgundy" },
+      { id: "idhenley", title: "투블럭 헨리넥 증명사진", subtitle: "감각적이고 모던한", emoji: "🌿", accent: "#ECEFEA", image: "/cards/idhenley.webp", badge: "NEW", tags: ["증명사진"], go: "idhenley" },
+    ],
+  },
+  {
+    id: "bizline", heading: "링크드인·사원증·회사 소개용", title: "비즈니스 프로필", layout: "scroll", cat: "business",
+    items: [
+      { id: "biznavy", title: "네이비 정장 프로필", subtitle: "신뢰를 더하는 프로페셔널", emoji: "💼", accent: "#EAF3FF", image: "/cards/biznavy.webp", badge: "NEW", tags: ["비즈니스"], go: "biznavy" },
+      { id: "bizgray", title: "그레이 정장 프로필", subtitle: "차분하고 전문적인 인상", emoji: "🩶", accent: "#EFF0F2", image: "/cards/bizgray.webp", badge: "NEW", tags: ["비즈니스"], go: "bizgray" },
+      { id: "bizmnavy", title: "남성 네이비 정장", subtitle: "믿음직한 프로페셔널", emoji: "💼", accent: "#EAF3FF", image: "/cards/bizmnavy.webp", badge: "NEW", tags: ["비즈니스"], go: "bizmnavy" },
+      { id: "bizpinkjacket", title: "핑크 트위드 재킷 프로필", subtitle: "우아하고 화사한 셋업", emoji: "🌷", accent: "#FCE8EF", image: "/cards/bizpinkjacket.webp", badge: "NEW", tags: ["비즈니스"], go: "bizpinkjacket" },
+      { id: "bizmcharcoal", title: "남성 차콜 정장", subtitle: "비즈니스 스탠다드", emoji: "💼", accent: "#ECEEF1", image: "/cards/bizmcharcoal.webp", badge: "NEW", tags: ["비즈니스"], go: "bizmcharcoal" },
+      { id: "bizribbon", title: "리본 블라우스 프로필", subtitle: "우아한 여성 프로필", emoji: "🎀", accent: "#FFF0F5", image: "/cards/bizribbon.webp", badge: "NEW", tags: ["비즈니스"], go: "bizribbon" },
+      { id: "bizmblazer", title: "남성 네이비 블레이저", subtitle: "노타이 비즈캐주얼", emoji: "🧥", accent: "#EAF3FF", image: "/cards/bizmblazer.webp", badge: "NEW", tags: ["비즈니스"], go: "bizmblazer" },
+      { id: "bizcreamdress", title: "크림 원피스 프로필", subtitle: "은은하고 우아한 여성 프로필", emoji: "🎀", accent: "#FBF3E8", image: "/cards/bizcreamdress.webp", badge: "NEW", tags: ["비즈니스"], go: "bizcreamdress" },
+    ],
+  },
   {
     id: "bizowner", heading: "우리 가게 사진도 스튜디오급", title: "사장님 컨셉", layout: "scroll",
     items: [
@@ -446,6 +476,19 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "upscale", title: "고화질 변환", subtitle: "흐린 사진을 4배 또렷하게", emoji: "🔍", accent: "#E1ECFF", image: "/cards/upscale.webp", badge: "NEW", tags: ["고화질"], go: "upscale" },
     ],
   },
+];
+// ─── 홈 하단 "무엇을 만들까요" 목차 ────────────────────────────────────────────
+// 줄을 누르면 그 카테고리가 선택된 전체보기 오버레이가 열린다(뒤로가기는 useBackClose가 처리).
+// value = HOME_PILLS의 value와 같아야 오버레이 칩이 함께 켜진다.
+// thumbs = /cards/{key}.webp — 원형으로 겹쳐 보여줄 대표 3장.
+//   ★헤어·뷰티만 2장이다. GO_CATEGORIES 소속이 hairstyle·idol 2종뿐이라 억지로 채우지 않았다
+//   (메이크업 라인이 나오면 자연히 3장이 된다).
+const INDEX_ROWS: { no: string; name: string; desc: string; value: string; thumbs: string[] }[] = [
+  { no: "01", name: "인생샷", desc: "일상을 화보처럼", value: "lifeshot", thumbs: ["lifeshot", "luxe", "travel"] },
+  { no: "02", name: "헤어·뷰티", desc: "시술 전 미리보기", value: "beauty", thumbs: ["hairstyle", "idol"] },
+  { no: "03", name: "반려동물", desc: "우리 아이 첫 스튜디오 화보", value: "pet", thumbs: ["petstudio", "petcostume", "pet"] },
+  { no: "04", name: "가족·커플", desc: "함께라서 더 예쁜 한 장", value: "family", thumbs: ["couple", "wedding", "duofamily"] },
+  { no: "05", name: "재미·추억", desc: "오늘의 웃음 한 장", value: "fun", thumbs: ["baby", "clay", "y2k"] },
 ];
 // ─────────────────────────────────────────────────────────────
 export default function Home() {
@@ -788,7 +831,9 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   {section.heading ? <p style={{ margin: "0 0 3px", fontSize: 14, color: HOME.sub, fontWeight: 500 }}>{section.heading}</p> : null}
                   <p style={{ margin: 0, fontSize: 24, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>{section.title}<span style={{ color: "#FF4B7C" }}>.</span></p>
                 </div>
-                <button onClick={() => { const v = HOME_PILLS[pill].value; setAllConceptsCat(v === "home" ? "all" : v); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
+                {/* section.cat이 있으면 그 카테고리로, 없으면 종전대로 현재 칩을 따라간다
+                    (cat 미보유 3섹션은 v = HOME_PILLS[pill].value 로 기존과 완전 동치) */}
+                <button onClick={() => { const v = section.cat ?? HOME_PILLS[pill].value; setAllConceptsCat(v === "home" ? "all" : v); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
               </div>
               {isGrid ? (
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: "0 18px" }}>
@@ -805,6 +850,40 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               <div style={{ marginTop: 30, background: "#191919", padding: "32px 24px" }}>
                 <p style={{ margin: "0 0 8px", fontSize: 12.5, color: "#FF4B7C", fontWeight: 700, letterSpacing: 1 }}>MOSPIC STUDIO</p>
                 <p style={{ margin: 0, fontSize: 23, color: "#fff", fontWeight: 900, whiteSpace: "pre-line", letterSpacing: -0.4, lineHeight: 1.35 }}>{"사진관 안 가도,\n사진관보다 잘 나오게"}<span style={{ color: "#FF4B7C" }}>.</span></p>
+              </div>
+            )}
+            {/* 카테고리 목차 — 비즈니스 섹션 바로 뒤, 사장님 섹션 앞. 검은 배너와 같은 방식으로 끼운다.
+                줄 탭 = 그 카테고리가 선택된 전체보기 오버레이(뒤로가기 = 오버레이만 닫힘). */}
+            {section.id === "bizline" && (
+              <div style={{ marginTop: 30 }}>
+                <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 18px", marginBottom: 13 }}>
+                  <div>
+                    <p style={{ margin: "0 0 3px", fontSize: 14, color: HOME.sub, fontWeight: 500 }}>카테고리로 한눈에</p>
+                    <p style={{ margin: 0, fontSize: 24, color: HOME.text, fontWeight: 900, letterSpacing: -0.4 }}>무엇을 만들까요<span style={{ color: "#FF4B7C" }}>.</span></p>
+                  </div>
+                  <button onClick={() => { setAllConceptsCat("all"); setShowAllConcepts(true); }} style={{ color: HOME.sub, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap", background: "none", border: "none", cursor: "pointer", padding: 0 }}>전체보기 ›</button>
+                </div>
+                <div style={{ padding: "0 18px" }}>
+                  {INDEX_ROWS.map((row, ri) => (
+                    <div key={row.value} className="pressable"
+                      onClick={() => { setAllConceptsCat(row.value); setShowAllConcepts(true); }}
+                      style={{ display: "flex", alignItems: "center", gap: 12, padding: "14px 0", cursor: "pointer", borderBottom: ri < INDEX_ROWS.length - 1 ? "1px solid #EEECE8" : "none" }}>
+                      <span style={{ width: 24, flexShrink: 0, fontSize: 13, color: HOME.sub, fontWeight: 600 }}>{row.no}</span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ margin: 0, fontSize: 17, color: HOME.text, fontWeight: 800 }}>{row.name}</p>
+                        <p style={{ margin: "2px 0 0", fontSize: 12, color: HOME.sub }}>{row.desc}</p>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+                        {row.thumbs.map((t, ti) => (
+                          <div key={t} style={{ width: 44, height: 44, borderRadius: "50%", overflow: "hidden", border: "2px solid #FAFAF8", marginLeft: ti === 0 ? 0 : -10, flexShrink: 0 }}>
+                            <img src={`/cards/${t}.webp`} alt="" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </div>
+                        ))}
+                        <span style={{ marginLeft: 6, fontSize: 18, color: HOME.sub }}>›</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             </Fragment>
