@@ -8,7 +8,35 @@ function SuccessContent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState("");
   const [addedUses, setAddedUses] = useState(0);
+  const [retrying, setRetrying] = useState(false);
   const isCoinFlow = searchParams.get("flow") === "coin";
+  const orderIdParam = searchParams.get("orderId") || "";
+
+  // ★재시도 가능하게 charge 호출을 분리했다. 예전엔 useEffect 안에 묻혀 있어
+  //   한 번 실패하면 "홈으로" 말고는 길이 없었고, 홈으로 가는 순간 URL의
+  //   paymentKey·orderId가 사라져 영구 미적립이 됐다(결제는 됐는데 코인 0).
+  //   charge는 order:{orderId} 멱등이 지키므로 몇 번을 다시 눌러도 중복 적립되지 않는다.
+  const runCoinCharge = (paymentKey: string, orderId: string, amount: string, productId: string) => {
+    setRetrying(true);
+    fetch("/api/coins/charge", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ provider: "toss", productId, paymentKey, orderId, amount: Number(amount) }),
+    })
+      .then(r => r.json().then(data => ({ ok: r.ok, data })))
+      .then(({ ok, data }) => {
+        if (ok) {
+          setStatus("success");
+          setMessage(data.duplicated ? `이미 충전된 결제예요. 현재 잔액 ${data.balance}코인` : `충전 완료! 현재 잔액 ${data.balance}코인`);
+          setAddedUses(data.added ?? 0);
+        } else {
+          setStatus("error");
+          setMessage(data.error || "충전 확인에 실패했습니다.");
+        }
+      })
+      .catch(() => { setStatus("error"); setMessage("네트워크 오류로 확인하지 못했어요."); })
+      .finally(() => setRetrying(false));
+  };
 
   useEffect(() => {
     const paymentKey = searchParams.get("paymentKey");
@@ -24,24 +52,7 @@ function SuccessContent() {
 
     // ── 코인 충전 흐름 (flow=coin) ──
     if (flow === "coin") {
-      const productId = searchParams.get("productId") || "";
-      fetch("/api/coins/charge", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: "toss", productId, paymentKey, orderId, amount: Number(amount) }),
-      })
-        .then(r => r.json().then(data => ({ ok: r.ok, data })))
-        .then(({ ok, data }) => {
-          if (ok) {
-            setStatus("success");
-            setMessage(`충전 완료! 현재 잔액 ${data.balance}코인`);
-            setAddedUses(data.added ?? 0);
-          } else {
-            setStatus("error");
-            setMessage(data.error || "충전 확인에 실패했습니다.");
-          }
-        })
-        .catch(() => { setStatus("error"); setMessage("오류가 발생했습니다."); });
+      runCoinCharge(paymentKey, orderId, amount, searchParams.get("productId") || "");
       return;
     }
 
@@ -93,10 +104,38 @@ function SuccessContent() {
       {status === "error" && (
         <>
           <div style={{ fontSize: 56, marginBottom: 20 }}>😢</div>
-          <p style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 8px" }}>결제에 실패했어요</p>
-          <p style={{ fontSize: 14, color: "#999", margin: "0 0 28px" }}>{message}</p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: "#111", margin: "0 0 8px" }}>충전을 확인하지 못했어요</p>
+          <p style={{ fontSize: 14, color: "#999", margin: "0 0 16px" }}>{message}</p>
+          {/* ★결제가 이미 됐을 수 있으므로 화면을 닫으면 안 된다는 걸 먼저 알린다.
+              닫는 순간 URL의 결제 정보가 사라져 스스로 복구할 방법이 없어진다. */}
+          {isCoinFlow && orderIdParam && (
+            <p style={{ fontSize: 13, color: "#FF4B7C", fontWeight: 700, background: "#FFF5F8", border: "1px solid #FFE0EC", borderRadius: 12, padding: "11px 16px", margin: "0 0 22px", lineHeight: 1.5 }}>
+              결제가 이미 완료됐을 수 있어요.<br />이 화면을 닫지 말고 아래 &lsquo;다시 시도&rsquo;를 눌러주세요.
+            </p>
+          )}
+          {isCoinFlow && orderIdParam && (
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 300, marginBottom: 18 }}>
+              <button onClick={() => {
+                const pk = searchParams.get("paymentKey"); const oid = searchParams.get("orderId"); const amt = searchParams.get("amount");
+                if (!pk || !oid || !amt) return;
+                setStatus("loading"); setMessage("");
+                runCoinCharge(pk, oid, amt, searchParams.get("productId") || "");
+              }} disabled={retrying}
+                style={{ background: retrying ? "#E8E9ED" : "#111", color: retrying ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "15px 0", fontSize: 15, fontWeight: 700, cursor: retrying ? "not-allowed" : "pointer" }}>
+                {retrying ? "확인 중..." : "다시 시도"}
+              </button>
+              <button onClick={() => {
+                const subject = encodeURIComponent(`[MOSPIC] 코인 충전 문의 (주문번호 ${orderIdParam})`);
+                const body = encodeURIComponent(`주문번호: ${orderIdParam}\n결제는 됐는데 코인이 들어오지 않았습니다.\n\n(아래에 상황을 적어주세요)\n`);
+                window.location.href = `mailto:rnrwls159@naver.com?subject=${subject}&body=${body}`;
+              }}
+                style={{ background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 16, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                문의하기
+              </button>
+            </div>
+          )}
           <button onClick={() => router.push("/")}
-            style={{ background: "#111", color: "#fff", border: "none", borderRadius: 16, padding: "14px 32px", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>
+            style={{ background: "none", color: "#8A8F98", border: "none", padding: "8px 16px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
             홈으로 돌아가기
           </button>
         </>

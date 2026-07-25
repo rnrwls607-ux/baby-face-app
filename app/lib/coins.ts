@@ -17,6 +17,48 @@ const INFLIGHT_KEY = (uid: string) => `inflight:${uid}`;
 const ORIGINALS_KEY = (uid: string) => `originals:${uid}`;
 export const ORDER_KEY = (orderId: string) => `order:${orderId}`;
 
+// ── 주문 영수증 (2026-07-25) ────────────────────────────────────────────────
+// 왜 객체로 바꿨나: 예전엔 order:{id}에 uid 문자열만 넣어 "중복 방지 플래그" 역할만 했다.
+// 그래서 사후에 "이 결제로 몇 코인이 나갔나"를 주문키만으로는 알 수 없었고,
+// creditCoins의 coinlog LPUSH가 실패하면(잔액은 늘고 내역은 없는 경우) 복원할 근거가
+// 아예 사라졌다. 영수증을 남겨두면 그 두 가지가 모두 주문키 하나로 해결된다.
+// ★미적립 판정(결제는 됐는데 코인이 안 들어감)의 전제이기도 하다.
+export type OrderReceipt = {
+  uid: string;
+  provider: string;
+  productId: string;
+  coins: number;
+  amount: number;
+  at: number;
+  status: "credited" | "credited-by-admin";
+  legacy?: boolean; // true = 07-25 이전 주문(uid 문자열만 저장돼 상세를 알 수 없음)
+};
+
+// ★하위호환: 이미 저장된 옛 주문은 값이 uid 문자열이다. 양쪽을 안전하게 읽는다.
+//   (Upstash는 저장 시 JSON 직렬화하므로 객체는 객체로, 문자열은 문자열로 돌아온다)
+export function parseOrderRecord(v: unknown): OrderReceipt | null {
+  if (v === null || v === undefined) return null;
+  if (typeof v === "string") {
+    // 옛 형식 — uid만 알 수 있고 상품·코인 수는 기록이 없다. coinlog의 ref로 역추적할 것.
+    return { uid: v, provider: "toss", productId: "", coins: 0, amount: 0, at: 0, status: "credited", legacy: true };
+  }
+  if (typeof v === "object") {
+    const o = v as Partial<OrderReceipt>;
+    if (typeof o.uid !== "string") return null;
+    return {
+      uid: o.uid,
+      provider: o.provider ?? "toss",
+      productId: o.productId ?? "",
+      coins: typeof o.coins === "number" ? o.coins : 0,
+      amount: typeof o.amount === "number" ? o.amount : 0,
+      at: typeof o.at === "number" ? o.at : 0,
+      status: o.status === "credited-by-admin" ? "credited-by-admin" : "credited",
+      legacy: false,
+    };
+  }
+  return null;
+}
+
 // 기존 usage route와 동일한 null-safe 관례 — env 미설정(로컬)이면 코인 로직 전체 skip
 const redis = process.env.KV_REST_API_URL
   ? new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN! })

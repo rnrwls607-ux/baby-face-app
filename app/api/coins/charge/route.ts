@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { getUserId } from "../../../lib/auth";
 import { getCoinProduct } from "../../../lib/products";
-import { ORDER_KEY, chargeAllowed, creditCoins, getBalance } from "../../../lib/coins";
+import { ORDER_KEY, chargeAllowed, creditCoins, getBalance, parseOrderRecord, type OrderReceipt } from "../../../lib/coins";
 
 export const runtime = "nodejs";
 
@@ -42,9 +42,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "결제 금액이 상품 가격과 일치하지 않습니다." }, { status: 400 });
     }
 
-    // ── 멱등 1차: 이미 처리된 주문이면 토스 재승인 시도 없이 즉시 반환 (success 새로고침 대응) ──
-    if (await redis.exists(ORDER_KEY(orderId))) {
-      return NextResponse.json({ balance: await getBalance(uid), duplicated: true });
+    // ── 멱등 1차: 이미 처리된 주문이면 토스 재승인 시도 없이 즉시 반환 (success 새로고침·재시도 대응) ──
+    // ★EXISTS가 아니라 GET으로 읽는다 — 영수증을 그대로 돌려줘야 재시도 화면이
+    //   "이미 충전됨(+N코인)"을 사용자에게 보여줄 수 있다. 옛 문자열 형식도 parse가 흡수.
+    const prior = parseOrderRecord(await redis.get(ORDER_KEY(orderId)));
+    if (prior) {
+      return NextResponse.json({
+        balance: await getBalance(uid),
+        duplicated: true,
+        added: prior.coins,
+        receipt: prior,
+      });
     }
 
     // ── 토스 서버 승인 ──
@@ -62,9 +70,16 @@ export async function POST(request: NextRequest) {
     }
 
     // ── 멱등 2차: SET NX 레이스 가드 (동시 요청이 1차를 같이 통과한 경우) ──
-    const first = await redis.set(ORDER_KEY(orderId), uid, { nx: true, ex: 60 * 60 * 24 * 365 });
+    // ★값이 곧 영수증이다 — 사후 감사·미적립 판정·관리자 보정의 유일한 1차 근거.
+    const receipt: OrderReceipt = {
+      uid, provider: "toss", productId: product.id,
+      coins: product.coins, amount: Number(amount),
+      at: Date.now(), status: "credited",
+    };
+    const first = await redis.set(ORDER_KEY(orderId), receipt, { nx: true, ex: 60 * 60 * 24 * 365 });
     if (first !== "OK") {
-      return NextResponse.json({ balance: await getBalance(uid), duplicated: true });
+      const raced = parseOrderRecord(await redis.get(ORDER_KEY(orderId)));
+      return NextResponse.json({ balance: await getBalance(uid), duplicated: true, added: raced?.coins ?? 0, receipt: raced });
     }
 
     const balance = await creditCoins(uid, product.coins, orderId);
