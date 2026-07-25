@@ -261,10 +261,21 @@ const HOME_PILLS = [
   { label: "사장님 💼", value: "biz" },
   { label: "재미·추억", value: "fun" },
 ];
-const HOME_HERO = [
+// ─── 홈 히어로 슬라이드 ──────────────────────────────────────────────────────
+// 소재를 늘리려면 ★이 배열에만 항목을 추가하면 된다 — 자동 순환·점 인디케이터는
+// 배열 길이를 따라가고, 코드는 손댈 곳이 없다.
+//   id             고유 키
+//   title          메인 카피 (\n 으로 줄바꿈)
+//   subtitle       서브 카피
+//   image          /public 기준 경로 — ★표시 규격 480×270(16:9), 2배수 권장 960×540
+//   objectPosition 사진에서 보여줄 기준점 (얼굴이 잘리면 여기를 조절)
+//   go             탭했을 때 열 컨셉 키 (CONCEPTS의 키)
+//   accent/emoji   image가 없을 때 쓰는 폴백
+const HERO_SLIDES = [
   { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg", objectPosition: "center 48%" },
   { id: "biz", title: "정장 입은 나를,\n1분 만에", subtitle: "AI 비즈니스 프로필", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
 ];
+const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[] }[] = [
   {
     id: "popular", heading: "지금 가장 많이 만드는", title: "인기 컨셉", layout: "grid",
@@ -638,12 +649,45 @@ export default function Home() {
     const heroRef = useRef<HTMLDivElement>(null);
  // 카드 탭 → 상세 페이지 열기
 const handleCardTap = (go: string) => setDetail(conceptForGo(go));
+    // ─── 히어로 자동 순환 ──────────────────────────────────────────────────
+    // 가로 스크롤 스냅 위에 얹는다(transform 트랙이 아님) — 네이티브 스와이프가
+    // 그대로 살아 있고, scrollTo({behavior:"smooth"})가 오른쪽→왼쪽 가로 이동을 그린다.
+    const heroTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+    // ★정지 조건: 홈 칩이 아니거나 홈 탭이 아니면 히어로가 화면에 없다 → 타이머를 돌릴 이유가 없다.
+    const heroRunnable = HOME_PILLS[pill].value === "home" && activeTab === "home" && HERO_SLIDES.length > 1;
+
+    const stopHero = () => { if (heroTimer.current) { clearInterval(heroTimer.current); heroTimer.current = null; } };
+    const startHero = () => {
+      stopHero();
+      if (!heroRunnable) return;
+      heroTimer.current = setInterval(() => {
+        const el = heroRef.current;
+        if (!el || !el.clientWidth) return;
+        if (document.hidden) return; // 탭 백그라운드 — 넘기지 않는다
+        const cur = Math.round(el.scrollLeft / el.clientWidth);
+        const next = (cur + 1) % HERO_SLIDES.length; // 마지막 → 첫 장 순환
+        el.scrollTo({ left: next * el.clientWidth, behavior: "smooth" });
+      }, HERO_INTERVAL_MS);
+    };
+
+    useEffect(() => {
+      startHero();
+      // 탭이 백그라운드로 가면 타이머 자체를 끄고, 돌아오면 다시 건다(배터리·불필요 리렌더 방지)
+      const onVis = () => { if (document.hidden) stopHero(); else startHero(); };
+      document.addEventListener("visibilitychange", onVis);
+      return () => { stopHero(); document.removeEventListener("visibilitychange", onVis); };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [heroRunnable]);
+
     // 히어로 스크롤 시 현재 인덱스 추적 (점 인디케이터용)
     const onHeroScroll = () => {
       const el = heroRef.current;
-      if (!el) return;
+      if (!el || !el.clientWidth) return;
       const idx = Math.round(el.scrollLeft / el.clientWidth);
       setHeroIdx(idx);
+      // ★수동 스와이프 직후 곧바로 자동 전환되면 뺏기는 느낌이 난다 → 타이머를 처음부터 다시.
+      //   (자동 전환이 만든 스크롤에도 걸리지만, 결과는 "한 장당 5초"로 동일해 무해하다)
+      startHero();
     };
     const renderCard = (item: HomeCardItem, width: string | number, ratio: string) => (
       <div key={item.id} className="pressable" onClick={() => handleCardTap(item.go)} style={{ width, flexShrink: 0, cursor: "pointer" }}>
@@ -680,7 +724,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
         {HOME_PILLS[pill].value === "home" && (
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
-          {HOME_HERO.map(h => (
+          {HERO_SLIDES.map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
               <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 270, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
@@ -701,9 +745,9 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
         </div>
         )}
         {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
-        {HOME_PILLS[pill].value === "home" && HOME_HERO.length > 1 && (
+        {HOME_PILLS[pill].value === "home" && HERO_SLIDES.length > 1 && (
         <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 12 }}>
-          {HOME_HERO.map((_, i) => (
+          {HERO_SLIDES.map((_, i) => (
             <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
           ))}
         </div>
