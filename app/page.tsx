@@ -460,6 +460,25 @@ export default function Home() {
   useBackClose(showAllConcepts, () => setShowAllConcepts(false));
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
+  // ─── 워드마크 → 홈 복귀 (2026-07-25) ───────────────────────────────────────
+  // 리렌더 강제용. HomeMain은 인라인 컴포넌트라 Home이 리렌더되면 리마운트되고,
+  // 그때 pill을 persistedHomePill에서 다시 읽는다 → 미러만 0으로 바꾸면 칩이 홈으로 돌아온다.
+  const [, bumpHome] = useState(0);
+  const goHome = () => {
+    // ★열린 오버레이 수만큼 "한 번에" 뒤로 점프한다.
+    //   오버레이를 state로 하나씩 닫으면 useBackClose 정리자가 각각 history.back()을
+    //   같은 틱에 N번 쏘는데, 브라우저가 이를 합치면 ignoreNextPop 가드만 남아
+    //   다음 뒤로가기를 삼킨다(앱 종료 증상). go(-N)은 popstate 1회로 끝나고
+    //   훅의 "점프 대응" while 루프가 스택을 정확히 비운다 — 가드 불균형이 생기지 않는다.
+    const openCount = [activeTab !== "home", !!detail, showSettings, showAllConcepts, !!historyView, showPaymentSheet]
+      .filter(Boolean).length;
+    persistedHomePill = 0; // 칩을 "홈"으로 (미러 → 리마운트 시 반영)
+    if (openCount > 0) window.history.go(-openCount);
+    else bumpHome(n => n + 1); // 오버레이가 없으면 리렌더가 안 일어나므로 직접 유발
+    window.scrollTo(0, 0);
+    // go(-N)의 popstate는 비동기라 위 스크롤이 닫히기 전에 끝난다 → 닫힌 뒤 한 번 더.
+    if (openCount > 0) setTimeout(() => window.scrollTo(0, 0), 80);
+  };
   // 홈 코인 현황 카드용 잔액 1회 캐시 (실패 시 null 유지 → 카드 숨김, 에러 미표출)
   const [homeCoinBalance, setHomeCoinBalance] = useState<number | null>(null);
   useEffect(() => {
@@ -556,7 +575,11 @@ export default function Home() {
             <Icon.Back />
           </button>
         ) : (
-          <img src="/logo.png" alt="mospic" style={{ height: 28, width: "auto", display: "block" }} />
+          // 워드마크 = 홈 복귀 버튼. 로고 크기(28)는 그대로 두고 상하 패딩으로만
+          // 탭 영역을 44px로 확보 — 세로 중앙 정렬이라 시각 위치는 변하지 않는다.
+          <button onClick={goHome} aria-label="홈으로" style={{ background: "none", border: "none", padding: "8px 6px 8px 0", margin: 0, cursor: "pointer", display: "flex", alignItems: "center" }}>
+            <img src="/logo.png" alt="mospic" style={{ height: 28, width: "auto", display: "block" }} />
+          </button>
         )}
         {title && <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>{title}</span>}
       </div>
