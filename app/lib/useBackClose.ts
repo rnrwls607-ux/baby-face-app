@@ -23,6 +23,25 @@ import { useEffect, useRef } from "react";
 // 닫지 말고 window.location.replace(url)로 이동할 것 (가짜 칸이 목적지로
 // 덮여 잔여 칸이 남지 않는다).
 
+// ★임시 진단(제거 예정) — 화면 배지. 원격 기기라 logcat이 안 잡혀 육안으로 읽는다.
+// ★page.tsx도 이 함수를 import해 쓴다: 카운터를 한 곳에 둬야 배지가 겹치지 않고 세로로 쌓인다
+//   (page.tsx에 따로 두면 이 파일의 D3와 offset이 각자 놀아 서로 위에 포개진다).
+// 감소시키지 않는다 — 사라진 자리를 재사용하면 아직 떠 있는 배지와 좌표가 충돌한다.
+// 한 문서에서 최대 3장(D1·D2·D3)이라 단조 증가로 충분하고, 새 문서면 모듈째 초기화된다.
+let diagCount = 0;
+export function showDiagBadge(msg: string) {
+  if (typeof document === "undefined") return;
+  const d = document.createElement("div");
+  d.textContent = msg;
+  d.style.cssText = "position:fixed;left:8px;right:8px;bottom:" + (90 + diagCount * 52) + "px;z-index:99999;"
+    + "background:#111;color:#0f0;font-size:12px;font-family:monospace;"
+    + "padding:10px 12px;border-radius:10px;pointer-events:none;opacity:.95;"
+    + "word-break:break-all;";
+  diagCount++;
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 20000);
+}
+
 type Entry = { close: () => void };
 
 const stack: Entry[] = [];
@@ -82,6 +101,9 @@ function ensureListener() {
   // bfcache 복원(뒤로가기로 문서가 통째로 되살아남) 시: 화면 state는 열린 채인데
   // 가짜 칸은 이미 소비/대체된 뒤일 수 있어 어긋난다 → 전부 닫고 카운터 리셋.
   window.addEventListener("pageshow", (e: PageTransitionEvent) => {
+    // ★임시 진단(제거 예정) — bfcache 복원 여부 실측. false도 찍어야 "핸들러는 돌았는데
+    //   persisted가 아니었다"와 "핸들러가 아예 안 돌았다"를 구분할 수 있다.
+    showDiagBadge("D3 pageshow persisted=" + e.persisted);
     if (!e.persisted) return;
     ignoreNextPop = 0;
     ghostsAhead = 0;

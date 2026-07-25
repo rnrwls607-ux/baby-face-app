@@ -8,7 +8,7 @@ import { saveImage } from "./lib/saveImage";
 import { shareImage } from "./lib/shareImage";
 import { getFavorites, toggleFavorite } from "./lib/favorites";
 import { APP_VERSION } from "./lib/version";
-import { useBackClose } from "./lib/useBackClose";
+import { useBackClose, showDiagBadge } from "./lib/useBackClose"; // showDiagBadge = 임시 진단(제거 예정)
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
 import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
@@ -549,6 +549,9 @@ export default function Home() {
     const uncover = () => document.documentElement.removeAttribute("data-mospic-restoring");
     try {
       const raw = sessionStorage.getItem("mospic_back_ctx");
+      // ★임시 진단(제거 예정) — ★if (!raw) return 보다 앞. "없음"도 찍혀야
+      //   "재연을 안 탄 건지" vs "타고도 칸이 없는 건지"를 가른다.
+      showDiagBadge("D1 ctx=" + (raw ? "있음" : "없음"));
       if (!raw) return;
       sessionStorage.removeItem("mospic_back_ctx");
       const ctx = JSON.parse(raw) as { detail?: string; from?: string; cat?: string };
@@ -572,18 +575,9 @@ export default function Home() {
       //   600ms 지연은 passive effect 플러시(=useBackClose의 pushState) 이후를 보기 위함.
       //   재연 경로에서만 실행된다 — 위 `if (!raw) return`이 정상 홈 진입을 걸러낸다.
       //   ★window.history로 명시 — 이 컴포넌트의 history state(HistoryItem[])가 이름을 가린다.
-      //   ★console.log → 화면 표시로 전환: 원격 기기라 logcat이 안 잡혀 육안 판독으로 간다.
-      //   15초 뒤 자동 소멸 + pointer-events:none이라 조작을 막지 않는다.
       setTimeout(() => {
-        const d = document.createElement("div");
-        d.textContent = "[BACKDIAG] state=" + JSON.stringify(window.history.state)
-          + " len=" + window.history.length;
-        d.style.cssText = "position:fixed;left:8px;right:8px;bottom:90px;z-index:99999;"
-          + "background:#111;color:#0f0;font-size:12px;font-family:monospace;"
-          + "padding:10px 12px;border-radius:10px;pointer-events:none;opacity:.95;"
-          + "word-break:break-all;";
-        document.body.appendChild(d);
-        setTimeout(() => d.remove(), 15000);
+        showDiagBadge("D2 재연실행 state=" + JSON.stringify(window.history.state)
+          + " len=" + window.history.length);
       }, 600);
     } catch { uncover(); /* 파싱·접근 불가 — 재연만 포기, 홈은 정상 */ }
   // eslint-disable-next-line react-hooks/exhaustive-deps

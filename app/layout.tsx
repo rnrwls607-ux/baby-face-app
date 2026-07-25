@@ -59,7 +59,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             useBackClose 좌초 자동 통과(back 발사)와 복원의 경합을 제거. 1200ms 백스톱 타이머로
             복원 실패 시에도 빈 화면에 갇히지 않음. ctx 없으면 완전 무동작. */}
         <style dangerouslySetInnerHTML={{ __html: "html[data-mospic-restoring] body::before{content:'';position:fixed;inset:0;background:#FAFAF8;z-index:9999}" }} />
-        <script dangerouslySetInnerHTML={{ __html: "try{if(sessionStorage.getItem('mospic_back_ctx')){document.documentElement.setAttribute('data-mospic-restoring','1');history.replaceState({},'',location.href);setTimeout(function(){document.documentElement.removeAttribute('data-mospic-restoring')},1200)}}catch(e){}" }} />
+        {/* ★임시 진단(제거 예정) — document.title='[D0] '+… 1줄만 덧댐. 기존 로직 무접촉.
+            스크립트 환경이라 배지를 못 쓴다. 단 셸 앱에는 탭 타이틀이 보이지 않아
+            D0는 브라우저에서만 판독 가능하다 — 같은 순간을 D1(ctx 있음/없음)이 화면으로 덮는다. */}
+        <script dangerouslySetInnerHTML={{ __html: "try{if(sessionStorage.getItem('mospic_back_ctx')){document.title='[D0] '+document.title;document.documentElement.setAttribute('data-mospic-restoring','1');history.replaceState({},'',location.href);setTimeout(function(){document.documentElement.removeAttribute('data-mospic-restoring')},1200)}}catch(e){}" }} />
         {children}
         <Toast />
         <CoinNeededSheet />
