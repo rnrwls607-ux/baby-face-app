@@ -7,6 +7,23 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-27 (11차) — 코인 클라 게이트 3페이지 보강, 153 전 페이지 동형화
+- [대상] idstyle·nukki·petstudio — 어제 402 누락이던 그 3개. 코인 클라 게이트
+  (COIN_GATED·COIN_COST·잔액 캐시·즉시 부족 체크·버튼 코인 표기)가 통째로 없었다
+- [★자동 삽입 포기] 세 페이지가 표준 앵커와 전부 달랐다: petstudio·idstyle은 버튼
+  라벨이 문자열(`: "펫 화보 만들기 ✨"`)이고 표준은 JSX fragment, nukki는 loading
+  분기조차 없는 별도 버튼(`배경 지우기 ✨ · 무료 · 오늘 5회`), idstyle은
+  handleSubmit 가드가 faces.length < MIN_FACES(다장 선택 UI).
+  → 일괄 정규식 대신 페이지별 명시 앵커로 전환(앵커 1회 검증 후 적용)
+- [nukki 예외] 버튼은 손대지 않았다. coinCost 0이라 코인 표기 조건이 어차피
+  false이고, 기존 "무료 · 오늘 5회" 문구가 이 컨셉의 실제 정책(withDailyFree)이다.
+  게이트 블록만 넣어 형태를 통일했고 무동작임을 주석에 명시
+- [★정정] petstudio는 3코인이다(9코인 아님). 10차 보고에서 "9코인"이라 한 것은
+  근거 없는 서술이었다 — 9코인 65종은 비즈니스 34 + 증명사진 31뿐
+- [게이트] 153페이지 전수: COIN_GATED 정의 153 / 잔액 fetch 가드 153 /
+  즉시 부족 체크 153 / CoinIcon 참조 153 — 전부 동형. 빌드 Compiled successfully
+- [남은 리스크] Toss 앱 웹뷰 결제(카드사 스킴) 실측 미완 — 활성화 직후 최우선
+
 ## 2026-07-26 (10차) — ★코인 전면 활성화(원장 스위치 ON)
 - [구조] 비용 진실원을 concepts.ts coinCost 하나로 통일. withCoin이
   LIVE_COIN_CONCEPTS.includes(key) && CONCEPTS[key].coinCost를 읽어 resolved 산출,

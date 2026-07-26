@@ -13,8 +13,10 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
+import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
+import CoinIcon from "../components/CoinIcon";
 
 const STYLE_KEY = "blueshirt";
 const STYLE_LABEL = "S컬 블루 셔츠";
@@ -24,6 +26,19 @@ const MAX_FACES = 6;
 
 export default function IdStylePage() {
   const router = useRouter();
+  // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin)
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("idstyle");
+  const COIN_COST = CONCEPTS.idstyle?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [showGuide, setShowGuide] = useState(true);
   const [faces, setFaces] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,6 +77,8 @@ export default function IdStylePage() {
   const removeFace = (i: number) => setFaces(prev => prev.filter((_, idx) => idx !== i));
   const handleSubmit = async () => {
     if (faces.length < MIN_FACES) { setError(`사진을 ${MIN_FACES}장 이상 선택해주세요.`); return; }
+    // 즉시 부족 체크(캐시 기준, 서버 호출 전)
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 100000);
@@ -169,7 +186,7 @@ export default function IdStylePage() {
             </div>
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : "증명사진 만들기 ✨"}
+              {loading ? `만드는 중... (${elapsed}초)` : <>증명사진 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", marginTop: 14, lineHeight: 1.6 }}>※ AI 생성물로, 여권 등 공적 증명용으로는 사용할 수 없어요.</p>
           </>

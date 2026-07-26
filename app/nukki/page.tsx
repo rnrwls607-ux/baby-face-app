@@ -14,12 +14,28 @@ import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
 import AdBanner from "../components/AdBanner";
 import BeforeAfterHero from "../components/BeforeAfterHero";
-import { BA_LIVE } from "../lib/concepts";
+import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
+import CoinIcon from "../components/CoinIcon";
 
 export default function NukkiPage() {
   const router = useRouter();
+  // ★nukki는 coinCost 0(withDailyFree 경로)이라 아래 게이트는 전부 무동작이다.
+  //   153페이지 템플릿 통일이 목적 — 향후 벌크 수술의 앵커 일관성을 위해 형태만 맞춘다.
+  // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin)
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("nukki");
+  const COIN_COST = CONCEPTS.nukki?.coinCost ?? 0;
+  const [coinBalance, setCoinBalance] = useState<number | null>(null);
+  // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
+  useEffect(() => {
+    if (!COIN_GATED || COIN_COST <= 0) return;
+    fetch("/api/coins")
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (d && typeof d.balance === "number") setCoinBalance(d.balance); })
+      .catch(() => { /* 비로그인·실패 시 가드 생략 → 서버가 판정 */ });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [image, setImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -49,6 +65,8 @@ export default function NukkiPage() {
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
+    // 즉시 부족 체크(캐시 기준, 서버 호출 전)
+    if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
     const tid = setTimeout(() => ctrl.abort(), 110000);
