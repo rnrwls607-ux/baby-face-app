@@ -24,7 +24,9 @@ const CELL = 28;                 // 체커보드 셀
 const LIGHT = "#FFFFFF", DARK = "#E8E8E8";
 
 const NUKKI_SRC = "examples/ba/누끼 사진/cut_dog.png";        // ★알파 보유(768×1024)
-const UPSCALE_SRC = "examples/ba/업스케일 사진/up_detail.png"; // 눈 클로즈업(1448×1086)
+// ★2026-07-26 교체: 눈 클로즈업(up_detail)은 확대 인체 사진이라 거부감 리스크가 있어
+//   풍경으로 바꿨다. 산 능선·침엽수림·수면 반영이 "4배 고화질"의 디테일을 인물 없이 보여준다.
+const UPSCALE_SRC = "examples/ba/업스케일 사진/up_scene.png"; // 산·호수 풍경(1448×1086)
 const OUT = path.join(process.cwd(), "public", "hero", "hero_freetools.webp");
 
 // 체커보드 SVG — 셀 단위로 사각형을 깔면 문자열이 길어져 pattern 하나로 반복시킨다
