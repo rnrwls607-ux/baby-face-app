@@ -12,16 +12,17 @@ import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
+import UploadGuide from "../components/upload/UploadGuide";
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import CoinIcon from "../components/CoinIcon";
 
-export default function FixnightPage() {
+export default function BrickfigurePage() {
   const router = useRouter();
   // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin) — ★스위치 날 벌크 앵커
-  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("fixnight");
-  const COIN_COST = CONCEPTS.fixnight?.coinCost ?? 0;
+  const COIN_GATED = LIVE_COIN_CONCEPTS.includes("brickfigure");
+  const COIN_COST = CONCEPTS.brickfigure?.coinCost ?? 0;
   const [coinBalance, setCoinBalance] = useState<number | null>(null);
   // 로그인 상태면 잔액 1회 캐시 (즉시 부족 체크용 — 낡은 캐시는 서버 402가 백스톱)
   useEffect(() => {
@@ -68,7 +69,7 @@ export default function FixnightPage() {
     const tid = setTimeout(() => ctrl.abort(), 235000); // 서버 내부 컷 230초 + 여유 5초 (Pro 생성 계열)
     try {
       const compressed = await compress(image);
-      const res = await fetch("/api/fixnight", {
+      const res = await fetch("/api/brickfigure", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: compressed }),
@@ -81,32 +82,33 @@ export default function FixnightPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "야간 사진 구제");
+      void addToHistory(data.output, "블록 피규어");
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
-  const handleDownload = () => { void saveImage(result, "fixnight.png"); };
-  const handleShare = () => { void shareImage(result, "fixnight.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
+  const handleDownload = () => { void saveImage(result, "brickfigure.png"); };
+  const handleShare = () => { void shareImage(result, "brickfigure.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <UploadGuide type="space" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 16px", height: 56, borderBottom: "1px solid #f0f0f0", position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (result) { setResult(""); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#111", padding: "4px 8px 4px 0" }}>‹</button>
-        <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>야간 사진 구제</span>
+        <span style={{ fontSize: 16, fontWeight: 700, color: "#111" }}>블록 피규어</span>
       </div>
       <div style={{ padding: "20px 20px 100px" }}>
         {!result && (
           <>
             {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
-            {BA_LIVE.includes("fixnight") ? (
+            {BA_LIVE.includes("brickfigure") ? (
               <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
-                { before: `/examples/ba/fixnight-before-${n}.webp`, after: `/examples/ba/fixnight-after-${n}.webp` },
-                { before: `/examples/ba/fixnight-before.webp`, after: `/examples/ba/fixnight-after-${n}.webp` },
+                { before: `/examples/ba/brickfigure-before-${n}.webp`, after: `/examples/ba/brickfigure-after-${n}.webp` },
+                { before: `/examples/ba/brickfigure-before.webp`, after: `/examples/ba/brickfigure-after-${n}.webp` },
               ])} />
             ) : (
-              <PreviewCard placeholder="🌙" caption="야간 사진 구제, 미리 만나보세요" />
+              <PreviewCard placeholder="🧱" caption="블록 피규어, 미리 만나보세요" />
             )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
             <UploadZone
@@ -117,18 +119,18 @@ export default function FixnightPage() {
               onRemove={() => setImage("")}
               cameraFacing="environment"
             />
-            <TipChips tips={[{ icon: "expand", label: "밤에 찍은 사진" }, { icon: "sun", label: "너무 캄캄하지 않게" }, { icon: "eye", label: "흔들리지 않게" }]} />
+            <TipChips tips={[{ icon: "expand", label: "장면 전체가 보이게" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "흔들리지 않게" }]} />
             <PrivacyLine />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
-              {loading ? `만드는 중... (${elapsed}초)` : <>야간 사진 구제하기 🌙{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
+              {loading ? `만드는 중... (${elapsed}초)` : <>블록 피규어 만들기 🧱{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
           </>
         )}
         {loading && (
           <div style={{ marginTop: 24, textAlign: "center" }}>
-            <div style={{ fontSize: 48 }}>🌙</div>
-            <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 어둠을 걷어내고 있어요...</p>
+            <div style={{ fontSize: 48 }}>🧱</div>
+            <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 브릭으로 쌓고 있어요...</p>
           </div>
         )}
         {error && (
@@ -142,7 +144,7 @@ export default function FixnightPage() {
             <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
-              <img src={result} alt="야간 사진 구제" style={{ width: "100%", display: "block" }} />
+              <img src={result} alt="블록 피규어" style={{ width: "100%", display: "block" }} />
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}
