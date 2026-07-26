@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ensureWelcome, WELCOME_COINS } from "../../../../lib/coins";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -61,7 +62,21 @@ export async function GET(request: NextRequest) {
       email: userData.kakao_account?.email || null,
     };
 
-    const response = NextResponse.redirect(new URL("/", request.url));
+    // 웰컴 코인 — 로그인 즉시 지급. 첫 지급일 때만 ?welcome=N을 달아 홈이 모달을 띄운다.
+    // ★uid는 쿠키에 넣는 user.id와 같은 문자열이라(둘 다 String(userData.id)),
+    //   나중에 getUserId()가 만드는 uid와 welcome:{uid} 키가 정확히 일치한다.
+    // ★지급 실패가 로그인을 막으면 안 된다 — 삼켜서 로그인만은 성사시킨다
+    //   (다음 /api/coins·유료 생성 때 ensureWelcome이 다시 시도한다).
+    let welcomed = false;
+    try {
+      welcomed = await ensureWelcome(user.id);
+    } catch (e) {
+      console.error("[kakao] 웰컴 코인 지급 실패(로그인은 계속):", (e as { message?: string })?.message);
+    }
+
+    const dest = new URL("/", request.url);
+    if (welcomed) dest.searchParams.set("welcome", String(WELCOME_COINS));
+    const response = NextResponse.redirect(dest);
 
     response.cookies.set("kakao_user", JSON.stringify(user), {
       httpOnly: true,

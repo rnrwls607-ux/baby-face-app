@@ -7,6 +7,30 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-26 (8차) — 웰컴 3코인 로그인 즉시 지급 + 확인 모달
+- [기존 실태] ensureWelcome(SET NX·WELCOME_COINS 3)은 이미 있었지만 호출부가
+  withDailyFree·withCoin·/api/coins 3곳뿐이라 "코인 API를 부르거나 유료 생성을
+  시도할 때" 지급됐다 — 로그인해도 받은 줄 모르는 상태
+- [수리] 카카오 콜백에서 로그인 즉시 지급. ensureWelcome 반환형 void→Promise<boolean>
+  (첫 지급 true), 첫 지급일 때만 ?welcome=N 리다이렉트 → 홈이 모달 1회 표시 후
+  history.replaceState로 주소 정리(?tab=coin과 같은 관례·같은 위치)
+- [★uid 동일성] 콜백 지급 키 = String(userData.id), 이후 getUserId()는
+  String(JSON.parse(cookie).id) = 같은 문자열. String 멱등이라 welcome:{uid}가
+  두 벌 생길 수 없다. 게다가 SET NX라 콜백 뒤 다른 경로가 또 불려도 실지급 0
+- [지급 실패 격리] try/catch로 삼켜 로그인은 성사시킨다. 실패해도 다음 /api/coins나
+  유료 생성 때 기존 호출부가 재시도
+- [WELCOME_COINS export] 콜백·클라가 3을 하드코딩하지 않게 서버 상수 하나만 본다
+- [모달] 402 시트(CoinNeededSheet)와 동일 규격 재사용 — 오버레이 .4, 시트 라운드
+  24, 핸들 36×4, 타이틀 20/900, 서브 13/#999, CTA #FF4B7C. 새 색·폰트 0.
+  useBackClose 등록으로 뒤로가기·오버레이 탭으로도 닫힘
+- [잔액 재조회 무동작] 홈에는 코인 잔액 state가 없다(07-25 코인 카드 제거분).
+  코인 탭이 마운트마다 자체 조회하므로 열면 이미 +3이 보인다 — 추가 조치 불필요
+- [canCharge 조사] chargeAllowed(uid) = COIN_ADMIN_IDS 포함 또는
+  COIN_CHARGE_OPEN==="true". ★서버 env 전역 on/off뿐이고 플랫폼 구분이 없다.
+  "앱=충전 잠금, 웹=Toss" 분기를 하려면 UA/헤더 기반 Capacitor 감지가 별도로 필요
+- [다음] 과금 활성화는 별건. withCoin이 LIVE_COIN_CONCEPTS+coinCost를 읽게 고치면
+  배열 1줄로 켜고 끌 수 있다(현재 배열은 클라 표시 전용, 서버는 route 인자 151개)
+
 ## 2026-07-26 (7차) — 히어로 무료 도구 스플릿 슬라이드
 - 3번 슬롯 신설(총 7장): 좌 배경 제거(체커보드+누끼 피사체) / 우 4배 고화질 —
   반반 탭존, 각각 상세 시트 직행. "4K" 아닌 "4배" 표기(엔진 4x — 과장 방지)

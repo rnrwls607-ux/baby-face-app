@@ -6,7 +6,7 @@ import { Redis } from "@upstash/redis";
 import { put } from "@vercel/blob";
 import { getUserId } from "./auth";
 
-const WELCOME_COINS = 3;
+export const WELCOME_COINS = 3; // 콜백·클라가 3을 하드코딩하지 않도록 여기 하나만 본다
 const LOG_MAX = 500;
 
 // 키 네이밍 (order:는 충전 단계에서 멱등 플래그로 사용 예정 — 예약)
@@ -92,13 +92,17 @@ async function pushLog(uid: string, entry: CoinLogEntry): Promise<void> {
   await redis.ltrim(LOG_KEY(uid), 0, LOG_MAX - 1);
 }
 
-// 웰컴 코인 3개 1회 지급 — SET NX가 원자적이라 이중지급 불가
-export async function ensureWelcome(uid: string): Promise<void> {
-  if (!redis) return;
+// 웰컴 코인 3개 1회 지급 — SET NX가 원자적이라 이중지급 불가.
+// 콜백에서 로그인 즉시 지급하고, 첫 지급 여부(true)가 웰컴 모달의 트리거가 된다.
+// SET NX라 어느 경로로 불려도(콜백·withCoin·/api/coins) 실지급은 1회뿐이다.
+// 반환: 이번 호출에서 처음 지급했으면 true, 이미 받은 계정이면 false.
+export async function ensureWelcome(uid: string): Promise<boolean> {
+  if (!redis) return false;
   const first = await redis.set(WELCOME_KEY(uid), 1, { nx: true });
-  if (first !== "OK") return;
+  if (first !== "OK") return false;
   await redis.incrby(COIN_KEY(uid), WELCOME_COINS);
   await pushLog(uid, { type: "welcome", amount: WELCOME_COINS, at: Date.now() });
+  return true;
 }
 
 export async function getBalance(uid: string): Promise<number> {

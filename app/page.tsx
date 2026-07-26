@@ -525,6 +525,7 @@ export default function Home() {
   const [userLoading, setUserLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>("home");
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
+  const [welcomeCoins, setWelcomeCoins] = useState(0); // >0이면 웰컴 모달 표시(값 = 받은 코인 수)
   const [payingProduct, setPayingProduct] = useState<string | null>(null);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [historyView, setHistoryView] = useState<HistoryItem | null>(null);
@@ -546,6 +547,7 @@ export default function Home() {
   useBackClose(showAllConcepts, () => setShowAllConcepts(false));
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
+  useBackClose(welcomeCoins > 0, () => setWelcomeCoins(0)); // 웰컴 모달 — 뒤로가기로도 닫힌다
   // ─── 워드마크 → 홈 복귀 (2026-07-25) ───────────────────────────────────────
   // 리렌더 강제용. HomeMain은 인라인 컴포넌트라 Home이 리렌더되면 리마운트되고,
   // 그때 pill을 persistedHomePill에서 다시 읽는다 → 미러만 0으로 바꾸면 칩이 홈으로 돌아온다.
@@ -601,6 +603,16 @@ export default function Home() {
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("tab") === "coin") {
       setActiveTab("ticket");
+      window.history.replaceState(null, "", "/");
+    }
+  }, []);
+  // 최초 로그인 웰컴 (?welcome=N) → 모달 1회, 주소 정리 (위 ?tab=coin과 같은 관례)
+  //   콜백이 ensureWelcome 첫 지급일 때만 이 쿼리를 단다 = 재로그인에는 안 뜬다.
+  //   코인 수는 쿼리로 받는다 — 서버의 WELCOME_COINS가 진실원이고 여기서 3을 하드코딩하지 않는다.
+  useEffect(() => {
+    const n = Number(new URLSearchParams(window.location.search).get("welcome"));
+    if (Number.isFinite(n) && n > 0) {
+      setWelcomeCoins(n);
       window.history.replaceState(null, "", "/");
     }
   }, []);
@@ -1366,6 +1378,23 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 </p>
               )}
             </div>
+          </div>
+        </div>
+      )}
+      {/* 웰컴 코인 모달 — 최초 로그인 1회. 규격은 402 시트(CoinNeededSheet)와 동일:
+          같은 오버레이 농도·시트 라운드·핸들·타이틀/서브 크기·CTA 색. 새 색·폰트 도입 없음. */}
+      {welcomeCoins > 0 && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 130, display: "flex", flexDirection: "column", justifyContent: "flex-end", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setWelcomeCoins(0); }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)" }} />
+          <div style={{ position: "relative", background: "#fff", borderRadius: "24px 24px 0 0", padding: "24px 20px 40px", maxWidth: 480, width: "100%", margin: "0 auto" }}>
+            <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
+            <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>웰컴 코인 {welcomeCoins}개가 도착했어요 🎉</p>
+            <p style={{ fontSize: 13, color: "#999", margin: "0 0 20px" }}>지금 바로 원하는 컨셉을 만들어보세요</p>
+            <button onClick={() => setWelcomeCoins(0)}
+              style={{ width: "100%", background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 14, padding: "15px 0", fontSize: 15, fontWeight: 800, cursor: "pointer" }}>
+              시작하기
+            </button>
           </div>
         </div>
       )}
