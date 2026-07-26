@@ -38,7 +38,7 @@ export default function PrivacyPage() {
       <div style={{ padding: "18px 18px 40px" }}>
         <div style={{ background: "#fff", borderRadius: 16, padding: "22px 20px 26px" }}>
           <p style={st.p}>퍼스트컴퍼니(이하 &quot;회사&quot;)는 모스픽(MOSPIC, 이하 &quot;서비스&quot;)을 운영함에 있어 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 안전하게 보호하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.</p>
-          <p style={{ ...st.p, fontWeight: 700, color: "#191919" }}>시행일: 2026년 [__]월 [__]일</p>
+          <p style={{ ...st.p, fontWeight: 700, color: "#191919" }}>시행일: 2026년 7월 26일</p>
 
           <p style={st.h2}>제1조 (개인정보의 처리 목적)</p>
           <p style={st.p}>회사는 다음의 목적을 위하여 개인정보를 처리하며, 목적 이외의 용도로는 이용하지 않습니다. 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행합니다.</p>
@@ -101,7 +101,7 @@ export default function PrivacyPage() {
 
           <p style={st.h2}>제11조 (개인정보 보호책임자)</p>
           <div style={st.box}>
-            <p style={st.kv}><span style={st.k}>성명 · </span>[대표자 성명 — 채워주세요]</p>
+            <p style={st.kv}><span style={st.k}>성명 · </span>최민준</p>
             <p style={st.kv}><span style={st.k}>직책 · </span>대표</p>
             <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>연락처 · </span>rnrwls159@naver.com</p>
           </div>
@@ -112,8 +112,8 @@ export default function PrivacyPage() {
 
           <p style={st.h2}>제12조 (개인정보 처리방침의 변경)</p>
           <p style={st.p}>이 개인정보 처리방침은 시행일로부터 적용되며, 내용의 추가·삭제·수정이 있는 경우 개정 사항을 시행 7일 전부터 서비스 내 공지사항을 통해 고지합니다.</p>
-          <p style={st.small}>· 공고일자: 2026년 [__]월 [__]일</p>
-          <p style={st.small}>· 시행일자: 2026년 [__]월 [__]일</p>
+          <p style={st.small}>· 공고일자: 2026년 7월 26일</p>
+          <p style={st.small}>· 시행일자: 2026년 7월 26일</p>
         </div>
       </div>
     </div>
