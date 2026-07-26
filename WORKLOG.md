@@ -7,6 +7,28 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-26 (9차) — 비로그인 401 로그인 유도 시트(153페이지) + 402 누락 3페이지 보강
+- [문제] withCoin·withDailyFree는 비로그인에 401 "로그인이 필요해요"를 주는데,
+  페이지들은 그걸 빨간 에러 박스로만 띄웠다 — 로그인 입구가 없는 막다른 골목.
+  히어로 "무료" 탭으로 들어온 nukki·upscale 유입자도 같은 벽(withDailyFree도 401)
+- [LoginNeededSheet] coinSheet와 같은 window 이벤트 관례(openLoginSheet()),
+  layout 전역 마운트, 402 시트와 동일 규격(오버레이 .4·라운드 24·핸들 36×4·
+  타이틀 20/900·서브 13/#999·CTA #FF4B7C) — 새 색·폰트 0. useBackClose 상속.
+  서브 문구는 WELCOME_COINS 상수를 읽는다(3 하드코딩 금지)
+- [벌크 153] 표준 150개 = 401 분기 1줄 + 주석 + import 1줄(3줄).
+  ★402 누락 3개(idstyle·nukki·petstudio)는 401·402 둘 다 보강(6줄) —
+  앞선 진단에서 "누락 2개"라 한 것은 부정확했다(handleSubmit 기준 재집계로 3개 확정).
+  세 페이지 모두 구조는 표준과 같고 402 줄·import만 빠진 단순 누락이었다(upscale은 보유)
+- [★공정 함정] 1차 시도에서 402 코드 줄만 앵커로 잡아, 기존 "// 코인 부족(402)"
+  주석이 새로 삽입한 401 줄 위에 남아 주석이 다른 줄을 설명하게 됐다. 153개 전부
+  원복(git checkout -- app/) 후 앵커를 "주석 줄 + 코드 줄 묶음"으로 바꿔 재실행.
+  ※원복 시 layout.tsx 변경도 함께 날아가므로 재적용 필요 — 다음에도 주의
+- [0단계 발견] /api/auth/kakao는 returnTo·redirect 파라미터를 받지 않는다(GET()이
+  request 인자조차 없음). 콜백도 항상 "/"로 보낸다 → 이번엔 홈 복귀로 간다.
+  웰컴 모달이 홈에 뜨므로 착지로도 성립. 원래 컨셉 페이지 복귀는 백로그
+- [게이트] 401/402/openLoginSheet/openCoinSheet 각 153 일치, 파일당 diff
+  3줄(150개)·6줄(3개)·삭제 0, 빌드 Compiled successfully
+
 ## 2026-07-26 (8차) — 웰컴 3코인 로그인 즉시 지급 + 확인 모달
 - [기존 실태] ensureWelcome(SET NX·WELCOME_COINS 3)은 이미 있었지만 호출부가
   withDailyFree·withCoin·/api/coins 3곳뿐이라 "코인 API를 부르거나 유료 생성을

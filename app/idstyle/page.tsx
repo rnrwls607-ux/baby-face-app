@@ -13,6 +13,8 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
+import { openCoinSheet } from "../lib/coinSheet";
+import { openLoginSheet } from "../lib/loginSheet";
 
 const STYLE_KEY = "blueshirt";
 const STYLE_LABEL = "S컬 블루 셔츠";
@@ -73,6 +75,10 @@ export default function IdStylePage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
+      // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);

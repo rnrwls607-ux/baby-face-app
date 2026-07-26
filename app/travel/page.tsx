@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { addToHistory } from "../lib/history";
 import { saveImage } from "../lib/saveImage";
 import { openCoinSheet } from "../lib/coinSheet";
+import { openLoginSheet } from "../lib/loginSheet";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import CoinIcon from "../components/CoinIcon";
 import { shareImage } from "../lib/shareImage";
@@ -85,6 +86,8 @@ export default function TravelPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
       // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지) — ★스위치 날 120곳 벌크 앵커 원형
       if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");

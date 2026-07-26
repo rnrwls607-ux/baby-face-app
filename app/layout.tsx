@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Toast from "./components/Toast";
 import CoinNeededSheet from "./components/CoinNeededSheet";
+import LoginNeededSheet from "./components/LoginNeededSheet";
 import BackButtonBridge from "./components/BackButtonBridge";
 
 export const metadata: Metadata = {
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Toast />
         <CoinNeededSheet />
+        <LoginNeededSheet />
         <BackButtonBridge />
       </body>
     </html>

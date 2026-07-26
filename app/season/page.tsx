@@ -16,6 +16,7 @@ import UploadGuide from "../components/upload/UploadGuide";
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
+import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 
 // 칩 4종 — key는 route의 SEASON_PROMPTS 키와 반드시 일치해야 한다(불일치 시 봄으로 폴백됨)
@@ -89,6 +90,8 @@ export default function SeasonPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
       // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지) — ★스위치 날 벌크 앵커
       if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");

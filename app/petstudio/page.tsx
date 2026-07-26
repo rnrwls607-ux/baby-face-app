@@ -15,6 +15,8 @@ import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import { openCoinSheet } from "../lib/coinSheet";
+import { openLoginSheet } from "../lib/loginSheet";
 
 export default function PetstudioPage() {
   const router = useRouter();
@@ -60,6 +62,10 @@ export default function PetstudioPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
+      // 코인 부족(402) → 전역 충전 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
