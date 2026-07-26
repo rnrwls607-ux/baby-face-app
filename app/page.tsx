@@ -270,9 +270,19 @@ const HOME_PILLS = [
 //   objectPosition 사진에서 보여줄 기준점 (얼굴이 잘리면 여기를 조절)
 //   go             탭했을 때 열 컨셉 키 (CONCEPTS의 키)
 //   accent/emoji   image가 없을 때 쓰는 폴백
-const HERO_SLIDES = [
+//   split          ★한 장에 도구 둘을 반씩 담은 슬라이드. 있으면 title/subtitle 대신
+//                  좌·우 50% 탭존이 각각 자기 컨셉 상세를 연다(go·텍스트 오버레이 미사용)
+const HERO_SLIDES: {
+  id: string; image: string; accent: string;
+  title?: string; subtitle?: string; emoji?: string; go?: string; objectPosition?: string;
+  split?: { label: string; key: string }[];
+}[] = [
   { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg", objectPosition: "center 48%" },
   { id: "biz", title: "첫인상은\n프로필 사진에서", subtitle: "비즈니스 프로필 34종", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
+  { id: "freetools", accent: "#F2F2F2", image: "/hero/hero_freetools.webp", split: [
+    { label: "배경 제거", key: "nukki" },
+    { label: "4배 고화질", key: "upscale" },
+  ] },
   { id: "luxe", title: "사진관 안 가도,\n사진관보다", subtitle: "스튜디오 화보를 1분 만에", emoji: "🖤", accent: "#EDEAE6", go: "luxe", image: "/hero/luxe.webp", objectPosition: "center 50%" },
   { id: "petstudio", title: "우리 아이도\n프로필 사진", subtitle: "펫 스튜디오 · 코스튬", emoji: "🐶", accent: "#F3EDE4", go: "petstudio", image: "/hero/petstudio.webp", objectPosition: "center 50%" },
   { id: "couple", title: "둘이 함께,\n화보처럼", subtitle: "커플 · 웨딩 · 가족", emoji: "💑", accent: "#FBEFE9", go: "couple", image: "/hero/couple.webp", objectPosition: "center 50%" },
@@ -782,19 +792,32 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               슬라이드가 1장뿐이면 순환이 없으므로 클론도 만들지 않는다. */}
           {(HERO_SLIDES.length > 1 ? [...HERO_SLIDES, { ...HERO_SLIDES[0], id: HERO_SLIDES[0].id + "-loop" }] : HERO_SLIDES).map(h => (
             <div key={h.id} style={{ flexShrink: 0, width: "100%", scrollSnapAlign: "center", paddingRight: 0, boxSizing: "border-box" }}>
-              <div onClick={() => handleCardTap(h.go)} style={{ borderRadius: 0, height: 270, cursor: "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
+              {/* split 슬라이드는 판 전체가 아니라 좌·우 존이 각자 탭을 받는다 */}
+              <div onClick={h.split ? undefined : () => handleCardTap(h.go!)} style={{ borderRadius: 0, height: 270, cursor: h.split ? "default" : "pointer", position: "relative", overflow: "hidden", background: `linear-gradient(165deg, ${h.accent} 0%, #ffffff 130%)` }}>
                 {h.image ? (
                   <>
-                    <img src={h.image} alt={h.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: h.objectPosition }} />
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 35%, transparent 60%)" }} />
+                    <img src={h.image} alt={h.title ?? ""} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: h.objectPosition }} />
+                    {/* 어둠 그라데이션은 흰 글자 가독성용 — split은 글자가 없어 사진만 어두워지므로 뺀다 */}
+                    {!h.split && <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 35%, transparent 60%)" }} />}
                   </>
                 ) : (
                   <div style={{ position: "absolute", right: 18, top: 44, fontSize: 120, opacity: 0.4 }}>{h.emoji}</div>
                 )}
-                <div style={{ position: "absolute", left: 24, bottom: 28, textAlign: "left" }}>
-                  <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: "#fff", letterSpacing: -0.5, whiteSpace: "pre-line", textShadow: "0 2px 8px rgba(0,0,0,0.45)" }}>{h.title}</p>
-                  <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.92)", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>{h.subtitle}</p>
-                </div>
+                {h.split ? h.split.map((z, zi) => (
+                  <div key={z.key} onClick={() => handleCardTap(z.key)}
+                    style={{ position: "absolute", top: 0, bottom: 0, left: zi === 0 ? 0 : "50%", width: "50%", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", paddingBottom: 22 }}>
+                    {/* ★coinCost === 0 일 때만 — IAP 전환 시 자동 소멸(허위 고지 방지). 카드 뱃지와 같은 조건 */}
+                    {CONCEPTS[z.key]?.coinCost === 0 && (
+                      <span style={{ marginBottom: 6, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>
+                    )}
+                    <span style={{ background: "rgba(255,255,255,0.94)", color: "#191919", fontSize: 15, fontWeight: 800, padding: "8px 14px", borderRadius: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>{z.label}</span>
+                  </div>
+                )) : (
+                  <div style={{ position: "absolute", left: 24, bottom: 28, textAlign: "left" }}>
+                    <p style={{ margin: 0, fontSize: 25, fontWeight: 900, color: "#fff", letterSpacing: -0.5, whiteSpace: "pre-line", textShadow: "0 2px 8px rgba(0,0,0,0.45)" }}>{h.title}</p>
+                    <p style={{ margin: "7px 0 0", fontSize: 14, fontWeight: 500, color: "rgba(255,255,255,0.92)", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>{h.subtitle}</p>
+                  </div>
+                )}
               </div>
             </div>
           ))}
