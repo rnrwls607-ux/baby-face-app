@@ -13,18 +13,90 @@ const st: Record<string, CSSProperties> = {
   k: { color: "#9B9B9B", fontWeight: 600 },
 };
 
-// 제2조 표 → 카드형 리스트 (모바일 480px에서 표가 깨지지 않게)
+// 제1조 수집 항목 → 카드형 리스트 (모바일 480px에서 표가 깨지지 않게)
 const COLLECT_ITEMS = [
-  { label: "회원 정보", items: "카카오 회원번호, 닉네임, 이메일(카카오 제공 동의 시)", method: "카카오 로그인" },
-  { label: "생성 요청 정보", items: "이용자가 업로드하는 사진(얼굴 등 개인 식별 정보가 포함될 수 있음)", method: "이용자 직접 업로드" },
-  { label: "자동 수집 정보", items: "쿠키(로그인 세션, 무료 이용 횟수), 서비스 이용 기록", method: "서비스 이용 과정에서 자동 생성" },
+  {
+    label: "회원 로그인",
+    items: "카카오 계정 고유번호, 닉네임, 프로필 이미지, 이메일(카카오 제공 동의 시)",
+    purpose: "회원 식별, 코인·히스토리 등 회원 기능 제공",
+    period: "회원 탈퇴 시까지 (탈퇴 시 지체 없이 파기)",
+  },
+  {
+    label: "사진 생성 서비스",
+    items: "이용자가 업로드한 사진(얼굴 사진 포함), 생성물",
+    purpose: "AI 이미지 생성 및 결과 제공",
+    period: "아래 제1조 ② 참조",
+  },
+  {
+    label: "결제",
+    items: "주문번호, 결제 승인 정보(수단·금액·일시), 구매 상품 정보",
+    purpose: "결제 처리, 환불, 법정 기록 보존",
+    period: "전자상거래법에 따라 5년",
+  },
+  {
+    label: "자동 수집",
+    items: "접속 기록(IP 주소, 접속 일시), 쿠키, 기기·브라우저 정보",
+    purpose: "부정 이용 방지, 서비스 안정 운영",
+    period: "제2조의 법정 기간",
+  },
+  {
+    label: "고객 문의",
+    items: "이메일 주소, 문의 내용",
+    purpose: "문의 처리 및 결과 안내",
+    period: "처리 완료 후 3년 (소비자 불만·분쟁 처리 기록)",
+  },
 ];
 
-// 제6조 국외 이전 표 → 수탁자별 카드
-const TRANSFER_ITEMS = [
-  { name: "Google LLC", country: "미국", items: "업로드 사진", how: "이용자가 생성을 요청한 시점에 API를 통한 암호화 전송", purpose: "AI 이미지 생성(Gemini)", period: "생성 처리 후 지체 없이 파기 (수탁자 정책에 따름)" },
-  { name: "OpenAI, L.L.C.", country: "미국", items: "업로드 사진", how: "상동", purpose: "AI 이미지 생성(GPT Image)", period: "상동" },
-  { name: "Replicate, Inc.", country: "미국", items: "업로드 사진 또는 생성 결과물", how: "상동", purpose: "이미지 업스케일·배경 제거", period: "상동" },
+// 제5조 국외 이전 — 개인정보 보호법 제28조의8 제1항 제3호(계약 이행을 위한 처리위탁·보관)
+const OVERSEAS = [
+  {
+    name: "Google LLC (미국)",
+    items: "업로드 사진",
+    how: "생성 요청 시 실시간 API 전송",
+    purpose: "AI 이미지 생성",
+    period: "생성 처리 후 각 사 API 정책에 따라 단기 보관 후 파기",
+    contact: "privacy.google.com",
+  },
+  {
+    name: "OpenAI OpCo, LLC (미국)",
+    items: "업로드 사진",
+    how: "생성 요청 시 실시간 API 전송",
+    purpose: "AI 이미지 생성·보정",
+    period: "오남용 모니터링 목적 최대 30일 보관 후 파기 (OpenAI API 정책)",
+    contact: "privacy@openai.com",
+  },
+  {
+    name: "Replicate, Inc. (미국)",
+    items: "업로드 사진·생성물",
+    how: "요청 시 실시간 API 전송",
+    purpose: "이미지 업스케일·배경 제거",
+    period: "처리 완료 후 각 사 정책에 따라 파기",
+    contact: "replicate.com/privacy",
+  },
+  {
+    name: "Vercel Inc. (미국)",
+    items: "서비스 이용 데이터, 저장 생성물 이미지",
+    how: "서비스 이용 시",
+    purpose: "호스팅·이미지 저장 인프라",
+    period: "회원 탈퇴 또는 제1조의 보유 기간 만료 시까지",
+    contact: "vercel.com/legal/privacy-policy",
+  },
+  {
+    name: "Upstash, Inc. (미국)",
+    items: "회원번호 기준 이용 수량·코인 잔액",
+    how: "서비스 이용 시",
+    purpose: "이용량 관리·부정 이용 방지",
+    period: "회원 탈퇴 시까지",
+    contact: "upstash.com",
+  },
+];
+
+// 제2조 법정 보유
+const LEGAL_KEEP = [
+  { what: "계약 또는 청약철회 등에 관한 기록", term: "5년 (전자상거래법)" },
+  { what: "대금결제 및 재화 등의 공급에 관한 기록", term: "5년 (전자상거래법)" },
+  { what: "소비자의 불만 또는 분쟁 처리에 관한 기록", term: "3년 (전자상거래법)" },
+  { what: "서비스 접속 기록", term: "3개월 (통신비밀보호법)" },
 ];
 
 export default function PrivacyPage() {
@@ -37,81 +109,91 @@ export default function PrivacyPage() {
       </div>
       <div style={{ padding: "18px 18px 40px" }}>
         <div style={{ background: "#fff", borderRadius: 16, padding: "22px 20px 26px" }}>
-          <p style={st.p}>퍼스트컴퍼니(이하 &quot;회사&quot;)는 모스픽(MOSPIC, 이하 &quot;서비스&quot;)을 운영함에 있어 「개인정보 보호법」 등 관련 법령을 준수하며, 이용자의 개인정보를 안전하게 보호하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.</p>
+          <p style={st.p}>퍼스트컴퍼니(이하 &quot;회사&quot;)는 MOSPIC(모스픽) 서비스 이용자의 개인정보를 「개인정보 보호법」 등 관계 법령에 따라 적법하게 처리하고 안전하게 관리하며, 개인정보 보호법 제30조에 따라 처리 기준을 다음과 같이 공개합니다.</p>
           <p style={{ ...st.p, fontWeight: 700, color: "#191919" }}>시행일: 2026년 7월 26일</p>
 
-          <p style={st.h2}>제1조 (개인정보의 처리 목적)</p>
-          <p style={st.p}>회사는 다음의 목적을 위하여 개인정보를 처리하며, 목적 이외의 용도로는 이용하지 않습니다. 이용 목적이 변경되는 경우에는 「개인정보 보호법」 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행합니다.</p>
-          <p style={st.p}>1. <b>회원 가입 및 관리</b>: 카카오 계정을 통한 회원 식별, 로그인 상태 유지, 부정 이용 방지</p>
-          <p style={st.p}>2. <b>AI 이미지 생성 서비스 제공</b>: 이용자가 업로드한 사진을 인공지능 모델로 변환하여 결과물을 제공</p>
-          <p style={st.p}>3. <b>서비스 운영</b>: 무료 이용 횟수 관리, 문의 응대, 서비스 품질 개선</p>
-
-          <p style={st.h2}>제2조 (처리하는 개인정보의 항목)</p>
+          <p style={st.h2}>제1조 (수집하는 개인정보, 이용 목적, 보유 기간)</p>
+          <p style={st.p}>회사는 서비스 제공에 필요한 최소한의 개인정보만 수집·이용합니다.</p>
           {COLLECT_ITEMS.map(c => (
             <div key={c.label} style={st.box}>
               <p style={st.boxTitle}>{c.label}</p>
               <p style={st.kv}><span style={st.k}>항목 · </span>{c.items}</p>
-              <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>수집 방법 · </span>{c.method}</p>
+              <p style={st.kv}><span style={st.k}>이용 목적 · </span>{c.purpose}</p>
+              <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>보유 기간 · </span>{c.period}</p>
             </div>
           ))}
+          <p style={st.p}>② 사진 생성 서비스의 보유 기간은 다음과 같습니다.</p>
+          <p style={st.p}>· <b>업로드 사진</b>: 생성 처리 목적으로만 이용하며 서버에 저장하지 않습니다.</p>
+          <p style={st.p}>· <b>생성물(회원)</b>: 히스토리용 축소 이미지(최대 500개) 및 유료 생성물 원본(생성일로부터 1년)을 보관합니다. 이용자가 삭제하면 즉시 파기하며, 회원 탈퇴 시 히스토리와 그 이미지는 파기됩니다. 유료 생성물 원본은 보유 기간이 지나면 파기됩니다.</p>
+          <p style={st.p}>· <b>생성물(비회원)</b>: 서버에 저장하지 않으며 이용 기기에만 저장됩니다.</p>
+          <p style={st.p}>③ 신용카드 번호 등 민감한 결제 정보는 결제대행사(토스페이먼츠) 또는 앱 마켓이 처리하며 회사는 저장하지 않습니다.</p>
 
-          <p style={st.h2}>제3조 (개인정보의 처리 및 보유 기간)</p>
-          <p style={st.p}>1. <b>회원 정보</b>: 회원 탈퇴 시까지 보유하며, 탈퇴 시 지체 없이 파기합니다.</p>
-          <p style={st.p}>2. <b>업로드 사진</b>: <b>회사는 이용자가 업로드한 원본 사진을 서버에 저장하지 않습니다.</b> 업로드된 사진은 AI 이미지 생성 목적으로만 일시적으로 처리(제6조의 수탁자에게 전송)되며, 생성 처리 완료 후 지체 없이 폐기됩니다.</p>
-          <p style={st.p}>3. <b>생성 결과물</b>: 생성 결과물은 기본적으로 이용자 기기에 저장됩니다. 로그인 이용자의 경우 히스토리 기능 제공을 위해 생성 결과물(축소본)이 회사가 이용하는 클라우드 저장소에 보관되며, 이용자는 앱 내 개별·전체 삭제 기능으로 언제든지 파기할 수 있습니다. 유료 생성물 원본의 보관·파기는 제5항에 따릅니다.</p>
-          <p style={st.p}>4. <b>쿠키</b>: 각 쿠키의 유효기간 만료 또는 이용자의 삭제 시까지.</p>
-          <p style={st.p}>5. <b>유료 생성물 원본</b>: 유료(코인 차감) 생성물의 원본 이미지는 서비스 제공을 위해 생성일로부터 1년간 보관 후 지체 없이 파기하며, 이용자가 해당 항목을 삭제하는 경우 즉시 파기합니다.</p>
+          <p style={st.h2}>제2조 (법령에 따른 보유)</p>
+          <p style={st.p}>관계 법령에 따라 다음 정보는 명시된 기간 동안 보관 후 파기합니다.</p>
+          <div style={st.box}>
+            {LEGAL_KEEP.map((l, i) => (
+              <p key={l.what} style={i === LEGAL_KEEP.length - 1 ? { ...st.kv, margin: 0 } : st.kv}>
+                <span style={st.k}>{l.what} · </span>{l.term}
+              </p>
+            ))}
+          </div>
 
-          <p style={st.h2}>제4조 (개인정보의 파기 절차 및 방법)</p>
-          <p style={st.p}>1. 회사는 개인정보 보유 기간의 경과, 처리 목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체 없이 해당 개인정보를 파기합니다.</p>
-          <p style={st.p}>2. 전자적 파일 형태의 정보는 복구할 수 없는 기술적 방법으로 삭제합니다.</p>
+          <p style={st.h2}>제3조 (만 14세 미만 아동)</p>
+          <p style={st.p}>회사는 만 14세 이상의 이용자를 대상으로 서비스를 제공하며, 만 14세 미만 아동의 개인정보를 수집하지 않습니다. 수집된 사실을 인지하는 경우 지체 없이 파기합니다.</p>
 
-          <p style={st.h2}>제5조 (개인정보의 제3자 제공)</p>
-          <p style={st.p}>회사는 이용자의 개인정보를 제1조의 목적 범위 내에서만 처리하며, 이용자의 사전 동의 또는 법령의 특별한 규정 없이는 제3자에게 제공하지 않습니다.</p>
+          <p style={st.h2}>제4조 (제3자 제공)</p>
+          <p style={st.p}>회사는 이용자의 개인정보를 제3자에게 제공하지 않습니다. 이용자가 별도로 동의하거나 법령에 근거가 있는 경우에만 예외적으로 제공됩니다.</p>
 
-          <p style={st.h2}>제6조 (개인정보 처리의 위탁 및 국외 이전)</p>
-          <p style={st.p}>① 회사는 AI 이미지 생성 서비스 제공을 위하여, 이용자가 업로드한 사진의 처리를 아래 국외 사업자에게 위탁하고 있으며, 이 과정에서 개인정보가 국외로 이전됩니다.</p>
-          {TRANSFER_ITEMS.map(t => (
-            <div key={t.name} style={st.box}>
-              <p style={st.boxTitle}>{t.name} <span style={{ fontWeight: 600, color: "#9B9B9B" }}>({t.country})</span></p>
-              <p style={st.kv}><span style={st.k}>이전 항목 · </span>{t.items}</p>
-              <p style={st.kv}><span style={st.k}>이전 일시 및 방법 · </span>{t.how}</p>
-              <p style={st.kv}><span style={st.k}>이용 목적 · </span>{t.purpose}</p>
-              <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>보유·이용 기간 · </span>{t.period}</p>
+          <p style={st.h2}>제5조 (처리 위탁 및 국외 이전)</p>
+          <p style={st.p}>① 회사는 서비스 제공을 위해 결제 처리를 토스페이먼츠(국내)에 위탁합니다.</p>
+          <p style={st.p}>② AI 이미지 생성과 서비스 운영에 필수적인 처리를 위해, 개인정보 보호법 제28조의8 제1항 제3호(계약 이행을 위한 처리위탁·보관)에 따라 다음과 같이 개인정보를 국외 사업자에 위탁·보관합니다. 이전은 각 시점에 암호화된 통신(HTTPS)으로 이루어집니다.</p>
+          {OVERSEAS.map(o => (
+            <div key={o.name} style={st.box}>
+              <p style={st.boxTitle}>{o.name}</p>
+              <p style={st.kv}><span style={st.k}>이전 항목 · </span>{o.items}</p>
+              <p style={st.kv}><span style={st.k}>이전 시점·방법 · </span>{o.how}</p>
+              <p style={st.kv}><span style={st.k}>이전 목적 · </span>{o.purpose}</p>
+              <p style={st.kv}><span style={st.k}>보유 기간 · </span>{o.period}</p>
+              <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>문의처 · </span>{o.contact}</p>
             </div>
           ))}
-          <p style={st.p}>② 이용자는 개인정보의 국외 이전을 원하지 않을 경우 사진 업로드(생성 요청)를 하지 않을 수 있습니다. 다만 이 경우 AI 이미지 생성 서비스의 이용이 불가능합니다.</p>
+          <p style={st.p}>③ 회사는 이용자의 사진을 자체 AI 모델 학습에 사용하지 않으며, 수탁사에도 생성 목적 외 이용(모델 학습 포함)을 허용하지 않는 조건의 API를 이용합니다.</p>
+          <p style={st.p}>④ 이용자는 국외 이전을 거부할 수 있으나, 이전이 서비스 제공에 필수적이므로 이 경우 사진 생성 서비스 이용이 불가능합니다.</p>
 
-          <p style={st.h2}>제7조 (개인정보의 안전성 확보조치)</p>
-          <p style={st.p}>1. 전송 구간 암호화(HTTPS) 적용</p>
-          <p style={st.p}>2. 원본 사진의 서버 미저장 원칙 운영</p>
-          <p style={st.p}>3. 개인정보에 대한 접근 권한 최소화</p>
+          <p style={st.h2}>제6조 (파기)</p>
+          <p style={st.p}>보유 기간이 지나거나 처리 목적이 달성되면 지체 없이 파기합니다. 전자적 파일은 복구할 수 없는 방법으로 삭제하며, 법령상 보존이 필요한 정보는 다른 정보와 분리하여 보관 후 기간 만료 시 파기합니다.</p>
 
-          <p style={st.h2}>제8조 (쿠키 등 자동 수집 장치의 설치·운영 및 거부)</p>
-          <p style={st.p}>① 회사는 로그인 상태 유지와 무료 이용 횟수 관리를 위하여 쿠키를 사용합니다.</p>
-          <p style={st.p}>② 이용자는 웹 브라우저의 설정을 통해 쿠키 저장을 거부할 수 있습니다. 다만 쿠키 저장을 거부할 경우 로그인이 필요한 서비스 이용에 어려움이 있을 수 있습니다.</p>
+          <p style={st.h2}>제7조 (쿠키 등 자동 수집 장치)</p>
+          <p style={st.p}>① 회사는 로그인 상태 유지 목적의 쿠키를 사용합니다. 이용자는 브라우저 설정에서 쿠키를 거부할 수 있으나, 이 경우 로그인 등 일부 기능 이용이 제한될 수 있습니다.</p>
+          <p style={st.p}>② 회사는 광고 식별자를 수집하지 않으며, 제3자 광고·마케팅·행태 분석 도구를 사용하지 않습니다.</p>
 
-          <p style={st.h2}>제9조 (정보주체의 권리·의무 및 행사 방법)</p>
-          <p style={st.p}>① 이용자는 회사에 대해 언제든지 개인정보 열람·정정·삭제·처리정지 요구 등의 권리를 행사할 수 있습니다.</p>
-          <p style={st.p}>② 권리 행사는 서비스 내 설정 메뉴(회원 탈퇴, 생성 기록 삭제) 또는 제11조의 개인정보 보호책임자에게 이메일로 요청할 수 있으며, 회사는 지체 없이 조치합니다.</p>
-          <p style={st.p}>③ 회원 탈퇴(동의 철회) 시 회원 정보는 지체 없이 파기됩니다.</p>
+          <p style={st.h2}>제8조 (이용자의 권리와 행사 방법)</p>
+          <p style={st.p}>① 이용자는 언제든지 개인정보 열람·정정·삭제·처리정지를 요구할 수 있으며, 제10조의 문의처(이메일)로 요청하면 지체 없이 조치합니다.</p>
+          <p style={st.p}>② 히스토리 삭제, 회원 탈퇴 등은 서비스 내 기능으로 직접 행사할 수 있습니다.</p>
+          <p style={st.p}>③ 권리 행사는 법정대리인이나 위임받은 자를 통해서도 할 수 있으며, 이 경우 관계 법령 서식에 따른 위임장을 제출해야 합니다.</p>
+          <p style={st.p}>④ 열람·처리정지 요구는 개인정보 보호법 등 관계 법령에 따라 제한될 수 있으며, 다른 법령에서 수집 대상으로 명시된 정보는 삭제를 요구할 수 없습니다.</p>
 
-          <p style={st.h2}>제10조 (만 14세 미만 아동의 개인정보)</p>
-          <p style={st.p}>본 서비스는 만 14세 미만 아동을 대상으로 하지 않으며, 만 14세 미만 아동의 개인정보를 수집하지 않습니다.</p>
+          <p style={st.h2}>제9조 (안전성 확보 조치)</p>
+          <p style={st.p}>회사는 개인정보 보호를 위해 전송 구간 암호화(HTTPS), 접근 권한 최소화 및 관리 기능 접근 통제, 개인정보 수집 최소화, 보안 위협 모니터링 등의 조치를 시행합니다.</p>
 
-          <p style={st.h2}>제11조 (개인정보 보호책임자)</p>
+          <p style={st.h2}>제10조 (개인정보 보호책임자)</p>
           <div style={st.box}>
             <p style={st.kv}><span style={st.k}>성명 · </span>최민준</p>
             <p style={st.kv}><span style={st.k}>직책 · </span>대표</p>
             <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>연락처 · </span>rnrwls159@naver.com</p>
           </div>
           <p style={st.p}>이용자는 서비스 이용 중 발생한 모든 개인정보 보호 관련 문의, 불만 처리, 피해 구제 등을 개인정보 보호책임자에게 문의할 수 있습니다.</p>
-          <p style={st.p}>기타 개인정보 침해에 대한 신고나 상담이 필요한 경우 아래 기관에 문의할 수 있습니다.</p>
-          <p style={st.small}>· 개인정보침해신고센터 (국번없이 118 / privacy.kisa.or.kr)</p>
-          <p style={st.small}>· 개인정보분쟁조정위원회 (1833-6972 / kopico.go.kr)</p>
 
-          <p style={st.h2}>제12조 (개인정보 처리방침의 변경)</p>
-          <p style={st.p}>이 개인정보 처리방침은 시행일로부터 적용되며, 내용의 추가·삭제·수정이 있는 경우 개정 사항을 시행 7일 전부터 서비스 내 공지사항을 통해 고지합니다.</p>
+          <p style={st.h2}>제11조 (권익침해 구제)</p>
+          <p style={st.p}>개인정보 침해에 대한 신고·상담은 아래 기관에 문의할 수 있습니다.</p>
+          <p style={st.small}>· 개인정보침해 신고센터 (privacy.kisa.or.kr / 국번 없이 118)</p>
+          <p style={st.small}>· 개인정보 분쟁조정위원회 (www.kopico.go.kr / 1833-6972)</p>
+          <p style={st.small}>· 대검찰청 (www.spo.go.kr / 1301)</p>
+          <p style={st.small}>· 경찰청 (ecrm.police.go.kr / 182)</p>
+
+          <p style={st.h2}>제12조 (방침의 적용 범위와 변경)</p>
+          <p style={st.p}>① 이 방침은 MOSPIC 서비스(웹·앱)에 적용되며, 서비스에 연결된 외부 사이트의 개인정보 처리에는 적용되지 않습니다.</p>
+          <p style={st.p}>② 방침을 변경하는 경우 적용 7일 전(이용자에게 불리한 중대한 변경은 30일 전)에 서비스 내 공지합니다.</p>
           <p style={st.small}>· 공고일자: 2026년 7월 26일</p>
           <p style={st.small}>· 시행일자: 2026년 7월 26일</p>
         </div>

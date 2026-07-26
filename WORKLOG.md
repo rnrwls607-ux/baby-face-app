@@ -7,6 +7,32 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-26 (5차) — 개인정보처리방침 12조 전면 증보 (MEVU 대조)
+- MEVU 방침을 주제 체크리스트로만 사용, 전문 자체 작성. 핵심 추가: ★국외 이전
+  고지 5개사(Google·OpenAI·Replicate·Vercel·Upstash — 법 28조의8 1항 3호 처리위탁
+  근거, 별도 동의 UI 불요) / 법정 보유기간 표 / 쿠키 / 권리 행사 / 파기 / 구제기관
+- 역선언 2건: 광고 식별자·마케팅 SDK 미사용, 사진 AI 학습 미사용(추론 API만) —
+  MEVU가 쓸 수 없는 신뢰 문구
+- 코드 검증 슬롯 A~F 결과:
+  A 카카오 = 회원번호+닉네임+프로필이미지+이메일 4개(httpOnly 쿠키 7일) — 전문의
+    "고유번호"만 표기는 축소라 4개로 수정
+  B 업로드 사진 = 생성 route에 @vercel/blob import 0건, 미저장 확정 ✓
+  C 쿠키 = kakao_user 1개뿐. document.cookie·middleware 0건 — "무료 이용 횟수
+    쿠키"는 실재하지 않아 문구 삭제(구 방침의 오기를 승계할 뻔)
+  D 광고·분석 SDK = GA·GTM·픽셀·firebase·mixpanel·amplitude·hotjar 전부 0건.
+    grep의 "clarity" 7건은 AI 프롬프트 영단어(FACE CLARITY RULE) — SDK 아님 ✓
+  E 결제 저장 = orderId·amount·productId·productName·uses·paidAt. 카드번호·
+    paymentKey 미저장 ✓
+  F 비회원 생성물 = history/save가 kakao_user 없으면 미저장 ✓
+- ★코드↔문서 격차 3건(별건 수리 대기):
+  ① payment 기록 Redis TTL 1년 < 전자상거래법 5년 — 방침은 법정 5년 유지, 코드가
+     미달. 만료 시 법정 보존 의무 위반 소지
+  ② 유료 원본 자동 파기 없음 — purge-expired(RETENTION_DAYS 365)가 관리자 수동
+     배치라 실행 안 하면 무기한. 크론 필요
+  ③ 탈퇴 시 originals:{uid}·payment:* 미삭제 — history만 지운다. 방침은 사실대로
+     "탈퇴 시 히스토리 파기 / 유료 원본은 보유기간 경과 시 파기"로 기술
+- 미채택: 광고 플랫폼 목록·얼굴인식·푸시 마케팅·AWS/채널톡 위탁(해당 없음)
+
 ## 2026-07-26 (4차) — 약관 25조 증보(MEVU 대조 반영) + privacy 공란 확정
 - MEVU 약관 전문 대조 → 주제만 채택·전면 자체 작성: 약관 외 준칙(운영정책 근거)·
   통지·미성년자 결제 법정대리인 동의·쿠폰 조항(앱 쿠폰 탭 실존인데 약관 부재
