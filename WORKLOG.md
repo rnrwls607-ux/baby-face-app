@@ -7,6 +7,25 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-27 (13차) — 402 시트 게스트 소프트 로그인 줄(B) — 게스트 신원 라운드 종결
+- [줄] "필요 N · 보유 M" 아래(canCharge 양 분기 공통)에 게스트 전용 안내 1줄 +
+  보조 버튼("카카오로 시작하기"). 테두리·회색 톤이라 아래 상품 버튼(핑크)보다
+  위계가 낮다. 웰컴 개수는 WELCOME_COINS 상수 참조(하드코딩 0), 새 색 0
+- [판정] 시트 오픈 시 /api/auth/me 1회(마운트 아님). ★loggedIn 기본값 true라
+  조회 실패·지연 시 줄이 숨겨진다 — 로그인 사용자에게 로그인을 권하는 오판 불가.
+  /api/coins의 canCharge로는 못 가른다(로그인 사용자도 충전 잠금이면 false)
+- [★발견 — 클라 번들 오염] LoginNeededSheet가 WELCOME_COINS를 위해 coins.ts를
+  import한 탓에 @upstash/redis SDK가 클라 청크(134KB)에 들어가 있다(12차 이전,
+  9차 커밋에서 유입). 이번 시트도 같은 청크라 추가 오염은 0이지만 근본 수리 필요
+  · ★보안 영향 없음 확인: KV_REST_API_TOKEN은 변수명 문자열만 남고(런타임
+    undefined) 실제 upstash.io 주소·토큰 값은 번들에 없다
+  · 수리안: WELCOME_COINS를 서버 의존 없는 상수 파일(예 lib/coinConst.ts)로 분리
+    → coins.ts·LoginNeededSheet·CoinNeededSheet 3파일 접촉. 이번 명령 범위 밖이라
+    별건으로 남긴다
+- [라운드 종결] 게스트 신원 A(12차)+B(13차) 완료. C(로그인 시 잔액 병합)는
+  게스트가 충전을 못 해 잔액이 항상 0이라 지금은 불필요 — 게스트 IAP를 여는
+  순간 선행 조건이 된다
+
 ## 2026-07-27 (12차) — ★게스트 신원 도입: 비로그인 생성 개방
 - [발급] proxy.ts 신규 — mospic_guest 쿠키 부재 시 "g_"+randomUUID(httpOnly·secure·
   lax·1년). 페이지 요청만 매처(api·_next·확장자 제외). 발급 지점이 하나라 이중 발급·

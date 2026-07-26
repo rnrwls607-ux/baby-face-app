@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { COIN_SHEET_EVENT, type CoinSheetDetail } from "../lib/coinSheet";
 import { COIN_PRODUCT_LIST } from "../lib/products";
 import { useBackClose } from "../lib/useBackClose";
+import { WELCOME_COINS } from "../lib/coins";
 
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
@@ -12,6 +13,9 @@ export default function CoinNeededSheet() {
   const [detail, setDetail] = useState<CoinSheetDetail | null>(null);
   const [canCharge, setCanCharge] = useState(false);
   const [paying, setPaying] = useState<string | null>(null);
+  // ★기본 true = 소프트 로그인 줄 숨김. 판정 실패 시 이 값이 남아,
+  //   이미 로그인한 사람에게 로그인을 권하는 오판이 절대 나지 않는다.
+  const [loggedIn, setLoggedIn] = useState(true);
   // 뒤로가기 → 시트만 닫기 (기존 오버레이 관례)
   useBackClose(!!detail, () => setDetail(null));
 
@@ -22,6 +26,12 @@ export default function CoinNeededSheet() {
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => setCanCharge(d?.canCharge === true))
         .catch(() => { /* 판정 실패 시 폴백(지갑 안내) 유지 */ });
+      // 게스트 판정 — /api/coins의 canCharge로는 못 가른다(로그인 사용자도 충전 잠금이면 false).
+      // 마운트가 아니라 오픈 시 1회만 부른다.
+      fetch("/api/auth/me")
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => setLoggedIn(d?.loggedIn !== false))
+        .catch(() => { /* 실패 시 기본 true 유지 = 줄 숨김 */ });
     };
     window.addEventListener(COIN_SHEET_EVENT, onOpen);
     return () => window.removeEventListener(COIN_SHEET_EVENT, onOpen);
@@ -62,6 +72,20 @@ export default function CoinNeededSheet() {
         <div style={{ width: 36, height: 4, background: "#E0E0E0", borderRadius: 2, margin: "0 auto 20px" }} />
         <p style={{ fontSize: 20, fontWeight: 900, color: "#111", margin: "0 0 4px" }}>코인이 부족해요</p>
         <p style={{ fontSize: 13, color: "#999", margin: "0 0 2px" }}>필요 {detail.need}코인 · 보유 {detail.balance}코인</p>
+        {/* 게스트에게만 보이는 소프트 로그인 줄 — 강요하지 않는다.
+            테두리·회색 톤이라 아래 상품 버튼(핑크)보다 시각 위계가 낮다.
+            코인 수는 서버 상수를 그대로 쓴다(하드코딩 금지). */}
+        {!loggedIn && (
+          <div style={{ margin: "12px 0 4px", padding: "12px 14px", border: "1.5px solid #F0F0F0", borderRadius: 14 }}>
+            <p style={{ fontSize: 13, color: "#999", margin: "0 0 8px", lineHeight: 1.6 }}>
+              카카오 로그인하면 웰컴 코인 {WELCOME_COINS}개를 드려요 · 만든 사진도 계정에 보존돼요
+            </p>
+            <button onClick={() => { window.location.replace("/api/auth/kakao"); }}
+              style={{ width: "100%", background: "#fff", color: "#111", border: "1.5px solid #F0F0F0", borderRadius: 12, padding: "11px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+              카카오로 시작하기
+            </button>
+          </div>
+        )}
         <p style={{ fontSize: 13, color: "#FF4B7C", fontWeight: 700, margin: "0 0 16px" }}>🎉 런칭 기념 40% 할인</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {COIN_PRODUCT_LIST.map((product) => (
