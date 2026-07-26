@@ -76,7 +76,8 @@ export async function POST(request: NextRequest) {
       coins: product.coins, amount: Number(amount),
       at: Date.now(), status: "credited",
     };
-    const first = await redis.set(ORDER_KEY(orderId), receipt, { nx: true, ex: 60 * 60 * 24 * 365 });
+    // 전자상거래법 제6조 — 계약·대금결제 기록 5년 보존 의무. 방침 제2조와 정합 (1826일 = 365×5 + 윤일 1)
+    const first = await redis.set(ORDER_KEY(orderId), receipt, { nx: true, ex: 60 * 60 * 24 * 1826 });
     if (first !== "OK") {
       const raced = parseOrderRecord(await redis.get(ORDER_KEY(orderId)));
       return NextResponse.json({ balance: await getBalance(uid), duplicated: true, added: raced?.coins ?? 0, receipt: raced });

@@ -7,6 +7,26 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-26 (6차) — 방침↔코드 격차 3건 수리 (법정 5년·파기 크론·탈퇴 정리)
+- [결제 5년] TTL 1년 → 1826일(365×5+윤일). 전자상거래법 제6조 계약·대금결제 기록
+  보존 의무. 수정 3곳: coins/charge(order:{id} 영수증)·admin/grant-coins(동일 키)·
+  payments/confirm(payment:{uid}:{orderId}). ★무접촉 3곳은 기록이 아닌 잔액/카운터라
+  1년 유지: confirm의 bonusKey(무상 코인 1년 정책과 정합)·usage:{uid}·free:* 일일 카운터
+- [파기 크론] purge-expired에 GET 분기 신설 — Vercel Cron이 Authorization: Bearer
+  ${CRON_SECRET}로 호출할 때만 전체 사용자 실파기. 사람이 쓰는 POST(관리자·dryRun
+  기본)는 무접촉. vercel.json 신설, schedule "0 18 * * *"(UTC) = KST 03:00
+  · ★안전 방어선 ⑥ 추가: 삭제 직전 verifyAllExpired로 재검사, 365일 미경과나 at 없는
+    항목이 하나라도 섞이면 그 사용자를 통째로 건너뛴다(부분 삭제 금지). POST 실파기도
+    같은 함수를 타게 통일 — 방어선이 한 곳에만 있으면 의미가 없다
+  · CRON_SECRET 미설정 시 전원 401(빈 Bearer 매칭 방지)
+- [탈퇴 정리] withdraw가 history만 지우고 originals:{uid}를 남기던 고아 문제 수리.
+  경로 소유권 가드(/originals/{uid}/) 후 Blob+인덱스 삭제. payment:*는 법정 5년이라
+  의도적으로 유지(주석에 근거 명시)
+  · 방침 제1조 1줄 정합: "탈퇴 시 히스토리만 파기" → "삭제하거나 탈퇴하면 즉시 파기"
+    — 최소보유 원칙이 1년 대기보다 낫고 분쟁 소지도 적다
+- [MJ 할 일] Vercel 대시보드에 CRON_SECRET 환경변수 등록(값 미생성 — 보고 참조).
+  등록 전까지 크론은 401로 아무 것도 지우지 않는다(안전 실패)
+
 ## 2026-07-26 (5차) — 개인정보처리방침 12조 전면 증보 (MEVU 대조)
 - MEVU 방침을 주제 체크리스트로만 사용, 전문 자체 작성. 핵심 추가: ★국외 이전
   고지 5개사(Google·OpenAI·Replicate·Vercel·Upstash — 법 28조의8 1항 3호 처리위탁

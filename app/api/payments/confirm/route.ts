@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       productName: product.name,
       uses: product.uses,
       paidAt: new Date().toISOString(),
-    }), { ex: 60 * 60 * 24 * 365 });
+    }), { ex: 60 * 60 * 24 * 1826 }); // 전자상거래법 제6조 — 계약·대금결제 기록 5년 보존 의무. 방침 제2조와 정합
 
     return NextResponse.json({
       success: true,

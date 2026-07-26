@@ -79,6 +79,31 @@ export async function POST(request: NextRequest) {
       } catch (e) {
         console.error("[withdraw] 클라우드 기록 삭제 실패:", (e as { message?: string })?.message);
       }
+
+      // 2-b) 유료 생성물 원본 삭제 (originals/{uid}/… + 인덱스)
+      //   방침 제1조 — "이용자가 삭제하거나 탈퇴하면 즉시 파기". 1년 만기를 기다리지 않는다
+      //   (개인정보 최소보유 원칙). 만기 파기는 크론(purge-expired)이 남은 것만 처리한다.
+      //   ★경로 소유권 가드 — originals/{uid}/ 를 포함하는 url만 지운다(purge-expired와 같은 관례).
+      try {
+        const items = await redis.lrange<{ urls?: string[] }>(`originals:${userId}`, 0, -1);
+        const urls = (Array.isArray(items) ? items : [])
+          .flatMap((i) => i?.urls || [])
+          .filter((u): u is string => typeof u === "string" && u.includes(`/originals/${userId}/`));
+        if (urls.length && process.env.BLOB_READ_WRITE_TOKEN) {
+          try {
+            await del(urls);
+          } catch {
+            /* Blob 삭제 실패는 무시 — 인덱스 삭제는 진행(고아 파일은 cleanup 대상) */
+          }
+        }
+        await redis.del(`originals:${userId}`);
+      } catch (e) {
+        console.error("[withdraw] 유료 원본 삭제 실패:", (e as { message?: string })?.message);
+      }
+
+      // ★payment:{uid}:* 는 삭제하지 않는다 —
+      //   전자상거래법 제6조상 계약·대금결제 기록은 5년 보존 의무가 있어, 탈퇴해도
+      //   법정 기간까지 다른 정보와 분리해 보관한다(방침 제2조·제6조).
     }
 
     // 3) unlink 성공이 확인된 뒤에만 세션 쿠키 삭제

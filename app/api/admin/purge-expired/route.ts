@@ -20,6 +20,13 @@
 //   body: { uid }                      → 해당 uid dryRun
 //   body: { uid, confirm:"DELETE" }    → 해당 uid 실제 파기
 //   body: { all: true }                → 전체 사용자 dryRun (실삭제 불가)
+//
+// GET /api/admin/purge-expired  (2026-07-26 추가)
+//   Vercel Cron 전용. Authorization: Bearer ${CRON_SECRET} 이 맞을 때만 전체 사용자를
+//   순회하며 ★실제 파기한다. 사람이 매일 누를 수 없어 자동화가 필요했고, 사람이 쓰는
+//   POST 경로(관리자·dryRun 기본)는 손대지 않았다.
+//   ★안전 방어선 ⑥: 삭제 직전 항목을 한 번 더 검사해 365일 미경과가 하나라도 섞이면
+//     그 사용자 처리를 통째로 건너뛴다(부분 삭제도 하지 않는다).
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { del } from "@vercel/blob";
@@ -57,6 +64,88 @@ async function scanUser(uid: string, now: number) {
   };
 }
 
+// ★안전 방어선 ⑥ — 삭제 목록 재검증. pickExpired가 이미 걸렀지만, 삭제는 되돌릴 수 없으므로
+// 지우기 직전에 한 번 더 본다. 하나라도 어긋나면 그 사용자는 통째로 건너뛴다(부분 삭제 금지).
+function verifyAllExpired(items: OriginalItem[], now: number): { ok: true } | { ok: false; reason: string } {
+  for (const o of items) {
+    if (typeof o?.at !== "number") return { ok: false, reason: `at 없음 (id=${o?.id ?? "?"})` };
+    const ageDays = Math.floor((now - o.at) / 86400_000);
+    if (now - o.at <= RETENTION_MS) return { ok: false, reason: `보유기간 미경과 ${ageDays}일 (id=${o.id ?? "?"})` };
+  }
+  return { ok: true };
+}
+
+// 한 사용자의 만료 원본을 실제로 파기. POST(관리자)·GET(크론)이 공유한다.
+async function purgeUser(uid: string, expired: OriginalItem[], now: number) {
+  const guard = verifyAllExpired(expired, now);
+  if (!guard.ok) {
+    console.error(`[purge-expired] ★중단 uid=${uid} — 삭제 목록에 부적격 항목: ${guard.reason}`);
+    return { aborted: true as const, reason: guard.reason, removed: 0, blobDeleted: 0, failed: [] as string[] };
+  }
+  const key = `originals:${uid}`;
+  let removed = 0, blobDeleted = 0;
+  const failed: string[] = [];
+  for (const item of expired) {
+    // ③ 경로 소유권 가드 — 본인 originals 경로만
+    for (const url of item.urls || []) {
+      if (!url.includes(`/originals/${uid}/`)) { failed.push(url); continue; }
+      try { if (process.env.BLOB_READ_WRITE_TOKEN) { await del(url); blobDeleted++; } }
+      catch (e) { failed.push(url); console.warn(`[purge-expired] Blob 삭제 실패:`, (e as Error)?.message); }
+    }
+    // ④ LREM은 저장 원문과 일치해야 하므로 파싱 객체 그대로 (문자열 재조립 금지)
+    try { await redis!.lrem(key, 1, item); removed++; }
+    catch (e) { console.error(`[purge-expired] LREM 실패 id=${item.id}:`, (e as Error)?.message); }
+  }
+  return { aborted: false as const, removed, blobDeleted, failed };
+}
+
+// welcome:* 키로 가입 사용자 uid 목록 확보 (원장 생성 시 1회 세팅되는 키)
+async function scanUids(): Promise<string[]> {
+  const uids: string[] = [];
+  let cursor = "0";
+  do {
+    const [next, keys] = await redis!.scan(cursor, { match: "welcome:*", count: 500 });
+    cursor = String(next);
+    for (const k of keys as string[]) uids.push(String(k).replace(/^welcome:/, ""));
+  } while (cursor !== "0");
+  return uids;
+}
+
+// ── Vercel Cron 전용 자동 파기 ──
+// CRON_SECRET 미설정이면 아무도 통과할 수 없다(빈 문자열 Bearer 매칭 방지).
+export async function GET(request: NextRequest) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret || request.headers.get("authorization") !== `Bearer ${secret}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (!redis) return NextResponse.json({ error: "Redis 미설정" }, { status: 500 });
+
+  const now = Date.now();
+  const uids = await scanUids();
+  let purgedUsers = 0, totalRemoved = 0, totalBlob = 0, totalFailed = 0;
+  const aborted: { uid: string; reason: string }[] = [];
+
+  for (const uid of uids) {
+    const r = await scanUser(uid, now);
+    if (r.expiredCount === 0) continue;
+    const res = await purgeUser(uid, r._rawExpired, now);
+    if (res.aborted) { aborted.push({ uid, reason: res.reason }); continue; }
+    purgedUsers++;
+    totalRemoved += res.removed;
+    totalBlob += res.blobDeleted;
+    totalFailed += res.failed.length;
+  }
+
+  const summary = {
+    mode: "cron", retentionDays: RETENTION_DAYS,
+    userCount: uids.length, purgedUsers,
+    deleted: totalRemoved, blobDeleted: totalBlob, failed: totalFailed,
+    abortedCount: aborted.length, aborted,
+  };
+  console.warn(`[purge-expired][cron] 사용자=${uids.length} 파기대상자=${purgedUsers} 인덱스제거=${totalRemoved} Blob삭제=${totalBlob} 실패=${totalFailed} 중단=${aborted.length}`);
+  return NextResponse.json(summary);
+}
+
 export async function POST(request: NextRequest) {
   const denied = adminGate(request, "purge-expired");
   if (denied) return denied;
@@ -75,15 +164,7 @@ export async function POST(request: NextRequest) {
         error: "전체 순회는 조회(dryRun)만 가능합니다. 실제 파기는 uid를 지정해 한 명씩 실행하세요.",
       }, { status: 400 });
     }
-    // welcome:* 키로 가입 사용자 uid 목록 확보 (원장 생성 시 1회 세팅되는 키)
-    const uids: string[] = [];
-    let cursor = "0";
-    do {
-      const [next, keys] = await redis.scan(cursor, { match: "welcome:*", count: 500 });
-      cursor = String(next);
-      for (const k of keys as string[]) uids.push(String(k).replace(/^welcome:/, ""));
-    } while (cursor !== "0");
-
+    const uids = await scanUids();
     const results = [];
     for (const u of uids) {
       const r = await scanUser(u, now);
@@ -111,28 +192,22 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // ── 실제 파기 ──
+  // ── 실제 파기 ── (크론과 동일한 함수 = 동일한 안전 방어선을 탄다)
   console.warn(`[ADMIN][purge-expired] ★실파기 시작 uid=${uid} 대상 ${r.expiredCount}건`);
-  const key = `originals:${uid}`;
-  let removed = 0, blobDeleted = 0;
-  const failed: string[] = [];
-  for (const item of r._rawExpired) {
-    // ③ 경로 소유권 가드 — 본인 originals 경로만
-    for (const url of item.urls || []) {
-      if (!url.includes(`/originals/${uid}/`)) { failed.push(url); continue; }
-      try { if (process.env.BLOB_READ_WRITE_TOKEN) { await del(url); blobDeleted++; } }
-      catch (e) { failed.push(url); console.warn(`[ADMIN][purge-expired] Blob 삭제 실패:`, (e as Error)?.message); }
-    }
-    // ④ LREM은 저장 원문과 일치해야 하므로 파싱 객체 그대로 (문자열 재조립 금지)
-    try { await redis.lrem(key, 1, item); removed++; }
-    catch (e) { console.error(`[ADMIN][purge-expired] LREM 실패 id=${item.id}:`, (e as Error)?.message); }
+  const res = await purgeUser(uid, r._rawExpired, now);
+  if (res.aborted) {
+    return NextResponse.json({
+      mode: "user", uid, dryRun: false, aborted: true, reason: res.reason,
+      deleted: 0, blobDeleted: 0,
+      note: "삭제 목록에 보유기간 미경과 항목이 섞여 있어 전체를 중단했습니다.",
+    }, { status: 409 });
   }
 
-  console.warn(`[ADMIN][purge-expired] uid=${uid} 인덱스제거=${removed} Blob삭제=${blobDeleted} 실패=${failed.length}`);
+  console.warn(`[ADMIN][purge-expired] uid=${uid} 인덱스제거=${res.removed} Blob삭제=${res.blobDeleted} 실패=${res.failed.length}`);
   return NextResponse.json({
     mode: "user", uid, dryRun: false, retentionDays: RETENTION_DAYS,
     total: r.total, expiredCount: r.expiredCount,
-    deleted: removed, blobDeleted, failed,
-    note: "약관 제3조 5항(생성일로부터 1년 보관 후 파기)에 따라 파기했습니다.",
+    deleted: res.removed, blobDeleted: res.blobDeleted, failed: res.failed,
+    note: "개인정보처리방침 제1조(생성일로부터 1년 보관 후 파기)에 따라 파기했습니다.",
   });
 }
