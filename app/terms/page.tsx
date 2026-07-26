@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import type { CSSProperties } from "react";
 
 // 공통 텍스트 스타일 — privacy 페이지와 동일 규격(법률 문서라 읽기 편한 여백·행간 우선)
@@ -15,6 +16,9 @@ const st: Record<string, CSSProperties> = {
 
 export default function TermsPage() {
   const router = useRouter();
+  // 하단 사업자 정보 — 기본 접힘(포털 푸터 관례). 법정 상시 표기는 설정 하단 블록이 담당하고
+  // 여기는 참고 표기라, 조문을 다 읽은 뒤의 시선을 가리지 않게 접어 둔다.
+  const [bizOpen, setBizOpen] = useState(false);
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10, borderBottom: "1px solid #EFF0F3" }}>
@@ -159,14 +163,24 @@ export default function TermsPage() {
           <p style={st.h2}>부칙</p>
           <p style={st.p}>이 약관은 2026년 7월 26일부터 시행합니다.</p>
 
-          <div style={{ ...st.box, marginTop: 22, marginBottom: 0 }}>
-            <p style={st.boxTitle}>사업자 정보</p>
-            <p style={st.kv}><span style={st.k}>상호 · </span>퍼스트컴퍼니</p>
-            <p style={st.kv}><span style={st.k}>대표 · </span>최민준</p>
-            <p style={st.kv}><span style={st.k}>사업자등록번호 · </span>415-26-00922</p>
-            <p style={st.kv}><span style={st.k}>주소 · </span>대구광역시 달서구 성서로45길 29, 1층 8호 (갈산동)</p>
-            <p style={st.kv}><span style={st.k}>전화 · </span>0507-1427-5058</p>
-            <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>문의 · </span>rnrwls159@naver.com</p>
+          {/* 세로 padding은 44px 탭 영역을 가진 헤더 버튼이 대신 만든다(접힘 상태 높이 제어) */}
+          <div style={{ ...st.box, marginTop: 22, marginBottom: 0, padding: "0 14px" }}>
+            <button onClick={() => setBizOpen(v => !v)} aria-expanded={bizOpen}
+              style={{ width: "100%", height: 44, display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: 0, cursor: "pointer" }}>
+              <span style={{ ...st.boxTitle, margin: 0 }}>사업자 정보</span>
+              <span style={{ ...st.k, fontSize: 12 }}>{bizOpen ? "▴" : "▾"}</span>
+            </button>
+            {bizOpen && (
+              // 행 추가는 여기 <p> 한 줄 — 통신판매업 신고번호가 들어올 자리
+              <div style={{ paddingBottom: 13 }}>
+                <p style={st.kv}><span style={st.k}>상호 · </span>퍼스트컴퍼니</p>
+                <p style={st.kv}><span style={st.k}>대표 · </span>최민준</p>
+                <p style={st.kv}><span style={st.k}>사업자등록번호 · </span>415-26-00922</p>
+                <p style={st.kv}><span style={st.k}>주소 · </span>대구광역시 달서구 성서로45길 29, 1층 8호 (갈산동)</p>
+                <p style={st.kv}><span style={st.k}>전화 · </span>0507-1427-5058</p>
+                <p style={{ ...st.kv, margin: 0 }}><span style={st.k}>문의 · </span>rnrwls159@naver.com</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
