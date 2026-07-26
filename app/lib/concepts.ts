@@ -18,8 +18,6 @@ export type Concept = {
   inputRule?: "solo_face" | "multi_face" | "pet" | "none";
 };
 
-// 코인 게이트 라이브 컨셉 — 스위치 날 여기에 전체 키를 넣는 것으로 일괄 전환 (단일 지점)
-export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
 
 // 홈 "인기" 칩에 노출할 엄선 20종 — 배열 순서가 곧 표시 순서(홈 카드가 있는 키만)
 export const POPULAR_KEYS: string[] = ["idblack", "idnavy", "biznavy", "bizgray", "lifeshot", "y2k", "luxe", "idol", "travel", "couple", "friend", "duofamily", "petstudio", "petcostume", "clay", "figure", "roman", "wedding", "graduation", "hairstyle"];
@@ -2578,6 +2576,12 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "soon",
   },
 };
+
+// 코인 게이트 라이브 컨셉 — ★2026-07-26 전면 활성화. 끄기 = 이 줄을 ["travel"] 등 리터럴로.
+//   전환 전 형태(부분 롤백 시 이 형태로 복원):
+//     export const LIVE_COIN_CONCEPTS: string[] = ["travel"];
+//   ★정의 위치는 CONCEPTS 뒤여야 한다 — Object.keys가 초기화 전 참조(TDZ)를 하면 런타임 에러.
+export const LIVE_COIN_CONCEPTS: string[] = Object.keys(CONCEPTS);
 
 export function conceptForGo(go: string): Concept {
   if (go === "baby") return CONCEPTS.baby;

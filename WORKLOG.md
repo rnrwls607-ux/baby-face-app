@@ -7,6 +7,30 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-26 (10차) — ★코인 전면 활성화(원장 스위치 ON)
+- [구조] 비용 진실원을 concepts.ts coinCost 하나로 통일. withCoin이
+  LIVE_COIN_CONCEPTS.includes(key) && CONCEPTS[key].coinCost를 읽어 resolved 산출,
+  resolved===0이면 기존 휴면 우회 그대로. route 152곳의 `withCoin("키", 0, …)`
+  두 번째 인자는 호환용으로 남기고 무시(void cost) — 페이지·route 파일 0개 수정
+- [스위치] LIVE_COIN_CONCEPTS = Object.keys(CONCEPTS) 파생.
+  ★끄기 = 이 한 줄을 ["travel"] 등 리터럴로 되돌리면 전부 휴면(전환 전 형태는
+  파일 주석에 보존). 롤백 1줄
+- [★TDZ 함정] 기존 정의가 22행(CONCEPTS 30행보다 앞)이라 그 자리에 Object.keys를
+  쓰면 초기화 전 참조로 런타임 에러. 정의를 CONCEPTS 종료 직후로 옮겨 해결
+- [가격표] 0코인 2종(nukki·upscale — withDailyFree 경로라 withCoin 미적용,
+  히어로 무료 필 유지) / 3코인 87종(재미추억 35·인생샷 18·반려동물 12·가족커플 11·
+  사장님 8·헤어뷰티 2·비즈니스 1) / 9코인 65종(비즈니스 34·증명사진 31 — 출력 3장).
+  withCoin 걸린 152 route 전부 CONCEPTS 등록 확인(비용 미정의 0건)
+- [검증] travel resolved 3 전후 동일 / 해석 분포 3코인 87·9코인 65가 표시층과
+  완전 일치 / 페이지 diff 0 / 빌드 Compiled successfully
+- [★미비점 — 다음 작업] idstyle·nukki·petstudio 3개 페이지에 클라 코인 게이트
+  (COIN_GATED·COIN_COST·잔액 캐시·즉시 부족 체크)가 통째로 없다. 어제 402 누락이던
+  그 3개와 동일. petstudio는 9코인인데 버튼에 코인 표시가 안 뜨고 즉시 체크도 없어
+  서버 왕복 후에야 402 시트가 뜬다(동작은 정상, UX 열위). idstyle은 은퇴 컨셉
+- [잔여 리스크] Toss 결제가 앱 웹뷰에서 카드사 앱 스킴(intent://·ispmobile://)을
+  띄울 수 있는지 미실측. allowNavigation은 *.kakao.com뿐 — 막히면 충전 불가라
+  과금만 켜진 상태가 된다. ★실기기 1회 확인이 활성화 직후 최우선
+
 ## 2026-07-26 (9차) — 비로그인 401 로그인 유도 시트(153페이지) + 402 누락 3페이지 보강
 - [문제] withCoin·withDailyFree는 비로그인에 401 "로그인이 필요해요"를 주는데,
   페이지들은 그걸 빨간 에러 박스로만 띄웠다 — 로그인 입구가 없는 막다른 골목.

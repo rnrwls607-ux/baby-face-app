@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { put } from "@vercel/blob";
 import { getUserId } from "./auth";
+// ★비용의 진실원 — concepts.ts는 import가 0개인 순수 데이터 모듈이라 순환 참조가 없다.
+import { CONCEPTS, LIVE_COIN_CONCEPTS } from "./concepts";
 
 export const WELCOME_COINS = 3; // 콜백·클라가 3을 하드코딩하지 않도록 여기 하나만 본다
 const LOG_MAX = 500;
@@ -168,13 +170,19 @@ export function withDailyFree(conceptKey: string, dailyLimit: number, handler: R
   };
 }
 
+// cost 인자는 호환용으로 남겨둔다 — ★진실원은 concepts.ts의 coinCost이고 이 인자는 무시된다.
+// (route 152곳의 `withCoin("키", 0, handler)` 표기를 건드리지 않고 스위치를 켜기 위한 선택.
+//  표시층(페이지의 CONCEPTS.키?.coinCost)과 과금층이 같은 값을 읽어 어긋날 수 없다.)
 export function withCoin(conceptKey: string, cost: number, handler: RouteHandler): RouteHandler {
   return async (request: NextRequest, ...args: unknown[]): Promise<Response> => {
-    // 💤 휴면 모드: cost 0이면 로그인 확인·inflight 락·잔액체크(402)·차감·Blob 저장을 전부 건너뛰고
-    //    핸들러로 바로 통과 → 이 래퍼가 붙어도 라이브 동작은 wrapping 전과 100% 동일하다.
-    //    IAP 롤아웃 D-day에 cost를 실가격(예: 3·9)으로 바꾸면 위 게이트 전부가 한꺼번에 켜진다.
-    //    (cost > 0 경로는 아래 기존 로직 그대로 — 이 조기 반환은 cost === 0에서만 작동.)
-    if (cost === 0) {
+    // 💤 휴면 모드: 해석된 비용이 0이면 로그인 확인·inflight 락·잔액체크(402)·차감·Blob 저장을
+    //    전부 건너뛰고 핸들러로 바로 통과 → 래퍼가 붙어도 동작은 wrapping 전과 100% 동일하다.
+    //    끄기: concepts.ts의 LIVE_COIN_CONCEPTS를 리터럴 배열로 되돌리면 전부 휴면으로 돌아간다.
+    //    ★CONCEPTS 미등록 키는 0(무료)으로 fail-open — 잘못 과금하는 것보다 안전하다.
+    const live = LIVE_COIN_CONCEPTS.includes(conceptKey);
+    const resolved = live ? (CONCEPTS[conceptKey]?.coinCost ?? 0) : 0;
+    void cost; // 위 주석대로 미사용 — 시그니처만 유지
+    if (resolved === 0) {
       return handler(request, ...args);
     }
     if (!redis) {
@@ -194,21 +202,21 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
 
     try {
       const balance = await getBalance(uid);
-      if (balance < cost) {
-        return NextResponse.json({ error: "코인이 부족해요", need: cost, balance }, { status: 402 });
+      if (balance < resolved) {
+        return NextResponse.json({ error: "코인이 부족해요", need: resolved, balance }, { status: 402 });
       }
 
       const res = await handler(request, ...args);
 
-      // cost > 0 조건: 0코인 래퍼(upscale·nukki 예정)는 차감·원본 저장 경로를 자동으로 안 탄다
-      if (res.status < 400 && cost > 0) {
-        const after = await redis.decrby(COIN_KEY(uid), cost);
+      // resolved > 0 조건: 무료(0코인) 컨셉은 차감·원본 저장 경로를 자동으로 안 탄다
+      if (res.status < 400 && resolved > 0) {
+        const after = await redis.decrby(COIN_KEY(uid), resolved);
         if (after < 0) {
           console.warn(`[coins] 잔액 음수 감지 uid=${uid} concept=${conceptKey} after=${after} — 0으로 복원`);
           await redis.set(COIN_KEY(uid), 0);
         }
         const ledgerId = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-        await pushLog(uid, { type: "spend", amount: -cost, ref: conceptKey, id: ledgerId, at: Date.now() });
+        await pushLog(uid, { type: "spend", amount: -resolved, ref: conceptKey, id: ledgerId, at: Date.now() });
 
         // ── 유료 원본 영구 저장 (정책: 차감 생성물만 / 표시=1000px 축소본·다운로드=원본 이원화) ──
         // 실패·3초 초과 시 생성·차감은 그대로 유지하고 로그만 남긴다 — 응답 무지연 원칙
@@ -224,7 +232,7 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
                 Promise.all(outputs.map((u, i) => putOriginal(uid, ledgerId, i, u))),
                 new Promise<never>((_, rej) => setTimeout(() => rej(new Error("원본 업로드 3초 초과")), 3000)),
               ]);
-              await redis.lpush(ORIGINALS_KEY(uid), { id: ledgerId, urls: originalUrls, concept: conceptKey, coins: cost, at: Date.now() });
+              await redis.lpush(ORIGINALS_KEY(uid), { id: ledgerId, urls: originalUrls, concept: conceptKey, coins: resolved, at: Date.now() });
               await redis.ltrim(ORIGINALS_KEY(uid), 0, 499);
             } catch (err) {
               console.error(`[coins] 원본 저장 실패(생성·차감 유지) uid=${uid} concept=${conceptKey}:`, (err as Error)?.message);
