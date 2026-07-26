@@ -8,7 +8,7 @@
 // 막다른 골목이었다. 히어로 "무료" 탭으로 들어온 nukki·upscale 유입자도 같은 벽을 만났다.
 import { useEffect, useState } from "react";
 import { LOGIN_SHEET_EVENT } from "../lib/loginSheet";
-import { WELCOME_COINS } from "../lib/coins";
+import { WELCOME_COINS } from "../lib/coin-constants"; // ★coins.ts 금지 — Redis SDK가 클라 번들에 딸려온다
 import { useBackClose } from "../lib/useBackClose";
 
 export default function LoginNeededSheet() {

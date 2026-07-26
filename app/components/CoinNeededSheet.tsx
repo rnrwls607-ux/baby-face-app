@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { COIN_SHEET_EVENT, type CoinSheetDetail } from "../lib/coinSheet";
 import { COIN_PRODUCT_LIST } from "../lib/products";
 import { useBackClose } from "../lib/useBackClose";
-import { WELCOME_COINS } from "../lib/coins";
+import { WELCOME_COINS } from "../lib/coin-constants"; // ★coins.ts 금지 — Redis SDK가 클라 번들에 딸려온다
 
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 

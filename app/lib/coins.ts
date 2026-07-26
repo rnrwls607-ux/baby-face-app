@@ -7,8 +7,12 @@ import { put } from "@vercel/blob";
 import { getUserId, getAnyUserId } from "./auth";
 // ★비용의 진실원 — concepts.ts는 import가 0개인 순수 데이터 모듈이라 순환 참조가 없다.
 import { CONCEPTS, LIVE_COIN_CONCEPTS } from "./concepts";
+import { WELCOME_COINS } from "./coin-constants";
 
-export const WELCOME_COINS = 3; // 콜백·클라가 3을 하드코딩하지 않도록 여기 하나만 본다
+// 웰컴 코인 수는 서버 의존 0인 coin-constants에서 온다 — 클라 시트가 coins.ts를
+// import하면 @upstash/redis가 클라 번들에 끌려 들어가기 때문이다(13차 실측).
+// 기존 서버 호출부 호환을 위해 여기서 재export한다.
+export { WELCOME_COINS };
 const LOG_MAX = 500;
 
 // 키 네이밍 (order:는 충전 단계에서 멱등 플래그로 사용 예정 — 예약)

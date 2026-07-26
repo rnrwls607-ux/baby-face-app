@@ -7,6 +7,21 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-27 (14차) — WELCOME_COINS 상수 분리, 클라 번들 Redis SDK 제거
+- [원인] 9차에서 LoginNeededSheet가 웰컴 개수를 쓰려고 coins.ts를 import했다.
+  coins.ts는 @upstash/redis·@vercel/blob·next/server를 끌고 오는 서버 모듈이라
+  Redis SDK가 통째로 클라 청크에 실렸다(13차 실측 135KB)
+- [수리] app/lib/coin-constants.ts 신규 — import 0개인 순수 상수 파일.
+  coins.ts는 여기서 import 후 재export(서버 호출부 무수정), 두 시트는 경로만 교체
+- [★실측] 리빌드 후 Redis SDK 포함 클라 청크 1개(135KB) → 0개.
+  KV_REST_API 참조 청크도 0. 남은 "upstash" 문자열 1건은 privacy 페이지의
+  국외 위탁사 목록(정상 콘텐츠)
+- [보안] 애초에 토큰 값은 안 샜다 — NEXT_PUBLIC_ 없는 env는 클라 빌드에서
+  치환되지 않아 변수명만 남고 런타임 undefined였다. 순수 용량·위생 문제였음
+- [출처 단일화] WELCOME_COINS 정의는 coin-constants 1곳뿐. 리터럴 3 잔존 0
+- [재발 방지] coin-constants.ts 주석에 "이 파일에는 어떤 import도 두지 않는다"를
+  못박았다. 클라 컴포넌트 중 coins.ts를 import하는 곳 0건 확인
+
 ## 2026-07-27 (13차) — 402 시트 게스트 소프트 로그인 줄(B) — 게스트 신원 라운드 종결
 - [줄] "필요 N · 보유 M" 아래(canCharge 양 분기 공통)에 게스트 전용 안내 1줄 +
   보조 버튼("카카오로 시작하기"). 테두리·회색 톤이라 아래 상품 버튼(핑크)보다
