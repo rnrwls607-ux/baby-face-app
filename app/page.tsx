@@ -252,8 +252,12 @@ function showD6() {
   try {
     if (d6Shown || typeof document === "undefined") return;
     d6Shown = true;
+    // nav 읽는 법: 0B = 순수 캐시 서빙(네트워크 미경유) / 수백B+304 = 재검증 /
+    //              수KB+200 = 네트워크 본문. no-store가 먹으면 항상 마지막이어야 한다.
+    const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
     const msg = "D6 SW=" + (navigator.serviceWorker?.controller ? "제어중" : "없음")
-      + " Cap=" + !!((window as { Capacitor?: unknown }).Capacitor);
+      + " Cap=" + !!((window as { Capacitor?: unknown }).Capacitor)
+      + " nav=" + (nav ? Math.round(nav.transferSize) + "B/" + ((nav as { responseStatus?: number }).responseStatus ?? "?") : "?");
     const d = document.createElement("div");
     d.textContent = msg;
     d.style.cssText = "position:fixed;left:8px;right:8px;bottom:" + (90 + d6Count * 52) + "px;z-index:99999;"
