@@ -4,7 +4,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { put } from "@vercel/blob";
-import { getUserId } from "./auth";
+import { getUserId, getAnyUserId } from "./auth";
 // ★비용의 진실원 — concepts.ts는 import가 0개인 순수 데이터 모듈이라 순환 참조가 없다.
 import { CONCEPTS, LIVE_COIN_CONCEPTS } from "./concepts";
 
@@ -100,6 +100,8 @@ async function pushLog(uid: string, entry: CoinLogEntry): Promise<void> {
 // 반환: 이번 호출에서 처음 지급했으면 true, 이미 받은 계정이면 false.
 export async function ensureWelcome(uid: string): Promise<boolean> {
   if (!redis) return false;
+  // 게스트 웰컴 금지 — 쿠키 초기화 파밍 차단. 호출부가 늘어도 여기서 방어한다.
+  if (uid.startsWith("g_")) return false;
   const first = await redis.set(WELCOME_KEY(uid), 1, { nx: true });
   if (first !== "OK") return false;
   await redis.incrby(COIN_KEY(uid), WELCOME_COINS);
@@ -114,6 +116,8 @@ export async function getBalance(uid: string): Promise<number> {
 
 // 충전 게이트: COIN_ADMIN_IDS(콤마 구분)에 있거나 COIN_CHARGE_OPEN==="true"면 허용
 export function chargeAllowed(uid: string): boolean {
+  // 게스트 충전 금지 — 게스트 구매는 Play IAP 라운드에서 다룬다.
+  if (uid.startsWith("g_")) return false;
   const admins = (process.env.COIN_ADMIN_IDS || "").split(",").map((s) => s.trim()).filter(Boolean);
   return admins.includes(uid) || process.env.COIN_CHARGE_OPEN === "true";
 }
@@ -124,6 +128,11 @@ export async function creditCoins(uid: string, coins: number, ref: string): Prom
   const balance = await redis.incrby(COIN_KEY(uid), coins);
   await pushLog(uid, { type: "charge", amount: coins, ref, at: Date.now() });
   return balance;
+}
+
+// Vercel 엣지가 x-forwarded-for를 재작성하므로 첫 값이 클라이언트 IP다(클라 위조는 덮어써진다).
+function getClientIp(request: NextRequest): string {
+  return (request.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
 }
 
 type RouteHandler = (request: NextRequest, ...args: unknown[]) => Promise<Response>;
@@ -137,7 +146,7 @@ export function withDailyFree(conceptKey: string, dailyLimit: number, handler: R
       return handler(request, ...args);
     }
 
-    const uid = getUserId(request);
+    const uid = getAnyUserId(request);
     if (!uid) return NextResponse.json({ error: "로그인이 필요해요" }, { status: 401 });
 
     await ensureWelcome(uid);
@@ -150,7 +159,10 @@ export function withDailyFree(conceptKey: string, dailyLimit: number, handler: R
     try {
       // KST 날짜가 키에 박혀 자정 경계는 키 교체로 자동 리셋 (서버는 UTC — +9h 보정)
       const kstDate = new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 10);
-      const key = `free:${conceptKey}:${uid}:${kstDate}`;
+      // 게스트는 IP 한도 — 쿠키 리셋 파밍 차단(07-20 로그인 방어의 대체).
+      // 카카오 회원은 기존 uid 키를 그대로 쓴다.
+      const scope = uid.startsWith("g_") ? `ip:${getClientIp(request)}` : uid;
+      const key = `free:${conceptKey}:${scope}:${kstDate}`;
       const used = await redis.incr(key); // INCR 선행 — 재시도 남발에도 안전
       await redis.expire(key, 172800);
       if (used > dailyLimit) {
@@ -190,7 +202,9 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
       return handler(request, ...args);
     }
 
-    const uid = getUserId(request);
+    // 게스트 포함 신원 — 게스트는 웰컴 no-op → inflight → 잔액 0 → 402로 자연히 흘러간다.
+    // 401은 쿠키가 전면 차단된 극단 케이스의 안전망으로만 남는다.
+    const uid = getAnyUserId(request);
     if (!uid) return NextResponse.json({ error: "로그인이 필요해요" }, { status: 401 });
 
     await ensureWelcome(uid);

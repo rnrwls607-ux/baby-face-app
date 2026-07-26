@@ -7,6 +7,32 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-27 (12차) — ★게스트 신원 도입: 비로그인 생성 개방
+- [발급] proxy.ts 신규 — mospic_guest 쿠키 부재 시 "g_"+randomUUID(httpOnly·secure·
+  lax·1년). 페이지 요청만 매처(api·_next·확장자 제외). 발급 지점이 하나라 이중 발급·
+  누락이 원천 차단. 동시 첫 요청 경합은 마지막 Set-Cookie 승자로 수렴, 패자 키는
+  TTL로 소멸(free:*는 2일, coin은 게스트 잔액 0이라 생성 자체가 안 됨)
+- [★Next 16 deprecation] middleware 규약이 deprecated라 proxy.ts로 만들었다
+  (함수명도 proxy). 1차 시도에서 middleware.ts로 만들었더니 빌드가 경고를 냈고,
+  node_modules/next/dist/docs/.../proxy.md 확인 후 전환 — 경고 소멸
+- [신원] auth.ts에 getAnyUserId 신설: 카카오 우선, 없으면 mospic_guest(형식
+  /^g_[0-9a-f-]{36}$/ 검증). getUserId는 무수정 — "카카오 회원인가" 판별자로
+  결제·탈퇴·관리자 판정에 계속 쓰인다
+- [차단 2종] ensureWelcome·chargeAllowed 최상단에 g_ 게이트. 호출부가 늘어도
+  함수가 스스로 지킨다(웰컴 호출부는 이번 라운드에만 3→4곳으로 늘었다)
+- [무료 도구] withDailyFree 키를 게스트는 free:{concept}:ip:{x-forwarded-for 첫값}:
+  {KST일자}로 분기 — 쿠키 리셋 파밍 차단(07-20 로그인 방어의 대체). 카카오는 uid 원형
+- [게스트 흐름] withCoin은 분기 추가 0으로 성립: 웰컴 no-op → inflight → 잔액 0 →
+  402. /api/coins 401 해제로 게스트가 balance 0을 받아 153페이지 즉시 부족 체크가
+  서버 왕복 없이 발화(페이지 수정 0)
+- [무접촉] history·generate·usage·payments·withdraw·me·admin은 카카오 전용 유지
+- [★IAP 라운드 선행 조건] ①로그인 시 게스트 잔액 병합(C커밋) — 지금은 게스트가
+  충전을 못 해 잔액이 항상 0이라 무해하지만, 게스트 IAP를 열면 즉시 필수
+  ②게스트 IAP 개방 시 약관 제6조① "코인 구매…회원만" 문구 수정
+  ③purge-expired가 welcome:* 스캔이라 게스트를 못 본다 → coin:* 기준으로 변경
+- [백로그] 복붙 getUserId 7곳(generate·history 4종·usage·payments/confirm) 공용
+  유틸 통일 — 지금은 무접촉이 맞지만, 게스트 히스토리를 열면 필요해진다
+
 ## 2026-07-27 (11차) — 코인 클라 게이트 3페이지 보강, 153 전 페이지 동형화
 - [대상] idstyle·nukki·petstudio — 어제 402 누락이던 그 3개. 코인 클라 게이트
   (COIN_GATED·COIN_COST·잔액 캐시·즉시 부족 체크·버튼 코인 표기)가 통째로 없었다
