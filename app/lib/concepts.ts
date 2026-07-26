@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   resultCount?: number;
@@ -869,6 +869,54 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "toon3d",
     detailImage: "/details/toon3d.webp",
     inputRule: "solo_face",
+  },
+  goldenhour: {
+    key: "goldenhour",
+    coinCost: 3,
+    title: "골든아워",
+    subtitle: "흐린 오후도 가장 아름다운 빛으로",
+    emoji: "🌅",
+    accent: "#FBEEDF",
+    description: "평범한 오후 사진을 하루 중 가장 아름다운 노을빛으로 바꿔드려요. 건물도 사람도 그대로, 빛과 하늘만 황금빛이 돼요.",
+    examples: [
+      { emoji: "🌅", accent: "#FBEEDF" },
+      { emoji: "🌇", accent: "#FDE8D5" },
+      { emoji: "✨", accent: "#FFF6E0" },
+    ],
+    start: "goldenhour",
+    detailImage: "/details/goldenhour.webp",
+  },
+  fixnight: {
+    key: "fixnight",
+    coinCost: 3,
+    title: "야간 사진 구제",
+    subtitle: "어두운 밤 사진, 밤은 그대로 선명하게",
+    emoji: "🌙",
+    accent: "#E7EAF3",
+    description: "너무 어둡고 지저분하게 나온 밤 사진을 깨끗하고 밝게 되살려드려요. 낮처럼 만들지 않고, 밤 분위기는 그대로 둡니다.",
+    examples: [
+      { emoji: "🌙", accent: "#E7EAF3" },
+      { emoji: "🌃", accent: "#E3E7F2" },
+      { emoji: "💡", accent: "#FFF3DC" },
+    ],
+    start: "fixnight",
+    detailImage: "/details/fixnight.webp",
+  },
+  season: {
+    key: "season",
+    coinCost: 3,
+    title: "계절 변환",
+    subtitle: "같은 자리를 봄·여름·가을·겨울로",
+    emoji: "🍂",
+    accent: "#F7E9DE",
+    description: "같은 장소, 같은 순간을 원하는 계절로 바꿔드려요. 벚꽃·녹음·단풍·눈 중에서 고르면 나무도 하늘도 그 계절이 됩니다.",
+    examples: [
+      { emoji: "🌸", accent: "#FCEAF1" },
+      { emoji: "🍁", accent: "#F7E9DE" },
+      { emoji: "❄️", accent: "#E9EFF7" },
+    ],
+    start: "season",
+    detailImage: "/details/season.webp",
   },
   halloween: {
     key: "halloween",
