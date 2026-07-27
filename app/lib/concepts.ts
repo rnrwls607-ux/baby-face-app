@@ -2729,5 +2729,15 @@ export function conceptForGo(go: string): Concept {
   if (go === "fourcut") return CONCEPTS.fourcut;
   if (go === "fourcutillust") return CONCEPTS.fourcutillust;
   if (go === "fourcutcouple") return CONCEPTS.fourcutcouple;
+  // 신규 9종 — 이 줄이 없으면 홈 카드를 눌러도 soon("준비 중") 시트가 뜬다
+  if (go === "goldenhour") return CONCEPTS.goldenhour;
+  if (go === "fixnight") return CONCEPTS.fixnight;
+  if (go === "season") return CONCEPTS.season;
+  if (go === "fixbacklight") return CONCEPTS.fixbacklight;
+  if (go === "bgchange") return CONCEPTS.bgchange;
+  if (go === "fixcrowd") return CONCEPTS.fixcrowd;
+  if (go === "beauty") return CONCEPTS.beauty;
+  if (go === "anisky") return CONCEPTS.anisky;
+  if (go === "brickfigure") return CONCEPTS.brickfigure;
   return CONCEPTS.soon;
 }

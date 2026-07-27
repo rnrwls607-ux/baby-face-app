@@ -329,16 +329,15 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "paperart", title: "페이퍼 아트", subtitle: "겹겹이 오려 만든 나", emoji: "✂️", accent: "#FBEEDF", badge: "NEW", tags: ["재미"], go: "paperart", image: "/cards/paperart.webp" },
       { id: "stickerpack", title: "스티커팩", subtitle: "여섯 컷 나만의 스티커", emoji: "🏷️", accent: "#FFF0D9", badge: "NEW", tags: ["재미"], go: "stickerpack", image: "/cards/stickerpack.webp" },
       { id: "toon3d", title: "3D 캐릭터 초상", subtitle: "극장판 주인공이 된 나", emoji: "🎬", accent: "#E7EDFB", badge: "NEW", tags: ["재미"], go: "toon3d", image: "/cards/toon3d.webp" },
-      // ★썸네일 반입 후 주석 해제 (완전체 원칙 — /cards/{key}.webp 없으면 깨진 이미지)
-      // { id: "goldenhour", title: "골든아워", subtitle: "흐린 오후도 가장 아름다운 빛으로", emoji: "🌅", accent: "#FBEEDF", image: "/cards/goldenhour.webp", badge: "NEW", tags: ["인생샷"], go: "goldenhour" },
-      // { id: "fixnight", title: "야간 사진 구제", subtitle: "어두운 밤 사진, 밤은 그대로 선명하게", emoji: "🌙", accent: "#E7EAF3", image: "/cards/fixnight.webp", badge: "NEW", tags: ["인생샷"], go: "fixnight" },
-      // { id: "season", title: "계절 변환", subtitle: "같은 자리를 봄·여름·가을·겨울로", emoji: "🍂", accent: "#F7E9DE", image: "/cards/season.webp", badge: "NEW", tags: ["재미"], go: "season" },
-      // { id: "fixbacklight", title: "역광 구제", subtitle: "시커먼 얼굴은 환하게, 역광 감성은 그대로", emoji: "🔆", accent: "#FCEEDA", image: "/cards/fixbacklight.webp", badge: "NEW", tags: ["인생샷"], go: "fixbacklight" },
-      // { id: "bgchange", title: "배경 교체", subtitle: "나는 그대로, 배경만 바꿔요", emoji: "🖼️", accent: "#EDEDF0", image: "/cards/bgchange.webp", badge: "NEW", tags: ["인생샷"], go: "bgchange" },
-      // { id: "fixcrowd", title: "행인 지우개", subtitle: "낯선 사람들만 감쪽같이, 그 자리는 온전히", emoji: "🧹", accent: "#E3F0F2", image: "/cards/fixcrowd.webp", badge: "NEW", tags: ["인생샷"], go: "fixcrowd" },
-      // { id: "beauty", title: "뷰티 보정", subtitle: "쌩얼도, 메이크업 받은 날처럼", emoji: "💄", accent: "#FBE7EE", image: "/cards/beauty.webp", badge: "NEW", tags: ["헤어·뷰티"], go: "beauty" },
-      // { id: "anisky", title: "애니 감성", subtitle: "평범한 오후를 애니 영화의 한 장면으로", emoji: "⛅", accent: "#E2ECFA", image: "/cards/anisky.webp", badge: "NEW", tags: ["재미"], go: "anisky" },
-      // { id: "brickfigure", title: "블록 피규어", subtitle: "내 하루가 귀여운 블록 세상으로", emoji: "🧱", accent: "#FBEFD6", image: "/cards/brickfigure.webp", badge: "NEW", tags: ["재미"], go: "brickfigure" },
+      { id: "goldenhour", title: "골든아워", subtitle: "흐린 오후도 가장 아름다운 빛으로", emoji: "🌅", accent: "#FBEEDF", image: "/cards/goldenhour.webp", badge: "NEW", tags: ["인생샷"], go: "goldenhour" },
+      { id: "fixnight", title: "야간 사진 구제", subtitle: "어두운 밤 사진, 밤은 그대로 선명하게", emoji: "🌙", accent: "#E7EAF3", image: "/cards/fixnight.webp", badge: "NEW", tags: ["인생샷"], go: "fixnight" },
+      { id: "season", title: "계절 변환", subtitle: "같은 자리를 봄·여름·가을·겨울로", emoji: "🍂", accent: "#F7E9DE", image: "/cards/season.webp", badge: "NEW", tags: ["재미"], go: "season" },
+      { id: "fixbacklight", title: "역광 구제", subtitle: "시커먼 얼굴은 환하게, 역광 감성은 그대로", emoji: "🔆", accent: "#FCEEDA", image: "/cards/fixbacklight.webp", badge: "NEW", tags: ["인생샷"], go: "fixbacklight" },
+      { id: "bgchange", title: "배경 교체", subtitle: "나는 그대로, 배경만 바꿔요", emoji: "🖼️", accent: "#EDEDF0", image: "/cards/bgchange.webp", badge: "NEW", tags: ["인생샷"], go: "bgchange" },
+      { id: "fixcrowd", title: "행인 지우개", subtitle: "낯선 사람들만 감쪽같이, 그 자리는 온전히", emoji: "🧹", accent: "#E3F0F2", image: "/cards/fixcrowd.webp", badge: "NEW", tags: ["인생샷"], go: "fixcrowd" },
+      { id: "beauty", title: "뷰티 보정", subtitle: "쌩얼도, 메이크업 받은 날처럼", emoji: "💄", accent: "#FBE7EE", image: "/cards/beauty.webp", badge: "NEW", tags: ["헤어·뷰티"], go: "beauty" },
+      { id: "anisky", title: "애니 감성", subtitle: "평범한 오후를 애니 영화의 한 장면으로", emoji: "⛅", accent: "#E2ECFA", image: "/cards/anisky.webp", badge: "NEW", tags: ["재미"], go: "anisky" },
+      { id: "brickfigure", title: "블록 피규어", subtitle: "내 하루가 귀여운 블록 세상으로", emoji: "🧱", accent: "#FBEFD6", image: "/cards/brickfigure.webp", badge: "NEW", tags: ["재미"], go: "brickfigure" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], image: "/cards/interior.webp", go: "interior" },
@@ -510,11 +509,10 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
 // 줄을 누르면 그 카테고리가 선택된 전체보기 오버레이가 열린다(뒤로가기는 useBackClose가 처리).
 // value = HOME_PILLS의 value와 같아야 오버레이 칩이 함께 켜진다.
 // thumbs = /cards/{key}.webp — 원형으로 겹쳐 보여줄 대표 3장.
-//   ★헤어·뷰티만 2장이다. GO_CATEGORIES 소속이 hairstyle·idol 2종뿐이라 억지로 채우지 않았다
-//   (메이크업 라인이 나오면 자연히 3장이 된다).
+//   헤어·뷰티는 오래 2장이었다(hairstyle·idol). beauty(뷰티 보정)가 합류해 예고대로 3장이 됐다.
 const INDEX_ROWS: { no: string; name: string; desc: string; value: string; thumbs: string[] }[] = [
   { no: "01", name: "인생샷", desc: "일상을 화보처럼", value: "lifeshot", thumbs: ["lifeshot", "luxe", "travel"] },
-  { no: "02", name: "헤어·뷰티", desc: "시술 전 미리보기", value: "beauty", thumbs: ["hairstyle", "idol"] },
+  { no: "02", name: "헤어·뷰티", desc: "시술 전 미리보기", value: "beauty", thumbs: ["hairstyle", "idol", "beauty"] },
   { no: "03", name: "반려동물", desc: "우리 아이 첫 스튜디오 화보", value: "pet", thumbs: ["petstudio", "petcostume", "pet"] },
   { no: "04", name: "가족·커플", desc: "함께라서 더 예쁜 한 장", value: "family", thumbs: ["couple", "wedding", "duofamily"] },
   { no: "05", name: "재미·추억", desc: "오늘의 웃음 한 장", value: "fun", thumbs: ["baby", "clay", "y2k"] },
