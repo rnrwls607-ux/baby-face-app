@@ -2,6 +2,7 @@
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
+import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
@@ -85,6 +86,8 @@ export default function MenuPage() {
       });
       clearTimeout(tid);
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
       if (res.status === 402) { openCoinSheet({ need: data.need ?? 0, balance: data.balance ?? 0 }); return; }
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
@@ -161,6 +164,7 @@ export default function MenuPage() {
         {error && (
           <div style={{ background: "#FFEAF1", border: "1px solid #FF4B7C33", borderRadius: 12, padding: "13px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 700 }}>⚠️ {error}</p>
+            {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}
         {result && (
