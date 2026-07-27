@@ -86,7 +86,7 @@ const OVERSEAS = [
     items: "회원번호 기준 이용 수량·코인 잔액",
     how: "서비스 이용 시",
     purpose: "이용량 관리·부정 이용 방지",
-    period: "회원 탈퇴 시까지",
+    period: "회원 탈퇴 시까지 (단, 웰컴 코인 지급 여부는 재가입 부정 수령 방지를 위해 탈퇴 후에도 보관합니다)",
     contact: "upstash.com",
   },
 ];

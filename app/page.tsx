@@ -11,7 +11,7 @@ import { APP_VERSION } from "./lib/version";
 import { useBackClose } from "./lib/useBackClose";
 import Upscale4K from "./components/Upscale4K";
 import CoinWallet from "./components/CoinWallet";
-import AiReportLink, { aiReportMailto } from "./components/AiReportLink";
+import { aiReportMailto } from "./components/AiReportLink";
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY || "test_ck_vZnjEJeQVxn5Ol1JZgbd8PmOoBN0";
 type KakaoUser = { id: string; nickname: string; profileImage: string | null; email: string | null };
 type Tab = "home" | "ticket" | "coupon" | "history";

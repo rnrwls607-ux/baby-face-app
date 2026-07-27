@@ -101,6 +101,21 @@ export async function POST(request: NextRequest) {
         console.error("[withdraw] 유료 원본 삭제 실패:", (e as { message?: string })?.message);
       }
 
+      // 2-c) 코인 잔액·사용 내역 삭제
+      //   방침 제1조 "회원 탈퇴 시 지체 없이 파기" · 제5조 위탁표(Upstash "이용 수량·코인 잔액")와
+      //   정합. coinlog는 어떤 컨셉을 언제 썼는지가 남는 이용 이력이라 반드시 함께 지운다.
+      //   unlink는 이미 성공했으므로 여기 실패는 탈퇴를 막지 않는다(로그로만 추적).
+      try {
+        await redis.del(`coin:${userId}`);
+        await redis.del(`coinlog:${userId}`);
+      } catch (e) {
+        console.error("[withdraw] 코인 데이터 삭제 실패:", (e as { message?: string })?.message);
+      }
+
+      // ★welcome:{uid} 는 삭제하지 않는다 —
+      //   재가입 웰컴 파밍 차단. privacy 제5조에 예외 고지됨.
+      //   (지우면 탈퇴→재가입을 반복해 웰컴 코인을 무한히 받을 수 있다)
+
       // ★payment:{uid}:* 는 삭제하지 않는다 —
       //   전자상거래법 제6조상 계약·대금결제 기록은 5년 보존 의무가 있어, 탈퇴해도
       //   법정 기간까지 다른 정보와 분리해 보관한다(방침 제2조·제6조).
