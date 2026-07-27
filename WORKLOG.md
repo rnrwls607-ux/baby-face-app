@@ -7,6 +7,49 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-27 — ★신규 컨셉 9종 배치 완결 (검증→코드화→킷→BA, 155종 체제)
+- [배치 여정] 최초 10종안에서 실측 왕복으로 재편 — film·mono 탈락(MJ), dslr 탈락("누가
+  언제 쓰나" 테스트 실패), 신규 투입 anisky(애니 감성 릴스 트렌드)·brickfigure(블록
+  인증샷 트렌드) → 최종 9종: goldenhour·fixnight·season·fixbacklight·bgchange·
+  fixcrowd·beauty·anisky·brickfigure (전부 1장 출력=3코인 휴면, 그룹B)
+- [★엔진 지형 확립] 검증 왕복의 산물 — GPT=과감하나 합성감 / flash=자연스러우나 원본
+  침식 / Pro=장면 재구성+자연광. 결론: "원본 보존이 생명인 편집=GPT / 장면을 새로 짓는
+  게 본질=Pro / 색·톤만=flash". 최종 Pro 3(goldenhour·fixnight·season)·GPT 6
+- [프롬프트 자산 신규] SCENE & IDENTITY LOCK(빛 계열 공유) / GROUND LOCK+오버레이
+  테스트(goldenhour v5 — 지상 잠금·하늘 자유) / SKIN TRUTH(beauty — 신규 점 생성 금지
+  최상단+자가검증) / ANTI-COMPOSITE 4종(bgchange — 라이트랩·접지그림자·경계·원카메라) /
+  저작권 가드(anisky 작품명 금지·brickfigure 완구 브랜드 금지 — voxel 문법)
+- [코드화 3차] e69bd99(Pro 3종) → ecfc3ed(GPT 3종) → 3eaef4e(GPT 3종+fixnight 가이드
+  정합). ★구제 컨셉 표준 신설: 입력=망한 사진인 컨셉(fixnight·fixbacklight·fixcrowd)은
+  업로드 가이드 미표시(가이드의 "잘 찍기"가 입력 전제와 모순)
+- [bgchange 칩 확장 321c2fd] 원버튼→5칩(studio·cafe·beach·night·garden), CORE+SCENES+
+  FINISH 합성(season 패턴). 부수 수리 3: 외톨이 칸 full-width / 로딩 문구 / onClick
+  이벤트 객체 방어
+- [킷 9종] 스킬 v2 기반 + 신규 표준 2: ①썸네일 하단 띠 통일(시그니처색 띠 + 흰 볼드
+  컨셉명 + 세로 구분선 + 서브카피) ②"커피 한 잔 값" 금지 적용(★스킬 파일 사본엔 잔재
+  — 갱신 백로그)
+- [최종 배선 3f70c99] webp 18장(67.5→8.3MB, -87.6%) + 홈 카드 9종 해제 + INDEX_ROWS
+  헤어·뷰티 3장 승격 + ★conceptForGo 9종 매핑 추가
+- [BA 등록 dae90f2] 26쌍 52장(768×960 q85), 검수 시트 2벌(원료+크롭 산출물) 26/26 통과
+  제외 0. attention 20·center 6. ★md5 함정: {키}_헤드사진.png 4종이 애프터 복제본인데
+  fixbacklight만 애프터2와 동일(나머지 3종은 애프터1) — 짐작 매칭했으면 오등록
+- [★사고 기록 — 보고형 게이트 3연속 오탐] 1~3차 게이트표가 전부 "8지점 8/8 ✓"였으나
+  실제론 conceptForGo가 9종 전부 누락(카드 숨김이라 실피해 0, 주석 해제 직전 발견).
+  발견 수단 = "활성 카드 174장 전수 soon 폴백 실행 검사". ★새 표준: 배선 게이트는
+  자기보고 금지, 폴백 전수 실행 검사로
+- [실태 확인 — ★함정 추가] "문서 체크리스트 ≠ 코드 실태": engine 필드=타입에 없음,
+  resultCount=146종 실사용 0, inputRule=순수 메타데이터(validate-photo 게이트는
+  하드코딩 인자, concepts 필드는 아무도 안 읽음 — 관례상 solo_face만 계속 표기).
+  배선 사양은 문서가 아니라 최신 블록(toon3d)을 원본으로
+- 규모: CONCEPTS 155종 / 생성 route 154 / BA_LIVE 148종
+- 다음에 할 것: [MJ] 완전체 폰 실측(홈 9카드→상세→만들기·BA 순환·갤러리 저장·뒤로) /
+  [달력] 추석 한복 리프레시 판단(8월 중순 데드라인) → 수능 응원(9월 초 착수) /
+  [백로그] photo_any 가이드 시트(B대화 몫) · bgchange·season 잔여 변형 BA 추가 후보
+  (beach·night·garden·studio / summer·autumn·winter — 소재 기확보) · 스킬 파일 갱신
+- 주의/메모: 새 컨셉 배선 게이트 = 폴백 전수 실행 검사 필수 / 구제 컨셉 = 가이드
+  미표시 / 헤드사진류 복제 파일은 md5 대조 전 매칭 금지 / bgchange BA 2쌍(3번 후보는
+  BeforeAfterHero onload 검증이 자동 소거 — 코드 무접촉)
+
 ## 2026-07-27 (14차) — WELCOME_COINS 상수 분리, 클라 번들 Redis SDK 제거
 - [원인] 9차에서 LoginNeededSheet가 웰컴 개수를 쓰려고 coins.ts를 import했다.
   coins.ts는 @upstash/redis·@vercel/blob·next/server를 끌고 오는 서버 모듈이라
