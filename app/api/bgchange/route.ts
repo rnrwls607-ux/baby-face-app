@@ -14,27 +14,39 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-async function generateBgchange(imageDataUrl: string): Promise<string> {
-  const img = parseImage(imageDataUrl);
-  const prompt = `Using the input photo, create ONE finished studio photograph of this exact person — as if they were actually standing in a premium photo studio when the shutter clicked. The #1 failure to avoid: a "cut-out pasted on a backdrop" look. The result must be one seamless, real photograph.
+// 칩 합성 — season route와 같은 구조: CORE + 씬 + FINISH
+// ★키는 클라의 BG_OPTIONS와 반드시 일치해야 한다(불일치 시 스튜디오로 폴백됨)
+const BG_CORE = `Using the input photo, create ONE finished photograph of this exact person in a beautiful new location — as if they were actually standing there when the shutter clicked. The #1 failure to avoid: a "cut-out pasted on a backdrop" look. The result must be one seamless, real photograph.
 
 PERSON LOCK:
 - The person is preserved from the input with complete fidelity: exact same face, identity, expression, pose, body, hair, and clothing — nothing beautified, restyled, re-posed, or re-drawn.
 - GLASSES RULE: same frames if worn; add none if not.
 
-THE STUDIO:
+THE NEW LOCATION:
 - Remove the original background completely — no trace remains.
-- New setting: a premium minimal photo studio — a smooth seamless backdrop in a soft warm light-gray tone with a gentle professional lighting gradient. Quiet, elegant, timeless: the kind of studio used for high-end profile photos.
+- New setting:`;
 
-ANTI-COMPOSITE REALISM (spend your effort here — this decides success):
-1. LIGHT WRAP: soft studio light must visibly wrap around the person — a gentle, believable glow along the edges of hair, shoulders, and clothing that matches the backdrop's light direction. Their features never change; only the light falling on them adapts to the studio.
+const BG_SCENES: Record<string, string> = {
+  studio: `A premium minimal photo studio — a smooth seamless backdrop in a soft warm light-gray tone with a gentle professional lighting gradient. Quiet, elegant, timeless: the kind of clean studio used for high-end profile photos.`,
+  cafe: `A cozy, stylish modern cafe — warm wooden tones with a softly blurred espresso bar and shelves behind, gentle window daylight washing in. Inviting and trendy, like a beloved Seoul cafe on a calm afternoon.`,
+  beach: `A beautiful clear-day beach — soft blue ocean and sky melting into a gently blurred horizon behind, bright warm natural sunlight, a fresh airy summer-vacation mood.`,
+  night: `A stylish city street at night — warm glowing signs and street lights melting into soft dreamy bokeh behind, a moody yet flattering evening atmosphere; the person gently and beautifully lit by the warm nearby lights, face clearly visible.`,
+  garden: `A lush flower garden in full bloom — softly blurred colorful flowers and greenery all around, warm natural sunlight filtering through, fresh and romantic.`,
+};
+
+const BG_FINISH = `ANTI-COMPOSITE REALISM (spend your effort here — this decides success):
+1. LIGHT WRAP: the location's light must visibly wrap around the person — a gentle, believable glow along the edges of hair, shoulders, and clothing that matches the scene's light direction and warmth. Their features never change; only the light falling on them adapts to the new location.
 2. GROUNDING SHADOW: a soft, correctly placed contact shadow beneath and behind them ties them into the space — never a floating figure.
-3. EDGE PERFECTION: hair edges stay fine, wispy, and natural against the backdrop — individual strands visible, no halo, no hard cut line, no smudged outline.
-4. ONE CAMERA: one unified perspective, exposure, white balance, grain, and depth of field across the whole frame (person sharp, backdrop softly graduated behind). The person and the studio must breathe the same photographic air.
+3. EDGE PERFECTION: hair edges stay fine, wispy, and natural against the new background — individual strands visible, no halo, no hard cut line, no smudged outline.
+4. ONE CAMERA: one unified perspective, exposure, white balance, grain, and depth of field across the whole frame (person sharp, the location softly falling away behind). The person and the place must breathe the same photographic air.
 
-FINAL TEST: a stranger seeing this must think it is an ordinary, beautiful studio photo taken on location — never an edited composite.
+FINAL TEST: a stranger seeing this must think it is an ordinary, beautiful photo taken at that location — never an edited composite.
 
 Photorealistic, high resolution, no text, no watermark, no border.`;
+
+async function generateBgchange(imageDataUrl: string, bg: string): Promise<string> {
+  const img = parseImage(imageDataUrl);
+  const prompt = BG_SCENES[bg] ? `${BG_CORE}\n${BG_SCENES[bg]}\n\n${BG_FINISH}` : `${BG_CORE}\n${BG_SCENES.studio}\n\n${BG_FINISH}`; // 미지정·이상값 → 스튜디오 폴백
 
   // multipart/form-data 구성 (Web FormData + Blob)
   const form = new FormData();
@@ -63,7 +75,7 @@ Photorealistic, high resolution, no text, no watermark, no border.`;
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[bgchange] model=${OPENAI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[bgchange] model=${OPENAI_MODEL} bg=${bg} status=${res.status} ${Date.now() - t0}ms`);
   if (!res.ok) {
     const errText = (await res.text()).slice(0, 300);
     console.error(`[bgchange] OpenAI 오류 ${res.status}: ${errText}`);
@@ -84,8 +96,10 @@ async function handler(request: NextRequest) {
     }
     const body = await request.json();
     const image: string = body?.image;
+    // 칩 값은 클라가 body.bg로 보낸다 — 문자열이 아니면 스튜디오로 (season 관례)
+    const bg: string = typeof body?.bg === "string" ? body.bg : "studio";
     if (!image) return NextResponse.json({ error: "사진을 올려주세요." }, { status: 400 });
-    const output = await generateBgchange(image);
+    const output = await generateBgchange(image, bg);
     return NextResponse.json({ output: [output] });
   } catch (e: unknown) {
     const err = e as { message?: string };

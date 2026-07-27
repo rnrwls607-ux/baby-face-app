@@ -19,6 +19,15 @@ import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 
+// 칩 5종 — key는 route의 BG_SCENES 키와 반드시 일치해야 한다(불일치 시 스튜디오로 폴백됨)
+const BG_OPTIONS = [
+  { key: "studio", label: "📷 스튜디오" },
+  { key: "cafe", label: "☕ 감성 카페" },
+  { key: "beach", label: "🌊 푸른 바다" },
+  { key: "night", label: "🌃 밤거리" },
+  { key: "garden", label: "🌷 꽃밭" },
+];
+
 export default function BgchangePage() {
   const router = useRouter();
   // 코인 게이트 표시·가드 (coinCost는 표시 전용 — 요금의 진실원은 서버 withCoin) — ★스위치 날 벌크 앵커
@@ -35,6 +44,7 @@ export default function BgchangePage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [image, setImage] = useState<string>("");
+  const [bg, setBg] = useState<string>("studio"); // 기본값 스튜디오 — 칩을 안 골라도 바로 만들 수 있다
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -61,8 +71,11 @@ export default function BgchangePage() {
     img.src = b64;
   });
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
-  const handleSubmit = async () => {
+  // pick: 결과 화면에서 "다른 배경으로" 누를 때 그 배경으로 바로 재생성 (칩 상태 갱신 포함)
+  const handleSubmit = async (pick?: string) => {
     if (!image) { setError("사진을 올려주세요."); return; }
+    const chosen = pick || bg;
+    if (pick) setBg(pick);
     // 즉시 부족 체크(캐시 기준, 서버 호출 전) — ★스위치 날 벌크 앵커
     if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
@@ -73,7 +86,7 @@ export default function BgchangePage() {
       const res = await fetch("/api/bgchange", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: compressed }),
+        body: JSON.stringify({ image: compressed, bg: chosen }),
         signal: ctrl.signal,
       });
       clearTimeout(tid);
@@ -92,6 +105,12 @@ export default function BgchangePage() {
       setError(err?.name === "AbortError" ? "시간이 너무 오래 걸렸어요. 다시 시도해주세요." : err?.message || "오류가 발생했습니다.");
     } finally { setLoading(false); }
   };
+  const chipStyle = (active: boolean) => ({
+    padding: "12px 0", borderRadius: 14, fontSize: 14, fontWeight: 800, cursor: "pointer",
+    border: active ? "1.5px solid #FF4B7C" : "1.5px solid #EFF0F3",
+    background: active ? "#FFEAF1" : "#fff",
+    color: active ? "#FF4B7C" : "#9B9B9B",
+  });
   const handleDownload = () => { void saveImage(result, "bgchange.png"); };
   const handleShare = () => { void shareImage(result, "bgchange.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   return (
@@ -114,6 +133,14 @@ export default function BgchangePage() {
               <PreviewCard placeholder="🖼️" caption="배경 교체, 미리 만나보세요" />
             )}
             <StepIndicator current={result ? 3 : loading ? 2 : 1} />
+            <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", marginBottom: 18 }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>어떤 배경으로 바꿀까요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+                {BG_OPTIONS.map((o, i) => (
+                  <button key={o.key} onClick={() => setBg(o.key)} style={{ ...chipStyle(bg === o.key), ...(i === BG_OPTIONS.length - 1 ? { gridColumn: "1 / -1" } : {}) }}>{o.label}</button>
+                ))}
+              </div>
+            </div>
             <UploadZone
               label="사진"
               images={image ? [image] : []}
@@ -124,7 +151,7 @@ export default function BgchangePage() {
             />
             <TipChips tips={[{ icon: "face", label: "인물이 크게" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "머리카락 가리지 않게" }]} />
             <PrivacyLine />
-            <button onClick={handleSubmit} disabled={loading || !image}
+            <button onClick={() => handleSubmit()} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : <>배경 교체하기 🖼️{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
             </button>
@@ -133,7 +160,7 @@ export default function BgchangePage() {
         {loading && (
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>🖼️</div>
-            <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 스튜디오로 옮기고 있어요...</p>
+            <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 새 배경으로 옮기고 있어요...</p>
           </div>
         )}
         {error && (
@@ -148,6 +175,15 @@ export default function BgchangePage() {
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
               <img src={result} alt="배경 교체" style={{ width: "100%", display: "block" }} />
+            </div>
+            {/* 다른 배경으로 — 사진을 다시 올리지 않고 칩만 눌러 재생성 (이 컨셉의 핵심 재미) */}
+            <div style={{ background: "#fff", borderRadius: 20, padding: "18px 18px", boxShadow: "0 2px 16px rgba(0,0,0,0.04)", margin: "0 0 12px" }}>
+              <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>다른 배경으로도 만들어볼까요?</p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
+                {BG_OPTIONS.map((o, i) => (
+                  <button key={o.key} onClick={() => void handleSubmit(o.key)} disabled={loading} style={{ ...chipStyle(bg === o.key), ...(i === BG_OPTIONS.length - 1 ? { gridColumn: "1 / -1" } : {}) }}>{o.label}</button>
+                ))}
+              </div>
             </div>
             <div style={{ display: "flex", gap: 10 }}>
               <button onClick={handleDownload}

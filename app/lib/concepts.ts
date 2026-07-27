@@ -936,10 +936,10 @@ export const CONCEPTS: Record<string, Concept> = {
     key: "bgchange",
     coinCost: 3,
     title: "배경 교체",
-    subtitle: "나는 그대로, 배경만 스튜디오로",
+    subtitle: "나는 그대로, 배경만 바꿔요",
     emoji: "🖼️",
     accent: "#EDEDF0",
-    description: "어수선한 배경을 지우고 고급 스튜디오 배경으로 바꿔드려요. 얼굴과 옷은 그대로, 오려붙인 티 없이 자연스럽게.",
+    description: "어수선한 배경을 지우고 원하는 곳으로 옮겨드려요. 스튜디오·감성 카페·푸른 바다·밤거리·꽃밭 중에서 고르면 돼요. 얼굴과 옷은 그대로, 오려붙인 티 없이 자연스럽게.",
     examples: [
       { emoji: "🖼️", accent: "#EDEDF0" },
       { emoji: "🤍", accent: "#F5F5F7" },

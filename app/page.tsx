@@ -334,7 +334,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // { id: "fixnight", title: "야간 사진 구제", subtitle: "어두운 밤 사진, 밤은 그대로 선명하게", emoji: "🌙", accent: "#E7EAF3", image: "/cards/fixnight.webp", badge: "NEW", tags: ["인생샷"], go: "fixnight" },
       // { id: "season", title: "계절 변환", subtitle: "같은 자리를 봄·여름·가을·겨울로", emoji: "🍂", accent: "#F7E9DE", image: "/cards/season.webp", badge: "NEW", tags: ["재미"], go: "season" },
       // { id: "fixbacklight", title: "역광 구제", subtitle: "시커먼 얼굴은 환하게, 역광 감성은 그대로", emoji: "🔆", accent: "#FCEEDA", image: "/cards/fixbacklight.webp", badge: "NEW", tags: ["인생샷"], go: "fixbacklight" },
-      // { id: "bgchange", title: "배경 교체", subtitle: "나는 그대로, 배경만 스튜디오로", emoji: "🖼️", accent: "#EDEDF0", image: "/cards/bgchange.webp", badge: "NEW", tags: ["인생샷"], go: "bgchange" },
+      // { id: "bgchange", title: "배경 교체", subtitle: "나는 그대로, 배경만 바꿔요", emoji: "🖼️", accent: "#EDEDF0", image: "/cards/bgchange.webp", badge: "NEW", tags: ["인생샷"], go: "bgchange" },
       // { id: "fixcrowd", title: "행인 지우개", subtitle: "낯선 사람들만 감쪽같이, 그 자리는 온전히", emoji: "🧹", accent: "#E3F0F2", image: "/cards/fixcrowd.webp", badge: "NEW", tags: ["인생샷"], go: "fixcrowd" },
       // { id: "beauty", title: "뷰티 보정", subtitle: "쌩얼도, 메이크업 받은 날처럼", emoji: "💄", accent: "#FBE7EE", image: "/cards/beauty.webp", badge: "NEW", tags: ["헤어·뷰티"], go: "beauty" },
       // { id: "anisky", title: "애니 감성", subtitle: "평범한 오후를 애니 영화의 한 장면으로", emoji: "⛅", accent: "#E2ECFA", image: "/cards/anisky.webp", badge: "NEW", tags: ["재미"], go: "anisky" },
