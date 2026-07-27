@@ -1,6 +1,7 @@
 "use client";
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE } from "../lib/concepts";
+import { openLoginSheet } from "../lib/loginSheet";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { saveImage } from "../lib/saveImage";
@@ -69,6 +70,8 @@ export default function UpscalePage() {
         body: JSON.stringify({ image: c, scale: 4 }),
       });
       const data = await res.json();
+      // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
+      if (res.status === 401) { openLoginSheet(); return; }
       if (!res.ok) throw new Error(data.error || "오류가 발생했어요.");
       if (!data.output?.[0]) throw new Error("결과를 받지 못했어요.");
       setResult(data.output[0]);
