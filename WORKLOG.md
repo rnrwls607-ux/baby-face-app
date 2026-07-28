@@ -7,6 +7,45 @@
 - 다음에 할 것:
 - 주의/메모:+
 
+## 2026-07-28 — ★글램 라인 7종 완결 (검증 15전 8승 → 코드화 3차, 162종 체제)
+- [검증 여정] 후보 15종 왕복 — 채택 7: idolglam(GPT+Pro 2칩 화보컷/직캠컷)·cheerglam(Pro)·
+  crewglam(Pro)·guestlook(Pro)·anchorglam(GPT, Pro폴백 승인)·goddessdress(GPT)·
+  tripface(GPT, 남녀공용). 폐기: glampure·glamsmoky(beauty와 방향 중복)·balletcore(무드×
+  일상배경 충돌)·blackhair(흑발→흑발 낙차 0)·남성 3종(파일럿·CEO·badboy — 그루밍 상한
+  탓 낙차 부족)·rockchic(최종 드롭). colorchange 보류(추후 재검증)
+- [★판매 공식 확립] 통과작 공통분모 = "혼자 못 만드는 모습(헤메코 팀급) + 일상 배경에서
+  읽힘 + 비포 대비 낙차 확실". 파생 관문 2: "아이콘이 얼굴을 가리는 직업은 못 산다
+  (파일럿 모자)" / "무드가 배경까지 세트인 컨셉은 못 산다(발레코어)"
+- [★엔진 지도 확장] GPT = 패션·수트·드레스 생존(idol·anchor·goddess·trip), 정형 코스튬
+  (치어복·발레복·승무원복)에서 생성 신뢰도 붕괴 → Pro. 웹 ChatGPT 생성 불안정 빈발 —
+  라이브(API)와 다를 수 있음 유의
+- [SKIN TRUTH v1→v3] Pro가 "매력점"을 발명하는 사고 2회 → v3 = 기본값 선언형("피부의
+  기본값은 깨끗함, 점은 원본 복사만") + 종결줄 강화 + 존별 스캔 셀프체크. 글램 전 컨셉
+  v3 통일(코드화분 포함)
+- [코드화 3차] 6b5512a(Pro 3종) → 24cf23a(GPT 3종) → 6c86999(idolglam 이중 엔진 —
+  칩이 엔진을 가르는 첫 route, 프롬프트 상수 단일 참조·에러 태그 분리·조건부 키 가드)
+- [★발견 — 코인 전종 라이브] LIVE_COIN_CONCEPTS = Object.keys(CONCEPTS)로 바뀌어 있어
+  coinCost 3 블록 = 즉시 3코인 과금. withCoin 0 인자·COIN_DORMANT 주석은 무시됨(전
+  컨셉 동일). B대화 IAP 전환 의도인지 확인 대기 — "휴면 코인" 용어 은퇴, 기존 ★154개
+  route COIN_DORMANT 스테일 주석 정리 백로그(초안의 12개는 변종 집계 중 한 줄만 읽은
+  수치. 실측 = withCoin 래핑 159 중 글램 신표기 4를 뺀 154)
+- [★표준 — 전례 실사] "job 전례" 단정이 4번째 문서≠코드 사고(engine·resultCount·
+  inputRule에 이어). 새 표준: 명령문에서 전례 단정 금지 → 실사 후 있으면 따르고 없으면
+  신설·보고. crewglam·anchorglam 자격 고지는 신설 라인
+- [게이트 진화] 검사기 정밀판(프롬프트 리터럴 제외 + key: 앵커 판정 — 들여쓰기 함정
+  스크립트 재현 수리) / ★이스케이프 잔재 0 검사 신설(생성기가 백틱·달러를 리터럴로 박은
+  사고 45건을 빌드 전 검거)
+- [부수] 17차 스토어 문서 잔여 정리 798fe1f / privacy 제7조 게스트 쿠키 문구 불일치 —
+  B대화 몫으로 이관
+- 규모: CONCEPTS 162종 / 생성 route 161 / 글램 7종 홈 카드 주석 대기
+- 다음에 할 것: [A] 글램 킷 7종(cheer→crew→guest→idol→anchor→goddess→trip, trip은
+  비포 3장 생성 선행) → webp 배선+BA / [MJ] 코인 전종 라이브 의도 확인(B대화) /
+  [★달력] 추석 한복 리프레시 판단 — 8월 중순 마지노선, 킷 공정과 병행 필수 /
+  [보류] hairmenu 검증팩 · colorchange 재검증 · bgchange 잔여 변형 BA
+- 주의/메모: 이중 엔진 route 표준 = 프롬프트 상수 1벌 공유·태그 분리·조건부 키 가드 /
+  글램 비포 = beauty_비포1~3 재사용(여성 전용 컨셉은 1~2만) / GPT 킷 애프터는 라이브
+  재생성이 최종본(코인 차감 발생 유의)
+
 ## 2026-07-27 (17차) — 스토어 문서 정합: Data safety 5건 실측 반영 + 컨셉 수 150+ + 계정 삭제 앵커 URL
 - [Data safety 5건] 14~16차 감사에서 드러난 누락·부정확을 코드 실측으로 교체:
   ① 기기 ID 신설 — 게스트 쿠키 mospic_guest(1년·httpOnly·SameSite Lax, proxy.ts가 페이지
