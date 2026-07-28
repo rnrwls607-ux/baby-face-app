@@ -191,6 +191,12 @@ export default function PrivacyPage() {
           <p style={st.small}>· 대검찰청 (www.spo.go.kr / 1301)</p>
           <p style={st.small}>· 경찰청 (ecrm.police.go.kr / 182)</p>
 
+          {/* 계정 삭제 안내 — Play Console "계정 삭제 URL"이 가리키는 앵커(#delete-account).
+              조 번호를 붙이지 않는다: 법률 조항이 아니라 절차 안내이고, 붙이면 이후 조문
+              번호가 전부 밀린다. 상단 스티키 헤더(56px)에 제목이 가리지 않도록 scrollMarginTop. */}
+          <p id="delete-account" style={{ ...st.h2, scrollMarginTop: 68 }}>회원 탈퇴 방법</p>
+          <p style={st.p}>앱 또는 웹에서 로그인한 뒤 <b>설정 &gt; 회원탈퇴</b>에서 직접 탈퇴할 수 있습니다. 탈퇴 시 데이터 처리 범위는 제1조·제5조를 참조해 주세요.</p>
+
           <p style={st.h2}>제12조 (방침의 적용 범위와 변경)</p>
           <p style={st.p}>① 이 방침은 MOSPIC 서비스(웹·앱)에 적용되며, 서비스에 연결된 외부 사이트의 개인정보 처리에는 적용되지 않습니다.</p>
           <p style={st.p}>② 방침을 변경하는 경우 적용 7일 전(이용자에게 불리한 중대한 변경은 30일 전)에 서비스 내 공지합니다.</p>
