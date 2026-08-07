@@ -62,9 +62,12 @@ ABSOLUTELY AVOID (equally important):
 - Crowds or other people in the frame, distorted hands, warped architecture.
 - Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 const SELF_CHECK = `SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
+// 조립 완성본 export — diag mode=real이 실전과 문자 단위 동일한 프롬프트로 재현 실험을 하기 위함.
+// ★아래 식은 generateHanbok이 쓰던 조립식 그대로다(md5 게이트로 동일성 증명).
+export const HANBOK_PROMPT = `${CORE}\n\n${SCENE}\n\n${FINISH}\n\n${SELF_CHECK}`;
 async function generateHanbok(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}\n\n${SELF_CHECK}`;
+  const prompt = HANBOK_PROMPT;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
