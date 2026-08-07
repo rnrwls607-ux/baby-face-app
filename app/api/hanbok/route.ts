@@ -55,7 +55,7 @@ WARDROBE — premium modern hanbok:
 POSE:
 - A graceful, serene pose: standing softly with hands gently gathered, a light poised turn, or a soft gaze toward the camera with a gentle smile.`;
 const FINISH = `FRAMING:
-- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the face clearly the luminous hero of the frame.
 
 CAMERA:
 - Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
