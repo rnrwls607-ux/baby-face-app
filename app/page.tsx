@@ -319,6 +319,9 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
   {
     id: "more", heading: "이런 것도 만들어드려요", title: "다양한 AI 사진", layout: "scroll",
     items: [
+      { id: "hanbok", title: "한복 화보", subtitle: "추석엔, 가장 고운 한복 화보", emoji: "🌸", accent: "#FCE8EF", badge: "추석", tags: ["인생샷"], image: "/cards/hanbok.webp", go: "hanbok" },
+      { id: "hanbokcouple", title: "웨딩 한복 커플", subtitle: "추석, 둘이 고운 한복으로", emoji: "👘", accent: "#FFF1E0", badge: "NEW", tags: ["커플"], image: "/cards/hanbokcouple.webp", go: "hanbokcouple" },
+      { id: "familyhanbok", title: "명절 한복 2인", subtitle: "추석 부모님과, 고운 한복 2인 화보", emoji: "🏮", accent: "#FFF1E0", badge: "NEW", tags: ["가족"], image: "/cards/familyhanbok.webp", go: "familyhanbok" },
       { id: "baby", title: "우리 아기 얼굴은?", subtitle: "부모 닮은 아기 미리보기", emoji: "👶", accent: "#FFE0EC", badge: "BEST", tags: ["인기", "가족"], go: "baby", image: "/cards/baby.webp" },
       { id: "voxel", title: "복셀 아트", subtitle: "사진을 3D 블록으로", emoji: "🧊", accent: "#E1ECFF", badge: "NEW", tags: ["픽셀"], go: "voxel", image: "/cards/voxel.webp" },
       { id: "pendrawing", title: "펜 드로잉 초상", subtitle: "한 장의 손그림 초상화", emoji: "✒️", accent: "#F2F0EC", badge: "NEW", tags: ["재미"], go: "pendrawing", image: "/cards/pendrawing.webp" },
@@ -449,7 +452,6 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // { id: "goods", title: "굿즈 미리보기", subtitle: "나·우리 애가 아크릴 굿즈로", emoji: "🔑", accent: "#FFE9D6", badge: "NEW", tags: ["재미"], go: "goods" }, // 완성 대기 — 상세페이지·썸네일 준비 후 오픈
       { id: "luxe", title: "럭셔리 매거진 화보", subtitle: "매거진 커버 속 나", emoji: "🖤", accent: "#E8EAED", badge: "NEW", tags: ["인생샷"], image: "/cards/luxe.webp", go: "luxe" },
       { id: "travel", title: "여행지 프로필", subtitle: "여행지 인생샷 한 장", emoji: "✈️", accent: "#E1ECFF", badge: "NEW", tags: ["인생샷"], image: "/cards/travel.webp", go: "travel" },
-      { id: "hanbok", title: "한복 화보", subtitle: "고궁 노을빛, 기품 있는 나", emoji: "🌸", accent: "#FCE8EF", badge: "NEW", tags: ["인생샷"], image: "/cards/hanbok.webp", go: "hanbok" },
       { id: "retro90", title: "90년대 사진관", subtitle: "그때 그 사진관 감성", emoji: "📼", accent: "#FFEFD6", badge: "NEW", tags: ["재미"], image: "/cards/retro90.webp", go: "retro90" },
       { id: "hocance", title: "호캉스 화보", subtitle: "5성급 풀사이드 바이브", emoji: "🏝️", accent: "#DCEBFF", badge: "NEW", tags: ["인생샷"], image: "/cards/hocance.webp", go: "hocance" },
       { id: "redcarpet", title: "레드카펫 화보", subtitle: "오늘 밤의 주인공", emoji: "✨", accent: "#E8EAED", badge: "NEW", tags: ["인생샷"], image: "/cards/redcarpet.webp", go: "redcarpet" },
@@ -459,7 +461,6 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "flower", title: "플라워 화보", subtitle: "꽃에 둘러싸인 순간", emoji: "💐", accent: "#FCE8EF", badge: "NEW", tags: ["인생샷"], image: "/cards/flower.webp", go: "flower" },
       { id: "petcostume", title: "펫 코스튬", subtitle: "우리 애 옷 입혀보기", emoji: "🎀", accent: "#FFE0EC", badge: "NEW", tags: ["반려동물"], image: "/cards/petcostume.webp", go: "petcostume" },
       { id: "couple", title: "커플 스튜디오 화보", subtitle: "둘이 함께, 스튜디오 화보", emoji: "💑", accent: "#FFE0EC", badge: "NEW", tags: ["커플"], image: "/cards/couple.webp", go: "couple" },
-      { id: "hanbokcouple", title: "웨딩 한복 커플", subtitle: "한복 입고 둘이 한 장", emoji: "👘", accent: "#FFF1E0", badge: "NEW", tags: ["커플"], image: "/cards/hanbokcouple.webp", go: "hanbokcouple" },
       { id: "friend", title: "우정 스냅", subtitle: "베프랑 같이 찍은 한 장", emoji: "👯", accent: "#DCEBFF", badge: "NEW", tags: ["우정"], image: "/cards/friend.webp", go: "friend" },
       { id: "remindwedding", title: "리마인드 웨딩", subtitle: "부모님 웨딩사진, 다시 한 번", emoji: "💒", accent: "#FFF1E0", badge: "NEW", tags: ["가족"], image: "/cards/remindwedding.webp", go: "remindwedding" },
       { id: "selfwedding", title: "셀프웨딩 화보", subtitle: "우리끼리, 웨딩 화보", emoji: "💍", accent: "#FCE8EF", badge: "NEW", tags: ["커플"], image: "/cards/selfwedding.webp", go: "selfwedding" },
@@ -467,7 +468,6 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "coupletravel", title: "커플 여행 스냅", subtitle: "둘이 함께, 여행 스냅", emoji: "✈️", accent: "#DFF3FF", badge: "NEW", tags: ["커플"], image: "/cards/coupletravel.webp", go: "coupletravel" },
       // 가족 스튜디오 화보 — 3인 이상 다중인물 신원 유지 구현 난이도로 숨김 (해법 확보 시 복구, route·URL은 보존)
       // { id: "family", title: "가족 스튜디오 화보", subtitle: "온 가족이 한 장에", emoji: "👨‍👩‍👧‍👦", accent: "#E7F7EA", badge: "NEW", tags: ["가족"], go: "family" },
-      { id: "familyhanbok", title: "명절 한복 2인", subtitle: "둘이 함께, 명절 한복", emoji: "🏮", accent: "#FFF1E0", badge: "NEW", tags: ["가족"], image: "/cards/familyhanbok.webp", go: "familyhanbok" },
       { id: "familypet", title: "반려가족 사진", subtitle: "우리 애도 가족이니까", emoji: "🐾", accent: "#DCEBFF", badge: "NEW", tags: ["가족"], image: "/cards/familypet.webp", go: "familypet" },
       // 네컷 라인 — 스트립 품질 검증 후 복귀 예정 (URL·route·concepts는 보존)
       // { id: "fourcut", title: "인생네컷", subtitle: "나 혼자 네컷 한 장", emoji: "📸", accent: "#FFE0EC", badge: "NEW", tags: ["네컷"], go: "fourcut" },

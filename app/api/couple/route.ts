@@ -32,6 +32,14 @@ IDENTITY LAW — the absolute rules (never violate):
 - AGE LAW (one rule for everyone): each person's age impression stays their own — a younger person looks fresh and well-rested (never older), an older person stays gracefully and clearly their own generation (never made younger). Elegantly gray hair stays elegantly gray, beautifully styled.
 - GLASSES per person: if a person wears glasses in their input, they wear the SAME glasses (same frames) — exactly one pair, worn normally. If they don't, add none. Never move glasses between the two, never duplicate a pair.
 
+[SKIN TRUTH v3 — the #1 rule of this entire work]
+- DEFAULT SKIN IS CLEAR: unless a mole or mark is CLEARLY visible in the original photo, render that area of skin perfectly clear and unmarked. Marks may ONLY be copied from the original — never invented, never added for "beauty," never imagined out of blur, shadow, or noise.
+- ZERO new marks: creating even ONE mole, beauty mark, freckle, spot, or scar that does not exist in the original — on the face, neck, or anywhere — is a critical failure that ruins the entire work.
+- When in doubt, leave it out: a missing mark is acceptable; an invented mark is not.
+- Every EXISTING mole and mark stays exactly where it is — makeup may soften it slightly, never erase it, never move it.
+- The makeup NEVER adds marks: no painted-on beauty marks, no aesthetic freckles, no "charming" moles, under any circumstance.
+- Flawless skin still means REAL skin — pores and fine texture remain visible; a wax or 3D-render look is a critical failure.
+
 FACE — one standard for everyone (no modes):
 1. SMALL FACE: slim each person's OWN jawline into a soft, elegant version of itself — reduce cheek fullness and facial width so each face reads about 10% smaller and more compact than their input, with clean head-to-shoulder proportions. A refinement of THEIR jaw, never a new jaw — their face shape remains unmistakably theirs. For a visibly older person, apply this gently — refined and lifted, never artificially tight.
 2. EYES: SAME size, SAME shape, SAME eyelid type as the source — enhanced only through light and freshness: bright, awake, lively, with clean sparkling catchlights (clearly visible through lenses if they wear glasses).
@@ -40,9 +48,9 @@ FACE — one standard for everyone (no modes):
 5. HARMONY: every adjustment blends into ONE natural, harmonious face per person — the "expensive photoshop" look, never warped, stretched, or uncanny.
 
 SKIN — the star of this retouch (this is where the beauty lives — absolute):
-- Both faces wear a professional camera-ready makeup base: poreless-smooth, perfectly even-toned skin with a dewy luminous glow — soft highlights on the cheekbones and nose bridge, a gentle healthy blush, a healthy warm undertone. Radiant and alive, never plastic, waxy, or matte-caked.
+- Both faces wear a professional camera-ready makeup base: silky-smooth, perfectly even-toned skin with a dewy luminous glow — soft highlights on the cheekbones and nose bridge, a gentle healthy blush, a healthy warm undertone. Radiant and alive, never plastic, waxy, or matte-caked.
 - Coverage is COMPLETE and UNIFORM across face and neck — one clean glowing tone, the way a top makeup artist finishes skin for a photoshoot. Completely remove blemishes, acne, redness, dark circles, and oiliness.
-- GUARDRAIL: paint ZERO moles, dark spots, pigmentation, or marks of any kind anywhere on either face or neck — the flawless base has covered everything. Clean luminous skin only.
+- GUARDRAIL: invent ZERO new moles, dark spots, pigmentation, or marks of any kind anywhere — and every mole or mark clearly visible in a person's own source stays exactly where it is, softened by the makeup base yet present (SKIN TRUTH v3 above). Nothing painted on, nothing erased, nothing moved.
 - Makeup reads age-appropriate and elegant: a female person — a luminous dewy base with soft brows and a soft rosy lip; a male person — clean, fresh, polished grooming. Never heavy, never garish.
 
 THE RETOUCH PROMISE:
@@ -64,7 +72,7 @@ const FINISH = (G1: string, G2: string) => `STEP 2 — FINAL ROLL CALL (before f
 Compare the finished portrait against the sources, check by check:
 - Side by side with Image 1, is Person 1 instantly the same person — same eyes, same nose, same face, SAME hair silhouette, just glowing? Side by side with Image 2, is Person 2?
 - GENDER CHECK: is Person 1 clearly ${G1} as confirmed? Is Person 2 clearly ${G2} as confirmed? A swap = failed edit.
-- SKIN CHECK: do both faces and necks show one perfectly even, flawless luminous finish — zero moles, spots, or marks anywhere? If anything interrupts the clean finish, cover it before finishing.
+- SKIN CHECK: zero INVENTED moles, spots, or marks anywhere — and every mole clearly visible in each person's own source still in its place? The finish is luminous yet real: nothing painted on, nothing erased, nothing moved.
 - Exactly two people? Two faces still clearly different from each other? No blended features, no moved glasses? No one made younger or older?
 Only when every check passes is the portrait complete.
 
@@ -76,7 +84,7 @@ ABSOLUTELY AVOID (equally important):
 - Changing anyone's haircut, hair length, or hair color; any added hairpieces, ornaments, or dramatic updos.
 - Rendering anyone's gender against the user's confirmation; swapping the two people's genders or styling.
 - Reshaping ANY feature beyond the subtle jawline refinement: no enlarged eyes, no changed noses, no new face shapes — for anyone, at any age.
-- Any mole, spot, or mark interrupting the flawless skin on either face or neck.
+- Any INVENTED mole, spot, or mark that does not exist in the sources — and any source mole erased or moved.
 - Any face that fails the side-by-side test; blended, averaged, or swapped features; two faces converging into clones.
 - Wrong headcount: a third person, a missing person, or a duplicate.
 - Making anyone look younger or older than their source; a warped, over-liquified, or uncanny face.

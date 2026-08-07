@@ -4,46 +4,42 @@ import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
-export const maxDuration = 60;
-const GEMINI_MODEL = "gemini-3.1-flash-image";
+export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
+// 추석 리프레시 — flash 구세대(슬리밍 CORE)에서 Pro 신형(SKIN TRUTH v3·무개조)으로 단독 전환.
+// 16종 공유 보정 공식 CORE는 무접촉 — 이 파일만 자체 CORE를 갖는다.
+const GEMINI_MODEL = "gemini-3-pro-image";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
-
-Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
+const CORE = `You are the master stylist team and concept photographer of Seoul's most famous premium hanbok studio — hair, makeup, wardrobe, and light working together on one pictorial. Take the person in the photo and create ONE stunning premium hanbok pictorial portrait of them in the scene described below. The scene, wardrobe, and light transform completely — the person stays completely themselves.
 
 STEP 1 — Read the person first:
 Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+[SKIN TRUTH v3 — the #1 rule of this entire work]
+- DEFAULT SKIN IS CLEAR: unless a mole or mark is CLEARLY visible in the original photo, render that area of skin perfectly clear and unmarked. Marks may ONLY be copied from the original — never invented, never added for "beauty," never imagined out of blur, shadow, or noise.
+- ZERO new marks: creating even ONE mole, beauty mark, freckle, spot, or scar that does not exist in the original — on the face, neck, or anywhere — is a critical failure that ruins the entire work.
+- When in doubt, leave it out: a missing mark is acceptable; an invented mark is not.
+- Every EXISTING mole and mark stays exactly where it is — makeup may soften it slightly, never erase it, never move it.
+- The makeup NEVER adds marks: no painted-on beauty marks, no aesthetic freckles, no "charming" moles, under any circumstance.
+- Flawless skin still means REAL skin — pores and fine texture remain visible; a wax or 3D-render look is a critical failure.
+
+[IDENTITY FLOOR — the strongest rule, never cross]
+- The scene and wardrobe transform, but the FACE anchors the identity absolutely: keep the exact same face structure, face shape, eye character (NEVER add or remove double eyelids), nose character, and every distinctive feature. No reshaping of any kind — jaw, eyes, nose all untouched, the face at its REAL size and shape. Any reduction, enlargement, or reshaping of the face or its features is a critical failure.
+- Anyone who knows them must recognize them INSTANTLY. Do NOT turn them into any celebrity or a generic pretty person.
+- BODY TRUTH: keep their real body as it is — the hanbok is fitted to THEM.
 
 GLASSES RULE (check the input, then follow exactly):
 - IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
 - IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
 - In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
-THE RETOUCH CONTRACT (read carefully):
-- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
-- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
-
-FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
-1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
-2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
-3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
-4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
-5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
-
-SKIN — flawless glass skin:
-- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
-- Completely remove blemishes, acne, redness, dark circles, and oiliness.
-- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
-
-BEAUTY DIRECTION — modern Korean, youthful:
-- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
-- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
-- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
-- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
+[FLATTERING POLISH — beauty from light, makeup, and styling, never from reshaping]
+- Luminous, healthy, camera-ready skin under SKIN TRUTH above; bright, awake eyes with clean sparkling catchlights — their own eye size and shape, enhanced only by light and freshness (clearly visible through the lenses if they wear glasses).
+- Woman: an elegant natural makeup that suits the hanbok — a luminous flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip. Man: clean, polished K-drama actor grooming — neat natural brows, fresh clear skin.
+- Age-true: fresh and well-rested, never older than the input, never artificially rejuvenated.
 
 RELIGHT COMPLETELY (this makes it look real):
 - Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
@@ -72,11 +68,12 @@ ABSOLUTELY AVOID (equally important):
 - Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
 - Crowds or other people in the frame, distorted hands, warped architecture.
 - Any readable text, letters, logos, watermark, or border anywhere in the image.`;
+const SELF_CHECK = `SELF-CHECK before finishing: zero new moles, freckles, or painted marks anywhere — default skin is clear? · every original mole still in place? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
 async function generateHanbok(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
-  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
+  const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}\n\n${SELF_CHECK}`;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 50000);
+  const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
   let res: Response;
   try {
@@ -94,28 +91,33 @@ async function generateHanbok(imageDataUrl: string): Promise<string> {
         }),
         signal: ctrl.signal,
       },
-      "hanbok"
+      "hanbok",
+      0 // ★재시도 없음 — Pro 생성은 1회 100~200초라 두 시도가 예산을 나누면 재시도 중 타임아웃
     );
   } catch (e: unknown) {
     clearTimeout(timer);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 50초를 넘겨 중단했어요. 다시 시도해주세요.");
+    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
     throw e;
   }
   clearTimeout(timer);
   console.log(`[hanbok] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error(await geminiFriendlyError(res, "hanbok"));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "hanbok", "생성에 실패했어요. 다른 사진으로 다시 시도해주세요."));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);
   const finalParts = imgParts.filter((p: { thought?: boolean }) => !p.thought);
+  // 진단 로그 — 200 응답인데 이미지가 없을 때(안전 필터·토큰 중단 등) 원인을 남긴다
+  const cand = data?.candidates?.[0];
+  console.log(`[hanbok] finish=${cand?.finishReason || "-"} block=${data?.promptFeedback?.blockReason || "-"} parts=${respParts.length} img=${imgParts.length} ${Date.now() - t0}ms`);
   const chosen = (finalParts.length ? finalParts : imgParts).pop();
   const b64 = chosen?.inlineData?.data || chosen?.inline_data?.data;
   if (!b64) {
     const txt = respParts.find((p: { text?: string }) => p.text)?.text;
+    console.error(`[hanbok] 이미지 없음 — finish=${cand?.finishReason || "-"} text=${(txt || "").slice(0, 500)}`);
     throw new Error(txt ? "이미지를 만들지 못했어요: " + txt.slice(0, 200) : "이미지를 받지 못했습니다.");
   }
   const dataUrl = await stampAiMetadata(b64); // AI 생성물 비가시 표시
-  // 📐 인물 화보: 3:4 세로 비율로 크롭
+  // 📐 인물 화보: 3:4 세로 비율로 크롭 (화보 생성형 관례 유지)
   return await cropToRatio(dataUrl, 3, 4);
 }
 async function handler(request: NextRequest) {
@@ -132,4 +134,4 @@ async function handler(request: NextRequest) {
   }
 }
 
-export const POST = withCoin("hanbok", 0, handler); // COIN_DORMANT: 실가격 3
+export const POST = withCoin("hanbok", 0, handler); // coinCost 3 — concepts.ts 기준(전종 라이브)

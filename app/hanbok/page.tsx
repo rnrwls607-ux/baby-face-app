@@ -65,7 +65,7 @@ export default function HanbokPage() {
     if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
     setLoading(true); setError(""); setResult("");
     const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 110000);
+    const tid = setTimeout(() => ctrl.abort(), 235000); // 서버 내부 컷 230초 + 여유 5초 (Pro 생성 계열)
     try {
       const compressed = await compress(image);
       const res = await fetch("/api/hanbok", {
