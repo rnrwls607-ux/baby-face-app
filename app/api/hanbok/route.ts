@@ -58,11 +58,7 @@ CAMERA:
 - Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
 
 ABSOLUTELY AVOID (equally important):
-- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
-- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
-- Making them unrecognizable or turning them into a generic pretty person.
-- ANY aged, mature, or old-fashioned look — never older than the input.
-- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Oversaturated HDR.
 - Crowds or other people in the frame, distorted hands, warped architecture.
 - Any readable text, letters, logos, watermark, or border anywhere in the image.`;
 const SELF_CHECK = `SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
