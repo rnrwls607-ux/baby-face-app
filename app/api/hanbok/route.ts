@@ -5,7 +5,7 @@ import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
-// 추석 리프레시 — flash 구세대(슬리밍 CORE)에서 Pro 신형(SKIN TRUTH v3·무개조)으로 단독 전환.
+// 추석 리프레시 — flash 구세대(슬리밍 CORE)에서 Pro 신형(SKIN PERFECTION·무개조)으로 단독 전환.
 // 16종 공유 보정 공식 CORE는 무접촉 — 이 파일만 자체 CORE를 갖는다.
 const GEMINI_MODEL = "gemini-3-pro-image";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
@@ -18,13 +18,10 @@ const CORE = `You are the master stylist team and concept photographer of Seoul'
 STEP 1 — Read the person first:
 Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
 
-[SKIN TRUTH v3 — the #1 rule of this entire work]
-- DEFAULT SKIN IS CLEAR: unless a mole or mark is CLEARLY visible in the original photo, render that area of skin perfectly clear and unmarked. Marks may ONLY be copied from the original — never invented, never added for "beauty," never imagined out of blur, shadow, or noise.
-- ZERO new marks: creating even ONE mole, beauty mark, freckle, spot, or scar that does not exist in the original — on the face, neck, or anywhere — is a critical failure that ruins the entire work.
-- When in doubt, leave it out: a missing mark is acceptable; an invented mark is not.
-- Every EXISTING mole and mark stays exactly where it is — makeup may soften it slightly, never erase it, never move it.
-- The makeup NEVER adds marks: no painted-on beauty marks, no aesthetic freckles, no "charming" moles, under any circumstance.
-- Flawless skin still means REAL skin — pores and fine texture remain visible; a wax or 3D-render look is a critical failure.
+[SKIN PERFECTION — the #1 rule of this entire work]
+- Render the skin PERFECTLY CLEAN, clear, and even — a flawless, uniform complexion across the face, neck, and body, like a premium studio profile photo.
+- The ONLY marks allowed anywhere are ones CLEARLY visible in the original photo, kept in their exact original spots. Everything else is clean skin — nothing new appears, ever. If unsure whether something is a mark or just shadow/noise, render clean skin.
+- Flawless still means REAL: natural pores and fine skin texture remain visible — never waxy, never 3D-render plastic.
 
 [IDENTITY FLOOR — the strongest rule, never cross]
 - The scene and wardrobe transform, but the FACE anchors the identity absolutely: keep the exact same face structure, face shape, eye character (NEVER add or remove double eyelids), nose character, and every distinctive feature. No reshaping of any kind — jaw, eyes, nose all untouched, the face at its REAL size and shape. Any reduction, enlargement, or reshaping of the face or its features is a critical failure.
@@ -37,7 +34,7 @@ GLASSES RULE (check the input, then follow exactly):
 - In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
 [FLATTERING POLISH — beauty from light, makeup, and styling, never from reshaping]
-- Luminous, healthy, camera-ready skin under SKIN TRUTH above; bright, awake eyes with clean sparkling catchlights — their own eye size and shape, enhanced only by light and freshness (clearly visible through the lenses if they wear glasses).
+- Luminous, healthy, camera-ready skin under SKIN PERFECTION above; bright, awake eyes with clean sparkling catchlights — their own eye size and shape, enhanced only by light and freshness (clearly visible through the lenses if they wear glasses).
 - Woman: an elegant natural makeup that suits the hanbok — a luminous flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip. Man: clean, polished K-drama actor grooming — neat natural brows, fresh clear skin.
 - Age-true: fresh and well-rested, never older than the input, never artificially rejuvenated.
 
@@ -68,7 +65,7 @@ ABSOLUTELY AVOID (equally important):
 - Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
 - Crowds or other people in the frame, distorted hands, warped architecture.
 - Any readable text, letters, logos, watermark, or border anywhere in the image.`;
-const SELF_CHECK = `SELF-CHECK before finishing: zero new moles, freckles, or painted marks anywhere — default skin is clear? · every original mole still in place? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
+const SELF_CHECK = `SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
 async function generateHanbok(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const prompt = `${CORE}\n\n${SCENE}\n\n${FINISH}\n\n${SELF_CHECK}`;

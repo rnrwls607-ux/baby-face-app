@@ -16,13 +16,10 @@ const CUT_MS = 230000; // 양 경로 공통 컷
 //   그래서 상수 하나를 양 경로가 공유한다(복사 2벌 금지 — 개정 시 여기 한 곳만 고친다).
 const IDOL_PROMPT = `You are the head stylist team of Korea's top K-pop entertainment company — hair, makeup, and wardrobe working together on one photo. The person in this photo walks in as themselves; they walk out as a debut-ready idol, photographed in this exact same moment and place. Think of it as a fansign or behind-the-scenes photo: an idol in full stage styling, caught in an everyday spot. Same person, same photo — idol version.
 
-[SKIN TRUTH v3 — the #1 rule of this entire work]
-- DEFAULT SKIN IS CLEAR: unless a mole or mark is CLEARLY visible in the original photo, render that area of skin perfectly clear and unmarked. Marks may ONLY be copied from the original — never invented, never added for "beauty," never imagined out of blur, shadow, or noise.
-- ZERO new marks: creating even ONE mole, beauty mark, freckle, spot, or scar that does not exist in the original — on the face, neck, or anywhere — is a critical failure that ruins the entire work.
-- When in doubt, leave it out: a missing mark is acceptable; an invented mark is not.
-- Every EXISTING mole and mark stays exactly where it is — makeup may soften it slightly, never erase it, never move it.
-- The makeup NEVER adds marks: no painted-on beauty marks, no aesthetic freckles, no "charming" moles, under any circumstance.
-- Flawless idol skin still means REAL skin — pores and fine texture remain visible; a wax or 3D-render look is a critical failure.
+[SKIN PERFECTION — the #1 rule of this entire work]
+- Render the skin PERFECTLY CLEAN, clear, and even — a flawless, uniform complexion across the face, neck, and body, like a premium studio profile photo.
+- The ONLY marks allowed anywhere are ones CLEARLY visible in the original photo, kept in their exact original spots. Everything else is clean skin — nothing new appears, ever. If unsure whether something is a mark or just shadow/noise, render clean skin.
+- Flawless still means REAL: natural pores and fine skin texture remain visible — never waxy, never 3D-render plastic.
 
 [IDENTITY FLOOR — the strongest rule, never cross]
 - This transformation stacks new hair + bold makeup + new outfit, so the FACE must anchor the identity absolutely: keep the exact same face structure, face shape, eye character (NEVER add or remove double eyelids), nose character, and every distinctive feature. No reshaping of any kind — jaw, eyes, nose all untouched.
@@ -43,9 +40,9 @@ const IDOL_PROMPT = `You are the head stylist team of Korea's top K-pop entertai
 [LIGHT POLISH]
 - Keep the original scene and background, but light the person like an idol photo: soft, even, flattering key light on the face with a clean premium finish; harsh shadows and dull color casts removed. The background stays recognizably the same place.
 
-SELF-CHECK before finishing: zero new moles, freckles, or painted marks anywhere? · every original mole still in place? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched? · same person at a glance, despite new hair and outfit? · same pose, same background? · outfit modest, logo-free, and not copying any real idol? · does it scream "idol" instantly? Only then is the work complete.
+SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched? · same person at a glance, despite new hair and outfit? · same pose, same background? · outfit modest, logo-free, and not copying any real idol? · does it scream "idol" instantly? Only then is the work complete.
 
-Output: one photorealistic photo, identical in pose and background to the input — the same person in complete idol styling. High resolution, no text, no watermark, no border — and absolutely zero new moles or marks anywhere: default skin is clear.`;
+Output: one photorealistic photo, identical in pose and background to the input — the same person in complete idol styling. High resolution, no text, no watermark, no border — and the skin perfectly clean: nothing on it that the original does not have.`;
 
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);

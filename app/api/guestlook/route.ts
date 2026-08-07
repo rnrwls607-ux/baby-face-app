@@ -15,13 +15,10 @@ async function generateGuestlook(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const prompt = `You are the styling team preparing a wedding guest for the big day — hair, makeup, and wardrobe working together on one photo. The person in this photo walks in as themselves; they walk out in a flawless Korean wedding-guest look, photographed in this exact same moment and place. Think of it as the mirror-check snapshot before leaving for the ceremony: elegant, polished, perfectly appropriate. Same person, same photo — wedding-guest version.
 
-[SKIN TRUTH v3 — the #1 rule of this entire work]
-- DEFAULT SKIN IS CLEAR: unless a mole or mark is CLEARLY visible in the original photo, render that area of skin perfectly clear and unmarked. Marks may ONLY be copied from the original — never invented, never added for "beauty," never imagined out of blur, shadow, or noise.
-- ZERO new marks: creating even ONE mole, beauty mark, freckle, spot, or scar that does not exist in the original — on the face, neck, or anywhere — is a critical failure that ruins the entire work.
-- When in doubt, leave it out: a missing mark is acceptable; an invented mark is not.
-- Every EXISTING mole and mark stays exactly where it is — makeup may soften it slightly, never erase it, never move it.
-- The makeup NEVER adds marks: no painted-on beauty marks, no aesthetic freckles, no "charming" moles, under any circumstance.
-- Flawless skin still means REAL skin — pores and fine texture remain visible; a wax or 3D-render look is a critical failure.
+[SKIN PERFECTION — the #1 rule of this entire work]
+- Render the skin PERFECTLY CLEAN, clear, and even — a flawless, uniform complexion across the face, neck, and body, like a premium studio profile photo.
+- The ONLY marks allowed anywhere are ones CLEARLY visible in the original photo, kept in their exact original spots. Everything else is clean skin — nothing new appears, ever. If unsure whether something is a mark or just shadow/noise, render clean skin.
+- Flawless still means REAL: natural pores and fine skin texture remain visible — never waxy, never 3D-render plastic.
 
 [IDENTITY FLOOR — the strongest rule, never cross]
 - This transformation stacks new hair + makeup + a new outfit, so the FACE must anchor the identity absolutely: keep the exact same face structure, face shape, eye character (NEVER add or remove double eyelids), nose character, and every distinctive feature. No reshaping of any kind — jaw, eyes, nose all untouched.
@@ -42,9 +39,9 @@ async function generateGuestlook(imageDataUrl: string): Promise<string> {
 [LIGHT POLISH]
 - Keep the original scene and background, but light the person soft and luminous like a premium portrait: even, flattering illumination on the face; harsh shadows and dull color casts removed. The background stays recognizably the same place.
 
-SELF-CHECK before finishing: scan the skin zone by zone — forehead, cheeks, nose, chin, jaw, neck — zero invented moles, freckles, or marks? · every original mole still in place? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched? · same person at a glance, despite the new hair and dress? · same pose, same hands with no props added, same background? · dress NOT white/ivory/cream, logo-free, modest? · does it read "wedding guest" instantly? Only then is the work complete.
+SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched? · same person at a glance, despite the new hair and dress? · same pose, same hands with no props added, same background? · dress NOT white/ivory/cream, logo-free, modest? · does it read "wedding guest" instantly? Only then is the work complete.
 
-Output: one photorealistic photo, identical in pose and background to the input — the same person in a complete wedding-guest look. High resolution, no text, no watermark, no border — and absolutely zero new moles or marks anywhere: default skin is clear.`;
+Output: one photorealistic photo, identical in pose and background to the input — the same person in a complete wedding-guest look. High resolution, no text, no watermark, no border — and the skin perfectly clean: nothing on it that the original does not have.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
