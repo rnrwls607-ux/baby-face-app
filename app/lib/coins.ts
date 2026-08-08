@@ -213,7 +213,7 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
 
     await ensureWelcome(uid);
 
-    const locked = await redis.set(INFLIGHT_KEY(uid), 1, { nx: true, ex: 90 });
+    const locked = await redis.set(INFLIGHT_KEY(uid), 1, { nx: true, ex: 240 }); // Pro 생성 100~230초 — 도중 락 만료로 동시 2건(이중 차감)이 열리던 구멍 봉쇄
     if (locked !== "OK") {
       return NextResponse.json({ error: "진행 중인 생성이 끝나면 다시 시도해주세요" }, { status: 429 });
     }
