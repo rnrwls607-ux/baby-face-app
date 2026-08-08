@@ -5,38 +5,48 @@ import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
 export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
-// 추석 리프레시 — flash 구세대(슬리밍 CORE)에서 Pro 신형(SKIN PERFECTION·무개조)으로 단독 전환.
-// 16종 공유 보정 공식 CORE는 무접촉 — 이 파일만 자체 CORE를 갖는다.
+// A/B 판정(2026-08-08) — 구판 보정 계약(슬리밍 CORE)을 복원하고 SKIN 절에 발명 봉쇄 1줄만 더했다.
+// 엔진은 Pro + flash 폴백(cd05fd9) 그대로. 16종 공유 보정 공식 CORE는 무접촉 — 이 파일만 자체 CORE를 갖는다.
 const GEMINI_MODEL = "gemini-3-pro-image";
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
   return { mimeType: m[1], data: m[2] };
 }
-const CORE = `You are the master stylist team and concept photographer of Seoul's most famous premium hanbok studio — hair, makeup, wardrobe, and light working together on one pictorial. Take the person in the photo and create ONE stunning premium hanbok pictorial portrait of them in the scene described below. The scene, wardrobe, and light transform completely — the person stays completely themselves.
+const CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo(s) and create ONE stunning, fully-retouched concept pictorial portrait of them in the scene described below.
 
 STEP 1 — Read the person first:
 Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
-
-[SKIN PERFECTION — the #1 rule of this entire work]
-- Render the skin PERFECTLY CLEAN, clear, and even — a flawless, uniform complexion across the face, neck, and body, like a premium studio profile photo.
-- The ONLY marks allowed anywhere are ones CLEARLY visible in the original photo, kept in their exact original spots. Everything else is clean skin — nothing new appears, ever. If unsure whether something is a mark or just shadow/noise, render clean skin.
-- Flawless still means REAL: natural pores and fine skin texture remain visible — never waxy, never 3D-render plastic.
-
-[IDENTITY FLOOR — the strongest rule, never cross]
-- The scene and wardrobe transform, but the FACE anchors the identity absolutely: keep the exact same face structure, face shape, eye character (NEVER add or remove double eyelids), nose character, and every distinctive feature. No reshaping of any kind — jaw, eyes, nose all untouched, the face at its REAL size and shape. Any reduction, enlargement, or reshaping of the face or its features is a critical failure.
-- Anyone who knows them must recognize them INSTANTLY. Do NOT turn them into any celebrity or a generic pretty person.
-- BODY TRUTH: keep their real body as it is — the hanbok is fitted to THEM.
 
 GLASSES RULE (check the input, then follow exactly):
 - IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
 - IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
 - In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
-[FLATTERING POLISH — beauty from light, makeup, and styling, never from reshaping]
-- Luminous, healthy, camera-ready skin under SKIN PERFECTION above; bright, awake eyes with clean sparkling catchlights — their own eye size and shape, enhanced only by light and freshness (clearly visible through the lenses if they wear glasses).
-- Woman: an elegant natural makeup that suits the hanbok — a luminous flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip. Man: clean, polished K-drama actor grooming — neat natural brows, fresh clear skin.
-- Age-true: fresh and well-rested, never older than the input, never artificially rejuvenated.
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+- The direction is one-way: marks may only be REMOVED, never added — do not paint any new mole, freckle, beauty mark, or spot anywhere, under any circumstance.
+
+BEAUTY DIRECTION — modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with at most the tasteful accent described in the scene below — soft natural straight brows, delicate eye makeup. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully for the scene below (around the glasses naturally if they wear them). Never a dated style that ages them.
 
 RELIGHT COMPLETELY (this makes it look real):
 - Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
@@ -52,19 +62,21 @@ WARDROBE — premium modern hanbok:
 POSE:
 - A graceful, serene pose: standing softly with hands gently gathered, a light poised turn, or a soft gaze toward the camera with a gentle smile.`;
 const FINISH = `FRAMING:
-- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the face clearly the luminous hero of the frame.
+- Vertical portrait, eye-level, roughly chest-up to waist-up — tall, model-like proportions with the small refined face clearly the hero of the frame.
 
 CAMERA:
 - Shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
 
 ABSOLUTELY AVOID (equally important):
-- Oversaturated HDR.
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
 - Crowds or other people in the frame, distorted hands, warped architecture.
 - Any readable text, letters, logos, watermark, or border anywhere in the image.`;
-const SELF_CHECK = `SELF-CHECK before finishing: skin perfectly clean with only original marks? · glasses exactly as the original (or still absent)? · double eyelids and face structure untouched, the face at its real size? · same person at a glance, in full hanbok styling? · does it read "premium hanbok pictorial" instantly? Only then is the work complete.`;
 // 조립 완성본 export — diag mode=real이 실전과 문자 단위 동일한 프롬프트로 재현 실험을 하기 위함.
-// ★아래 식은 generateHanbok이 쓰던 조립식 그대로다(md5 게이트로 동일성 증명).
-export const HANBOK_PROMPT = `${CORE}\n\n${SCENE}\n\n${FINISH}\n\n${SELF_CHECK}`;
+export const HANBOK_PROMPT = `${CORE}\n\n${SCENE}\n\n${FINISH}`;
 async function generateHanbok(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);
   const prompt = HANBOK_PROMPT;
