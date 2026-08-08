@@ -299,10 +299,12 @@ const HERO_SLIDES: {
     { label: "배경 제거", key: "nukki" },
     { label: "4배 고화질", key: "upscale" },
   ] },
-  { id: "luxe", title: "사진관 안 가도,\n사진관보다", subtitle: "스튜디오 화보를 1분 만에", emoji: "🖤", accent: "#EDEAE6", go: "luxe", image: "/hero/luxe.webp", objectPosition: "center 50%" },
-  { id: "petstudio", title: "우리 아이도\n프로필 사진", subtitle: "펫 스튜디오 · 코스튬", emoji: "🐶", accent: "#F3EDE4", go: "petstudio", image: "/hero/petstudio.webp", objectPosition: "center 50%" },
-  { id: "couple", title: "둘이 함께,\n화보처럼", subtitle: "커플 · 웨딩 · 가족", emoji: "💑", accent: "#FBEFE9", go: "couple", image: "/hero/couple.webp", objectPosition: "center 50%" },
-  { id: "food", title: "사장님,\n사진이 매출입니다", subtitle: "음식 · 상품 · 공간 보정", emoji: "🍽️", accent: "#F6EEE6", go: "food", image: "/hero/food.webp", objectPosition: "center 50%" },
+  { id: "idolglam", title: "오늘의 나,\n데뷔 화보의 주인공으로", emoji: "🌟", accent: "#F3E4F8", go: "idolglam", image: "/hero/hero_idolglam.webp", objectPosition: "center 50%" },
+  { id: "hanbok", title: "추석엔,\n가장 고운 한복 화보", emoji: "🌸", accent: "#FCE8EF", go: "hanbok", image: "/hero/hero_hanbok.webp", objectPosition: "center 50%" },
+  { id: "goldenhour", title: "그 사진,\n하루 중 가장 아름다운 빛으로", emoji: "🌅", accent: "#FBEEDF", go: "goldenhour", image: "/hero/hero_goldenhour.webp", objectPosition: "center 50%" },
+  { id: "goddessdress", title: "오늘 밤의\n주인공은 나", emoji: "👗", accent: "#F5E7EE", go: "goddessdress", image: "/hero/hero_goddessdress.webp", objectPosition: "center 50%" },
+  { id: "wedding", title: "웨딩 화보,\n스튜디오 없이도 눈부시게", emoji: "💍", accent: "#FBEFE9", go: "wedding", image: "/hero/hero_wedding.webp", objectPosition: "center 50%" },
+  { id: "brickfigure", title: "내 하루가,\n손바닥 위 블록 세상으로", emoji: "🧱", accent: "#FBEFD6", go: "brickfigure", image: "/hero/hero_brickfigure.webp", objectPosition: "center 50%" },
 ];
 const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
 // 성별 대상 도트 배지(시안 2 채택) — audience 있는 컨셉(사람 사진 필수)에만, 카드 사진 우상단.
