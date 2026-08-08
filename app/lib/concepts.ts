@@ -10,6 +10,7 @@ export type Concept = {
   start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
+  audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
   resultCount?: number;
   heroImage?: string;
   heroImages?: string[];
@@ -27,7 +28,7 @@ export const BA_LIVE: string[] = ["nukki", "y2k", "idtweed", "bizpinkjacket", "t
 
 export const CONCEPTS: Record<string, Concept> = {
   baby: {
-    key: "baby",
+    key: "baby", audience: "all",
     coinCost: 3,
     title: "우리 아기 얼굴은?",
     subtitle: "엄마·아빠 닮은 아기를 미리 만나요",
@@ -43,7 +44,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/baby.webp",
   },
   voxel: {
-    key: "voxel",
+    key: "voxel", audience: "all",
     coinCost: 3,
     title: "복셀 아트",
     subtitle: "사진을 3D 블록 세상으로",
@@ -125,7 +126,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "product",
   },
   restore: {
-    key: "restore",
+    key: "restore", audience: "all",
     coinCost: 3,
     title: "옛날 사진 복원",
     subtitle: "빛바랜 추억을 선명하게",
@@ -189,7 +190,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "car",
   },
   lifeshot: {
-    key: "lifeshot",
+    key: "lifeshot", audience: "all",
     coinCost: 3,
     title: "인생샷 프로필",
     subtitle: "감성 프로필 한 장",
@@ -205,7 +206,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "lifeshot",
   },
   y2k: {
-    key: "y2k",
+    key: "y2k", audience: "all",
     coinCost: 3,
     title: "Y2K 하이틴",
     subtitle: "2000년대 하이틴 스타로",
@@ -221,7 +222,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "y2k",
   },
   roman: {
-    key: "roman",
+    key: "roman", audience: "all",
     coinCost: 3,
     title: "로판 웹툰 주인공",
     subtitle: "웹툰 표지 주인공으로",
@@ -237,7 +238,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "roman",
   },
   clay: {
-    key: "clay",
+    key: "clay", audience: "all",
     coinCost: 3,
     title: "클레이 아트",
     subtitle: "점토로 빚은 우리",
@@ -253,7 +254,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "clay",
   },
   luxe: {
-    key: "luxe",
+    key: "luxe", audience: "all",
     coinCost: 3,
     title: "럭셔리 매거진 화보",
     subtitle: "매거진 커버 속 나",
@@ -285,7 +286,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "homecafe",
   },
   travel: {
-    key: "travel",
+    key: "travel", audience: "all",
     coinCost: 3,
     title: "여행지 프로필",
     subtitle: "여행지 인생샷 한 장",
@@ -301,7 +302,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/travel.webp",
   },
   hanbok: {
-    key: "hanbok",
+    key: "hanbok", audience: "all",
     coinCost: 3,
     title: "한복 화보",
     subtitle: "추석엔, 가장 고운 한복 화보",
@@ -317,7 +318,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/hanbok.webp",
   },
   retro90: {
-    key: "retro90",
+    key: "retro90", audience: "all",
     coinCost: 3,
     title: "90년대 사진관",
     subtitle: "그때 그 사진관 감성",
@@ -333,7 +334,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/retro90.webp",
   },
   hocance: {
-    key: "hocance",
+    key: "hocance", audience: "all",
     coinCost: 3,
     title: "호캉스 화보",
     subtitle: "5성급 풀사이드 바이브",
@@ -349,7 +350,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/hocance.webp",
   },
   redcarpet: {
-    key: "redcarpet",
+    key: "redcarpet", audience: "all",
     coinCost: 3,
     title: "레드카펫 화보",
     subtitle: "오늘 밤의 주인공",
@@ -365,7 +366,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/redcarpet.webp",
   },
   birthday: {
-    key: "birthday",
+    key: "birthday", audience: "all",
     coinCost: 3,
     title: "생일 화보",
     subtitle: "일 년 중 가장 빛나는 날",
@@ -381,7 +382,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/birthday.webp",
   },
   job: {
-    key: "job",
+    key: "job", audience: "all",
     coinCost: 3,
     title: "직업 변신",
     subtitle: "파일럿·의사·CEO로 변신",
@@ -397,7 +398,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/job.webp",
   },
   sporty: {
-    key: "sporty",
+    key: "sporty", audience: "all",
     coinCost: 3,
     title: "스포티 화보",
     subtitle: "테니스·골프 올드머니 룩",
@@ -413,7 +414,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/sporty.webp",
   },
   flower: {
-    key: "flower",
+    key: "flower", audience: "all",
     coinCost: 3,
     title: "플라워 화보",
     subtitle: "꽃에 둘러싸인 순간",
@@ -429,7 +430,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/flower.webp",
   },
   remindwedding: {
-    key: "remindwedding",
+    key: "remindwedding", audience: "all",
     coinCost: 3,
     title: "리마인드 웨딩",
     subtitle: "부모님 웨딩사진, 다시 한 번",
@@ -445,7 +446,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/remindwedding.webp",
   },
   selfwedding: {
-    key: "selfwedding",
+    key: "selfwedding", audience: "all",
     coinCost: 3,
     title: "셀프웨딩 화보",
     subtitle: "우리끼리, 웨딩 화보",
@@ -461,7 +462,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/selfwedding.webp",
   },
   duofamily: {
-    key: "duofamily",
+    key: "duofamily", audience: "all",
     coinCost: 3,
     title: "둘이서 가족사진",
     subtitle: "둘이서 남기는 가족사진",
@@ -477,7 +478,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/duofamily.webp",
   },
   coupletravel: {
-    key: "coupletravel",
+    key: "coupletravel", audience: "all",
     coinCost: 3,
     title: "커플 여행 스냅",
     subtitle: "둘이 함께, 여행 스냅",
@@ -621,7 +622,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/petjob.webp",
   },
   pendrawing: {
-    key: "pendrawing",
+    key: "pendrawing", audience: "all",
     coinCost: 3,
     title: "펜 드로잉 초상",
     subtitle: "한 장의 손그림 초상화",
@@ -637,7 +638,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/pendrawing.webp",
   },
   oilportrait: {
-    key: "oilportrait",
+    key: "oilportrait", audience: "all",
     coinCost: 3,
     title: "유화 명화 초상",
     subtitle: "미술관에 걸린 나",
@@ -653,7 +654,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/oilportrait.webp",
   },
   softanime: {
-    key: "softanime",
+    key: "softanime", audience: "all",
     coinCost: 3,
     title: "감성 애니 초상",
     subtitle: "애니메이션 한 장면처럼",
@@ -669,7 +670,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/softanime.webp",
   },
   retroanime: {
-    key: "retroanime",
+    key: "retroanime", audience: "all",
     coinCost: 3,
     title: "레트로 애니 초상",
     subtitle: "90년대 애니 한 장면",
@@ -685,7 +686,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/retroanime.webp",
   },
   popart: {
-    key: "popart",
+    key: "popart", audience: "all",
     coinCost: 3,
     title: "팝아트 포스터",
     subtitle: "원색으로 물든 나",
@@ -702,7 +703,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   marble: {
-    key: "marble",
+    key: "marble", audience: "all",
     coinCost: 3,
     title: "대리석 조각상",
     subtitle: "미술관에 선 나",
@@ -719,7 +720,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   chibifigure: {
-    key: "chibifigure",
+    key: "chibifigure", audience: "all",
     coinCost: 3,
     title: "미니 피규어",
     subtitle: "책상 위 나의 피규어",
@@ -736,7 +737,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   clayfigure: {
-    key: "clayfigure",
+    key: "clayfigure", audience: "all",
     coinCost: 3,
     title: "클레이 피규어",
     subtitle: "손으로 빚은 나",
@@ -753,7 +754,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   stitchart: {
-    key: "stitchart",
+    key: "stitchart", audience: "all",
     coinCost: 3,
     title: "자수 초상",
     subtitle: "한 땀 한 땀 수놓은 나",
@@ -769,7 +770,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/stitchart.webp",
   },
   pixelart: {
-    key: "pixelart",
+    key: "pixelart", audience: "all",
     coinCost: 3,
     title: "픽셀 아트",
     subtitle: "도트로 그린 나의 세계",
@@ -786,7 +787,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   stainedglass: {
-    key: "stainedglass",
+    key: "stainedglass", audience: "all",
     coinCost: 3,
     title: "스테인드글라스",
     subtitle: "빛으로 물든 초상",
@@ -802,7 +803,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/stainedglass.webp",
   },
   neonsign: {
-    key: "neonsign",
+    key: "neonsign", audience: "all",
     coinCost: 3,
     title: "네온사인 초상",
     subtitle: "어둠 속에 빛나는 나",
@@ -819,7 +820,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   paperart: {
-    key: "paperart",
+    key: "paperart", audience: "all",
     coinCost: 3,
     title: "페이퍼 아트",
     subtitle: "겹겹이 오려 만든 나",
@@ -835,7 +836,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/paperart.webp",
   },
   stickerpack: {
-    key: "stickerpack",
+    key: "stickerpack", audience: "all",
     coinCost: 3,
     title: "스티커팩",
     subtitle: "여섯 컷 나만의 스티커",
@@ -852,7 +853,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   toon3d: {
-    key: "toon3d",
+    key: "toon3d", audience: "all",
     coinCost: 3,
     title: "3D 캐릭터 초상",
     subtitle: "극장판 주인공이 된 나",
@@ -933,7 +934,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/fixbacklight.webp",
   },
   bgchange: {
-    key: "bgchange",
+    key: "bgchange", audience: "all",
     coinCost: 3,
     title: "배경 교체",
     subtitle: "나는 그대로, 배경만 바꿔요",
@@ -950,7 +951,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   fixcrowd: {
-    key: "fixcrowd",
+    key: "fixcrowd", audience: "all",
     coinCost: 3,
     title: "행인 지우개",
     subtitle: "낯선 사람들만 감쪽같이, 그 자리는 온전히",
@@ -966,7 +967,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/fixcrowd.webp",
   },
   beauty: {
-    key: "beauty",
+    key: "beauty", audience: "all",
     coinCost: 3,
     title: "뷰티 보정",
     subtitle: "쌩얼도, 메이크업 받은 날처럼",
@@ -999,7 +1000,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/anisky.webp",
   },
   brickfigure: {
-    key: "brickfigure",
+    key: "brickfigure", audience: "all",
     coinCost: 3,
     title: "블록 피규어",
     subtitle: "내 하루가 귀여운 블록 세상으로",
@@ -1015,7 +1016,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/brickfigure.webp",
   },
   cheerglam: {
-    key: "cheerglam",
+    key: "cheerglam", audience: "female",
     coinCost: 3,
     title: "치어리더",
     subtitle: "오늘의 나, 경기장의 스타로",
@@ -1032,7 +1033,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   crewglam: {
-    key: "crewglam",
+    key: "crewglam", audience: "female",
     coinCost: 3,
     title: "승무원 스타일",
     subtitle: "단정한 쪽머리와 유니폼, 기내의 품격",
@@ -1049,7 +1050,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   guestlook: {
-    key: "guestlook",
+    key: "guestlook", audience: "female",
     coinCost: 3,
     title: "하객룩",
     subtitle: "결혼식 가는 길, 가장 우아한 나",
@@ -1066,7 +1067,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   anchorglam: {
-    key: "anchorglam",
+    key: "anchorglam", audience: "female",
     coinCost: 3,
     title: "아나운서",
     subtitle: "단정한 수트, 뉴스룸의 카리스마",
@@ -1083,7 +1084,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   goddessdress: {
-    key: "goddessdress",
+    key: "goddessdress", audience: "female",
     coinCost: 3,
     title: "여신 드레스",
     subtitle: "시상식 밤의 주인공처럼",
@@ -1100,7 +1101,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   tripface: {
-    key: "tripface",
+    key: "tripface", audience: "all",
     coinCost: 3,
     title: "여행 셀카 구제",
     subtitle: "배경은 그대로, 나는 그날의 베스트로",
@@ -1116,7 +1117,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/tripface.webp",
   },
   idolglam: {
-    key: "idolglam",
+    key: "idolglam", audience: "all",
     coinCost: 3,
     title: "아이돌 글램",
     subtitle: "오늘의 나, 데뷔 화보의 주인공으로",
@@ -1133,7 +1134,7 @@ export const CONCEPTS: Record<string, Concept> = {
     inputRule: "solo_face",
   },
   halloween: {
-    key: "halloween",
+    key: "halloween", audience: "all",
     coinCost: 3,
     title: "할로윈 변신",
     subtitle: "뱀파이어·마녀·요정으로",
@@ -1149,7 +1150,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/halloween.webp",
   },
   goods: {
-    key: "goods",
+    key: "goods", audience: "all",
     coinCost: 3,
     title: "굿즈 미리보기",
     subtitle: "나·우리 애가 아크릴 굿즈로",
@@ -1164,7 +1165,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "goods",
   },
   bizprofile: {
-    key: "bizprofile",
+    key: "bizprofile", audience: "all",
     coinCost: 3,
     title: "명함·링크드인 프로필",
     subtitle: "비즈니스 프로필",
@@ -1179,7 +1180,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "bizprofile",
   },
   hairstyle: {
-    key: "hairstyle",
+    key: "hairstyle", audience: "all",
     coinCost: 3,
     title: "헤어 체인지",
     subtitle: "미용실 가기 전 미리보기",
@@ -1195,7 +1196,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "hairstyle",
   },
   illust: {
-    key: "illust",
+    key: "illust", audience: "all",
     coinCost: 3,
     title: "AI 일러스트",
     subtitle: "사진이 그림 한 장으로",
@@ -1211,7 +1212,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "illust",
   },
    idskyblue: {
-       key: "idskyblue",
+       key: "idskyblue", audience: "all",
      coinCost: 9,
        title: "하늘빛 블루 셔츠",
        subtitle: "맑고 산뜻한 첫인상",
@@ -1228,7 +1229,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "idskyblue",
      },
        biznavy: {
-       key: "biznavy",
+       key: "biznavy", audience: "female",
          coinCost: 9,
        title: "네이비 정장 프로필",
        subtitle: "신뢰를 더하는 프로페셔널",
@@ -1245,7 +1246,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "biznavy",
      },
      bizmnavy: {
-       key: "bizmnavy",
+       key: "bizmnavy", audience: "male",
        coinCost: 9,
        title: "남성 네이비 정장",
        subtitle: "믿음직한 프로페셔널",
@@ -1262,7 +1263,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmnavy",
      },
      bizmcharcoal: {
-       key: "bizmcharcoal",
+       key: "bizmcharcoal", audience: "male",
        coinCost: 9,
        title: "남성 차콜 정장",
        subtitle: "비즈니스 스탠다드",
@@ -1279,7 +1280,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmcharcoal",
      },
      bizmblack: {
-       key: "bizmblack",
+       key: "bizmblack", audience: "male",
        coinCost: 9,
        title: "남성 블랙 정장",
        subtitle: "격식 있는 클래식",
@@ -1296,7 +1297,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmblack",
      },
      bizmlightgray: {
-       key: "bizmlightgray",
+       key: "bizmlightgray", audience: "male",
        coinCost: 9,
        title: "남성 라이트그레이 정장",
        subtitle: "밝고 부드러운 인상",
@@ -1313,7 +1314,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmlightgray",
      },
      bizmvest: {
-       key: "bizmvest",
+       key: "bizmvest", audience: "male",
        coinCost: 9,
        title: "남성 쓰리피스 (조끼)",
        subtitle: "무게감 있는 임원룩",
@@ -1330,7 +1331,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmvest",
      },
      bizmbeige: {
-       key: "bizmbeige",
+       key: "bizmbeige", audience: "male",
        coinCost: 9,
        title: "남성 베이지 정장",
        subtitle: "따뜻하고 친근한",
@@ -1347,7 +1348,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmbeige",
      },
      bizmblazer: {
-       key: "bizmblazer",
+       key: "bizmblazer", audience: "male",
        coinCost: 9,
        title: "남성 네이비 블레이저",
        subtitle: "노타이 비즈캐주얼",
@@ -1364,7 +1365,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmblazer",
      },
      bizmturtle: {
-       key: "bizmturtle",
+       key: "bizmturtle", audience: "male",
        coinCost: 9,
        title: "남성 블레이저 터틀넥",
        subtitle: "모던 미니멀",
@@ -1381,7 +1382,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmturtle",
      },
      bizmdb: {
-       key: "bizmdb",
+       key: "bizmdb", audience: "male",
        coinCost: 9,
        title: "남성 더블브레스티드",
        subtitle: "존재감 있는 실루엣",
@@ -1398,7 +1399,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmdb",
      },
      bizmknittie: {
-       key: "bizmknittie",
+       key: "bizmknittie", audience: "male",
        coinCost: 9,
        title: "남성 니트타이 재킷",
        subtitle: "젊은 전문직 세미포멀",
@@ -1415,7 +1416,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizmknittie",
      },
       bizblack: {
-       key: "bizblack",
+       key: "bizblack", audience: "female",
         coinCost: 9,
        title: "블랙 정장 프로필",
        subtitle: "격식을 갖춘 클래식",
@@ -1432,7 +1433,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizblack",
      },
      bizwhite: {
-       key: "bizwhite",
+       key: "bizwhite", audience: "female",
        coinCost: 9,
        title: "화이트 셔츠 프로필",
        subtitle: "편안하고 단정한 전문가",
@@ -1449,7 +1450,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizwhite",
      },
      bizribbon: {
-       key: "bizribbon",
+       key: "bizribbon", audience: "female",
        coinCost: 9,
        title: "리본 블라우스 프로필",
        subtitle: "우아하고 단정한 여성 프로필",
@@ -1466,7 +1467,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizribbon",
      },
      bizbeige: {
-       key: "bizbeige",
+       key: "bizbeige", audience: "female",
        coinCost: 9,
        title: "베이지 정장 프로필",
        subtitle: "부드럽고 따뜻한 전문가",
@@ -1483,7 +1484,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizbeige",
      },
      bizlavender: {
-       key: "bizlavender",
+       key: "bizlavender", audience: "female",
        coinCost: 9,
        title: "라벤더 정장 프로필",
        subtitle: "화사하고 부드러운 첫인상",
@@ -1500,7 +1501,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizlavender",
      },
      bizgray: {
-       key: "bizgray",
+       key: "bizgray", audience: "female",
        coinCost: 9,
        title: "그레이 정장 프로필",
        subtitle: "차분하고 전문적인 인상",
@@ -1517,7 +1518,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizgray",
      },
      bizknit: {
-       key: "bizknit",
+       key: "bizknit", audience: "female",
        coinCost: 9,
        title: "니트 가디건 프로필",
        subtitle: "친근하고 단정한 분위기",
@@ -1534,7 +1535,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizknit",
      },
      bizchiffon: {
-       key: "bizchiffon",
+       key: "bizchiffon", audience: "female",
        coinCost: 9,
        title: "쉬폰 블라우스 프로필",
        subtitle: "밝고 화사한 여성 프로필",
@@ -1551,7 +1552,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizchiffon",
      },
      bizpinkjacket: {
-       key: "bizpinkjacket",
+       key: "bizpinkjacket", audience: "female",
        coinCost: 9,
        title: "핑크 트위드 재킷 프로필",
        subtitle: "우아하고 화사한 셋업",
@@ -1568,7 +1569,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizpinkjacket",
      },
      bizcreamdress: {
-       key: "bizcreamdress",
+       key: "bizcreamdress", audience: "female",
        coinCost: 9,
        title: "크림 원피스 프로필",
        subtitle: "은은하고 우아한 여성 프로필",
@@ -1585,7 +1586,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizcreamdress",
      },
      biznavyblouse: {
-       key: "biznavyblouse",
+       key: "biznavyblouse", audience: "female",
        coinCost: 9,
        title: "네이비 블라우스 프로필",
        subtitle: "단정하고 클래식한 조합",
@@ -1602,7 +1603,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "biznavyblouse",
      },
      bizskyblouse: {
-       key: "bizskyblouse",
+       key: "bizskyblouse", audience: "female",
        coinCost: 9,
        title: "스카이블루 블라우스 프로필",
        subtitle: "맑고 산뜻한 첫인상",
@@ -1619,7 +1620,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizskyblouse",
      },
      bizpinktweed: {
-       key: "bizpinktweed",
+       key: "bizpinktweed", audience: "female",
        coinCost: 9,
        title: "핑크 트위드 원피스 프로필",
        subtitle: "격식 있는 우아한 원피스",
@@ -1636,7 +1637,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizpinktweed",
      },
      bizshirring: {
-       key: "bizshirring",
+       key: "bizshirring", audience: "female",
        coinCost: 9,
        title: "셔링 블라우스 프로필",
        subtitle: "우아하고 고급스러운 무드",
@@ -1653,7 +1654,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizshirring",
      },
      bizviolet: {
-       key: "bizviolet",
+       key: "bizviolet", audience: "female",
        coinCost: 9,
        title: "바이올렛 스커트 프로필",
        subtitle: "차분하고 세련된 분위기",
@@ -1670,7 +1671,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizviolet",
      },
      bizblueskirt: {
-       key: "bizblueskirt",
+       key: "bizblueskirt", audience: "female",
        coinCost: 9,
        title: "블루 스커트 프로필",
        subtitle: "깨끗하고 산뜻한 느낌",
@@ -1687,7 +1688,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizblueskirt",
      },
      bizburgundy: {
-       key: "bizburgundy",
+       key: "bizburgundy", audience: "female",
        coinCost: 9,
        title: "버건디 슬랙스 프로필",
        subtitle: "자신감과 열정을 드러내는",
@@ -1704,7 +1705,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizburgundy",
      },
      bizkhaki: {
-       key: "bizkhaki",
+       key: "bizkhaki", audience: "female",
        coinCost: 9,
        title: "카키 수트 프로필",
        subtitle: "모던하고 세련된 무드",
@@ -1721,7 +1722,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizkhaki",
      },
      bizblackdress: {
-       key: "bizblackdress",
+       key: "bizblackdress", audience: "female",
        coinCost: 9,
        title: "블랙 원피스 프로필",
        subtitle: "시크하고 세련된 무드",
@@ -1738,7 +1739,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizblackdress",
      },
      bizbluegray: {
-       key: "bizbluegray",
+       key: "bizbluegray", audience: "female",
        coinCost: 9,
        title: "블루&그레이 미니원피스 프로필",
        subtitle: "발랄하고 산뜻한 인상",
@@ -1755,7 +1756,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizbluegray",
      },
      bizpinstripe: {
-       key: "bizpinstripe",
+       key: "bizpinstripe", audience: "female",
        coinCost: 9,
        title: "핀스트라이프 수트 프로필",
        subtitle: "클래식하고 자신감 있는",
@@ -1772,7 +1773,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizpinstripe",
      },
      bizcheck: {
-       key: "bizcheck",
+       key: "bizcheck", audience: "female",
        coinCost: 9,
        title: "체크 블레이저 수트 프로필",
        subtitle: "우아하고 클래식한 패턴",
@@ -1789,7 +1790,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizcheck",
      },
      bizknitdress: {
-       key: "bizknitdress",
+       key: "bizknitdress", audience: "female",
        coinCost: 9,
        title: "카멜 니트 원피스 프로필",
        subtitle: "따뜻하면서 단정한 무드",
@@ -1806,7 +1807,7 @@ export const CONCEPTS: Record<string, Concept> = {
        start: "bizknitdress",
      },
   figure: {
-    key: "figure",
+    key: "figure", audience: "all",
     coinCost: 3,
     title: "미니어처 피규어",
     subtitle: "내 사진이 피규어로",
@@ -1822,7 +1823,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "figure",
   },
   age: {
-    key: "age",
+    key: "age", audience: "all",
     coinCost: 3,
     title: "노년·베이비 변환",
     subtitle: "시간을 거슬러 보는 내 모습",
@@ -1886,7 +1887,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "upscale",
   },
   fashion: {
-    key: "fashion",
+    key: "fashion", audience: "all",
     coinCost: 3,
     title: "패션 룩북",
     subtitle: "오늘의 착장이 화보로",
@@ -1902,7 +1903,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "fashion",
   },
   idol: {
-    key: "idol",
+    key: "idol", audience: "all",
     coinCost: 3,
     title: "아이돌 프로필",
     subtitle: "오늘 데뷔하는 내 프로필",
@@ -1918,7 +1919,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idol",
   },
   xmas: {
-    key: "xmas",
+    key: "xmas", audience: "all",
     coinCost: 3,
     title: "크리스마스 화보",
     subtitle: "따뜻한 연말 한 장",
@@ -1934,7 +1935,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "xmas",
   },
   graduation: {
-    key: "graduation",
+    key: "graduation", audience: "all",
     coinCost: 3,
     title: "AI 졸업사진",
     subtitle: "학사모 쓴 내 모습",
@@ -1950,7 +1951,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "graduation",
   },
   wedding: {
-    key: "wedding",
+    key: "wedding", audience: "female",
     coinCost: 3,
     title: "웨딩 화보",
     subtitle: "드레스·턱시도 입은 나",
@@ -1998,7 +1999,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/petreceipt.webp",
   },
   era: {
-    key: "era",
+    key: "era", audience: "all",
     coinCost: 3,
     title: "시대·복장 변신",
     subtitle: "다른 시대에 태어났다면?",
@@ -2030,7 +2031,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/petcostume.webp",
   },
   couple: {
-    key: "couple",
+    key: "couple", audience: "all",
     coinCost: 3,
     title: "커플 스튜디오 화보",
     subtitle: "둘이 함께, 스튜디오 화보",
@@ -2046,7 +2047,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/couple.webp",
   },
   hanbokcouple: {
-    key: "hanbokcouple",
+    key: "hanbokcouple", audience: "all",
     coinCost: 3,
     title: "웨딩 한복 커플",
     subtitle: "추석, 둘이 고운 한복으로",
@@ -2062,7 +2063,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/hanbokcouple.webp",
   },
   friend: {
-    key: "friend",
+    key: "friend", audience: "all",
     coinCost: 3,
     title: "우정 스냅",
     subtitle: "베프랑 같이 찍은 한 장",
@@ -2078,7 +2079,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/friend.webp",
   },
   family: {
-    key: "family",
+    key: "family", audience: "all",
     coinCost: 3,
     title: "가족 스튜디오 화보",
     subtitle: "온 가족이 한 장에",
@@ -2093,7 +2094,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "family",
   },
   familyhanbok: {
-    key: "familyhanbok",
+    key: "familyhanbok", audience: "all",
     coinCost: 3,
     title: "명절 한복 2인",
     subtitle: "추석 부모님과, 고운 한복 2인 화보",
@@ -2125,7 +2126,7 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/familypet.webp",
   },
   fourcut: {
-    key: "fourcut",
+    key: "fourcut", audience: "all",
     coinCost: 3,
     title: "인생네컷",
     subtitle: "나 혼자 네컷 한 장",
@@ -2140,7 +2141,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "fourcut",
   },
   fourcutillust: {
-    key: "fourcutillust",
+    key: "fourcutillust", audience: "all",
     coinCost: 3,
     title: "인생네컷 (일러스트)",
     subtitle: "그림체 네컷 한 장",
@@ -2155,7 +2156,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "fourcutillust",
   },
   fourcutcouple: {
-    key: "fourcutcouple",
+    key: "fourcutcouple", audience: "all",
     coinCost: 3,
     title: "커플 네컷",
     subtitle: "둘이 함께 네컷 한 장",
@@ -2170,7 +2171,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "fourcutcouple",
   },
   idblack: {
-    key: "idblack",
+    key: "idblack", audience: "all",
     coinCost: 9,
     title: "블랙 정장 증명사진",
     subtitle: "취업·이력서용 깔끔한 정석",
@@ -2187,7 +2188,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idblack",
   },
   idnavy: {
-    key: "idnavy",
+    key: "idnavy", audience: "all",
     coinCost: 9,
     title: "네이비 정장 증명사진",
     subtitle: "신뢰감을 주는 면접용",
@@ -2204,7 +2205,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idnavy",
   },
   idcharcoal: {
-    key: "idcharcoal",
+    key: "idcharcoal", audience: "all",
     coinCost: 9,
     title: "차콜그레이 정장 증명사진",
     subtitle: "차분하고 전문적인 인상",
@@ -2221,7 +2222,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idcharcoal",
   },
   idwhiteshirt: {
-    key: "idwhiteshirt",
+    key: "idwhiteshirt", audience: "all",
     coinCost: 9,
     title: "화이트셔츠 증명사진",
     subtitle: "깔끔한 학생증·사원증용",
@@ -2238,7 +2239,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idwhiteshirt",
   },
   idbeige: {
-    key: "idbeige",
+    key: "idbeige", audience: "all",
     coinCost: 9,
     title: "베이지 정장 증명사진",
     subtitle: "부드럽고 따뜻한 인상",
@@ -2255,7 +2256,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idbeige",
   },
   idblacktie: {
-    key: "idblacktie",
+    key: "idblacktie", audience: "all",
     coinCost: 9,
     title: "블랙정장+넥타이 증명사진",
     subtitle: "격식을 갖춘 면접·서류용",
@@ -2272,7 +2273,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idblacktie",
   },
   idblouse: {
-    key: "idblouse",
+    key: "idblouse", audience: "female",
     coinCost: 9,
     title: "아이보리 블라우스 증명사진",
     subtitle: "편안하고 단정한 여성 느낌",
@@ -2289,7 +2290,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idblouse",
   },
   idknit: {
-    key: "idknit",
+    key: "idknit", audience: "all",
     coinCost: 9,
     title: "니트 가디건 증명사진",
     subtitle: "부드럽고 친근한 분위기",
@@ -2306,7 +2307,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idknit",
   },
   idturtleneck: {
-    key: "idturtleneck",
+    key: "idturtleneck", audience: "all",
     coinCost: 9,
     title: "터틀넥 증명사진",
     subtitle: "모던하고 미니멀한 인상",
@@ -2323,7 +2324,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idturtleneck",
   },
   idglasses: {
-    key: "idglasses",
+    key: "idglasses", audience: "all",
     coinCost: 9,
     title: "정장+안경 증명사진",
     subtitle: "안경을 깔끔하게 살린 정장",
@@ -2340,7 +2341,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idglasses",
   },
   idoffshoulder: {
-    key: "idoffshoulder",
+    key: "idoffshoulder", audience: "female",
     coinCost: 9,
     title: "단발 오프숄더 증명사진",
     subtitle: "청초하고 자연스러운 무드",
@@ -2357,7 +2358,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idoffshoulder",
   },
   idupdo: {
-    key: "idupdo",
+    key: "idupdo", audience: "female",
     coinCost: 9,
     title: "올림머리 블라우스 증명사진",
     subtitle: "정돈된 이미지를 주는",
@@ -2374,7 +2375,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idupdo",
   },
   idlonghair: {
-    key: "idlonghair",
+    key: "idlonghair", audience: "female",
     coinCost: 9,
     title: "긴머리 블라우스 증명사진",
     subtitle: "우아하고 자연스러운",
@@ -2391,7 +2392,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idlonghair",
   },
   idtweed: {
-    key: "idtweed",
+    key: "idtweed", audience: "female",
     coinCost: 9,
     title: "반묶음 트위드 증명사진",
     subtitle: "포멀한 러블리 무드",
@@ -2408,7 +2409,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idtweed",
   },
   idwavebob: {
-    key: "idwavebob",
+    key: "idwavebob", audience: "female",
     coinCost: 9,
     title: "물결 단발 증명사진",
     subtitle: "발랄하고 상큼한 C컬",
@@ -2425,7 +2426,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idwavebob",
   },
   idponytail: {
-    key: "idponytail",
+    key: "idponytail", audience: "female",
     coinCost: 9,
     title: "로우 포니테일 증명사진",
     subtitle: "깔끔하고 프로페셔널한",
@@ -2442,7 +2443,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idponytail",
   },
   idgarma: {
-    key: "idgarma",
+    key: "idgarma", audience: "male",
     coinCost: 9,
     title: "가르마컷 블랙정장 증명사진",
     subtitle: "신뢰감 있는 첫인상",
@@ -2459,7 +2460,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idgarma",
   },
   iddropcut: {
-    key: "iddropcut",
+    key: "iddropcut", audience: "male",
     coinCost: 9,
     title: "드랍컷 블루셔츠 증명사진",
     subtitle: "차분한 리더의 이미지",
@@ -2476,7 +2477,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "iddropcut",
   },
   idperm: {
-    key: "idperm",
+    key: "idperm", audience: "male",
     coinCost: 9,
     title: "페릭컷 화이트티 증명사진",
     subtitle: "기본에 충실한 산뜻함",
@@ -2493,7 +2494,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idperm",
   },
   idpomade: {
-    key: "idpomade",
+    key: "idpomade", audience: "male",
     coinCost: 9,
     title: "포마드 레트로정장 증명사진",
     subtitle: "그 시절 감성의 클래식",
@@ -2510,7 +2511,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idpomade",
   },
   idwarmbob: {
-    key: "idwarmbob",
+    key: "idwarmbob", audience: "female",
     coinCost: 9,
     title: "웜브라운 단발 증명사진",
     subtitle: "따뜻하고 포근한 무드",
@@ -2527,7 +2528,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idwarmbob",
   },
   idhime: {
-    key: "idhime",
+    key: "idhime", audience: "female",
     coinCost: 9,
     title: "밀크브라운 히메컷 증명사진",
     subtitle: "러블리하고 부드러운",
@@ -2544,7 +2545,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idhime",
   },
   idashwave: {
-    key: "idashwave",
+    key: "idashwave", audience: "female",
     coinCost: 9,
     title: "애쉬 웨이브 증명사진",
     subtitle: "세련되고 몽환적인",
@@ -2561,7 +2562,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idashwave",
   },
   idlowbun: {
-    key: "idlowbun",
+    key: "idlowbun", audience: "female",
     coinCost: 9,
     title: "로우번 터틀넥 증명사진",
     subtitle: "시크하고 세련된 무드",
@@ -2578,7 +2579,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idlowbun",
   },
   idburgundy: {
-    key: "idburgundy",
+    key: "idburgundy", audience: "female",
     coinCost: 9,
     title: "버건디 오프숄더 프로필",
     subtitle: "우아하고 여성스러운 화보",
@@ -2595,7 +2596,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idburgundy",
   },
   iddandy: {
-    key: "iddandy",
+    key: "iddandy", audience: "male",
     coinCost: 9,
     title: "댄디 베스트 증명사진",
     subtitle: "시원하고 댄디한 무드",
@@ -2612,7 +2613,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "iddandy",
   },
   iddownperm: {
-    key: "iddownperm",
+    key: "iddownperm", audience: "male",
     coinCost: 9,
     title: "다운펌 화이트셔츠 증명사진",
     subtitle: "청량하고 산뜻한 첫인상",
@@ -2629,7 +2630,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "iddownperm",
   },
   idnavysuit: {
-    key: "idnavysuit",
+    key: "idnavysuit", audience: "male",
     coinCost: 9,
     title: "가르마 네이비수트 증명사진",
     subtitle: "신뢰감 있는 프로페셔널",
@@ -2646,7 +2647,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idnavysuit",
   },
   idbeigeblazer: {
-    key: "idbeigeblazer",
+    key: "idbeigeblazer", audience: "male",
     coinCost: 9,
     title: "소프트펌 베이지 증명사진",
     subtitle: "세련되고 따뜻한 무드",
@@ -2663,7 +2664,7 @@ export const CONCEPTS: Record<string, Concept> = {
     start: "idbeigeblazer",
   },
   idhenley: {
-    key: "idhenley",
+    key: "idhenley", audience: "male",
     coinCost: 9,
     title: "투블럭 헨리넥 증명사진",
     subtitle: "감각적이고 모던한",

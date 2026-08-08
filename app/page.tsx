@@ -305,6 +305,23 @@ const HERO_SLIDES: {
   { id: "food", title: "사장님,\n사진이 매출입니다", subtitle: "음식 · 상품 · 공간 보정", emoji: "🍽️", accent: "#F6EEE6", go: "food", image: "/hero/food.webp", objectPosition: "center 50%" },
 ];
 const HERO_INTERVAL_MS = 5000; // 자동 전환 주기
+// 성별 대상 도트 배지(시안 2 채택) — audience 있는 컨셉(사람 사진 필수)에만, 카드 사진 우상단.
+// 펫·음식·공간·풍경·범용 도구는 audience 미지정이라 자동으로 안 뜬다. 히어로·목차 등 다른 형태 미적용.
+const AUD_DOT: Record<string, { c: string; t: string }> = {
+  female: { c: "#D96A8B", t: "여성" },
+  male: { c: "#3A5FA8", t: "남성" },
+  all: { c: "#9AA0AA", t: "공용" },
+};
+const audienceBadge = (go: string) => {
+  const a = CONCEPTS[go]?.audience;
+  if (!a) return null;
+  const d = AUD_DOT[a];
+  return (
+    <span style={{ position: "absolute", right: 10, top: 10, display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(255,255,255,0.8)", borderRadius: 20, padding: "3px 8px 3px 7px", fontSize: 11, fontWeight: 700, color: "#3A3E45", letterSpacing: 0.3 }}>
+      <span style={{ width: 6, height: 6, borderRadius: "50%", background: d.c }} />{d.t}
+    </span>
+  );
+};
 // cat: 이 섹션의 "전체보기 ›"가 열 카테고리(HOME_PILLS의 value). 비우면 현재 칩을 따른다.
 const HOME_SECTIONS: { id: string; heading: string; title: string; layout: string; items: HomeCardItem[]; cat?: string }[] = [
   {
@@ -804,6 +821,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
           </div>
           {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
           {CONCEPTS[item.go]?.coinCost === 0 && <span style={{ position: "absolute", left: 10, top: 10, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>}
+          {audienceBadge(item.go)}
         </div>
         <p style={{ margin: "11px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
         <p style={{ margin: "0 2px", fontSize: 16, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
@@ -1472,6 +1490,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                         </div>
                         {item.badge && <span style={{ position: "absolute", left: 10, bottom: 10, background: HOME.accent, color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>{item.badge}</span>}
           {CONCEPTS[item.go]?.coinCost === 0 && <span style={{ position: "absolute", left: 10, top: 10, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>}
+                        {audienceBadge(item.go)}
                       </div>
                       <p style={{ margin: "10px 2px 1px", fontSize: 12.5, color: HOME.sub, fontWeight: 500 }}>{item.subtitle}</p>
                       <p style={{ margin: "0 2px", fontSize: 15, color: HOME.text, fontWeight: 800, lineHeight: 1.25 }}>{item.title}</p>
