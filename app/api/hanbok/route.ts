@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withCoin } from "../../lib/coins";
-import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { fetchGeminiWithFallback, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 import { cropToRatio } from "../../lib/crop";
 export const runtime = "nodejs";
@@ -72,8 +72,9 @@ async function generateHanbok(imageDataUrl: string): Promise<string> {
   const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
   let res: Response;
+  let engine = "pro"; // 폴백 파일럿 — 어느 엔진이 응답했는지 로그에 남긴다
   try {
-    res = await fetchGeminiWithRetry(
+    ({ res, engine } = await fetchGeminiWithFallback(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
@@ -88,15 +89,16 @@ async function generateHanbok(imageDataUrl: string): Promise<string> {
         signal: ctrl.signal,
       },
       "hanbok",
-      0 // ★재시도 없음 — Pro 생성은 1회 100~200초라 두 시도가 예산을 나누면 재시도 중 타임아웃
-    );
+      // ★소프트컷 180초 — Pro 정상 분포(100~200초)의 꼬리만 흘리고 flash에 50초를 남긴다(총예산 230초)
+      { softCutMs: 180000, fallbackUrl: `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent`, signal: ctrl.signal }
+    ));
   } catch (e: unknown) {
     clearTimeout(timer);
     if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
     throw e;
   }
   clearTimeout(timer);
-  console.log(`[hanbok] model=${GEMINI_MODEL} status=${res.status} ${Date.now() - t0}ms`);
+  console.log(`[hanbok] engine=${engine} status=${res.status} ${Date.now() - t0}ms`);
   if (!res.ok) throw new Error(await geminiFriendlyError(res, "hanbok", "생성에 실패했어요. 다른 사진으로 다시 시도해주세요."));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
