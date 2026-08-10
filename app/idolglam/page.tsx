@@ -18,6 +18,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import RegenConfirmSheet from "../components/RegenConfirmSheet";
 
 // 칩 2종 = 엔진 선택 — key는 route의 분기 값과 반드시 일치해야 한다(불일치 시 화보컷으로 폴백됨)
 const STYLE_OPTIONS = [
@@ -46,6 +47,7 @@ export default function IdolglamPage() {
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
   const [elapsed, setElapsed] = useState(0);
+  const [pendingPick, setPendingPick] = useState<string | null>(null); // 칩 재생성 확인 대기 — 과금 전 1회 확인
   // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
   useBackClose(!!result, () => setResult(""));
   useEffect(() => {
@@ -181,7 +183,7 @@ export default function IdolglamPage() {
               <p style={{ fontSize: 13, fontWeight: 700, color: "#191919", marginBottom: 10, marginTop: 0 }}>다른 무드로도 만들어볼까요?</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8 }}>
                 {STYLE_OPTIONS.map(o => (
-                  <button key={o.key} onClick={() => void handleSubmit(o.key)} disabled={loading} style={chipStyle(style === o.key)}>{o.label}</button>
+                  <button key={o.key} onClick={() => (COIN_GATED && COIN_COST > 0 ? setPendingPick(o.key) : void handleSubmit(o.key))} disabled={loading} style={chipStyle(style === o.key)}>{o.label}</button>
                 ))}
               </div>
             </div>
@@ -197,6 +199,9 @@ export default function IdolglamPage() {
           </div>
         )}
       </div>
+      <RegenConfirmSheet open={pendingPick !== null} question="다른 무드로 새로 만들까요?" cost={COIN_COST}
+        onCancel={() => setPendingPick(null)}
+        onConfirm={() => { const k = pendingPick; setPendingPick(null); if (k) void handleSubmit(k); }} />
     </div>
   );
 }

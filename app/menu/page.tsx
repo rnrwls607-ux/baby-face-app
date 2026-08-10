@@ -4,6 +4,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import RegenConfirmSheet from "../components/RegenConfirmSheet";
 import AiReportLink from "../components/AiReportLink";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -48,6 +49,7 @@ export default function MenuPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [elapsed, setElapsed] = useState(0);
+  const [pendingPick, setPendingPick] = useState<string | null>(null); // 칩 재생성 확인 대기 — 과금 전 1회 확인
   // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
   useBackClose(!!result, () => setResult(""));
   useEffect(() => {
@@ -105,7 +107,7 @@ export default function MenuPage() {
     const on = style === opt.key;
     return (
       <button key={opt.key}
-        onClick={() => { setStyle(opt.key); if (onResult) runGenerate(opt.key); }}
+        onClick={() => { if (onResult) { if (COIN_GATED && COIN_COST > 0) { setPendingPick(opt.key); return; } setStyle(opt.key); runGenerate(opt.key); return; } setStyle(opt.key); }}
         style={{ padding: "11px 0", borderRadius: 12, fontSize: 13, fontWeight: 700, cursor: "pointer",
           border: on ? "1.5px solid #FF4B7C" : "1.5px solid #E8E9ED",
           background: on ? "#FF4B7C" : "#fff", color: on ? "#fff" : "#555" }}>
@@ -194,6 +196,9 @@ export default function MenuPage() {
           </div>
         )}
       </div>
+      <RegenConfirmSheet open={pendingPick !== null} question="다른 스타일로 새로 만들까요?" cost={COIN_COST}
+        onCancel={() => setPendingPick(null)}
+        onConfirm={() => { const k = pendingPick; setPendingPick(null); if (k) { setStyle(k); runGenerate(k); } }} />
     </div>
   );
 }
