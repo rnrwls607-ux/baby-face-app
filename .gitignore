@@ -42,3 +42,6 @@ next-env.d.ts
 
 # BA 원료(비포/애프터 원본 PNG) — 규격화 산출물만 public/examples/ba 에 커밋
 /examples/
+
+# 스토어 등록 소재 — 원본 캡처도 산출물도 앱에 안 쓰인다(플레이 콘솔 업로드 전용)
+/store-assets/
