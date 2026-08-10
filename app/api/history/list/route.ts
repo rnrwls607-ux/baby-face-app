@@ -53,23 +53,42 @@ export async function GET(request: NextRequest) {
     // 그 "고아 원본"을 찾아 목록에 합쳐 내려준다 — 조회 경로만 손대고 생성·차감은 무접촉.
     // ★중복 판정 = originalUrl 문자열 일치. Blob 경로가 originals/{uid}/{ledgerId}_{i}.{ext}로
     //   addRandomSuffix: false라 결정적이므로, 같은 생성이면 URL이 반드시 같다.
+    // ★2차 판정(시각창+컨셉)이 필요한 이유: addToHistory의 originalUrl 인자를 넘기는 페이지가
+    //   travel 한 곳뿐이라(나머지 161곳은 2인자 호출) history 레코드 대부분에 originalUrl이 없다.
+    //   실측 500건 중 보유 2건 — URL 일치만으로는 사실상 아무것도 못 거른다.
+    //   그래서 "같은 컨셉 + originals.at 직후 MATCH_WINDOW_MS 안의 history"를 같은 건으로 본다.
+    //   근거(실측): 시각차 중앙 4.3초·90% 9.5초(클라가 이미지 받아 축소·저장하는 시간).
+    //   30초면 매칭 49/55이고 60초·300초로 늘려도 개선이 없어, 창만 키우면 오매칭 위험만 커진다.
+    //   B안(전 페이지 originalUrl 배선)이 끝나면 신규분은 1차 URL 일치로 정확히 걸러진다.
+    const MATCH_WINDOW_MS = 30000;
     let recovered: CloudHistoryItem[] = [];
     try {
       const raw = await redis.lrange<OriginalItem>(`originals:${userId}`, 0, -1);
       const originals = Array.isArray(raw) ? raw : [];
       if (originals.length) {
         const seen = new Set(history.map(h => h.originalUrl).filter(Boolean) as string[]);
+        // 시각창 매칭에 이미 쓰인 history 인덱스 — 한 history가 두 originals를 덮지 않게 1:1로 소비한다
+        const claimed = new Set<number>();
         for (const o of originals) {
           const url = o?.urls?.[0];
           if (typeof url !== "string" || !url.startsWith("https://")) continue;
-          if (seen.has(url)) continue; // 이미 히스토리에 있는 건
+          if (seen.has(url)) continue; // ① 이미 히스토리에 있는 건(정확 일치)
+          // ② 시각창 + 컨셉 매칭 — 짝을 찾으면 그 history를 소비하고 복구분에서 제외
+          //    (originals의 concept은 영문 키라 화면·매칭 양쪽에 쓸 한글 제목으로 먼저 변환)
+          const title = (o.concept && CONCEPTS[o.concept]?.title) || o.concept || "";
+          const at = typeof o.at === "number" ? o.at : 0;
+          if (at && title) {
+            const hit = history.findIndex((h, i) =>
+              !claimed.has(i) && h?.concept === title &&
+              typeof h?.createdAt === "number" && h.createdAt >= at && h.createdAt <= at + MATCH_WINDOW_MS);
+            if (hit >= 0) { claimed.add(hit); continue; }
+          }
           seen.add(url); // originals 안의 중복도 한 번만
           recovered.push({
             id: `recovered_${o.id ?? url.slice(-24)}`,
-            url,                       // 축소본이 없으므로 원본을 그대로 표시원으로 쓴다
-            // originals의 concept은 영문 키(conceptKey)라 화면용 한글 제목으로 바꿔준다
-            concept: (o.concept && CONCEPTS[o.concept]?.title) || o.concept || "",
-            createdAt: typeof o.at === "number" ? o.at : 0,
+            url,     // 축소본이 없으므로 원본을 그대로 표시원으로 쓴다
+            concept: title, // originals의 concept은 영문 키라 위에서 한글 제목으로 변환해뒀다
+            createdAt: at,
             originalUrl: url,
             recovered: true,
           });
