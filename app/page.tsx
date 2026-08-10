@@ -568,6 +568,39 @@ export default function Home() {
   const [showAllConcepts, setShowAllConcepts] = useState(false);
   const [allConceptsCat, setAllConceptsCat] = useState("all");
   const [historyTab, setHistoryTab] = useState<"image" | "motion">("image");
+  // ─── 앱 심사용 숨김 로그인 (2026-08-10) ──────────────────────────────────
+  // 구글·애플 심사원은 한국 카카오 계정이 없어 로그인을 못 뚫는다. 설정의
+  // "현재 버전" 값을 3초 안에 7번 탭하면 리뷰 코드 입력칸이 열린다 —
+  // 안드로이드 "빌드 번호 7번 탭" 관례와 같아 영어로 설명하기 쉽다.
+  // ★이 외의 노출 경로는 없고, 설정을 닫으면 입력칸·탭 기록이 모두 초기화된다.
+  const reviewTapsRef = useRef<number[]>([]);
+  const [showReviewCode, setShowReviewCode] = useState(false);
+  const [reviewCode, setReviewCode] = useState("");
+  const [reviewErr, setReviewErr] = useState("");
+  const [reviewBusy, setReviewBusy] = useState(false);
+  const bumpReviewTap = () => {
+    const now = Date.now();
+    const taps = [...reviewTapsRef.current, now].filter(t => now - t <= 3000);
+    reviewTapsRef.current = taps;
+    if (taps.length >= 7) { reviewTapsRef.current = []; setShowReviewCode(true); }
+  };
+  const submitReviewCode = async () => {
+    const code = reviewCode.trim();
+    if (!code || reviewBusy) return;
+    setReviewBusy(true); setReviewErr("");
+    try {
+      const res = await fetch("/api/auth/review-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      // 404 = 통로 자체가 꺼짐(env 미설정) / 401 = 코드 불일치. 둘 다 영어로 짧게.
+      if (!res.ok) { setReviewErr(res.status === 404 ? "Unavailable" : "Invalid code"); setReviewBusy(false); return; }
+      window.location.replace("/"); // 세션 반영 — 전체 새로고침
+    } catch {
+      setReviewErr("Network error"); setReviewBusy(false);
+    }
+  };
   // 뒤로가기 → 열린 오버레이만 한 겹씩 닫기 (앱 이탈 방지, 겹침은 열린 순서대로)
   // 하단 탭도 표준 편입: 홈 외 탭에서 뒤로 = 홈 탭 복귀. ★오버레이들보다 먼저 등록해
   // 동시 오픈 시에도 탭이 스택 바닥(오버레이 먼저 닫힘 → 마지막에 탭이 홈으로).
@@ -579,6 +612,12 @@ export default function Home() {
   useBackClose(!!historyView, () => setHistoryView(null));
   useBackClose(showPaymentSheet, () => setShowPaymentSheet(false));
   useBackClose(welcomeCoins > 0, () => setWelcomeCoins(0)); // 웰컴 모달 — 뒤로가기로도 닫힌다
+  // 설정을 닫으면 심사용 입력칸은 흔적 없이 원상복귀 (다시 열려면 7탭을 다시 해야 한다)
+  useEffect(() => {
+    if (showSettings) return;
+    reviewTapsRef.current = [];
+    setShowReviewCode(false); setReviewCode(""); setReviewErr("");
+  }, [showSettings]);
   // ─── 워드마크 → 홈 복귀 (2026-07-25) ───────────────────────────────────────
   // 리렌더 강제용. HomeMain은 인라인 컴포넌트라 Home이 리렌더되면 리마운트되고,
   // 그때 pill을 persistedHomePill에서 다시 읽는다 → 미러만 0으로 바꾸면 칩이 홈으로 돌아온다.
@@ -1338,8 +1377,30 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
               </button>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 18px" }}>
                 <span style={{ fontSize: 15, fontWeight: 600, color: "#191919" }}>현재 버전</span>
-                <span style={{ fontSize: 13, color: "#9B9B9B" }}>{APP_VERSION} · 최신 버전</span>
+                {/* ★심사용 숨김 트리거 — 이 값을 3초 안에 7번 탭. 원래 클릭 동작이 없던
+                    자리라 일반 사용자에겐 보이지도 눌리지도 않는다(커서·하이라이트 무변화). */}
+                <span onClick={bumpReviewTap} style={{ fontSize: 13, color: "#9B9B9B", userSelect: "none", WebkitTapHighlightColor: "transparent" }}>{APP_VERSION} · 최신 버전</span>
               </div>
+              {showReviewCode && (
+                <div style={{ padding: "14px 18px 16px", borderTop: "1px solid #F2F3F5" }}>
+                  <p style={{ fontSize: 12, color: "#9B9B9B", margin: "0 0 8px" }}>App review sign-in</p>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <input
+                      value={reviewCode}
+                      onChange={e => { setReviewCode(e.target.value); setReviewErr(""); }}
+                      onKeyDown={e => { if (e.key === "Enter") void submitReviewCode(); }}
+                      placeholder="Review code"
+                      autoComplete="off" autoCapitalize="none" autoCorrect="off" spellCheck={false}
+                      style={{ flex: 1, minWidth: 0, background: "#fff", border: "1px solid #E5E7EB", borderRadius: 10, padding: "10px 12px", fontSize: 14, color: "#191919", outline: "none" }}
+                    />
+                    <button onClick={() => void submitReviewCode()} disabled={reviewBusy || !reviewCode.trim()}
+                      style={{ background: reviewBusy || !reviewCode.trim() ? "#E8E9ED" : "#FF4B7C", color: reviewBusy || !reviewCode.trim() ? "#AEB2BA" : "#fff", border: "none", borderRadius: 10, padding: "0 18px", fontSize: 14, fontWeight: 700, cursor: reviewBusy || !reviewCode.trim() ? "not-allowed" : "pointer" }}>
+                      {reviewBusy ? "..." : "OK"}
+                    </button>
+                  </div>
+                  {reviewErr && <p style={{ fontSize: 12, color: "#FF4B7C", margin: "8px 2px 0" }}>{reviewErr}</p>}
+                </div>
+              )}
             </div>
 
             {/* 데이터 */}
