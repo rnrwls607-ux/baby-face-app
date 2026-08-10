@@ -654,7 +654,7 @@ export default function Home() {
  const loadHistory = useCallback(async () => {
    if (user) {
      const cloud = await getCloudHistory();
-     setHistory(cloud.map(c => ({ id: c.id, src: c.url, concept: c.concept, createdAt: c.createdAt, originalUrl: c.originalUrl })));
+     setHistory(cloud.map(c => ({ id: c.id, src: c.url, concept: c.concept, createdAt: c.createdAt, originalUrl: c.originalUrl, recovered: c.recovered })));
    } else {
      setHistory(await getHistory());
    }
@@ -1091,6 +1091,9 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                   <button key={item.id} onClick={() => setHistoryView(item)} style={{ position: "relative", padding: 0, border: "none", cursor: "pointer", background: "none" }}>
                     <img src={item.src} alt={item.concept} style={{ width: "100%", aspectRatio: "1", objectFit: "cover", display: "block", borderRadius: 8 }} />
                     <span style={{ position: "absolute", left: 5, bottom: 5, background: "rgba(0,0,0,.55)", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 6 }}>{item.concept}</span>
+                    {/* 복구됨 — 생성 중 앱을 나가 저장되지 못한 건을 서버 원본에서 되살린 것.
+                        표시가 없으면 "이건 왜 여기 있지"가 되므로 작은 배지 하나로 알린다 */}
+                    {item.recovered && <span style={{ position: "absolute", right: 5, top: 5, background: "rgba(255,255,255,.92)", color: "#3A3E45", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 6 }}>복구됨</span>}
                   </button>
                 ))}
               </div>

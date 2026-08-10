@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
+import { CONCEPTS } from "../../../lib/concepts";
 
 // 배포 환경에서 GET 응답이 캐시되지 않도록 강제 (옛 빈 목록 캐싱 방지)
 export const dynamic = "force-dynamic";
@@ -16,7 +17,12 @@ type CloudHistoryItem = {
   url: string;
   concept: string;
   createdAt: number;
+  originalUrl?: string;
+  recovered?: boolean; // 복구분 표시용 — history에는 없고 originals에만 있던 생성물
 };
+
+// 유료 원본 인덱스(withCoin이 차감 시 기록) — 생성은 됐는데 클라가 저장을 못 한 건이 여기 남는다.
+type OriginalItem = { id?: string; urls?: string[]; concept?: string; at?: number };
 
 function getUserId(request: NextRequest): string | null {
   const cookie = request.cookies.get("kakao_user");
@@ -39,7 +45,46 @@ export async function GET(request: NextRequest) {
   try {
     // lpush 로 최신이 앞에 오므로 그대로 최신순
     const items = await redis.lrange<CloudHistoryItem>(`history:${userId}`, 0, -1);
-    return NextResponse.json({ items: Array.isArray(items) ? items : [] }, noStore);
+    const history = Array.isArray(items) ? items : [];
+
+    // ── 이탈 손실 구제 ─────────────────────────────────────────────────────
+    // 생성 중 앱을 나가면 클라의 addToHistory가 실행되지 않아 history에는 안 남는다.
+    // 하지만 코인은 이미 차감됐고 원본은 Blob + originals:{uid}에 보존돼 있다.
+    // 그 "고아 원본"을 찾아 목록에 합쳐 내려준다 — 조회 경로만 손대고 생성·차감은 무접촉.
+    // ★중복 판정 = originalUrl 문자열 일치. Blob 경로가 originals/{uid}/{ledgerId}_{i}.{ext}로
+    //   addRandomSuffix: false라 결정적이므로, 같은 생성이면 URL이 반드시 같다.
+    let recovered: CloudHistoryItem[] = [];
+    try {
+      const raw = await redis.lrange<OriginalItem>(`originals:${userId}`, 0, -1);
+      const originals = Array.isArray(raw) ? raw : [];
+      if (originals.length) {
+        const seen = new Set(history.map(h => h.originalUrl).filter(Boolean) as string[]);
+        for (const o of originals) {
+          const url = o?.urls?.[0];
+          if (typeof url !== "string" || !url.startsWith("https://")) continue;
+          if (seen.has(url)) continue; // 이미 히스토리에 있는 건
+          seen.add(url); // originals 안의 중복도 한 번만
+          recovered.push({
+            id: `recovered_${o.id ?? url.slice(-24)}`,
+            url,                       // 축소본이 없으므로 원본을 그대로 표시원으로 쓴다
+            // originals의 concept은 영문 키(conceptKey)라 화면용 한글 제목으로 바꿔준다
+            concept: (o.concept && CONCEPTS[o.concept]?.title) || o.concept || "",
+            createdAt: typeof o.at === "number" ? o.at : 0,
+            originalUrl: url,
+            recovered: true,
+          });
+        }
+      }
+    } catch {
+      recovered = []; // originals 조회 실패는 무시 — 기존 히스토리는 그대로 내려간다
+    }
+
+    // 생성시각 기준 통합 정렬(최신순). 복구분이 없으면 기존 순서와 동일하다.
+    const merged = recovered.length
+      ? [...history, ...recovered].sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0))
+      : history;
+
+    return NextResponse.json({ items: merged }, noStore);
   } catch {
     return NextResponse.json({ items: [] }, noStore);
   }

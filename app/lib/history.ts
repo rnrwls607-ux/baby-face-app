@@ -1,9 +1,10 @@
 // 생성 결과를 브라우저(IndexedDB)에 안정적으로 저장하는 히스토리
 // originalUrl: 유료 생성물의 원본 Blob 주소 (표시=축소본·다운로드=원본 이원화)
-export type HistoryItem = { id: string; src: string; concept: string; createdAt: number; originalUrl?: string };
+// recovered: 생성 중 이탈로 클라 저장이 못 된 건을 서버 originals 인덱스에서 되살린 항목(조회 전용 표시)
+export type HistoryItem = { id: string; src: string; concept: string; createdAt: number; originalUrl?: string; recovered?: boolean };
 
 // 로그인 사용자의 클라우드(Blob+Redis) 히스토리 항목
-export type CloudHistoryItem = { id: string; url: string; concept: string; createdAt: number; originalUrl?: string };
+export type CloudHistoryItem = { id: string; url: string; concept: string; createdAt: number; originalUrl?: string; recovered?: boolean };
 
 const DB_NAME = "photoAppDB";
 const STORE = "history";
