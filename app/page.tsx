@@ -293,8 +293,8 @@ const HERO_SLIDES: {
   title?: string; subtitle?: string; emoji?: string; go?: string; objectPosition?: string;
   split?: { label: string; key: string }[];
 }[] = [
-  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.jpg", objectPosition: "center 48%" },
-  { id: "biz", title: "첫인상은\n프로필 사진에서", subtitle: "비즈니스 프로필 34종", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.jpg", objectPosition: "center 50%" },
+  { id: "main", title: "셀카 한 장이,\n작품이 되다", subtitle: "AI 프로필 · 증명사진 · 화보", emoji: "✨", accent: "#F5E9DC", go: "idburgundy", image: "/hero/hero_main.webp", objectPosition: "center 48%" },
+  { id: "biz", title: "첫인상은\n프로필 사진에서", subtitle: "비즈니스 프로필 34종", emoji: "💼", accent: "#E8EAED", go: "bizmcharcoal", image: "/hero/hero_biz.webp", objectPosition: "center 50%" },
   { id: "freetools", accent: "#F2F2F2", image: "/hero/hero_freetools.webp", split: [
     { label: "배경 제거", key: "nukki" },
     { label: "4배 고화질", key: "upscale" },
