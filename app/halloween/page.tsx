@@ -90,7 +90,7 @@ export default function HalloweenPage() {
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
       const costumeLabel = COSTUME_OPTIONS.find(o => o.key === costume)?.label || "할로윈";
-      void addToHistory(data.output, `할로윈 ${costumeLabel}`);
+      void addToHistory(data.output, `할로윈 ${costumeLabel}`, Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

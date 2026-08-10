@@ -84,7 +84,7 @@ export default function FixbacklightPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
-      void addToHistory(data.output, "역광 구제");
+      void addToHistory(data.output, "역광 구제", Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

@@ -127,7 +127,7 @@ export default function BizBluegrayGrayPage() {
       if (!res.ok) throw new Error(data.error || "서버 오류가 발생했습니다.");
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResults(data.output);
-      void addToHistory(data.output, "비즈프로필 (블루그레이)");
+      void addToHistory(data.output, "비즈프로필 (블루그레이)", Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

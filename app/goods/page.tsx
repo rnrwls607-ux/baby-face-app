@@ -88,7 +88,7 @@ export default function GoodsPage() {
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
       const goodsLabel = GOODS_OPTIONS.find(o => o.key === goodsType)?.label || "굿즈";
-      void addToHistory(data.output, `굿즈 미리보기 ${goodsLabel}`);
+      void addToHistory(data.output, `굿즈 미리보기 ${goodsLabel}`, Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

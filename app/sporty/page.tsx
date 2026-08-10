@@ -89,7 +89,7 @@ export default function SportyPage() {
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
       const optionLabel = OPTIONS.find(o => o.key === option)?.label || "스포티 화보";
-      void addToHistory(data.output, `스포티 화보 ${optionLabel}`);
+      void addToHistory(data.output, `스포티 화보 ${optionLabel}`, Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };

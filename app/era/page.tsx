@@ -92,7 +92,7 @@ export default function EraPage() {
       if (!data.output?.length) throw new Error("이미지를 받지 못했습니다.");
       setResult(data.output[0]);
       const eraLabel = ERA_OPTIONS.find(o => o.key === era)?.label || "시대 변신";
-      void addToHistory(data.output, `시대 변신 ${eraLabel}`);
+      void addToHistory(data.output, `시대 변신 ${eraLabel}`, Array.isArray(data.originalUrls) ? data.originalUrls : undefined);
     } catch (e: unknown) {
       clearTimeout(tid);
       const err = e as { name?: string; message?: string };
