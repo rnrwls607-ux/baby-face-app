@@ -277,8 +277,8 @@ const HOME_PILLS = [
   { label: "재미·추억", value: "fun" },
 ];
 // ─── 홈 히어로 슬라이드 ──────────────────────────────────────────────────────
-// 소재를 늘리려면 ★이 배열에만 항목을 추가하면 된다 — 자동 순환·점 인디케이터는
-// 배열 길이를 따라가고, 코드는 손댈 곳이 없다.
+// 소재를 늘리려면 ★이 배열에만 항목을 추가하면 된다 — 자동 순환·우하단 카운터는
+// 배열 길이를 따라가고("/ 09"의 분모도 여기서 나온다), 코드는 손댈 곳이 없다.
 //   id             고유 키
 //   title          메인 카피 (\n 으로 줄바꿈)
 //   subtitle       서브 카피
@@ -832,7 +832,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [heroRunnable]);
 
-    // 히어로 스크롤 시 현재 인덱스 추적 (점 인디케이터용) + 클론 착지 처리
+    // 히어로 스크롤 시 현재 인덱스 추적 (우하단 카운터용) + 클론 착지 처리
     const onHeroScroll = () => {
       const el = heroRef.current;
       if (!el || !el.clientWidth) return;
@@ -887,8 +887,9 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             );
           })}
         </div>
-        {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 점 인디케이터) — 전체(pill 0)에서만 표시 */}
+        {/* 상단 배너 (한 장씩 꽉 차게 스와이프 + 우하단 카운터) — 전체(pill 0)에서만 표시 */}
         {HOME_PILLS[pill].value === "home" && (
+        <div style={{ position: "relative" }}>
         <div ref={heroRef} onScroll={onHeroScroll} className="hide-scrollbar" style={{ display: "flex", overflowX: "auto", scrollSnapType: "x mandatory", padding: 0 }}>
           {/* 마지막에 1번 슬라이드의 복제본을 한 장 더 깐다 — 무한 루프용(위 onHeroScroll 참고).
               슬라이드가 1장뿐이면 순환이 없으므로 클론도 만들지 않는다. */}
@@ -924,15 +925,18 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
             </div>
           ))}
         </div>
+        {/* 페이지 카운터 "01 / 09" — 점 인디케이터를 대체한다(2026-08-10).
+            ★스크롤 컨테이너 "바깥"에 겹친다: 안에 두면 슬라이드를 따라 밀려나가
+            넘길 때 카운터가 두 개 스쳐 보인다. 여기서는 판 위에 고정으로 얹힌다.
+            ★글자 없는 split 슬라이드는 어둠 그라데이션이 없어(위 참고) 흰 글씨만으로는
+            밝은 사진에 묻힌다 → 옅은 다크 칩을 깔아 어떤 사진에서도 읽히게 했다.
+            pointerEvents none — 카드 탭이 카운터에 막히지 않는다. */}
+        {HERO_SLIDES.length > 1 && (
+          <div style={{ position: "absolute", right: 14, bottom: 22, pointerEvents: "none", background: "rgba(0,0,0,0.38)", borderRadius: 20, padding: "4px 10px", fontSize: 12, letterSpacing: 0.6, lineHeight: 1.35 }}>
+            <span style={{ color: "#fff", fontWeight: 700 }}>{String(heroIdx + 1).padStart(2, "0")}</span>
+            <span style={{ color: "rgba(255,255,255,0.62)", fontWeight: 600 }}> / {String(HERO_SLIDES.length).padStart(2, "0")}</span>
+          </div>
         )}
-        {/* 점 인디케이터 — 전체(pill 0)이고 히어로가 2장 이상일 때만 표시 */}
-        {HOME_PILLS[pill].value === "home" && HERO_SLIDES.length > 1 && (
-        // 아래 코인 카드가 빠지면서 점이 히어로에 붙어 보여 8단위(16)로 띄웠다.
-        // 섹션 사이 간격(30)은 전 섹션 공통 리듬이라 건드리지 않는다.
-        <div style={{ display: "flex", gap: 5, justifyContent: "center", marginTop: 16 }}>
-          {HERO_SLIDES.map((_, i) => (
-            <span key={i} style={{ width: heroIdx === i ? 18 : 6, height: 6, borderRadius: 3, background: heroIdx === i ? "#191919" : "#D8D8D8", transition: "all .2s" }} />
-          ))}
         </div>
         )}
         {/* 코인 현황 카드는 2026-07-25에 제거 — 랜딩 최상단은 컨셉을 보여주는 자리로 양보했다.
