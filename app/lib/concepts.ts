@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
@@ -1131,6 +1131,71 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "idolglam",
     detailImage: "/details/idolglam.webp",
+    inputRule: "solo_face",
+  },
+  // ─── 신규 4종 (2026-08-12) — 킷(썸네일·상세) 반입 전까지 홈 카드는 주석 상태, 직접 URL 접근은 열려 있다
+  campusgrad: {
+    key: "campusgrad", audience: "all",
+    coinCost: 3,
+    title: "캠퍼스 졸업사진",
+    subtitle: "가고 싶던 그 캠퍼스에서",
+    emoji: "🎓",
+    accent: "#EAF0E4",
+    description: "학사모와 가운을 갖춰 입고 캠퍼스에서 찍은 졸업 화보를 만들어드려요. 아이비 캠퍼스·봄날 한국 대학·유럽 고전·도심 캠퍼스 중에서 고르면 돼요. 학교 이름이나 로고는 들어가지 않아요.",
+    examples: [
+      { emoji: "🎓", accent: "#EAF0E4" },
+      { emoji: "🌸", accent: "#FBE9EF" },
+      { emoji: "🏛️", accent: "#F3EEE4" },
+    ],
+    start: "campusgrad",
+    inputRule: "solo_face",
+  },
+  dresswedding: {
+    key: "dresswedding", audience: "all",
+    coinCost: 3,
+    title: "웨딩 스냅",
+    subtitle: "오늘, 웨딩 화보의 주인공",
+    emoji: "💍",
+    accent: "#FBEFE9",
+    description: "드레스나 턱시도를 입고 찍은 웨딩 화보를 혼자서도 만들 수 있어요. 의상(신부·신랑)과 배경(웨딩홀·가든·한옥)을 골라주세요. 얼굴은 그대로, 의상과 배경만 바뀌어요.",
+    examples: [
+      { emoji: "💍", accent: "#FBEFE9" },
+      { emoji: "👰", accent: "#FDF3F6" },
+      { emoji: "🏮", accent: "#F6EDE6" },
+    ],
+    start: "dresswedding",
+    inputRule: "solo_face",
+  },
+  gyaru: {
+    key: "gyaru", audience: "female",
+    coinCost: 3,
+    title: "갸루 메이크오버",
+    subtitle: "오늘만은 갸루",
+    emoji: "💗",
+    accent: "#FBE6F1",
+    description: "밀크티 웨이브 헤어에 또렷한 갸루 메이크업, Y2K 파스텔 룩까지 한 번에 입혀드려요. 포즈와 배경은 원본 그대로라 '같은 순간, 갸루 버전'이 돼요.",
+    examples: [
+      { emoji: "💗", accent: "#FBE6F1" },
+      { emoji: "🎀", accent: "#FDEEF4" },
+      { emoji: "✨", accent: "#F7EAF6" },
+    ],
+    start: "gyaru",
+    inputRule: "solo_face",
+  },
+  genderswap: {
+    key: "genderswap", audience: "all",
+    coinCost: 3,
+    title: "반대의 나",
+    subtitle: "다르게 태어났다면",
+    emoji: "🔄",
+    accent: "#E7EEF6",
+    description: "내가 반대 성별로 태어났다면 어떤 모습일지 보여드려요. 남남처럼 바뀌는 게 아니라 '내 쌍둥이 남매' 느낌으로, 눈매와 분위기는 그대로 이어져요.",
+    examples: [
+      { emoji: "🔄", accent: "#E7EEF6" },
+      { emoji: "🙋", accent: "#EFF3F8" },
+      { emoji: "🙋‍♂️", accent: "#E9EDF2" },
+    ],
+    start: "genderswap",
     inputRule: "solo_face",
   },
   halloween: {
@@ -2868,5 +2933,9 @@ export function conceptForGo(go: string): Concept {
   if (go === "tripface") return CONCEPTS.tripface;
   // 글램 라인 3차 — 이 줄이 없으면 홈 카드를 눌러도 soon("준비 중") 시트가 뜬다
   if (go === "idolglam") return CONCEPTS.idolglam;
+  if (go === "campusgrad") return CONCEPTS.campusgrad;
+  if (go === "dresswedding") return CONCEPTS.dresswedding;
+  if (go === "gyaru") return CONCEPTS.gyaru;
+  if (go === "genderswap") return CONCEPTS.genderswap;
   return CONCEPTS.soon;
 }
