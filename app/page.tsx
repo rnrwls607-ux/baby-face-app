@@ -908,7 +908,7 @@ const handleCardTap = (go: string) => setDetail(conceptForGo(go));
                 )}
                 {h.split ? h.split.map((z, zi) => (
                   <div key={z.key} onClick={() => handleCardTap(z.key)}
-                    style={{ position: "absolute", top: 0, bottom: 0, left: zi === 0 ? 0 : "50%", width: "50%", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", paddingBottom: 22 }}>
+                    style={{ position: "absolute", top: 0, bottom: 0, left: zi === 0 ? 0 : "50%", width: "50%", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-end", paddingBottom: 48 }}>
                     {/* ★coinCost === 0 일 때만 — IAP 전환 시 자동 소멸(허위 고지 방지). 카드 뱃지와 같은 조건 */}
                     {CONCEPTS[z.key]?.coinCost === 0 && (
                       <span style={{ marginBottom: 6, background: "#1B7A4A", color: "#fff", fontSize: 11, fontWeight: 800, padding: "5px 12px", borderRadius: 20 }}>무료</span>
