@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
+import { withQc } from "../../lib/qcGate";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 150; // 검수+재생성 1회 여유 (Fluid Compute 전제)
 
 const GEMINI_MODEL = "gemini-3.1-flash-image";
 
@@ -130,9 +131,9 @@ async function handler(request: NextRequest) {
     }
 
     const results = await Promise.allSettled([
-      generateOneIdPhoto(images),
-      generateOneIdPhoto(images),
-      generateOneIdPhoto(images),
+      withQc("idwhiteshirt", images[0], () => generateOneIdPhoto(images)),
+      withQc("idwhiteshirt", images[0], () => generateOneIdPhoto(images)),
+      withQc("idwhiteshirt", images[0], () => generateOneIdPhoto(images)),
     ]);
 
     const outputs = results
