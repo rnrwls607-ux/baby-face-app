@@ -20,6 +20,7 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import RegenConfirmSheet from "../components/RegenConfirmSheet";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 // 칩 2종 = 엔진 선택 — key는 route의 분기 값과 반드시 일치해야 한다(불일치 시 화보컷으로 폴백됨)
 const STYLE_OPTIONS = [
@@ -164,6 +165,7 @@ export default function IdolglamPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>🌟</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 데뷔 준비를 하고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

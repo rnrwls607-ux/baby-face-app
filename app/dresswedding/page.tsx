@@ -20,6 +20,7 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import RegenConfirmSheet from "../components/RegenConfirmSheet";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 // ★2단 선택 — 성별칩(의상 분기) × 배경칩. 두 값 모두 route의 분기 키와 일치해야 한다
 //   (성별 불일치 시 신부, 배경 불일치 시 hall로 폴백됨)
@@ -176,6 +177,7 @@ export default function DressweddingPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>💍</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 웨딩 화보를 찍고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

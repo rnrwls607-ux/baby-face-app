@@ -17,6 +17,7 @@ import StepIndicator from "../components/upload/StepIndicator";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function FamilyhanbokPage() {
   const router = useRouter();
@@ -185,6 +186,7 @@ export default function FamilyhanbokPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🎎</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 두 분께 한복을 입혀드리고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

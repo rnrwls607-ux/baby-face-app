@@ -20,6 +20,7 @@ import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 const MIN_PHOTOS = 3;
 const MAX_PHOTOS = 6;
@@ -185,6 +186,7 @@ export default function BizManBlackPage() {
             <div style={{ fontSize: 52 }}>💼</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 전문가 프로필 3장을 각각 만들고 있어요...</p>
             <p style={{ fontSize: 12, color: "#C2C6CE", marginTop: 4 }}>조금만 기다려주세요 ({elapsed}초)</p>
+            <LoadingSaveNote />
           </div>
         )}
 

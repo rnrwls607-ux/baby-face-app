@@ -18,6 +18,7 @@ import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function FixnightPage() {
   const router = useRouter();
@@ -134,6 +135,7 @@ export default function FixnightPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>🌙</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 어둠을 걷어내고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

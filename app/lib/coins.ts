@@ -8,6 +8,8 @@ import { getUserId, getAnyUserId } from "./auth";
 // ★비용의 진실원 — concepts.ts는 import가 0개인 순수 데이터 모듈이라 순환 참조가 없다.
 import { CONCEPTS, LIVE_COIN_CONCEPTS } from "./concepts";
 import { WELCOME_COINS } from "./coin-constants";
+// 히스토리 확정 저장 — save 라우트와 같은 규격을 쓰기 위한 공용 모듈
+import { makeThumbnail, saveHistoryItem } from "./historyStore";
 
 // 웰컴 코인 수는 서버 의존 0인 coin-constants에서 온다 — 클라 시트가 coins.ts를
 // import하면 @upstash/redis가 클라 번들에 끌려 들어가기 때문이다(13차 실측).
@@ -257,6 +259,34 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
               originalUrls = undefined;
             }
           }
+          // ── 서버측 히스토리 확정 저장 (2026-08-13) ────────────────────────────
+          // 왜: 히스토리는 지금까지 클라가 저장했다. 생성 중 화면을 나가거나 앱이
+          // 잠들면 클라가 죽어 결과가 통째로 사라진다(원본 Blob은 남는데 목록엔 없다).
+          // 여기서 확정 저장하면 클라 생존과 무관하게 남는다.
+          // ★격리: 이 블록은 코인 차감·응답에 영향 0 — try/catch + 5초 컷.
+          //   실패하면 조용히 스킵하고, 살아 있는 클라의 saveToCloud가 폴백으로 저장한다.
+          // ★카카오 uid만. 게스트(g_)는 클라우드 히스토리 대상이 아니라 손대지 않는다.
+          // ★originalUrl을 확보한 출력만 — 그래야 클라 도착분과 중복 판정이 가능하다.
+          if (originalUrls && !uid.startsWith("g_")) {
+            try {
+              await Promise.race([
+                (async () => {
+                  const title = CONCEPTS[conceptKey]?.title || conceptKey;
+                  for (let i = 0; i < outputs.length; i++) {
+                    const origin = originalUrls![i];
+                    if (!origin) continue;
+                    const thumb = await makeThumbnail(outputs[i]);
+                    if (!thumb) continue;
+                    await saveHistoryItem(uid, thumb, title, origin);
+                  }
+                })(),
+                new Promise<never>((_, rej) => setTimeout(() => rej(new Error("히스토리 저장 5초 초과")), 5000)),
+              ]);
+            } catch (err) {
+              console.error(`[coins] 히스토리 확정 저장 실패(생성·차감 유지) uid=${uid} concept=${conceptKey}:`, (err as Error)?.message);
+            }
+          }
+
           if (originalUrls) return NextResponse.json({ ...body, originalUrls }, { status: res.status });
           return res;
         } catch {

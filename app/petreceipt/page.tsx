@@ -19,6 +19,7 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import Upscale4K from "../components/Upscale4K";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 // ─────────────────────────────────────────────────────────────
 // [보존] Canvas 렌더 방식(drawReport) — AI 이미지 방식으로 전환하며 비활성화.
@@ -310,6 +311,7 @@ export default function PetreceiptPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🧾</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI 관상가가 얼굴을 살펴보고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

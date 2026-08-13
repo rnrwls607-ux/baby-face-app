@@ -18,6 +18,7 @@ import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function HocancePage() {
   const router = useRouter();
@@ -131,6 +132,7 @@ export default function HocancePage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🏝️</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 풀사이드 화보를 촬영하는 중...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

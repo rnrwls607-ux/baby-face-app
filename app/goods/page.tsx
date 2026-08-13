@@ -17,6 +17,7 @@ import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 const GOODS_OPTIONS = [
   { key: "keyring", label: "🔑 아크릴 키링" },
@@ -142,6 +143,7 @@ export default function GoodsPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🔑</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 굿즈 공방에서 제작하는 중...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

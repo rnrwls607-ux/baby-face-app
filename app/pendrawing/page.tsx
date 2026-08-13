@@ -18,6 +18,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function PendrawingPage() {
   const router = useRouter();
@@ -134,6 +135,7 @@ export default function PendrawingPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>✒️</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 펜으로 그리고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

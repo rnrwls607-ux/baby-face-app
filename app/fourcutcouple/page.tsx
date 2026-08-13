@@ -12,6 +12,7 @@ import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError } from "../components/ProCongestionNote";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function FourcutcouplePage() {
   const router = useRouter();
@@ -146,6 +147,7 @@ export default function FourcutcouplePage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>📸</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 네 컷을 차례로 찍고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

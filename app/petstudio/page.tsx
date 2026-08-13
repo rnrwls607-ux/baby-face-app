@@ -18,6 +18,7 @@ import UploadGuide from "../components/upload/UploadGuide";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function PetstudioPage() {
   const router = useRouter();
@@ -134,6 +135,7 @@ export default function PetstudioPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🐶</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 조명을 맞추고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

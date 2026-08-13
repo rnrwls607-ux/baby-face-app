@@ -18,6 +18,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 const COSTUME_OPTIONS = [
   { key: "royal", label: "👑 임금님·공주" },
@@ -158,6 +159,7 @@ export default function PetcostumePage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>🎀</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 옷을 입혀주고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

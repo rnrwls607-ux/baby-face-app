@@ -17,6 +17,7 @@ import StepIndicator from "../components/upload/StepIndicator";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function SelfweddingPage() {
   const router = useRouter();
@@ -185,6 +186,7 @@ export default function SelfweddingPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>💍</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 웨딩 화보를 촬영하고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

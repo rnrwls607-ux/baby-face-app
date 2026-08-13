@@ -20,6 +20,7 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import RegenConfirmSheet from "../components/RegenConfirmSheet";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 // 칩 4종 — key는 route의 CAMPUS_SCENES 키와 반드시 일치해야 한다(불일치 시 ivy로 폴백됨)
 const CAMPUS_OPTIONS = [
@@ -164,6 +165,7 @@ export default function CampusgradPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>🎓</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 캠퍼스로 데려가고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

@@ -1,16 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
-import { put } from "@vercel/blob";
+import { hasSameOriginal, makeThumbnail, saveHistoryItem } from "../../../lib/historyStore";
 
-const redis = process.env.KV_REST_API_URL
-  ? new Redis({
-      url: process.env.KV_REST_API_URL,
-      token: process.env.KV_REST_API_TOKEN!,
-    })
-  : null;
-
-// 사용자당 클라우드에 보관할 최대 개수 (무료 구간 보호)
-const MAX_ITEMS = 500;
+export const runtime = "nodejs";
 
 function getUserId(request: NextRequest): string | null {
   const cookie = request.cookies.get("kakao_user");
@@ -26,7 +17,7 @@ function getUserId(request: NextRequest): string | null {
 export async function POST(request: NextRequest) {
   // 비로그인·서버 미설정이면 "조용히 스킵" → 기존 동작 그대로 (에러 아님)
   const userId = getUserId(request);
-  if (!userId || !redis || !process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!userId) {
     return NextResponse.json({ saved: false });
   }
 
@@ -47,35 +38,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ saved: false });
   }
 
+  const origin = typeof originalUrl === "string" ? originalUrl : undefined;
+
+  // ★중복 방지 (2026-08-13) — withCoin이 이미 서버측에서 확정 저장한 건이면 여기서 멈춘다.
+  //   클라 166 호출부는 응답을 읽지 않으므로(saveToCloud는 await fetch만 한다) 계약 변경 영향 0.
+  if (await hasSameOriginal(userId, origin)) {
+    return NextResponse.json({ saved: "already" });
+  }
+
   try {
-    const match = src.match(/^data:(image\/[\w.+-]+);base64,(.*)$/);
-    if (!match) return NextResponse.json({ saved: false });
-    const contentType = match[1];
-    const buffer = Buffer.from(match[2], "base64");
-    const ext = contentType.includes("png") ? "png" : "jpg";
-
-    const id = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-    const key = `history:${userId}`;
-
-    // 1) 이미지 파일 → Vercel Blob (영구 보관)
-    const blob = await put(`history/${userId}/${id}.${ext}`, buffer, {
-      access: "public",
-      contentType,
-      addRandomSuffix: false,
-    });
-
-    // 2) 목록(누가/언제/컨셉/이미지URL) → Upstash Redis
-    const item = {
-      id,
-      url: blob.url,
-      concept: typeof concept === "string" ? concept : "",
-      createdAt: Date.now(),
-      ...(typeof originalUrl === "string" && originalUrl.startsWith("https://") ? { originalUrl } : {}),
-    };
-    await redis.lpush(key, item);
-    await redis.ltrim(key, 0, MAX_ITEMS - 1);
-
-    return NextResponse.json({ saved: true, url: blob.url });
+    const thumb = await makeThumbnail(src);
+    if (!thumb) return NextResponse.json({ saved: false });
+    const url = await saveHistoryItem(userId, thumb, typeof concept === "string" ? concept : "", origin);
+    return url ? NextResponse.json({ saved: true, url }) : NextResponse.json({ saved: false });
   } catch {
     // 저장 실패해도 기존 동작을 깨지 않도록 조용히 실패 처리
     return NextResponse.json({ saved: false });

@@ -19,6 +19,7 @@ import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 export default function CrewglamPage() {
   const router = useRouter();
@@ -138,6 +139,7 @@ export default function CrewglamPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>✈️</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 승무원 스타일로 단장하고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

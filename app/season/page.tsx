@@ -20,6 +20,7 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import RegenConfirmSheet from "../components/RegenConfirmSheet";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 // 칩 4종 — key는 route의 SEASON_PROMPTS 키와 반드시 일치해야 한다(불일치 시 봄으로 폴백됨)
 const SEASON_OPTIONS = [
@@ -164,6 +165,7 @@ export default function SeasonPage() {
           <div style={{ marginTop: 24, textAlign: "center" }}>
             <div style={{ fontSize: 48 }}>🍂</div>
             <p style={{ fontSize: 14, color: "#888", marginTop: 8 }}>AI가 계절을 갈아입히고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (

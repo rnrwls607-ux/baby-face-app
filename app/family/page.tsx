@@ -16,6 +16,7 @@ import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import LoadingSaveNote from "../components/LoadingSaveNote";
 
 const SLOT_LABELS = ["가족 1 (필수)", "가족 2 (필수)", "가족 3 (선택)", "가족 4 (선택)"];
 const MIN_PHOTOS = 2;
@@ -139,6 +140,7 @@ export default function FamilyPage() {
           <div style={{ marginTop: 28, textAlign: "center" }}>
             <div style={{ fontSize: 52 }}>👨‍👩‍👧‍👦</div>
             <p style={{ fontSize: 14, color: "#9B9B9B", marginTop: 10, fontWeight: 600 }}>AI가 온 가족을 한 장에 모으고 있어요...</p>
+            <LoadingSaveNote />
           </div>
         )}
         {error && (
