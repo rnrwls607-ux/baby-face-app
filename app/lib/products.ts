@@ -44,12 +44,16 @@ export interface CoinProduct {
   discountPct: number; // 할인율(%)
   badge: string;       // 할인 뱃지 문구
   tag?: string;        // 시트 라벨 (인기/베스트/최저가 등)
+  playProductId: string; // Play Console 관리형 상품 ID (IAP)
 }
 
+// ★playProductId 명명 규칙: Play 상품 ID는 소문자·숫자·언더스코어만 되고, 한 번 만들면
+//   삭제가 안 된다(비활성화만 가능). 내부 키(coin3)와 1:1로 읽히면서 규칙에도 맞는 형태로 잡았다.
+//   Play Console에 이 값 그대로 등록해야 한다 — 한 글자라도 다르면 상품을 못 찾는다.
 export const COIN_PRODUCTS: Record<string, CoinProduct> = {
-  coin3:  { id: "coin3",  name: "코인 3개",  coins: 3,  price: 900,  listPrice: 1500,  discountPct: 40, badge: "런칭 기념 40%", tag: "인기" },
-  coin9:  { id: "coin9",  name: "코인 9개",  coins: 9,  price: 2700, listPrice: 4500,  discountPct: 40, badge: "런칭 기념 40%", tag: "베스트" },
-  coin30: { id: "coin30", name: "코인 30개", coins: 30, price: 9000, listPrice: 15000, discountPct: 40, badge: "런칭 기념 40%", tag: "최저가" },
+  coin3:  { id: "coin3",  name: "코인 3개",  coins: 3,  price: 900,  listPrice: 1500,  discountPct: 40, badge: "런칭 기념 40%", tag: "인기",   playProductId: "coin_3" },
+  coin9:  { id: "coin9",  name: "코인 9개",  coins: 9,  price: 2700, listPrice: 4500,  discountPct: 40, badge: "런칭 기념 40%", tag: "베스트", playProductId: "coin_9" },
+  coin30: { id: "coin30", name: "코인 30개", coins: 30, price: 9000, listPrice: 15000, discountPct: 40, badge: "런칭 기념 40%", tag: "최저가", playProductId: "coin_30" },
 };
 
 export const COIN_PRODUCT_LIST: CoinProduct[] = [
@@ -60,4 +64,9 @@ export const COIN_PRODUCT_LIST: CoinProduct[] = [
 
 export function getCoinProduct(id: string): CoinProduct | null {
   return COIN_PRODUCTS[id] ?? null;
+}
+
+// Play 상품 ID → 내부 코인 상품 (IAP 적립 라우트가 영수증의 productId로 우리 상품을 찾을 때 쓴다)
+export function getCoinProductByPlayId(playProductId: string): CoinProduct | null {
+  return COIN_PRODUCT_LIST.find((p) => p.playProductId === playProductId) ?? null;
 }

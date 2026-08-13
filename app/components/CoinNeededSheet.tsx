@@ -6,9 +6,8 @@ import { COIN_SHEET_EVENT, type CoinSheetDetail } from "../lib/coinSheet";
 import { COIN_PRODUCT_LIST } from "../lib/products";
 import { useBackClose } from "../lib/useBackClose";
 import { WELCOME_COINS } from "../lib/coin-constants"; // ★coins.ts 금지 — Redis SDK가 클라 번들에 딸려온다
-import { saveReturnTo } from "../lib/returnTo";
+import { startPurchase } from "../lib/startPurchase";
 
-const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
 export default function CoinNeededSheet() {
   const [detail, setDetail] = useState<CoinSheetDetail | null>(null);
@@ -41,28 +40,11 @@ export default function CoinNeededSheet() {
   if (!detail) return null;
 
   const handleCharge = async (productId: string) => {
-    const product = COIN_PRODUCT_LIST.find((p) => p.id === productId);
-    if (!product) return;
     setPaying(productId);
-    // 이 시트는 402(코인 부족)로만 열린다 = 뭔가 만들다 막힌 자리다. 충전 후 그 자리로 돌려보낸다.
-    // ★지갑 탭 충전은 이 경로를 안 타므로 저장되지 않는다(지갑에서 온 사람은 지갑으로 복귀).
-    saveReturnTo(window.location.pathname);
     try {
-      const { loadTossPayments } = await import("@tosspayments/payment-sdk");
-      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
-      const orderId = "coin_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
-      await tossPayments.requestPayment("카드", {
-        amount: product.price,
-        orderId,
-        orderName: "MOSPIC " + product.name,
-        successUrl: window.location.origin + "/payment/success?flow=coin&productId=" + productId,
-        failUrl: window.location.origin + "/payment/fail",
-      });
-    } catch (e: unknown) {
-      const err = e as { code?: string; message?: string };
-      if (err?.code !== "USER_CANCEL") {
-        alert("결제 중 오류가 발생했어요: " + (err?.message || ""));
-      }
+      // 이 시트는 402(코인 부족)로만 열린다 = 뭔가 만들다 막힌 자리다 → saveReturn: true.
+      // ★지갑 탭 충전은 false라 저장되지 않는다(지갑에서 온 사람은 지갑으로 복귀).
+      await startPurchase(productId, { saveReturn: true });
     } finally {
       setPaying(null);
     }

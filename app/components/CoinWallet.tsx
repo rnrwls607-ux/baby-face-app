@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { CONCEPTS } from "../lib/concepts";
 import { COIN_PRODUCT_LIST } from "../lib/products";
+import { startPurchase } from "../lib/startPurchase";
 import CoinIcon from "./CoinIcon";
 
-const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
 type CoinLogEntry = { type: "welcome" | "charge" | "spend" | "refund"; amount: number; ref?: string; at: number };
 
@@ -61,25 +61,10 @@ export default function CoinWallet({ loggedIn, onLogin }: { loggedIn: boolean; o
   }, [loggedIn]);
 
   const handleCharge = async (productId: string) => {
-    const product = COIN_PRODUCT_LIST.find((p) => p.id === productId);
-    if (!product) return;
     setPaying(productId);
     try {
-      const { loadTossPayments } = await import("@tosspayments/payment-sdk");
-      const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);
-      const orderId = "coin_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
-      await tossPayments.requestPayment("카드", {
-        amount: product.price,
-        orderId,
-        orderName: "MOSPIC " + product.name,
-        successUrl: window.location.origin + "/payment/success?flow=coin&productId=" + productId,
-        failUrl: window.location.origin + "/payment/fail",
-      });
-    } catch (e: unknown) {
-      const err = e as { code?: string; message?: string };
-      if (err?.code !== "USER_CANCEL") {
-        alert("결제 중 오류가 발생했어요: " + (err?.message || ""));
-      }
+      // ★지갑 탭 충전은 saveReturn 없음 — 지갑에서 온 사람의 볼일은 잔액 확인이라 지갑으로 복귀한다.
+      await startPurchase(productId);
     } finally {
       setPaying(null);
     }

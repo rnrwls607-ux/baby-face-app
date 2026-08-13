@@ -1,3 +1,29 @@
+## 2026-08-14 — IAP-A: 결제 진입 통합 + Play 상품 매핑 + 앱 내 외부결제 차단
+- [문제] 같은 Toss 호출이 CoinNeededSheet과 CoinWallet에 통째로 복제돼 있었다.
+  IAP 분기를 붙이면 두 곳이 갈라지고, 한쪽만 고치는 사고가 나면 앱에서 Toss가 뜬다
+  = Play 정책 위반(결제 정지 사유)
+- [해결] app/lib/startPurchase.ts 신설 — 시트·지갑이 공유하는 단일 입구.
+  ★앱(Capacitor)에서는 분기가 아니라 차단이다. 안내만 띄우고 Toss 코드에 도달조차 안 함
+- [Play 상품 매핑] products.ts에 playProductId 추가 (coin3→coin_3 / coin9→coin_9 /
+  coin30→coin_30) + getCoinProductByPlayId 역조회. ★Play 상품 ID는 소문자·숫자·
+  언더스코어만 되고 한 번 만들면 삭제가 안 된다(비활성화만) — 이 값 그대로 등록해야 함
+- [경계 보존] saveReturn 옵션으로 갈랐다. 시트(402=만들다 막힌 자리)만 true,
+  지갑 탭은 false — 어제 확정한 "지갑에서 온 사람은 지갑으로 복귀" 규칙 그대로
+- [자구 대조 실측] HEAD 원문에서 기대 블록을 뽑아 헬퍼와 대조 — requestPayment 6줄·
+  orderId 생성식·SDK 동적 import·USER_CANCEL 조건·오류 문구 전부 문자 일치(들여쓰기만 -2)
+- [실측 44케이스] 웹: SDK 로드 1·requestPayment 1·3상품 금액/이름/successUrl/failUrl
+  일치·안내 토스트 0 / 네이티브 스텁: 3상품 × (SDK 로드 0·requestPayment 0·안내 1·
+  ★차단 시 returnTo 저장도 0) / returnTo: 저장값=pathname 3경로·저장 시점이
+  requestPayment 이전(호출 순간 스냅샷)·지갑 저장 0·포맷 {path,at} 유지
+- [무접촉] app/api 0줄 · app/payment 0줄 · 결제 라우트 0줄 · UI/문구/스타일 0줄
+  (핸들러 본문만 교체, 렌더 트리 diff 0)
+- [남은 것] IAP-B: RevenueCat 초기화 + purchasePackage + /api/coins/iap-credit 웹훅.
+  헬퍼 네이티브 분기에 TODO(IAP-B) 마킹해 둠 — 그 한 줄만 갈아끼우면 된다.
+  ★선행: MJ가 Play Console에 coin_3 / coin_9 / coin_30 등록(판매자 프로필 먼저)
+- 커밋 메시지: feat(IAP-A): 결제 진입 통합 + Play 상품 매핑 + 앱 내 외부결제 차단
+- 다음에 할 것: [MJ] Play Console 판매자 프로필 → 관리형 상품 3종 등록 → 라이선스
+  테스터 / 위택스 신고 상태 점검 / [다음 커밋] IAP-B (RC 초기화 + 웹훅 적립)
+
 ## 2026-08-13 — 충전 후 "이어서 만들기" 복귀 버튼
 - [문제] 402로 막혀 충전한 사람이 결제 성공 화면에서 "코인 지갑으로 →" 하나만 보고
   끝났다. 만들던 컨셉으로 돌아가려면 홈 → 카드 찾기를 다시 해야 했다
