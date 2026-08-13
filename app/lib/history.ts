@@ -1,3 +1,4 @@
+import { notifyGenerationDone } from "./notifyDone";
 // 생성 결과를 브라우저(IndexedDB)에 안정적으로 저장하는 히스토리
 // originalUrl: 유료 생성물의 원본 Blob 주소 (표시=축소본·다운로드=원본 이원화)
 // recovered: 생성 중 이탈로 클라 저장이 못 된 건을 서버 originals 인덱스에서 되살린 항목(조회 전용 표시)
@@ -104,6 +105,8 @@ export async function getHistory(): Promise<HistoryItem[]> {
 
 export async function addToHistory(srcs: string[], concept: string, originalUrls?: string[]): Promise<number> {
   if (typeof window === "undefined" || !window.indexedDB || !srcs?.length) return 0;
+  // 생성 성공 신호 — 앱이 백그라운드면 완료 알림 1발(웹·포그라운드는 발화 0)
+  void notifyGenerationDone();
   try {
     const db = await openDB();
     const now = Date.now();

@@ -1,3 +1,28 @@
+## 2026-08-13 — 백그라운드 완료 알림 (셸 로컬 알림 + 웹 훅 3파일)
+- [웹 훅 3파일] app/lib/notifyDone.ts 신설 · history.ts 발화 1지점 · LoadingSaveNote
+  권한 요청 1지점. ★165 페이지 무접촉 — addToHistory가 곧 "생성 성공" 신호이고,
+  LoadingSaveNote가 뜨는 순간이 곧 "생성 시작"이라 이미 있는 두 지점을 재사용했다
+- [발화 조건] 앱(Capacitor) + App.getState().isActive === false + 권한 보유. 3개 다
+  맞아야 1발. 포그라운드면 화면에 결과가 이미 있어 안 쏜다. 실패·타임아웃은 무알림(소음)
+- [★웹 발화 0] Notification API 미사용. 탭이 죽으면 콜백이 안 돌아 정작 필요한 순간에
+  못 가고 권한 프롬프트만 남는다. isNativePlatform()=false면 즉시 반환
+- [권한 시점] 첫 생성 직전 1회. 거절하면 localStorage에 기억해 다시 묻지 않는다 —
+  안드로이드는 재요청이 사실상 막히고, 물어봐야 소음이다. 거절해도 생성은 정상 진행
+- [실측 10케이스] 웹 2종 발화 0 / 거절 후 재요청 0 · 거절 기억 · 권한없음 발화 0 /
+  포그라운드 발화 0 / ★앱+백그라운드+권한 발화 1 / 플러그인 예외·구버전 앱 throw 0
+- [셸] @capacitor/local-notifications@8.2.1 설치 · POST_NOTIFICATIONS 권한 추가 ·
+  versionCode 3 / versionName 1.0.2 · cap sync 성공(플러그인 7종 인식).
+  ★브리지 파일 신설 불필요 — 원격 URL 모드라 웹의 window.Capacitor.Plugins로 직접 호출된다
+- [★게이트 ④ 일부 미완] gradle 빌드가 이 환경에서 "Unable to establish loopback
+  connection"으로 실패한다(샌드박스 제약, --no-daemon도 동일). 배선은 정적 검증으로
+  대체: capacitor.plugins.json · capacitor.settings.gradle · capacitor.build.gradle ·
+  네이티브 모듈 디렉터리 4곳 모두 확인. 실제 빌드는 MJ가 Android Studio에서
+- [한계] 원격 URL 셸이라 안드로이드가 웹뷰를 정리하면 콜백도 사라진다. "앱을 완전히
+  닫아도 온다"는 보장은 없다 — 그건 FCM 영역. 이번 건은 "다른 앱 쓰는 동안"까지다
+- 커밋 메시지: feat: 백그라운드 완료 알림 — 앱 로컬 알림 (웹 발화 0)
+- 다음에 할 것: [MJ] Android Studio에서 AAB 서명 빌드 → 비공개 트랙 업로드 → 실기기
+  실측(권한 팝업 시점 · 백그라운드 알림 도착)
+
 ## 2026-08-13 — 생성 결과 서버측 히스토리 확정 저장 + 로딩 안내
 - [문제] 히스토리는 클라가 저장했다. 생성 중 화면을 나가거나 앱이 잠들면 클라가 죽어
   결과가 통째로 사라진다 — 원본 Blob은 남는데 목록엔 없다. 코인은 이미 나간 뒤다

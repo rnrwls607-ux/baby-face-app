@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ensureNotifyPermission } from "../lib/notifyDone";
 
 // 생성 대기 중 안내 — "나가도 된다"는 보장을 로그인 사용자에게만 알린다.
 // ★게스트에는 렌더 0: 서버측 확정 저장은 카카오 uid에만 걸려 있어, 게스트에게
@@ -25,6 +26,8 @@ function checkLoggedIn(): Promise<boolean> {
 export default function LoadingSaveNote() {
   const [show, setShow] = useState(cached === true);
   useEffect(() => {
+    // 이 컴포넌트가 뜨는 순간 = 생성이 막 시작된 때. 알림 권한은 여기서 1회만 묻는다
+    void ensureNotifyPermission();
     let alive = true;
     void checkLoggedIn().then((v) => { if (alive) setShow(v); });
     return () => { alive = false; };
