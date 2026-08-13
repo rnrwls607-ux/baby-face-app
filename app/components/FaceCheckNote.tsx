@@ -26,9 +26,11 @@ type Props = {
   notes: FaceNote[];
   onReplace: (index: number, files: FileList) => void; // soft — 지목된 사진 교체
   onPick: (files: FileList) => void;                   // hard — 새로 고르기
+  // 단일 업로드(1장) 페이지 — 문구에서 "n번째"·"n장"을 뺀다. 그 자리에 셀 것이 없다.
+  single?: boolean;
 };
 
-export default function FaceCheckNote({ notes, onReplace, onPick }: Props) {
+export default function FaceCheckNote({ notes, onReplace, onPick, single = false }: Props) {
   if (notes.length === 0) return null;
 
   return (
@@ -49,7 +51,7 @@ export default function FaceCheckNote({ notes, onReplace, onPick }: Props) {
         if (n.kind === "ok") {
           return (
             <div key={i} style={barStyle("#E9F6F5", "#3E8E89")}>
-              ✓&nbsp;&nbsp;{n.count}장 확인 완료 — 만들 준비 됐어요
+              ✓&nbsp;&nbsp;{single ? "확인 완료 — 만들 준비 됐어요" : `${n.count}장 확인 완료 — 만들 준비 됐어요`}
             </div>
           );
         }
@@ -57,9 +59,9 @@ export default function FaceCheckNote({ notes, onReplace, onPick }: Props) {
           return (
             <div key={i} style={cardStyle(WARN_BORDER)}>
               <div style={hdrStyle}>
-                <span style={{ ...icStyle, background: WARN_BG, color: WARN_TX }}>{n.index + 1}</span>
+                <span style={{ ...icStyle, background: WARN_BG, color: WARN_TX }}>{single ? "!" : n.index + 1}</span>
                 <b style={{ fontSize: 13.5, fontWeight: 900, color: "#191919" }}>
-                  {n.index + 1}번째 사진, 이대로는 아쉬워요
+                  {single ? "이 사진, 이대로는 아쉬워요" : `${n.index + 1}번째 사진, 이대로는 아쉬워요`}
                 </b>
               </div>
               <ReasonList reasons={n.reasons} />
@@ -73,7 +75,7 @@ export default function FaceCheckNote({ notes, onReplace, onPick }: Props) {
             <div style={hdrStyle}>
               <span style={{ ...icStyle, background: "#FBEDED", color: "#B3453F" }}>✕</span>
               <b style={{ fontSize: 13.5, fontWeight: 900, color: "#191919" }}>
-                {n.count}장은 담지 못했어요
+                {single ? "이 사진은 쓸 수 없어요" : `${n.count}장은 담지 못했어요`}
               </b>
             </div>
             <ReasonList reasons={n.reasons} />

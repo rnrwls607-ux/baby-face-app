@@ -15,6 +15,8 @@ import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
+import FaceCheckNote from "../components/FaceCheckNote";
+import { useFaceCheckSingle } from "../lib/useFaceCheck";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
@@ -29,6 +31,7 @@ const COSTUME_OPTIONS = [
 export default function HalloweenPage() {
   const router = useRouter();
   const [image, setImage] = useState<string>("");
+  const faceCheck = useFaceCheckSingle(); // 얼굴 사전 검사 (inputRule "solo_face")
   const [costume, setCostume] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -67,7 +70,12 @@ export default function HalloweenPage() {
     };
     img.src = b64;
   });
-  const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
+  const handleUpload = async (file: File) => {
+    const b64 = await toBase64(file);
+    setImage(b64);
+    // hard_fail이면 담지 않는다 — 이유는 업로드 카드 아래 FaceCheckNote가 말한다
+    if (!(await faceCheck.check(b64))) setImage("");
+  };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
     if (COIN_GATED && coinBalance !== null && coinBalance < COIN_COST) { openCoinSheet({ need: COIN_COST, balance: coinBalance }); return; }
@@ -139,8 +147,14 @@ export default function HalloweenPage() {
               images={image ? [image] : []}
               max={1}
               onPick={files => handleUpload(files[0])}
-              onRemove={() => setImage("")}
+              onRemove={() => { setImage(""); faceCheck.clear(); }}
               cameraFacing="user"
+            />
+            <FaceCheckNote
+              notes={faceCheck.notes}
+              onReplace={(_i, files) => handleUpload(files[0])}
+              onPick={(files) => handleUpload(files[0])}
+              single
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않기" }]} />
             <PrivacyLine />

@@ -14,7 +14,7 @@ import { checkPhoto, newPhotoId, type Photo } from "./gate";
 export type FaceNote =
   | { kind: "checking" }
   | { kind: "ok"; count: number }
-  | { kind: "soft"; index: number; reasons: string[] }   // index = 0-based (표시는 +1)
+  | { kind: "soft"; index: number; reasons: string[] }   // index = 0-based (표시는 +1). 단일 모드는 -1
   | { kind: "hard"; count: number; reasons: string[] };
 
 export function useFaceCheck(inputRule: string = "solo_face") {
@@ -77,4 +77,42 @@ export function useFaceCheck(inputRule: string = "solo_face") {
   })();
 
   return { photos, images, notes, addPhotos, removePhoto, replacePhoto, resetPhotos };
+}
+
+// ─────────────────────────────────────────────────────────────
+// 단일 업로드(1장) 모드 — 53종 확산용.
+//
+// 왜 훅을 따로 두나: 이 페이지들은 이미 const [image, setImage] = useState<string>("")
+// 를 갖고 있고 handleSubmit·버튼 활성 조건이 전부 그 값을 본다. 사진 소유권을 훅으로
+// 옮기면 페이지마다 손댈 곳이 늘어난다. 그래서 이 훅은 "판정만" 들고 있는다.
+// ─────────────────────────────────────────────────────────────
+type SingleState =
+  | null
+  | { kind: "checking" }
+  | { kind: "pass" }
+  | { kind: "soft"; reasons: string[] }
+  | { kind: "hard"; reasons: string[] };
+
+export function useFaceCheckSingle(inputRule: string = "solo_face") {
+  const [state, setState] = useState<SingleState>(null);
+
+  /** 검사 실행. 반환값 false = hard_fail이라 이 사진은 담으면 안 된다. */
+  const check = async (src: string): Promise<boolean> => {
+    setState({ kind: "checking" });
+    const r = await checkPhoto(src, inputRule);
+    if (!r.ok) { setState({ kind: "hard", reasons: r.reasons }); return false; }
+    setState(r.gate.status === "soft_fail" ? { kind: "soft", reasons: r.gate.reasons } : { kind: "pass" });
+    return true;
+  };
+
+  const clear = () => setState(null);
+
+  const notes: FaceNote[] =
+    state === null ? []
+    : state.kind === "checking" ? [{ kind: "checking" }]
+    : state.kind === "pass" ? [{ kind: "ok", count: 1 }]
+    : state.kind === "soft" ? [{ kind: "soft", index: -1, reasons: state.reasons }]
+    : [{ kind: "hard", count: 1, reasons: state.reasons }];
+
+  return { notes, check, clear };
 }

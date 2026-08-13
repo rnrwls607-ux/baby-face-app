@@ -10,6 +10,8 @@ import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
 import PreviewCard from "../components/upload/PreviewCard";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
+import FaceCheckNote from "../components/FaceCheckNote";
+import { useFaceCheckSingle } from "../lib/useFaceCheck";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
 import UploadGuide from "../components/upload/UploadGuide";
@@ -37,6 +39,7 @@ export default function CrewglamPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [image, setImage] = useState<string>("");
+  const faceCheck = useFaceCheckSingle(); // 얼굴 사전 검사 (inputRule "solo_face")
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
@@ -62,7 +65,12 @@ export default function CrewglamPage() {
     };
     img.src = b64;
   });
-  const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
+  const handleUpload = async (file: File) => {
+    const b64 = await toBase64(file);
+    setImage(b64);
+    // hard_fail이면 담지 않는다 — 이유는 업로드 카드 아래 FaceCheckNote가 말한다
+    if (!(await faceCheck.check(b64))) setImage("");
+  };
   const handleSubmit = async () => {
     if (!image) { setError("사진을 올려주세요."); return; }
     // 즉시 부족 체크(캐시 기준, 서버 호출 전) — ★스위치 날 벌크 앵커
@@ -121,8 +129,14 @@ export default function CrewglamPage() {
               images={image ? [image] : []}
               max={1}
               onPick={files => handleUpload(files[0])}
-              onRemove={() => setImage("")}
+              onRemove={() => { setImage(""); faceCheck.clear(); }}
               cameraFacing="environment"
+            />
+            <FaceCheckNote
+              notes={faceCheck.notes}
+              onReplace={(_i, files) => handleUpload(files[0])}
+              onPick={(files) => handleUpload(files[0])}
+              single
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "expand", label: "상반신이 보이게" }]} />
             {/* 컨셉 범위 고지 — 앱의 보조문 톤(작은 회색). 결과가 기대와 다른 사고를 앞단에서 막는다 */}
