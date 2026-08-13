@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { overDailyLimit, getCachedVerdict, setCachedVerdict, GATE_DAILY_LIMIT } from "../../lib/gateGuard";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -12,6 +13,10 @@ const MIN_FACE_RATIO = 0.15;      // 이보다 작으면 얼굴이 너무 작다
 // 이 API는 어떤 상황에서도 200 OK 만 반환하고, 판단이 불가능하면 pass 한다.
 // 멀쩡한 사진을 잘못 막는 것이 최악의 경험이기 때문이다.
 // 네트워크 실패·타임아웃·JSON 파싱 실패·API 키 없음 → 전부 pass.
+//
+// ★유일한 예외는 일 한도 초과 429다. 그런데 클라(gate.ts)는 res.ok를 보지 않고
+//   body.result만 읽으므로, result 없는 429는 마지막 줄 pass 폴백으로 떨어진다.
+//   = 한도 초과는 "검사 생략"이지 "업로드 차단"이 아니다. 사용자를 인질로 잡지 않는다.
 // ─────────────────────────────────────────────────────────────
 
 type GateResult = { result: "hard_fail" | "soft_fail" | "pass"; reasons: string[] };
@@ -136,10 +141,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(PASS);
     }
 
-    const inspection = await inspect(image);
-    if (!inspection) return NextResponse.json(PASS);   // 판단 불가 → 통과
+    // ── 1) 해시 캐시 — 같은 사진 재검사는 Gemini 0콜 ──
+    // ★한도보다 먼저 본다. 캐시 히트는 Gemini를 안 부르므로 한도를 소비할 이유가 없다.
+    //   (되돌아와 같은 사진을 다시 올리는 정상 사용자가 한도를 까먹지 않는다.)
+    const cached = await getCachedVerdict(inputRule, image);
+    if (cached) {
+      console.log("[validate-photo] cache=HIT");
+      return NextResponse.json(cached);
+    }
 
-    return NextResponse.json(judge(inspection));
+    // ── 2) 일 한도 — 여기부터가 Gemini를 부르는 경로 ──
+    if (await overDailyLimit(request)) {
+      console.log("[validate-photo] limited=1");
+      // result 필드를 일부러 넣지 않는다 — 클라가 pass 폴백으로 떨어지게 두는 것이 의도다.
+      return NextResponse.json(
+        { error: `오늘 사진 확인 ${GATE_DAILY_LIMIT}회를 모두 사용했어요.`, limited: true },
+        { status: 429 }
+      );
+    }
+
+    console.log("[validate-photo] cache=MISS");
+    const inspection = await inspect(image);
+    if (!inspection) return NextResponse.json(PASS);   // 판단 불가 → 통과 (캐시하지 않는다)
+
+    const verdict = judge(inspection);
+    await setCachedVerdict(inputRule, image, verdict);
+    return NextResponse.json(verdict);
   } catch (e: unknown) {
     // 예상 못 한 어떤 에러도 사용자를 막지 않는다.
     console.error("validate-photo error:", (e as { message?: string })?.message);
