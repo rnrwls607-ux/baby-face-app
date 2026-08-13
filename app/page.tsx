@@ -378,11 +378,11 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "goddessdress", title: "여신 드레스", subtitle: "시상식 밤의 주인공처럼", emoji: "👗", accent: "#8E4B6B", image: "/cards/goddessdress.webp", badge: "NEW", tags: ["헤어·뷰티", "인생샷"], go: "goddessdress" },
       { id: "tripface", title: "여행 셀카 구제", subtitle: "배경은 그대로, 나는 그날의 베스트로", emoji: "🧳", accent: "#E07A5F", image: "/cards/tripface.webp", badge: "NEW", tags: ["인생샷"], go: "tripface" },
       { id: "idolglam", title: "아이돌 글램", subtitle: "오늘의 나, 데뷔 화보의 주인공으로", emoji: "🌟", accent: "#B54BC9", image: "/cards/idolglam.webp", badge: "NEW", tags: ["헤어·뷰티", "인생샷"], go: "idolglam" },
-      // ─── 신규 4종 (2026-08-12) — 킷(썸네일·상세) 반입 후 주석 해제해 오픈. 그때까지 직접 URL 접근만 가능
-      // { id: "campusgrad", title: "캠퍼스 졸업사진", subtitle: "가고 싶던 그 캠퍼스에서", emoji: "🎓", accent: "#EAF0E4", image: "/cards/campusgrad.webp", badge: "NEW", tags: ["인생샷"], go: "campusgrad" },
-      // { id: "dresswedding", title: "웨딩 스냅", subtitle: "오늘, 웨딩 화보의 주인공", emoji: "💍", accent: "#FBEFE9", image: "/cards/dresswedding.webp", badge: "NEW", tags: ["인생샷"], go: "dresswedding" },
-      // { id: "gyaru", title: "갸루 메이크오버", subtitle: "오늘만은 갸루", emoji: "💗", accent: "#FBE6F1", image: "/cards/gyaru.webp", badge: "NEW", tags: ["인생샷"], go: "gyaru" },
-      // { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
+      // ─── 신규 4종 (2026-08-12 신설 · 2026-08-13 킷 반입·홈 오픈)
+      { id: "campusgrad", title: "캠퍼스 졸업사진", subtitle: "가고 싶던 그 캠퍼스에서", emoji: "🎓", accent: "#EAF0E4", image: "/cards/campusgrad.webp", badge: "NEW", tags: ["인생샷"], go: "campusgrad" },
+      { id: "dresswedding", title: "웨딩 스냅", subtitle: "오늘, 웨딩 화보의 주인공", emoji: "💍", accent: "#FBEFE9", image: "/cards/dresswedding.webp", badge: "NEW", tags: ["인생샷"], go: "dresswedding" },
+      { id: "gyaru", title: "갸루 메이크오버", subtitle: "오늘만은 갸루", emoji: "💗", accent: "#FBE6F1", image: "/cards/gyaru.webp", badge: "NEW", tags: ["인생샷"], go: "gyaru" },
+      { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
       { id: "interior", title: "인테리어 비포/애프터", subtitle: "빈 방에 가구를", emoji: "🛋️", accent: "#FFEFD6", badge: "NEW", tags: ["인테리어"], image: "/cards/interior.webp", go: "interior" },

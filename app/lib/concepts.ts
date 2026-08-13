@@ -1148,6 +1148,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🏛️", accent: "#F3EEE4" },
     ],
     start: "campusgrad",
+    detailImage: "/details/campusgrad.webp",
     inputRule: "solo_face",
   },
   dresswedding: {
@@ -1164,6 +1165,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🏮", accent: "#F6EDE6" },
     ],
     start: "dresswedding",
+    detailImage: "/details/dresswedding.webp",
     inputRule: "solo_face",
   },
   gyaru: {
@@ -1180,6 +1182,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#F7EAF6" },
     ],
     start: "gyaru",
+    detailImage: "/details/gyaru.webp",
     inputRule: "solo_face",
   },
   genderswap: {
@@ -1196,6 +1199,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🙋‍♂️", accent: "#E9EDF2" },
     ],
     start: "genderswap",
+    detailImage: "/details/genderswap.webp",
     inputRule: "solo_face",
   },
   halloween: {
