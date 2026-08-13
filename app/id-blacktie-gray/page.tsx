@@ -7,8 +7,9 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
-import { checkPhoto, newPhotoId, type Photo } from "../lib/gate";
+import { useFaceCheck } from "../lib/useFaceCheck";
 import GateBadge from "../components/GateBadge";
+import FaceCheckNote from "../components/FaceCheckNote";
 import PreviewCard from "../components/upload/PreviewCard";
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
@@ -28,8 +29,8 @@ const ACCENT = "#FF4B7C";
 
 export default function IdBlacktieGrayPage() {
   const router = useRouter();
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const images = photos.map(p => p.src);
+  // 사진 목록·판정·안내는 훅이 소유한다 (65종 공통 — 규칙 변경 지점 1곳)
+  const { photos, images, notes, addPhotos, removePhoto, replacePhoto, resetPhotos } = useFaceCheck();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -77,34 +78,10 @@ export default function IdBlacktieGrayPage() {
     if (remaining <= 0) { setError(`사진은 최대 ${MAX_PHOTOS}장까지 올릴 수 있어요.`); return; }
     const picked = Array.from(files).slice(0, remaining);
     const converted = await Promise.all(picked.map(toBase64));
-    // 1) 먼저 "확인 중" 상태로 담아 화면에 바로 보여준다.
-    const batch: Photo[] = converted.map(src => ({ id: newPhotoId(), src, gate: { status: "checking" } }));
-    setPhotos(prev => [...prev, ...batch]);
-
-    // 2) 여러 장을 동시에 판정한다.
-    const checks = await Promise.all(batch.map(p => checkPhoto(p.src, "solo_face")));
-
-    const rejected = new Set<string>();
-    const passed = new Map<string, Photo["gate"]>();
-    const reasons: string[] = [];
-    batch.forEach((p, i) => {
-      const c = checks[i];
-      if (c.ok) passed.set(p.id, c.gate);
-      else { rejected.add(p.id); reasons.push(...c.reasons); }
-    });
-
-    // 3) 인덱스가 아니라 id 로 찾아 지우고 갱신한다 — 기다리는 동안 사진이
-    //    추가·삭제돼도 엉뚱한 사진을 건드리지 않는다.
-    setPhotos(prev => prev
-      .filter(p => !rejected.has(p.id))
-      .map(p => (passed.has(p.id) ? { ...p, gate: passed.get(p.id)! } : p)));
-
-    if (reasons.length) setError([...new Set(reasons)].join(" · "));
+    await addPhotos(converted);
   };
 
-  const removeImage = (idx: number) => {
-    setPhotos(prev => prev.filter((_, i) => i !== idx));
-  };
+  const removeImage = (idx: number) => removePhoto(idx);
 
   const handleSubmit = async () => {
     if (images.length < MIN_PHOTOS) { setError(`정면 얼굴 사진을 ${MIN_PHOTOS}장 이상 올려주세요.`); return; }
@@ -166,10 +143,15 @@ export default function IdBlacktieGrayPage() {
               max={MAX_PHOTOS}
               onPick={handleUpload}
               onRemove={removeImage}
-              renderBadge={idx => <GateBadge gate={photos[idx]?.gate} />}
+              renderBadge={idx => <GateBadge gate={photos[idx]?.gate} index={idx} />}
               accent={ACCENT}
               cameraFacing="user"
               gridHint="첫 번째 사진이 결과의 기준이 돼요 — 가장 잘 나온 정면 사진을 첫 번째로"
+            />
+            <FaceCheckNote
+              notes={notes}
+              onReplace={async (i, files) => { await replacePhoto(i, await Promise.all(Array.from(files).map(toBase64))); }}
+              onPick={handleUpload}
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않게" }]} />
             <PrivacyLine />
@@ -222,7 +204,7 @@ export default function IdBlacktieGrayPage() {
               ))}
             </div>
 
-            <button onClick={() => { setResults([]); setPhotos([]); }}
+            <button onClick={() => { setResults([]); resetPhotos(); }}
               style={{ width: "100%", marginTop: 18, background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 14, padding: "15px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>다시 만들기</button>
           </div>
         )}
