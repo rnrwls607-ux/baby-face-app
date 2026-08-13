@@ -17,34 +17,41 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 
 // 칩 합성 — bgchange route와 같은 구조: CORE + 씬 + FINISH
 // ★키는 클라의 CAMPUS_OPTIONS와 반드시 일치해야 한다(불일치 시 ivy로 폴백됨)
-const CAMPUS_CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio. Take the person in the photo and create ONE stunning graduation portrait of them in the scene described below. The scene, wardrobe, and light transform completely — the person stays recognizably themselves, at their absolute best.
+const CAMPUS_CORE = `You are the master retoucher and concept photographer of Seoul's most famous premium photo studio — the studio that celebrities and influencers visit for their concept pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the idol version of themselves — while friends still recognize them at a glance.
+
+Take the person in the photo and create ONE stunning, fully-retouched graduation portrait of them in the scene described below.
 
 STEP 1 — Read the person first:
 Note their gender, hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
 
-THE RETOUCH CONTRACT — visibly enhance and slim, while keeping them recognizable:
-- This is a PREMIUM RETOUCH: the person must look clearly prettier, slimmer, and more polished than the input — like a top studio's finished pictorial, not a raw photo.
-- Anyone who knows them must still recognize them instantly. Enhance and refine their existing features — never replace them with a different person's.
+GLASSES RULE (check the input, then follow exactly):
+- IF the person is wearing glasses in the input photo: the result MUST also show them wearing glasses — exactly ONE pair, worn normally on the face. Recreate THEIR OWN glasses: same frame shape, thickness, and color. Render clean, clear lenses with minimal glare so their bright retouched eyes stay clearly visible through them. Do NOT remove them, and do NOT swap them for sunglasses or different frames.
+- IF the person is NOT wearing glasses in the input: do not add glasses or sunglasses.
+- In ALL cases: never two pairs of glasses, never one pair on the face plus another in the hand or hair, never floating or duplicated eyewear anywhere in the frame.
 
-FACE RETOUCHING ORDER (apply ALL, in this priority):
-1. SMALL FACE: visibly reduce the overall face size — a compact, small face on the frame, the beauty standard of Korean pictorials.
-2. V-LINE: slim the jawline and cheeks into a smooth, elegant V-line — clearly slimmer than the input, about 10% reduction, natural and believable.
-3. EYES: enlarge the eyes subtly — brighter, more awake, with clean sparkling catchlights (clearly visible through the lenses if they wear glasses).
-4. NOSE: refine the nose — slightly slimmer bridge, softly refined tip.
-5. FACE HARMONY: balance all features into a naturally beautiful, harmonious face — still unmistakably them.
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
 
 SKIN — flawless glass skin:
-- Porcelain-smooth, luminous "glass skin": every blemish, mole, spot, scar, and imperfection completely covered and erased. Zero moles, zero spots, zero marks interrupting the flawless skin.
-- Even, bright skin tone with a healthy glow — poreless-smooth yet never plastic.
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+- Zero moles, zero spots, zero marks interrupting the flawless skin — every blemish, mole, spot, and scar completely covered and erased.
+- The direction is one-way: marks may only be REMOVED, never added — do not paint any new mole, freckle, beauty mark, or spot anywhere, under any circumstance.
 
 BEAUTY DIRECTION — modern Korean, youthful:
-- The finished face must read subtly YOUNGER and fresher than the input — well-rested, dewy, vibrant. Never older, never tired.
-- Woman: an elegant natural makeup that suits the occasion — a luminous flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip. Man: clean, polished K-drama actor grooming — neat natural brows, fresh clear skin.
-
-GLASSES RULE (check the input, then follow exactly):
-- If they are wearing glasses: keep the EXACT same glasses — same frame shape, same color, worn normally on the face. Only ONE pair.
-- If they are NOT wearing glasses: do NOT add any glasses.
-- Never duplicate glasses. Never add sunglasses.
+- Beautify in the aesthetic of TODAY's young Korean celebrities — fresh, youthful, clean. They must look subtly YOUNGER than the input photo, never older.
+- Woman: dewy "no-makeup makeup" base with a soft natural accent — soft natural straight brows, delicate eye makeup, a gentle rosy lip. Never heavy or dramatic.
+- Man: clean K-drama actor grooming — neat natural brows, fresh clear skin, effortless and modern.
+- Hair: a trendy modern Korean hairstyle that suits them, styled beautifully under the graduation cap (around the glasses naturally if they wear them). Never a dated style that ages them.
 
 RELIGHT COMPLETELY (this makes it look real):
 - Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.`;
@@ -55,37 +62,37 @@ const CAMPUS_SCENES: Record<string, string> = {
 - MORTARBOARD RULE (critical): the cap sits back on the head with the board angled UP so it NEVER shadows or covers the forehead, eyebrows, or eyes — the full face stays bright, open, and clearly visible, with the hairline showing naturally under the cap.
 - A classic graduation gown fitting naturally, with neat attire visible at the collar; holding a diploma scroll or a small bouquet below the chest line.
 - Location: a historic gothic-style campus — weathered stone archways and towers covered in green ivy, softly blurred behind the person, warm afternoon light filtering through old trees. Every wall and building surface is completely BARE and unmarked — plain clean stone with no plaques, no engravings, no banners, no signboards of any kind.
-- Light: golden late-afternoon sunlight with a gentle glow on the face, soft shadows — prestigious, timeless mood.
+- Light: flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, idol-grade luminous skin, every feature crisp and glowing — while the scene around them glows with golden late-afternoon sunlight through old trees; prestigious, timeless mood.
 - ABSOLUTELY NO school names, emblems, crests, flags, banners, or any readable or even blurry half-formed lettering anywhere — where a sign or plaque would naturally be, render plain empty stone instead. Even illegible text shapes are a failure. The atmosphere alone tells the story.`,
   krspring: `THE SCENE — a Korean university graduation portrait in full spring:
 - Wardrobe: a classic black academic gown with a deep navy-blue hood, and a black mortarboard cap, fitting naturally with neat attire underneath. They may hold a diploma tube or a small bouquet.
 - MORTARBOARD RULE (critical): the cap sits back on the head with the board angled UP so it NEVER shadows or covers the forehead, eyebrows, or eyes — the full face stays bright, open, and clearly visible, with the hairline showing naturally under the cap.
 - A classic graduation gown fitting naturally, with neat attire visible at the collar; holding a diploma scroll or a small bouquet below the chest line.
 - Location: a beautiful Korean university campus at cherry-blossom peak — a grand granite main gate and stone buildings softly blurred behind, pink petals drifting in the air, a clean open plaza. Every gate, wall, and building surface is completely BARE and unmarked — plain clean stone with no plaques, no engravings, no banners, no signboards of any kind.
-- Light: bright, clear spring daylight — fresh, hopeful, celebratory mood.
+- Light: flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, idol-grade luminous skin, every feature crisp and glowing — while the scene around them glows with bright, clear spring daylight; fresh, hopeful, celebratory mood.
 - ABSOLUTELY NO school names, emblems, crests, flags, banners, or any readable or even blurry half-formed lettering anywhere — where a sign or plaque would naturally be, render plain empty stone instead. Even illegible text shapes are a failure. The atmosphere alone tells the story.`,
   euclassic: `THE SCENE — a classic European university graduation portrait:
 - Wardrobe: a formal black academic gown with a white fur-trimmed hood draped elegantly, and a black mortarboard cap, over smart formal attire. They may hold a ribbon-tied diploma scroll.
 - MORTARBOARD RULE (critical): the cap sits back on the head with the board angled UP so it NEVER shadows or covers the forehead, eyebrows, or eyes — the full face stays bright, open, and clearly visible, with the hairline showing naturally under the cap.
 - A classic graduation gown fitting naturally, with neat attire visible at the collar; holding a diploma scroll or a small bouquet below the chest line.
 - Location: a centuries-old honey-stone college quadrangle — arched cloisters, tall spires, and a manicured courtyard lawn softly blurred behind the person. Every wall and stone surface is completely BARE and unmarked — no plaques, no engravings, no banners, no signboards of any kind.
-- Light: soft, gentle European daylight with warm tones — dignified, scholarly, timeless mood.
+- Light: flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, idol-grade luminous skin, every feature crisp and glowing — while the scene around them glows with soft, gentle European daylight with warm tones; dignified, scholarly, timeless mood.
 - ABSOLUTELY NO school names, emblems, crests, flags, banners, or any readable or even blurry half-formed lettering anywhere — where a sign or plaque would naturally be, render plain empty stone instead. Even illegible text shapes are a failure. The atmosphere alone tells the story.`,
   city: `THE SCENE — a modern city-campus graduation portrait:
 - Wardrobe: a sleek black academic gown with a minimal charcoal-gray hood and a black mortarboard cap, over modern smart attire. They may hold a slim diploma folder.
 - MORTARBOARD RULE (critical): the cap sits back on the head with the board angled UP so it NEVER shadows or covers the forehead, eyebrows, or eyes — the full face stays bright, open, and clearly visible, with the hairline showing naturally under the cap.
 - A classic graduation gown fitting naturally, with neat attire visible at the collar; holding a diploma scroll or a small bouquet below the chest line.
 - Location: a contemporary urban campus — glass-and-steel architecture with clean lines, a bright open plaza, the city skyline softly blurred in the distance. Every glass and wall surface is completely BARE and unmarked — no signage, no banners, no lettering of any kind.
-- Light: crisp, bright daylight with clean modern tones — ambitious, fresh, metropolitan mood.
+- Light: flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, idol-grade luminous skin, every feature crisp and glowing — while the scene around them glows with crisp, bright daylight with clean modern tones; ambitious, fresh, metropolitan mood.
 - ABSOLUTELY NO school names, emblems, crests, flags, banners, or any readable or even blurry half-formed lettering anywhere — where a sign or plaque would naturally be, render plain empty stone instead. Even illegible text shapes are a failure. The atmosphere alone tells the story.`,
 };
 
 const CAMPUS_FINISH = `POSE — proud, happy, natural:
 - A confident, proud smile or a warm gentle expression; shoulders relaxed, posture upright and dignified.
 
-FRAMING — vertical 3:4 portrait, upper-body shot, the person centered with graceful negative space.
+FRAMING — vertical 3:4 portrait, upper-body shot, the person centered — tall, model-like proportions with the small refined face clearly the hero of the frame.
 
-CAMERA — shot on an 85mm f/1.8 portrait lens look: creamy background bokeh, tack-sharp eyes, soft premium color grading.
+CAMERA — shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
 
 ABSOLUTELY AVOID:
 - Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.

@@ -13,7 +13,9 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
   return { mimeType: m[1], data: m[2] };
 }
 
-const GENDERSWAP_PROMPT = `You are a professional, photorealistic gender-swap portrait artist for a premium Korean photo studio. Take the person in this photo and show how THIS EXACT PERSON would look if they had been born the opposite gender — like their own good-looking twin sibling of the other gender, photographed at their best in this exact same moment and place.
+const GENDERSWAP_PROMPT = `You are the master retoucher and gender-swap portrait artist of Seoul's most famous premium photo studio — the studio that celebrities visit for their concept pictorials. Your signature skill: showing each client the most attractive version of themselves as the opposite gender — their own stunning twin of the other gender — while friends still recognize them at a glance.
+
+Take the person in this photo and show how THIS EXACT PERSON would look if they had been born the opposite gender — their own best-looking twin sibling of the other gender, professionally photographed at their absolute best, in this exact same moment and place.
 
 STEP 1 — Read the person first:
 Note their current gender presentation, age, ethnicity, skin tone, face shape, hair color, eye character (single/double eyelids), nose character, lip shape, and distinctive features (dimples, visible moles). The swapped result MUST keep the same age, the same ethnicity and skin tone, and the same core facial essence.
@@ -21,26 +23,58 @@ Note their current gender presentation, age, ethnicity, skin tone, face shape, h
 STEP 2 — Inherit the face, feature by feature (MOST IMPORTANT):
 - Build the opposite-gender face FROM this person's own features: the same eye character and eyelid type, the same nose impression, a clearly related lip shape and smile, the same overall face-shape flow — translated naturally into the other gender's proportions.
 - The result must look like this person's twin: anyone who knows them should instantly say "that is EXACTLY them as a man/woman — same eyes, same vibe."
-- Keep every distinctive cue that translates: dimples stay, and every mole or mark clearly visible in the original stays in its spot. Never add new moles, freckles, or marks anywhere — marks may only carry over from the original, never be invented.
-- NOT a generic handsome man or pretty woman — THIS person's genes, other gender.
+- Keep every distinctive cue that translates: dimples stay. NOT a generic handsome man or pretty woman — THIS person's genes, other gender.
 
-STEP 3 — Swap the gender convincingly, at their best (styled, never plain):
-- If the person presents as a WOMAN → render them as an attractive MAN: a naturally defined masculine jawline and brow built from her bone structure, fresh clear well-groomed skin, a trendy neat short hairstyle in the ORIGINAL hair color (clean K-drama actor styling), bright awake eyes, and a tasteful smart-casual menswear look (a clean shirt, knit, or light jacket) replacing the outfit.
-- If the person presents as a MAN → render them as an attractive WOMAN: a naturally softened feminine jawline built from his bone structure, luminous clear skin with light natural makeup (flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip), a flattering feminine hairstyle (soft waves or a neat medium-length cut) in the ORIGINAL hair color, bright lively eyes, and a tasteful feminine smart-casual look replacing the outfit.
-- POLISH: both directions get the "best day of their life" treatment — well-rested, healthy glow, subtle photogenic freshness. Clearly attractive and put-together, yet completely natural and believable — never a caricature, never plastic, never a stranger.
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as this person's twin — keep the fundamental impression of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED pictorial, not a plain documentary rendering. You are EXPECTED to make the twin visibly attractive and polished. The person's own reaction must be: "If I were born a man/woman, THIS is the best I could ever look — I'm showing this to everyone."
+
+THE SWAP — translate convincingly, at their best:
+
+IF the person presents as a WOMAN → render them as a strikingly attractive MAN:
+- A naturally defined, clean masculine jawline and brow built from her own bone structure — sharp but never harsh; a smooth jaw-to-neck line with no double chin.
+- Bright, awake, clearly defined eyes keeping her exact eyelid type; a straight refined nose grown from her nose's character.
+- Fresh, clear, well-groomed skin with a healthy glow; neat natural brows — clean K-drama actor grooming, effortless and modern.
+- Hair: a trendy neat short masculine hairstyle in the ORIGINAL hair color — clean actor styling that suits his face. Never a dated style.
+- Wardrobe: a tasteful smart-casual menswear look (a clean shirt, knit, or light jacket) replacing the outfit.
+
+IF the person presents as a MAN → render them as a strikingly beautiful WOMAN:
+- A naturally softened, elegant feminine jawline built from his own bone structure — a smooth refined line, gently smaller-reading face with graceful proportions.
+- Bright, lively, subtly larger-looking eyes keeping his exact eyelid type; a slim refined nose grown from his nose's character.
+- Poreless-smooth, luminous glass skin with a dewy glow; light natural makeup — flawless base, softly defined brows, delicate eye makeup, a gentle rosy lip. Never heavy.
+- Hair: a flattering feminine hairstyle (soft waves or a neat medium-length cut) in the ORIGINAL hair color, styled beautifully. Never a dated style.
+- Wardrobe: a tasteful feminine smart-casual look replacing the outfit.
+
+SKIN — flawless, one-way:
+- Completely remove blemishes, acne, redness, dark circles, and oiliness — clean, even-toned, luminous skin with soft highlights on the cheekbones and nose bridge; never plastic, waxy, or flat.
+- Every mole or mark clearly visible in the original stays in its spot on the twin. The direction is one-way: marks may only be REMOVED, never added — do not paint any new mole, freckle, beauty mark, or spot anywhere, under any circumstance.
+
+POLISH — the "best day of their life" treatment:
+- Well-rested, healthy glow, subtly photogenic freshness — clearly attractive and put-together, yet completely natural and believable. They must look subtly YOUNGER-fresh, never older. Never a caricature, never plastic, never a stranger.
+
+SCENE PRESERVATION — same photo, same place:
 - Keep the same age impression. Keep the exact pose, framing, camera angle, and the entire original background — nothing in the scene changes except the person.
-- LIGHT POLISH: keep the original scene, but light the person soft, bright, and flattering; dull color casts removed.
-- GLASSES RULE: if they wear glasses, keep the EXACT same frames; if they wear none, add none.
+- GLASSES RULE: if they wear glasses, keep the EXACT same frames on the twin; if they wear none, add none. Never duplicate glasses. Never add sunglasses.
+
+RELIGHT THE PERSON (this makes it look real):
+- Keep the original background's own light and air, but discard the dull lighting on the person — re-light them with flawless beauty lighting: a bright soft key light with delicate catchlights, gentle fill, and a clean rim light in the hair, every feature crisp and glowing — while the scene around them keeps its natural light with dull color casts removed. They must still look truly photographed in this same place at this same moment.
+
+FINAL SELF-CHECK before output:
+- Next to the source photo, friends must instantly say "that is EXACTLY them as a man/woman — same eyes, same vibe — and the best they could ever look."
+- Clearly attractive and polished, yet never warped, uncanny, or generic?
+- SKIN CHECK: clean skin with zero INVENTED marks — every original mole still in its spot?
+- Same age, same ethnicity, same skin tone, same hair color? Same pose, same background? Glasses exactly as the source?
 
 ABSOLUTELY AVOID:
 - A generic, unrelated person of the other gender — the family resemblance is the whole point.
 - Changing age, ethnicity, skin tone, or hair color.
 - Any invented mole, spot, or mark that does not exist in the original.
 - An ugly, awkward, or comedic result — this is a flattering premium portrait, not a joke filter.
-- Cartoon or illustration look, exaggerated features, waxy plastic skin.
+- A warped, over-liquified, or uncanny face; plastic waxy skin; dead flat lighting.
+- Cartoon or illustration look, exaggerated features.
 - Any text, letters, watermark, or border.
 
-Output: one photorealistic photo, identical in pose and background to the input — the same person as their attractive opposite-gender twin. High resolution.`;
+Output: one photorealistic photo, identical in pose and background to the input — the same person as their strikingly attractive opposite-gender twin, at the best they could ever look. High resolution.`;
 
 async function generateGenderswap(imageDataUrl: string): Promise<string> {
   const img = parseImage(imageDataUrl);

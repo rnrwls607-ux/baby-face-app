@@ -16,56 +16,182 @@ function parseImage(dataUrl: string): { mimeType: string; data: string } {
 }
 
 // 배경칩 3종 — ★키는 클라의 BG_OPTIONS와 반드시 일치해야 한다(불일치 시 hall로 폴백됨)
-const DW_BACKGROUNDS: Record<string, string> = {
-  hall: `- Background: a grand classic wedding hall — crystal chandeliers glowing above, a long virgin road lined with candlelight and white flowers, elegant marble and soft drapery melting into dreamy depth. Warm, romantic, ceremonial light with a soft key light on the face.`,
-  garden: `- Background: a sunlit outdoor garden wedding venue — a white flower arch and lush greenery softly blurred behind the person, petals drifting in the air, airy natural depth. Bright natural daylight, fresh and romantic.`,
-  hanok: `- Background: a serene traditional Korean hanok courtyard — wooden pillars, hanji doors, and a tiled roofline softly blurred behind the person, an elegant modern-meets-tradition small-wedding mood. Warm late-afternoon light, quiet and graceful.`,
+// background = WEDDING STYLING의 Background 줄 / glow = Light 줄의 배경 주광 서술
+const DW_BACKGROUNDS: Record<string, { background: string; glow: string }> = {
+  hall: {
+    background: `- Background: a grand classic wedding hall — crystal chandeliers glowing above, a long virgin road lined with candlelight and white flowers, elegant marble and soft drapery melting into dreamy depth.`,
+    glow: `warm, romantic chandelier and candlelight; dreamy, ceremonial mood`,
+  },
+  garden: {
+    background: `- Background: a sunlit outdoor garden wedding venue — a white flower arch and lush greenery softly blurred behind the person, petals drifting in the air, airy natural depth.`,
+    glow: `bright natural daylight through the greenery; fresh, romantic mood`,
+  },
+  hanok: {
+    background: `- Background: a serene traditional Korean hanok courtyard — wooden pillars, hanji doors, and a tiled roofline softly blurred behind the person, an elegant modern-meets-tradition small-wedding mood.`,
+    glow: `warm late-afternoon light; quiet, graceful mood`,
+  },
 };
 
-// 성별칩 × 배경칩 = 6조합. 의상·성별 분기는 wedding 구조를 참고했고 원본 파일은 무접촉이다.
-function buildPrompt(role: "bride" | "groom", bg: string): string {
-  const ROLE_WORD = role === "groom" ? "GROOM" : "BRIDE";
-  const styling = role === "groom"
-    ? `- Wardrobe: a refined black or midnight-navy tuxedo (or a classic formal wedding suit) over a crisp white dress shirt, with a neat bow tie or tie and a small boutonnière.
-- Hair: neat, polished groom styling keeping his real hairstyle, length, and true hair color.`
-    : `- Wardrobe: an elegant, classic white wedding dress with tasteful refined details (clean silhouette — not gaudy). She may optionally hold a small elegant bouquet.
-- Hair & makeup: a graceful bridal hairstyle that is a natural evolution of her real hairstyle, keeping her true hair color; soft bridal makeup that brightens but never changes her features.`;
-  const background = DW_BACKGROUNDS[bg] || DW_BACKGROUNDS.hall; // 미지정·이상값 → hall 폴백
-  return `TWO ABSOLUTE RULES (these override everything else):
-1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. This is a WEDDING PORTRAIT of this one real person — the elegant wardrobe, styling, and lighting are the transformation; NEVER reshape their facial features.
-2. ROLE — the person in this photo is the ${ROLE_WORD}. Style them exactly as described in the WEDDING STYLING section below, even if their appearance might read differently. Never switch the wardrobe to the other role.
+// ★조명 역전판 — 뷰티 조명이 대장, 장면 주광은 배경. {SKIN}만 역할별로 갈린다.
+const lightLine = (skin: string, glow: string) =>
+  `- Light: flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, ${skin}, every feature crisp and glowing — while the scene around them glows with ${glow}.`;
 
-TASK
-You are RETOUCHING a real photograph of one real person into a single elegant solo wedding studio portrait — NOT generating a new person. Keep the face as it is, lightly polished; transform only wardrobe, hair styling, background, lighting, and framing to the wedding standard below. Output exactly one wedding portrait of this one person.
+const brideBody = (background: string, light: string) => `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. Enhance and refine this one real person's features — never replace them with a different person's.
+2. ROLE — the person in this photo is the BRIDE. Style them exactly as described in the WEDDING STYLING section below, even if their appearance might read differently. Never switch the wardrobe to the other role.
+
+You are the master retoucher and concept photographer of Seoul's most famous premium wedding studio — the studio that celebrities and influencers visit for their wedding pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the most beautiful version of themselves on their wedding day — while friends still recognize them at a glance.
+
+Take the person in the photo and create ONE stunning, fully-retouched solo wedding portrait of them in the scene described below.
 
 HOW TO USE THE INPUT PHOTO
 - Ignore the input photo's framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the standard wedding-portrait composition below.
 
-IDENTITY LOCK — replicate the face, do not redesign it (highest priority)
-- Reproduce the facial structure exactly as in the source: the same face shape and width-to-length ratio, the same hairline and forehead height, the same jaw and chin shape and width, the same cheek fullness and cheekbones, the same eye size and shape and eyelid type (double eyelid stays double, monolid stays monolid), the same ears, the same nose bridge/width/tip, the same philtrum, the same lip shape and thickness, the same eyebrows, and the same spacing and proportions between all features. Keep the person's natural asymmetries — they are part of the identity.
-- Do not drift toward a generic, idealized, or "prettier" face. This is one specific individual; do not slim, enlarge, sharpen, or beautify anything — the bridal/groom beauty comes from wardrobe, styling, and lighting, never from reshaping features.
-- Keep the apparent age and sex characteristics as in the source, and the person's TRUE skin tone (correct any warm/cool color cast from the source lighting, but never lighten, darken, or shift the actual skin tone).
-- Keep facial hair (beard, stubble, mustache, or clean-shaven) exactly as in the source.
+STEP 1 — Read the person first:
+Note their hair color and length, skin tone, facial features, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
 
-SKIN & MARKS (absolute rule: flawless clean skin)
-- Render completely clean, smooth, even, healthy skin with good color; correct any dull or off color from the source lighting. Acne, pimples, blemishes, redness, irritation, discoloration, dark spots, and skin texture issues in the source are TEMPORARY skin conditions — NOT part of the person's identity. Remove them ALL and render that area as perfectly clean skin, exactly like a professional studio retouch with light makeup.
-- Treat shadows, contrast edges, lighting gradients, and compression artifacts in the source photo as clean skin — never mistake them for real marks. Soften pores and wrinkles to about half strength — a lightly-retouched look that keeps the person's real age, never plastic.
-- Marks: render AT MOST ONE mole in the entire face, and ONLY if it is large and iconic in the source — smaller and fainter than the source. Two or more marks are NEVER allowed. When in ANY doubt, render zero marks.
+GLASSES RULE (check the input, then follow exactly):
+- If they are wearing glasses: keep the EXACT same glasses — same frame shape, same color, worn normally on the face, with clean glare-free lenses. Only ONE pair.
+- If they are NOT wearing glasses: do NOT add any glasses.
+- Never duplicate glasses. Never add sunglasses.
 
-WEDDING STYLING
-${styling}
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED wedding pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless glass skin:
+- Poreless-smooth, even-toned, luminous glass skin with a dewy glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+- Zero moles, zero spots, zero marks interrupting the flawless skin — every blemish, mole, spot, and scar completely covered and erased.
+- The direction is one-way: marks may only be REMOVED, never added — do not paint any new mole, freckle, beauty mark, or spot anywhere, under any circumstance.
+
+BEAUTY DIRECTION — bridal, modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean celebrity brides — fresh, youthful, radiant. They must look subtly YOUNGER than the input photo, never older.
+- An elegant luminous bridal makeup: a flawless dewy base, softly defined brows, delicate eye makeup with a fine graceful shimmer, and a soft rosy lip — graceful and glowing, never heavy.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.
+
+WEDDING STYLING:
+- Wardrobe: an elegant, classic white wedding dress with tasteful refined details (clean silhouette — not gaudy). She may optionally hold a small elegant bouquet.
+- Hair: a graceful bridal hairstyle that flatters her — an elegant updo or soft romantic waves, a natural evolution of her real hairstyle in her true hair color, styled beautifully with fine bridal touches.
 ${background}
+${light}
 - Expression: a graceful, happy, natural soft smile — subtle, never exaggerated; eyes relaxed and on camera.
-- Eyewear & accessories: eyeglasses ONLY if the person is clearly wearing them in the source photo — then keep them (clear, glare-free). If they are NOT wearing glasses in the source, the output must have NO glasses — never add eyewear of any kind.
 - Hands: render naturally and correctly with the right number of fingers; if a hand would look awkward, keep it relaxed and simple.
 
-FRAMING
-- Vertical upper-body wedding portrait: from roughly the head to the waist, centered, portrait-lens perspective (~85mm, no wide-angle distortion), with a small even margin above the head.
+FRAMING — vertical upper-body wedding portrait: from roughly the head to the waist, centered, portrait-lens perspective — tall, model-like proportions with the small refined face clearly the hero of the frame, with a small even margin above the head.
 
-FINAL SELF-CHECK before output: placed next to the source photo, a family member must instantly say "that's the same person, in a wedding portrait." Also check the skin: if the output face has two or more spots/marks, or any acne or blemish, the result is wrong. And confirm the wardrobe matches the role: ${ROLE_WORD} styling only.
+CAMERA — shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
 
-OUTPUT
-- High-end wedding studio photography, photorealistic and elegant. No text, no watermark, no border.`;
+FINAL SELF-CHECK before output:
+- Placed next to the source photo, friends must instantly say "that's the same person — and this is the best she has ever looked."
+- Face clearly slimmer, brighter, and more polished than the input, yet never warped or uncanny?
+- SKIN CHECK: flawless glass skin with zero moles, zero spots, zero INVENTED marks anywhere?
+- Wardrobe matches the role: BRIDE styling only?
+
+ABSOLUTELY AVOID:
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Any painted-on or INVENTED mole, spot, or mark.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the background.
+- Any readable text, signs, or watermarks anywhere.
+
+Output: one photorealistic photo — the same person in a complete solo wedding portrait, at the absolute best of their life. High resolution, no text, no watermark, no border.`;
+
+const groomBody = (background: string, light: string) => `TWO ABSOLUTE RULES (these override everything else):
+1. IDENTITY — the output must be instantly recognizable as the SAME person as the input, side by side. Enhance and refine this one real person's features — never replace them with a different person's.
+2. ROLE — the person in this photo is the GROOM. Style them exactly as described in the WEDDING STYLING section below, even if their appearance might read differently. Never switch the wardrobe to the other role.
+
+You are the master retoucher and concept photographer of Seoul's most famous premium wedding studio — the studio that celebrities and influencers visit for their wedding pictorials. Your signature skill: every client walks out with a noticeably smaller face, flawless glass skin, and brighter features — looking like the most handsome version of themselves on their wedding day — while friends still recognize them at a glance.
+
+Take the person in the photo and create ONE stunning, fully-retouched solo wedding portrait of them in the scene described below.
+
+HOW TO USE THE INPUT PHOTO
+- Ignore the input photo's framing, zoom, crop, and angle entirely — even an extreme close-up selfie must produce the standard wedding-portrait composition below.
+
+STEP 1 — Read the person first:
+Note their hair color and length, skin tone, facial features, facial hair, and whether they are WEARING GLASSES. Adapt every choice below to flatter THIS specific person.
+
+GLASSES RULE (check the input, then follow exactly):
+- If they are wearing glasses: keep the EXACT same glasses — same frame shape, same color, worn normally on the face, with clean glare-free lenses. Only ONE pair.
+- If they are NOT wearing glasses: do NOT add any glasses.
+- Never duplicate glasses. Never add sunglasses.
+
+THE RETOUCH CONTRACT (read carefully):
+- The result must be recognizable as the same person — keep the fundamental impression and arrangement of their features so friends know them instantly.
+- BUT this is a professionally RETOUCHED wedding pictorial, not a raw documentary photo. You are EXPECTED to visibly enhance and slim. The person's own reaction must be: "This is the best I have ever looked in my life — I'm showing this to everyone."
+
+FACE RETOUCHING ORDER — apply ALL of these (premium Korean studio standard):
+1. SMALL FACE (most important): Slim the jawline into a soft, elegant V-line. Reduce cheek fullness and overall facial width. The whole face should read about 10% smaller and more compact than the input — a small, refined face with idol-like head-to-shoulder proportions.
+2. EYES: Brighter, more awake, and subtly larger-looking — lively, sparkling, clearly defined eyes that light up the whole face (clearly visible through the lenses if they wear glasses).
+3. NOSE: A subtly slimmer, straighter, more refined nose bridge and tip.
+4. CONTOURS: Softly lifted, youthful facial contours; a clean, smooth jaw-to-neck line with no double chin.
+5. HARMONY RULE: blend every adjustment into ONE natural, harmonious face — the "expensive photoshop" look where everything is clearly enhanced but nothing looks warped, stretched, or uncanny.
+
+SKIN — flawless clear skin:
+- Poreless-smooth, even-toned, luminous clear skin with a healthy fresh glow — top-tier beauty retouching plus perfect flattering light.
+- Completely remove blemishes, acne, redness, dark circles, and oiliness.
+- Keep it ALIVE: soft highlights on the cheekbones and nose bridge, a healthy warm undertone — never plastic, waxy, or flat.
+- Zero moles, zero spots, zero marks interrupting the flawless skin — every blemish, mole, spot, and scar completely covered and erased.
+- The direction is one-way: marks may only be REMOVED, never added — do not paint any new mole, freckle, beauty mark, or spot anywhere, under any circumstance.
+
+BEAUTY DIRECTION — groom, modern Korean, youthful:
+- Beautify in the aesthetic of TODAY's young Korean actors — fresh, youthful, sharp. They must look subtly YOUNGER than the input photo, never older.
+- Clean, polished K-drama actor grooming: fresh clear skin, neat natural brows, effortless and modern — camera-ready, never made-up.
+- Keep facial hair exactly as in the source — beard, stubble, or clean-shaven.
+
+RELIGHT COMPLETELY (this makes it look real):
+- Discard the lighting of the original photo entirely. Re-light the face and body with the flattering key light described in the scene below, with a gentle rim light in the hair and natural soft shadows. They must look truly photographed in this place at this moment — and the face must always stay BRIGHT and luminous.
+
+WEDDING STYLING:
+- Wardrobe: a refined black or midnight-navy tuxedo (or a classic formal wedding suit) over a crisp white dress shirt, with a neat bow tie or tie and a small boutonnière.
+- Hair: neat, polished groom styling — a trendy modern Korean cut that suits him, a natural evolution of his real hairstyle in his true hair color. Never a dated style that ages him.
+${background}
+${light}
+- Expression: a confident, happy, natural soft smile — subtle, never exaggerated; eyes relaxed and on camera.
+- Hands: render naturally and correctly with the right number of fingers; if a hand would look awkward, keep it relaxed and simple.
+
+FRAMING — vertical upper-body wedding portrait: from roughly the head to the waist, centered, portrait-lens perspective — tall, model-like proportions with the small refined face clearly the hero of the frame, with a small even margin above the head.
+
+CAMERA — shot on an 85mm portrait lens at f/1.8: the person tack-sharp, the background melting into soft creamy bokeh. Bright, clean, film-like color grade. Photorealistic, high resolution.
+
+FINAL SELF-CHECK before output:
+- Placed next to the source photo, friends must instantly say "that's the same person — and this is the best he has ever looked."
+- Face clearly slimmer, brighter, and more polished than the input, yet never warped or uncanny?
+- SKIN CHECK: flawless clear skin with zero moles, zero spots, zero INVENTED marks anywhere?
+- Facial hair exactly as the source?
+- Wardrobe matches the role: GROOM styling only?
+
+ABSOLUTELY AVOID:
+- Removing the person's glasses if they wore them, adding glasses they didn't wear, or duplicating any eyewear. No sunglasses.
+- A warped, over-liquified, or uncanny face — enhancements must read as expensive photoshop, never distortion.
+- Making them unrecognizable or turning them into a generic pretty person.
+- ANY aged, mature, or old-fashioned look — never older than the input.
+- Any painted-on or INVENTED mole, spot, or mark.
+- Plastic waxy skin, dead flat lighting, murky shadows on the face, oversaturated HDR.
+- Crowds or other people in the background.
+- Any readable text, signs, or watermarks anywhere.
+
+Output: one photorealistic photo — the same person in a complete solo wedding portrait, at the absolute best of their life. High resolution, no text, no watermark, no border.`;
+
+// 성별칩 × 배경칩 = 6조합. 배경 분기는 Background 줄과 Light 줄만 갈아끼운다.
+function buildPrompt(role: "bride" | "groom", bg: string): string {
+  const b = DW_BACKGROUNDS[bg] || DW_BACKGROUNDS.hall; // 미지정·이상값 → hall 폴백
+  const skin = role === "groom" ? "luminous clear skin" : "idol-grade luminous skin";
+  const light = lightLine(skin, b.glow);
+  return role === "groom" ? groomBody(b.background, light) : brideBody(b.background, light);
 }
 
 async function generateDresswedding(imageDataUrl: string, role: "bride" | "groom", bg: string): Promise<string> {
