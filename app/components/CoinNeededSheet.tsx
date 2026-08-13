@@ -6,6 +6,7 @@ import { COIN_SHEET_EVENT, type CoinSheetDetail } from "../lib/coinSheet";
 import { COIN_PRODUCT_LIST } from "../lib/products";
 import { useBackClose } from "../lib/useBackClose";
 import { WELCOME_COINS } from "../lib/coin-constants"; // ★coins.ts 금지 — Redis SDK가 클라 번들에 딸려온다
+import { saveReturnTo } from "../lib/returnTo";
 
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
@@ -43,6 +44,9 @@ export default function CoinNeededSheet() {
     const product = COIN_PRODUCT_LIST.find((p) => p.id === productId);
     if (!product) return;
     setPaying(productId);
+    // 이 시트는 402(코인 부족)로만 열린다 = 뭔가 만들다 막힌 자리다. 충전 후 그 자리로 돌려보낸다.
+    // ★지갑 탭 충전은 이 경로를 안 타므로 저장되지 않는다(지갑에서 온 사람은 지갑으로 복귀).
+    saveReturnTo(window.location.pathname);
     try {
       const { loadTossPayments } = await import("@tosspayments/payment-sdk");
       const tossPayments = await loadTossPayments(TOSS_CLIENT_KEY);

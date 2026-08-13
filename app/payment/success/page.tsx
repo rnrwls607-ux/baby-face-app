@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { consumeReturnTo } from "../../lib/returnTo";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -11,6 +12,10 @@ function SuccessContent() {
   const [retrying, setRetrying] = useState(false);
   const isCoinFlow = searchParams.get("flow") === "coin";
   const orderIdParam = searchParams.get("orderId") || "";
+  // 402 시트에서 넘어온 경우에만 값이 있다(지갑 충전은 저장하지 않는다).
+  // ★렌더 중이 아니라 마운트 시 1회 읽고 즉시 소비한다 — 뒤로가기 재진입에도 중복 발동 0.
+  const [returnTo, setReturnTo] = useState<string | null>(null);
+  useEffect(() => { setReturnTo(consumeReturnTo()); }, []);
 
   // ★재시도 가능하게 charge 호출을 분리했다. 예전엔 useEffect 안에 묻혀 있어
   //   한 번 실패하면 "홈으로" 말고는 길이 없었고, 홈으로 가는 순간 URL의
@@ -95,10 +100,25 @@ function SuccessContent() {
             <p style={{ fontSize: 14, color: "#888", margin: "0 0 4px" }}>{isCoinFlow ? "충전된 코인" : "추가된 이용 횟수"}</p>
             <p style={{ fontSize: 32, fontWeight: 900, color: "#FF4B7C", margin: 0 }}>+{addedUses}{isCoinFlow ? "코인" : "회"}</p>
           </div>
-          <button onClick={() => router.push(isCoinFlow ? "/?tab=coin" : "/")}
-            style={{ background: "#111", color: "#fff", border: "none", borderRadius: 16, padding: "16px 40px", fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
-            {isCoinFlow ? "코인 지갑으로 →" : "아기 얼굴 만들러가기 →"}
-          </button>
+          {isCoinFlow && returnTo ? (
+            /* 402로 막혔던 자리로 복귀 — 만들던 흐름을 이어준다. 지갑은 보조로 내린다.
+               replace를 쓰는 이유: 결제 성공 화면을 백스택에 남기면 뒤로가기로 되돌아온다. */
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, width: "100%", maxWidth: 300 }}>
+              <button onClick={() => router.replace(returnTo)}
+                style={{ background: "#FF4B7C", color: "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 18px rgba(255,75,124,0.32)" }}>
+                이어서 만들기 →
+              </button>
+              <button onClick={() => router.replace("/?tab=coin")}
+                style={{ background: "#fff", color: "#191919", border: "1.5px solid #EFF0F3", borderRadius: 16, padding: "14px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+                코인 지갑 보기
+              </button>
+            </div>
+          ) : (
+            <button onClick={() => router.push(isCoinFlow ? "/?tab=coin" : "/")}
+              style={{ background: "#111", color: "#fff", border: "none", borderRadius: 16, padding: "16px 40px", fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
+              {isCoinFlow ? "코인 지갑으로 →" : "아기 얼굴 만들러가기 →"}
+            </button>
+          )}
         </>
       )}
       {status === "error" && (
