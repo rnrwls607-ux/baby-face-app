@@ -1,3 +1,30 @@
+## 2026-08-14 — diag: 클라 절단 시 함수 생존 실험 라우트
+- [왜] 서버측 히스토리 저장(fd997d5)의 전제("클라가 죽어도 Vercel 함수는 완주")와
+  MJ 실측(생성 중 뒤로가기 → 무차감·무저장)이 모순됐다. 원인 규명이 먼저다
+- [★문서 근거] Vercel 공식: "Cancellation is opt-in. In your vercel.json, add
+  supportsCancellation: true" / "Any work not wrapped in waitUntil or after will be
+  lost on cancellation. This is why cancellation is opt-in."
+  → 우리 vercel.json에는 functions 블록 자체가 없다(미설정) · waitUntil/after 사용 0 ·
+  @vercel/functions 미설치. 문서대로면 함수는 완주해야 한다. 이 route가 그걸 잰다
+- [설계] /api/diag/alive?mode=run&id=&ms= → SET diag:alive → sleep → SET diag:done →
+  JSON. ?mode=check → { alive, done } + 판정문. ★생성 엔진 호출 0 = 비용 0
+- [프로덕션 쓰기] diag: 접두 키 + TTL 600초 한정 (MJ 승인). 수동 정리 불필요
+- [가드] diag/gemini의 allowed()를 자구 그대로 복제 — 저쪽은 export가 아니고
+  export로 바꾸면 이번 커밋의 수정 허용 범위를 벗어난다. 미인증 404(존재 은닉)
+- [방어] id는 [A-Za-z0-9_-]{1,40}만(키 조작 차단) · ms는 1000~45000 클램프
+  (maxDuration 60에 여유) · Redis 미설정이면 판정문으로 알리고 종료
+- [실측 15케이스] run 2148ms 완주·done 마커 존재·간격 = 대기시간 / check 정상 /
+  TTL 598~600s / 없는 id → null / id·mode 검증 400 / ms 클램프 45000 /
+  ★엔진 호출 0회 / 테스트 키 DEL 후 잔여 0
+- [★남은 선행조건] .env.local에 DIAG_SECRET·COIN_ADMIN_IDS 둘 다 없다. 프로덕션에서
+  ?key= 경로를 쓰려면 Vercel 환경변수에 DIAG_SECRET이 있어야 한다(없으면 404).
+  관리자 로그인 경로는 COIN_ADMIN_IDS에 uid가 등록돼 있어야 열린다
+- [다음 실험 절차] ①탭에서 mode=run&ms=20000 열기 ②2초 뒤 탭 닫기(절단 재현)
+  ③25초 뒤 mode=check → done 있으면 완주(전제 옳음, MJ 관찰은 타이밍),
+  done 없으면 사망(서버 보강 필요)
+- 커밋 메시지: diag: 클라 절단 시 함수 생존 실험 라우트
+- 다음에 할 것: MJ가 위 3단계 실험 → 결과에 따라 로딩 중 back 인터셉트(166종) 문구 확정
+
 ## 2026-08-14 — FaceCheck-C: 얼굴 사전 검사 53종 확산 (단일 업로드 모드)
 - [범위] 실사 (a) 1인 얼굴 53종 — inputRule solo_face 선언 20 + 미선언 33.
   ★선언을 기준으로 삼지 않았다: 같은 문장 틀("사진 한 장이면 ~")의 자매 컨셉인데
