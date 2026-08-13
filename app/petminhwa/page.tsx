@@ -13,6 +13,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import StepIndicator from "../components/upload/StepIndicator";
 import UploadZone from "../components/upload/UploadZone";
 import TipChips from "../components/upload/TipChips";
@@ -123,6 +124,7 @@ export default function PetminhwaPage() {
             />
             <TipChips tips={[{ icon: "face", label: "얼굴 정면" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 또렷하게" }]} />
             <PrivacyLine />
+            <ProCongestionHint concept="petminhwa" />
 
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
@@ -139,6 +141,7 @@ export default function PetminhwaPage() {
         {error && (
           <div style={{ background: "#FFEAF1", border: "1px solid #FF4B7C33", borderRadius: 12, padding: "13px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 700 }}>⚠️ {error}</p>
+            <ProCongestionError concept="petminhwa" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}

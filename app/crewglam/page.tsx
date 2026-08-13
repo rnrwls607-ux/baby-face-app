@@ -18,6 +18,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 
 export default function CrewglamPage() {
   const router = useRouter();
@@ -126,6 +127,7 @@ export default function CrewglamPage() {
             {/* 컨셉 범위 고지 — 앱의 보조문 톤(작은 회색). 결과가 기대와 다른 사고를 앞단에서 막는다 */}
             <p style={{ fontSize: 12, color: "#9B9B9B", margin: "10px 2px 0", lineHeight: 1.6 }}>여성 스타일링 전용 컨셉이에요 · 실제 소속·자격 증명 용도로는 사용할 수 없어요.</p>
             <PrivacyLine />
+            <ProCongestionHint concept="crewglam" />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : <>승무원 스타일 만들기 ✈️{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
@@ -141,6 +143,7 @@ export default function CrewglamPage() {
         {error && (
           <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
+            <ProCongestionError concept="crewglam" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}

@@ -11,6 +11,7 @@ import { CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError } from "../components/ProCongestionNote";
 
 export default function FourcutcouplePage() {
   const router = useRouter();
@@ -150,6 +151,7 @@ export default function FourcutcouplePage() {
         {error && (
           <div style={{ background: "#FFEAF1", border: "1px solid #FF4B7C33", borderRadius: 12, padding: "13px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 700 }}>⚠️ {error}</p>
+            <ProCongestionError concept="fourcutcouple" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}

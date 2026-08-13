@@ -18,6 +18,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import RegenConfirmSheet from "../components/RegenConfirmSheet";
 
 // 칩 4종 — key는 route의 CAMPUS_SCENES 키와 반드시 일치해야 한다(불일치 시 ivy로 폴백됨)
@@ -152,6 +153,7 @@ export default function CampusgradPage() {
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "이마가 보이게" }]} />
             <PrivacyLine />
+            <ProCongestionHint concept="campusgrad" />
             <button onClick={() => handleSubmit()} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : <>졸업사진 만들기 🎓{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
@@ -167,6 +169,7 @@ export default function CampusgradPage() {
         {error && (
           <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
+            <ProCongestionError concept="campusgrad" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}

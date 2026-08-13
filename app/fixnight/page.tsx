@@ -17,6 +17,7 @@ import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 
 export default function FixnightPage() {
   const router = useRouter();
@@ -122,6 +123,7 @@ export default function FixnightPage() {
             />
             <TipChips tips={[{ icon: "expand", label: "밤에 찍은 사진" }, { icon: "sun", label: "너무 캄캄하지 않게" }, { icon: "eye", label: "흔들리지 않게" }]} />
             <PrivacyLine />
+            <ProCongestionHint concept="fixnight" />
             <button onClick={handleSubmit} disabled={loading || !image}
               style={{ width: "100%", marginTop: 18, background: loading || !image ? "#E8E9ED" : "#FF4B7C", color: loading || !image ? "#AEB2BA" : "#fff", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: loading || !image ? "not-allowed" : "pointer", boxShadow: loading || !image ? "none" : "0 6px 18px rgba(255,75,124,0.32)" }}>
               {loading ? `만드는 중... (${elapsed}초)` : <>야간 사진 구제하기 🌙{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
@@ -137,6 +139,7 @@ export default function FixnightPage() {
         {error && (
           <div style={{ background: "#FFF0F3", border: "1px solid #FFD6E0", borderRadius: 12, padding: "12px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 600 }}>⚠️ {error}</p>
+            <ProCongestionError concept="fixnight" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}

@@ -12,6 +12,7 @@ import { openCoinSheet } from "../lib/coinSheet";
 import { openLoginSheet } from "../lib/loginSheet";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
 import CoinIcon from "../components/CoinIcon";
+import { ProCongestionError, ProCongestionHint } from "../components/ProCongestionNote";
 import StepIndicator from "../components/upload/StepIndicator";
 import TipChips from "../components/upload/TipChips";
 import PrivacyLine from "../components/upload/PrivacyLine";
@@ -173,6 +174,7 @@ export default function SelfweddingPage() {
             </div>
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "eye", label: "얼굴 가리지 않기" }]} />
             <PrivacyLine />
+            <ProCongestionHint concept="selfwedding" />
             <button onClick={handleSubmit} disabled={!canSubmit}
               style={{ width: "100%", marginTop: 18, background: canSubmit ? "#FF4B7C" : "#E8E9ED", color: canSubmit ? "#fff" : "#AEB2BA", border: "none", borderRadius: 16, padding: "16px 0", fontSize: 16, fontWeight: 800, cursor: canSubmit ? "pointer" : "not-allowed", boxShadow: canSubmit ? "0 6px 18px rgba(255,75,124,0.32)" : "none" }}>
               {loading ? `만드는 중... (${elapsed}초)` : <>셀프웨딩 화보 만들기 ✨{COIN_GATED && COIN_COST > 0 && <span style={{ fontSize: 13, fontWeight: 700, opacity: 0.9 }}> · <CoinIcon size={14} onColor /> {COIN_COST}</span>}</>}
@@ -188,6 +190,7 @@ export default function SelfweddingPage() {
         {error && (
           <div style={{ background: "#FFEAF1", border: "1px solid #FF4B7C33", borderRadius: 12, padding: "13px 16px", marginTop: 16 }}>
             <p style={{ fontSize: 13, color: "#FF4B7C", margin: 0, fontWeight: 700 }}>⚠️ {error}</p>
+            <ProCongestionError concept="selfwedding" error={error} />
             {COIN_GATED && COIN_COST > 0 && <div style={{ fontSize: 12, color: "#9B9B9B", marginTop: 6, fontWeight: 500 }}>코인은 차감되지 않았어요</div>}
           </div>
         )}
