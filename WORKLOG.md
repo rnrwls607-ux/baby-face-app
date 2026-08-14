@@ -1,3 +1,41 @@
+## 2026-08-14 — 가이드 시트 A: 유형 재배치 + 무가이드 7종 해소 (21파일)
+- [★조사 결론이 전제를 뒤집음] "전 컨셉 동일 세트"인 줄 알았는데 2026-07-25 리디자인으로
+  이미 9유형 분기 + 유형별 사진 27장(전량 600×800 webp) 완비였다. 그래서 재설계가 아니라
+  "잘못 연결된 유형 옮기기"가 실제 과제 — 새로 찍을 사진은 전량이 아니라 6장뿐
+- [상① 얼굴검사 모순 제거 — 가장 심각했던 것] portrait_multi 8종(illust·oilportrait·
+  paperart·pendrawing·retroanime·softanime·stainedglass·stitchart)은 시트가 "한 명 또는
+  두 명"이라 안내하는데, 전부 useFaceCheckSingle을 쓰고 훅 기본 inputRule이 "solo_face"라
+  (useFaceCheck.ts:96) 서버가 2인 사진을 hard_fail로 무조건 차단했다(validate-photo:115
+  "여러 명이 나왔어요"). ★가이드가 확실한 실패로 안내하던 상태 → solo_face로 이설
+- [상③] goods는 업로드 라벨이 "사람·반려동물 사진"이고 프롬프트도 the person인데 제품
+  시트(product_obj)를 띄우고 있었다 → portrait_multi로 이설(사진 재사용, 신규 촬영 0)
+- [중④] goldenhour·season·anisky·brickfigure는 라우트가 전부 장면 보존형(입력=아무 일상
+  사진)인데 인테리어·매물용 space 시트였다 — "수평 맞추기·모서리가 보이게·한쪽 벽만
+  찍힘"이 야외 스냅에 무의미 → 신설 daily_snap으로 이설
+- [상② 무가이드 7종 해소] fixbacklight·fixcrowd·fixnight·tripface→daily_snap /
+  upscale→any_photo / fourcutcouple→family / idstyle→solo_face.
+  ★입력 사진 상태가 결과의 전부인 "구제" 4종에 안내가 0이던 상태였다
+- [★fixcrowd 예외 준수] daily_snap 문안에 "혼자·한 명·두 명" 류 문구를 넣지 않았다 —
+  행인 지우개는 행인이 함께 찍힌 사진이 정상 입력이라 혼자 문구가 곧 오안내가 된다.
+  주석으로 못박음. 실측에서도 시트 본문에 해당 문구 0건 확인
+- [사진 없이 선행 가능했던 이유] cardsFor(imgType=null)이 회색 3:4 자리표시를 내주는
+  기존 장치 — 신규 2유형을 null로 배선하니 문구는 즉시 살고 사진만 나중에 붙는다.
+  실측: img 요청 0건·자리표시 3개·깨진 이미지 0 (404를 부르지 않는다)
+- [배선 방식 판단] CONCEPTS에 guideType 필드를 넣지 않고 기존 prop을 유지했다 —
+  ★페이지 폴더명과 컨셉 키가 99종 불일치(app/biz-black-gray ↔ bizblack)라 조회를 붙이면
+  166페이지에 매핑을 심어야 하고 오배선 위험만 커진다. prop은 접촉 21파일로 끝난다
+- [죽은 코드 제거] generic 별칭(CONTENT.generic = CONTENT.food_drink) — 쓰는 페이지 0.
+  폴백 대상은 CONTENT.solo_face로 교체(유니온 밖 값이 와도 빈 시트가 되지 않게)
+- [게이트] ①type 전수 CONTENT 키 포함·미배선 0/166·generic 잔재 0 ②유형 합계 166
+  (solo_face 120·family 12·pet 12·daily_snap 8·space 3·portrait_multi 3·food_drink 3·
+  product_obj 2·vehicle 1·old_photo 1·any_photo 1) ③얼굴검사 118종 중 "두 명/여러 명"
+  문구 0건 ④null 2유형 자리표시 정상·사진 보유 9유형 자산 누락 0 ⑤실측 3종
+  (fixcrowd·illust·upscale) + localStorage 키 분리 확인(daily_snap 숨겨도 solo_face는 뜸)
+  ⑥"Compiled successfully in 51s"·exit 0 / diff 21파일
+- 커밋 메시지: fix: 업로드 가이드 유형 재배치+무가이드 7종 해소 — 얼굴검사 모순 제거
+- 다음에 할 것: 커밋 B — daily_snap·any_photo 사진 6장(600×800 webp q85, public/guide/)
+  제작·투입. 코드는 imgType null → 유형명 2곳만 바꾸면 된다
+
 ## 2026-08-14 — LeaveGuard: 생성 중 이탈 가드 (166종)
 - [왜] 생성은 서버에서 계속 돌고 완성되면 코인이 사용된다. 로딩 화면에서 무심코 누른
   뒤로가기가 곧바로 앱을 벗어나면 사용자는 "코인만 날렸다"고 느낀다. 한 번 물어보고,

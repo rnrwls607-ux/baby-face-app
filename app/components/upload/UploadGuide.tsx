@@ -14,7 +14,7 @@ import { useBackClose } from "../../lib/useBackClose";
 //   시트 본문(권장 칩·"피해요" 한 줄)은 중립 톤 그대로 둔다.
 //
 // 기본은 매번 뜨고, "오늘 하루 보지 않기" 를 누른 날에만 안 뜬다.
-// type 별로 키가 분리돼, solo_face 와 generic 은 각각 따로 관리된다.
+// type 별로 키가 분리돼, solo_face 와 pet 은 각각 따로 관리된다.
 const KEY_PREFIX = "mospic_guide_";
 
 // 로컬 기준 오늘 날짜 YYYY-MM-DD
@@ -45,7 +45,7 @@ const cardsFor = (imgType: string | null, caps: readonly [string, string, string
 export type GuideType =
   | "solo_face" | "portrait_multi" | "family" | "pet"
   | "food_drink" | "product_obj" | "space" | "vehicle" | "old_photo"
-  | "generic"; // 옛 키 — 아래에서 food_drink의 별칭으로 남긴다
+  | "daily_snap" | "any_photo";
 
 const CONTENT: Record<string, Guide> = {
   // ── 사람 ──────────────────────────────────────────────
@@ -95,10 +95,20 @@ const CONTENT: Record<string, Guide> = {
     checks: ["사진 전체 담기", "정면에서 반듯하게", "밝은 곳에서", "그림자 없이"],
     avoid: ["비스듬한 각도", "유리 반사광", "일부만 찍힘", "손가락 가림"],
   },
+  // ── 일상 사진 보정·구제 ───────────────────────────────
+  daily_snap: { // 장면은 그대로 두고 빛·화질만 손보는 계열 — 입력이 "아무 일상 사진"이다
+    // ★fixcrowd(행인 지우개)는 행인이 함께 찍힌 사진이 정상 입력이다 —
+    //   이 시트에는 "혼자 나온 사진" 류 문구를 절대 넣지 않는다.
+    cards: cardsFor(null, ["이렇게 올려주세요", "심하게 흐릿해요", "화면을 다시 찍었어요"]),
+    checks: ["원본 그대로", "인물이 또렷하게", "화면이 흔들리지 않게", "원본 화질이 클수록 좋아요"],
+    avoid: ["심하게 흐릿함", "캡처·스크린샷", "과한 필터가 이미 입혀짐", "화면을 다시 찍은 사진"],
+  },
+  any_photo: { // 화질만 올리는 계열 — 무엇을 찍었든 받는다(사람·사물 가리지 않음)
+    cards: cardsFor(null, ["이렇게 올려주세요", "압축으로 뭉개졌어요", "이미 확대해 뭉갰어요"]),
+    checks: ["원본 파일 그대로", "가장 큰 크기로", "캡처보다 원본", "무엇을 찍었든 OK"],
+    avoid: ["카톡으로 받아 줄어든 사진", "화면 재촬영", "심한 압축 자국", "이미 확대해 뭉갠 사진"],
+  },
 };
-// ★옛 키 호환 — 아직 재배선하지 않은 컨셉이 type="generic"으로 들어와도 음식 시트를 본다.
-//   (배선이 끝나면 이 줄과 함께 generic을 지운다)
-CONTENT.generic = CONTENT.food_drink;
 
 // accent는 받기만 하고 쓰지 않는다 — 호출부 65곳이 넘기고 있어 시그니처는 유지하되,
 // 확인 버튼은 컨셉 색이 아니라 중립 검정으로 통일했다(핑크는 만들기 CTA 한 곳에만).
@@ -140,7 +150,7 @@ export default function UploadGuide({ type }: { type: GuideType; accent?: string
 
   if (!open) return null;
 
-  const { cards, checks, avoid } = CONTENT[type] ?? CONTENT.generic;
+  const { cards, checks, avoid } = CONTENT[type] ?? CONTENT.solo_face; // 안전망 — 유니온 밖 값이 들어와도 빈 시트가 되지 않는다
 
   return (
     <div
