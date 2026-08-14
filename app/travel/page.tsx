@@ -140,7 +140,7 @@ export default function TravelPage() {
             {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
             {BA_LIVE.includes("travel") ? (
               <div style={{ marginBottom: 8 }}>
-                <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+                <BeforeAfterHero pairs={[1, 2, 3, 4, 5, 6, 7].flatMap(n => [
                   { before: `/examples/ba/travel-before-${n}.webp`, after: `/examples/ba/travel-after-${n}.webp` },
                   { before: `/examples/ba/travel-before.webp`, after: `/examples/ba/travel-after-${n}.webp` },
                 ])} />
