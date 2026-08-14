@@ -7,6 +7,8 @@ import { saveImage } from "../lib/saveImage";
 import { shareImage } from "../lib/shareImage";
 import Upscale4K from "../components/Upscale4K";
 import { useBackClose, backCloseGhostCount } from "../lib/useBackClose";
+import { useLeaveGuard } from "../lib/useLeaveGuard";
+import LeaveConfirmSheet from "../components/LeaveConfirmSheet";
 import PreviewCard from "../components/upload/PreviewCard";
 import BeforeAfterHero from "../components/BeforeAfterHero";
 import { BA_LIVE, CONCEPTS, LIVE_COIN_CONCEPTS } from "../lib/concepts";
@@ -41,6 +43,8 @@ export default function RealestatePage() {
   const [elapsed, setElapsed] = useState(0);
   // 뒤로가기 → 결과 화면만 닫고 업로드 폼으로 (사진 유지, 앱 이탈 방지)
   useBackClose(!!result, () => setResult(""));
+  // 생성 중 뒤로가기 → 앱 이탈 대신 확인 시트 (생성은 계속 진행)
+  const leaveGuard = useLeaveGuard(loading);
   useEffect(() => {
     if (!loading) { setElapsed(0); return; }
     const t = setInterval(() => setElapsed(p => p + 1), 1000);
@@ -94,6 +98,7 @@ export default function RealestatePage() {
   const handleShare = () => { void shareImage(result, "realestate.png", "MOSPIC에서 만든 사진이에요 · mospic.com"); };
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", minHeight: "100vh", background: "#F7F8FA", fontFamily: "var(--font-noto), 'Apple SD Gothic Neo', sans-serif" }}>
+      <LeaveConfirmSheet open={leaveGuard.asking} coin={COIN_GATED && COIN_COST > 0} onStay={leaveGuard.stay} onLeave={leaveGuard.leave} />
       <UploadGuide type="space" />
       <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "0 12px", height: 56, position: "sticky", top: 0, background: "#fff", zIndex: 10 }}>
         <button onClick={() => { if (result) { setResult(""); return; } if (window.history.length > 1 + backCloseGhostCount()) router.back(); else router.push("/"); }} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#191919", padding: "4px 8px", lineHeight: 1 }}>‹</button>
