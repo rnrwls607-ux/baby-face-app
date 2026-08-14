@@ -29,6 +29,10 @@ const DESTINATION_OPTIONS = [
   { key: "europe", label: "🏰 유럽" },
   { key: "beach", label: "🏝️ 해변" },
   { key: "citynight", label: "🌃 도시 야경" },
+  { key: "paris", label: "🇫🇷 파리" },
+  { key: "tokyo", label: "🏮 도쿄 골목" },
+  { key: "newyork", label: "🗽 뉴욕" },
+  { key: "swiss", label: "🏔️ 스위스" },
 ] as const;
 
 export default function TravelPage() {
