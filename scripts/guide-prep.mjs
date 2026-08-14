@@ -20,8 +20,9 @@ const W = 600, H = 800;               // 3:4 — UploadGuide 카드 규격(표�
 const TYPES = [
   "solo_face", "portrait_multi", "family", "pet",
   "food_drink", "product_obj", "space", "vehicle", "old_photo",
-  "generic", // 옛 키 — 재배선이 끝나면 제거
+  "daily_snap", "any_photo", // 2026-08-14 신설 — 일상 사진 구제 / 화질만 올리기
 ];
+// ★generic은 제거했다(UploadGuide에서 별칭이 사라져 변환해봐야 쓰이지 않는다).
 
 const inDir = process.argv[2];
 if (!inDir) {
