@@ -64,6 +64,24 @@
 - 다음에 할 것: 커밋 B — daily_snap·any_photo 사진 6장(600×800 webp q85, public/guide/)
   제작·투입. 코드는 imgType null → 유형명 2곳만 바꾸면 된다
 
+## 2026-08-14 — travel 상세 갱신(8칩 반영) + BA 4쌍 추가 (5c3ee07)
+- [상세] travel.webp 교체(1071×13895, 731KB, 가로 1080 미만이라 무축소)
+- [BA] 3쌍 → 7쌍. 신규 4쌍의 비포는 기존 before-1 재사용(해시 일치로 동일 모델
+  증명), pairs [1..7]로 확장
+- 커밋 메시지: travel 상세 갱신(8칩 반영) + BA 4쌍 추가
+
+## 2026-08-14 — travel v6 전개 + 도시 칩 확장 — 4칩 → 8칩 (476b50e)
+- [칩] 신규 paris·tokyo·newyork·swiss / 기존 jeju(대낮 전환)·europe·beach·citynight
+- [구조] TRAVEL_PROMPTS[dest] = RETOUCH_CORE + SCENE + WARDROBE + FINISH_RULES —
+  공용이 머리·꼬리 2조각. CORE 교체는 통짜 불가, SCENE 기준으로 갈라 머리/꼬리
+  상수에 배치해야 절 순서가 안 무너짐. jeju 조립 결과 7,965자 문자 일치로 검증
+- [WARDROBE] 공용화 안 함 — europe·beach·citynight은 전용 의상 보유라 공용화 시
+  의상 절 2개 충돌. 신규 4종만 WARDROBE_GENERIC 사용
+- [조명] 역전판 표준형으로 전 칩 Light 줄 승계(주광·무드 문자 승계, 첫 글자
+  대소문자만 조정)
+- [레이아웃] 8칩 실측 2열 4행, 데스크톱·모바일 375px 모두 균일
+- 커밋 메시지: travel v6 전개 + 도시 칩 확장
+
 ## 2026-08-14 — LeaveGuard: 생성 중 이탈 가드 (166종)
 - [왜] 생성은 서버에서 계속 돌고 완성되면 코인이 사용된다. 로딩 화면에서 무심코 누른
   뒤로가기가 곧바로 앱을 벗어나면 사용자는 "코인만 날렸다"고 느낀다. 한 번 물어보고,
@@ -330,6 +348,46 @@
 - 커밋 메시지: feat: Pro 컨셉 혼잡 안내 — 실패 시 재시도·시간대 유도
 - 주의/메모: ★새 Pro 컨셉을 만들거나 엔진을 바꾸면 PRO_CONCEPTS 배열도 같이 고쳐야
   한다. 자동 파생이 아니라 대조 게이트가 잡는 구조다
+
+## 2026-08-13 — BA 배선 — 신설 4종 (530085d)
+- [원료 관례] examples/ba/{키}/ (gitignore) → 산출 public/examples/ba/{키}-before-N.webp·
+  -after-N.webp (768×960 q85)
+- [쌍 구성] campusgrad 3 / dresswedding 3 / gyaru 2 / genderswap 2 (양방향)
+- [★상한 주의] pairs 배열은 실제 쌍 수로 조정 필수 — gyaru·genderswap [1,2,3]→[1,2]
+  (idolglam 상한 누락 전례 반복 방지)
+- [검수] 변환본 컨택트시트 눈검수로 얼굴 잘림·짝 오배치 0 확인
+- 커밋 메시지: BA 배선 — 신설 4종 (자동 매칭·쌍 수 적응)
+
+## 2026-08-13 — 신설 4종 홈 오픈 — 상세·썸네일 반입(webp)·홈 카드 해제·도트 (2f367af)
+- [자산] public/details·cards에 {키}.png 반입 → webp q85 변환(22.60MB → 1.91MB, -91.5%)
+- [배선] 홈 카드 주석 4줄 해제, 홈 활성 155 → 159종
+- [도트] audience: gyaru=female, 나머지 3종=all (신설 커밋에서 이미 정확)
+- [★함정] concepts.ts·page.tsx는 CRLF 파일 — 
+ 앵커 안 걸림, EOL 보존 배선 필요
+- 커밋 메시지: 신설 4종 홈 오픈 — 상세·썸네일 반입(webp)·홈 카드 해제·도트
+
+## 2026-08-13 — 신설 4종 프롬프트 v2 — 외모 마스터 문법 통일 (cf5f6ac)
+- [범위] 4종(campusgrad·dresswedding·gyaru·genderswap) 프롬프트를 MOSPIC 외모
+  마스터 v1 기준으로 전면 교체
+- [검증] 모순 스캔 3축(보정금지↔허용 / 점 보존↔소거 / 나이 유지↔젊게) 12벌 0건
+- [게이트] 문자열 대조가 아니라 실제 조립 12벌 생성 후 필수 줄·보간 잔여 검증
+- [미결] genderswap의 "YOUNGER-fresh" 표현은 나이 축 오독 여지 — 실측에서 어려
+  보이면 그 줄만 수리
+- 커밋 메시지: 신설 4종 프롬프트 v2 — 외모 마스터 문법 통일 (campusgrad·
+  dresswedding·gyaru·genderswap)
+
+## 2026-08-12 — 신규 컨셉 4종 신설 — campusgrad·dresswedding·gyaru·genderswap (46b8a26)
+- [범위] 기존 graduation·wedding 무접촉(md5 4/4 동일 증명), 독립 신설
+- [campusgrad] Pro GA·240/230·칩 4종(ivy·krspring·euclassic·city), bgchange형
+  Record 분기
+- [dresswedding] Pro·성별 2 × 배경 3 = 6조합, buildPrompt(role,bg), 2단 칩 UI
+  신설(전례 없어 신설)
+- [gyaru·genderswap] GPT gpt-image-2, 크롭 없음(원본 포즈·배경 보존 계약)
+- [게이트] 8지점 배선 32/32, 칩 경로 10조합 전수, 폴백 soon 0
+- [★함정] concepts.ts는 2칸·5칸 들여쓰기 혼재 — 블록 헤더 정규식 대신 key: 앵커
+  사용해야 함(검사기가 자기 오류 검거)
+- 커밋 메시지: 신규 컨셉 4종 신설 — campusgrad·dresswedding·gyaru·genderswap
+  (기존 무접촉)
 
 ## 2026-08-11 — 스토어 소재 재설계 (피처 그래픽 + 스크린샷 크롭 전환)
 - [★잘림 진단 결과: 잘린 적 없음] 태그라인 "사진관 안 가도, 사진관보다"를 픽셀로 재니
@@ -1852,3 +1910,22 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
 
 ### 이전 작업 (이미 완료)
 - 업로드/성별선택/생성·선택/저장·공유/로딩/Vercel·PWA/카카오로그인/무료3회
+
+## 결정·자산 — 인물 컨셉 외모 프롬프트
+- **MOSPIC_외모마스터_v1.md**(리포 루트, 356행) = 인물 컨셉 외모 프롬프트의 정본.
+  티어1(풀 글램)·티어2(절제 스튜디오)·부록 A(SCENE 규칙: 조명 역전판·모자 규칙·
+  글자 봉쇄)·부록 B(2인)·부록 C(증상→처방)·부록 D(판례)
+- [승인 판례] idol(원문 추출) → campusgrad v2 → dresswedding v2 → gyaru v2 →
+  genderswap v2 → travel v6
+- [탈락 판례] 보존철학판 / 구판 축약 계약판 / travel 구판 / 증명문법판(2인 글램 목적)
+- [travel v6 확정 원칙 3] ①주광 색온도가 얼굴 품질을 좌우(골든아워 → 얼굴 노랗게,
+  대낮 클린이 우세) ②"HOW TO USE THE INPUT PHOTO"(셀카 구도 무시) 이식 시 닮음이
+  흔들릴 수 있어 최상단 IDENTITY 절대 규칙과 짝으로 넣어야 함 ③배경 생생함은
+  "lived-in textures + 실제 현장 촬영, 렌더 아님" 서술로 확보
+- [인물 컨셉 외모 전수 실사 — 143종] 발명 봉쇄 보유 5종 · 조명 역전판 2종 ·
+  3중 잠금 0종 → 배치 1a(구세대 CORE 12종+travel) / 배치 2(증명31·비즈34, 티어2
+  첫 적용, 추출 대조 선행) / 배치 3(2인 8종, 나이 보존 필수) 계획 수립
+- [CORE 실체] 공용 모듈이 아니라 route별 복사본 — 동일 문자열 12종(md5
+  ffefea29b7), travel·halloween·era는 자기 사본, y2k·fashion은 CORE 상수 없음
+- [백로그] BA pairs의 숫자 없는 폴백 줄({키}-before.webp)이 159개 페이지 전부에서
+  404 — 화면 무영향, 일괄 청소 대상
