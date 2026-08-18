@@ -1,3 +1,17 @@
+## 2026-08-18 — diag/alive 실측 결과: 함수 생존 확인 (4ae07a6 후속)
+- [★결론] 3단계 실험(run 시작 → 클라 절단 → check) 실측 완료 — 클라 절단에도
+  Vercel 함수는 완주한다. supportsCancellation 미설정(= 취소 옵트인 안 함) 상태의
+  Vercel 공식 문서 예측과 실측이 일치
+- [연결] "diag: 클라 절단 시 함수 생존 실험 라우트"(2026-08-14, 4ae07a6)에서 설계한
+  실험 절차의 실행 결과. 그 항목의 "다음 실험 절차"가 이 결론으로 닫힘
+
+## 2026-08-14 — 가이드 원료 폴더 gitignore (c8a6d02)
+- [내용] .gitignore에 3줄 추가 — /public/guide/raw/ (가이드 시트 원료용). 직전
+  커밋(db40b4a, 가이드 시트 B)의 "다음에 할 것"에 적어둔 검토 항목을 그대로 실행한
+  후속 커밋
+- [효과] BA 원료(/examples/)와 동일한 패턴 — 원본 PNG는 미추적, 산출 webp만 커밋
+- 커밋 메시지: chore: 가이드 원료 폴더 gitignore — public/guide/raw
+
 ## 2026-08-14 — 가이드 시트 B: 신규 유형 사진 6장 완성 (daily_snap·any_photo)
 - [원료] public/guide/raw/ 6장 전부 1086×1448 = 정확히 3:4 → ★크롭 0, 순수 축소만.
   "크롭에 결함이 잘리는지" 검수 항목은 구조적으로 발생 불가였다
@@ -1929,3 +1943,14 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   ffefea29b7), travel·halloween·era는 자기 사본, y2k·fashion은 CORE 상수 없음
 - [백로그] BA pairs의 숫자 없는 폴백 줄({키}-before.webp)이 159개 페이지 전부에서
   404 — 화면 무영향, 일괄 청소 대상
+
+## 다음 후보
+- 2인+ 얼굴 검사 11종 — multi_face 반대 규칙(2인 이상이어야 정상) 판정 분기 필요,
+  이미지당 1인 검사로는 안 됨
+- allowed()(diag 가드) 공용화 — 현재 diag/gemini·diag/alive 두 곳에 자구 복제
+- FCM 푸시 — 로컬 알림(6e9860e)은 "앱을 완전히 닫으면" 못 온다. 그 영역을 메우려면
+  FCM이 필요
+- IAP-B — RevenueCat 콘솔 초기화 + 웹훅. 선행: MJ Play Console 관리형 상품 3종
+  (coin_3/coin_9/coin_30) 등록
+- Pro 폴백 확산 판단 — fetchGeminiWithFallback(fd31140)은 신설됐지만 호출부 없음.
+  hanbok 파일럿(cd05fd9) 데이터 관찰 중, 확산 여부 미정
