@@ -1,3 +1,49 @@
+## 2026-08-18 — IAP-B: RevenueCat 구매 + 웹훅 적립 (env 게이트)
+- [구조] 결제는 Play가, 적립은 RC 웹훅이 한다. 클라 보고+서버 검증 대신 웹훅을 쓴 이유:
+  우리 쪽에 구글 서비스 계정 키를 두지 않아도 되고 RC가 재시도를 대신한다 — Toss에서
+  이미 겪은 "결제는 됐는데 코인은 안 들어옴" 부류를 그 재시도가 막는다.
+  대가는 비동기 — 클라가 잔액을 폴링하고 늦으면 "곧 완료돼요"로 안내한다
+- [★env 게이트 — 키 넣기 전까지 동작 무변화] NEXT_PUBLIC_RC_ANDROID_KEY 미설정이면
+  네이티브 분기가 IAP-A와 "같은 자리에 같은 문구"로 남고(native-pending),
+  RC_WEBHOOK_AUTH 미설정이면 웹훅이 404로 존재 자체를 숨긴다. 실측으로 둘 다 확인
+- [★로그인 연동 접촉 0곳] page.tsx·logout 라우트 무접촉. 구매 직전에 /api/auth/me로
+  uid를 읽어 그때 configure(첫 회)/logIn(사용자 변경 시) 한다.
+  로그아웃 훅을 한 곳이라도 빠뜨리면 RC의 appUserID가 이전 사용자로 굳어 남의 계정에
+  코인이 들어간다 — 배선을 늘리는 대신 그 사고를 구조적으로 불가능하게 만들었다
+- [브리지] app/lib/revenuecat.ts 신설. 플러그인은 셸에만 있고 웹 리포엔 없어
+  window.Capacitor.Plugins.Purchases로 직접 호출(BackButtonBridge·saveImage와 같은
+  전역+지역 타입 관례). 등록명 확인: capacitor.plugins.json의 "Purchases".
+  공개 표면은 rcPurchase·NativeOutcome 둘뿐 — 호출부 없는 export는 두지 않았다
+- [구매 경로] getProducts(NON_SUBSCRIPTION)로 스토어 실존 확인 → purchaseStoreProduct
+  직접 구매(Offering 미사용). ★미등록 상품(현재 coin_9·coin_30)은 결제를 시작조차
+  안 하고 "이 상품은 아직 준비 중이에요". 버튼을 미리 회색으로 죽이려면 시트·지갑 UI를
+  손봐야 하는데 이번 범위 밖 — 누르는 순간 막히므로 잘못 결제되는 경로는 없다
+- [적립 확인] 구매 성공 → "코인 적립 확인 중이에요…" → /api/coins 2초 간격 최대 15초
+  폴링 → 증가 확인 시 "코인 N개가 충전됐어요 · 잔액 M개"(실측 증가분·실측 잔액을 그대로
+  말한다) / 초과 시 "적립이 곧 완료돼요 — 잠시 후 코인 탭에서 확인해 주세요".
+  사용자 취소는 무음(의도한 행동에 말을 얹지 않는다), 오류는 짧은 토스트
+- [웹훅] app/api/coins/iap-credit 신설. Authorization === RC_WEBHOOK_AUTH /
+  NON_RENEWING_PURCHASE만 처리하고 그 외는 200으로 삼킨다(비200이면 RC가 무의미한
+  재시도를 반복한다) / product_id → getCoinProductByPlayId 역조회 /
+  멱등 order:iap:{transaction_id} GET 후 SET NX — charge 라우트 2단 패턴 그대로 /
+  OrderReceipt provider "google_play" TTL 5년(전자상거래법 제6조) / creditCoins 재사용
+- [★적립 보류] app_user_id가 카카오 uid 형식(/^d{5,20}$/)이 아니면 — RC 익명
+  $RCAnonymousID:… 나 게스트 g_… — 적립하지 않고 로그만 남긴다. 결제는 이미 끝났으니
+  그 로그가 수동 보정의 근거가 된다. 코인을 아무 계정에나 넣는 것보다 낫다
+- [★예외는 500] catch에서 500을 돌려줘야 RC가 재시도한다 — 일시 장애로 결제가 유실되면 안 된다
+- [실측 21케이스 · 외부 호출 0] env 미설정 404·네이티브 IAP-A 문구 동일 /
+  무헤더·위조 401·거부 시 적립 0 / 정상 페이로드 +3·영수증 provider·필드·TTL 1826일 /
+  ★동일 transaction_id 재전송 duplicated·2회째 적립 0 / RENEWAL·미매핑 상품 200 무시 /
+  RC 익명 id·게스트 uid 적립 보류. 프로덕션 Redis는 _gatetest_ 키만 쓰고 DEL·잔여 0
+- [무접촉] charge 라우트·coins.ts·CoinNeededSheet·CoinWallet·products.ts·returnTo 0줄.
+  ★웹 Toss 블록은 변경 줄 0 — diff 전부가 import·타입·네이티브 분기다
+- 커밋 메시지: feat(IAP-B): RevenueCat 구매 + 웹훅 적립 — env 게이트
+- 다음에 할 것: [MJ] ①Play Console 관리형 상품 coin_9·coin_30 등록(coin_3만 있는 현황)
+  ②RevenueCat 콘솔에서 Android 앱 연결 → NEXT_PUBLIC_RC_ANDROID_KEY 발급 →
+  Vercel 환경변수 ③RC 웹훅 URL을 https://mospic.com/api/coins/iap-credit 로 등록하고
+  Authorization 헤더 값을 RC_WEBHOOK_AUTH와 동일하게 설정 ④라이선스 테스터로 실구매 1회.
+  그 뒤 후보: 미등록 상품 버튼 회색 처리(시트·지갑 UI) · 게스트→로그인 잔액 병합(IAP-C)
+
 ## 2026-08-18 — diag/alive 실측 결과: 함수 생존 확인 (4ae07a6 후속)
 - [★결론] 3단계 실험(run 시작 → 클라 절단 → check) 실측 완료 — 클라 절단에도
   Vercel 함수는 완주한다. supportsCancellation 미설정(= 취소 옵트인 안 함) 상태의

@@ -5,9 +5,9 @@
 //
 // ★앱(Capacitor)에서는 Toss를 절대 띄우지 않는다. Play 정책상 앱 안에서 외부 결제를
 //   여는 것 자체가 위반이라, 분기가 아니라 차단이다. RC 연동 전까지는 안내만 띄운다.
-import { toast } from "./toast";
 import { getCoinProduct } from "./products";
 import { saveReturnTo } from "./returnTo";
+import { rcPurchase, type NativeOutcome } from "./revenuecat";
 
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
@@ -19,7 +19,7 @@ function isNative(): boolean {
   return (window as { Capacitor?: CapacitorGlobal }).Capacitor?.isNativePlatform?.() === true;
 }
 
-export type PurchaseOutcome = "web-toss" | "native-pending" | "unknown-product";
+export type PurchaseOutcome = "web-toss" | "unknown-product" | NativeOutcome;
 
 /**
  * 충전 결제를 시작한다.
@@ -33,12 +33,13 @@ export async function startPurchase(
   const product = getCoinProduct(productId);
   if (!product) return "unknown-product";
 
-  // ── 앱: 외부 결제 차단 ──
+  // ── 앱: 외부 결제 차단 + Play IAP ──
+  // ★Toss는 이 분기에서 절대 열리지 않는다. Play 정책상 앱 안의 외부 결제는
+  //   분기가 아니라 위반이라, 여기서 반환하지 못하면 아무 결제도 시작하지 않는다.
+  // ★NEXT_PUBLIC_RC_ANDROID_KEY 미설정이면 rcPurchase가 IAP-A와 같은 안내 토스트를
+  //   띄우고 "native-pending"으로 돌아온다 — 키를 넣기 전까지 동작 무변화.
   if (isNative()) {
-    // TODO(IAP-B): RevenueCat purchasePackage(product.playProductId)로 교체할 자리.
-    //   지금은 플러그인만 설치돼 있고 초기화·Offering이 없어 결제를 시작할 수 없다.
-    toast("앱 내 결제를 준비하고 있어요 🚀 곧 열려요");
-    return "native-pending";
+    return await rcPurchase(product.playProductId);
   }
 
   // ── 웹: 기존 Toss 경로 (자구 보존) ──
