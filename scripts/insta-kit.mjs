@@ -15,6 +15,7 @@
 // [사용법] 리포 루트에서
 //   node scripts/insta-kit.mjs            # insta/raw 아래 모든 slug
 //   node scripts/insta-kit.mjs voxel      # 특정 slug만
+//   node scripts/insta-kit.mjs voxel --style=B   # 커버 스타일 A|B|C (기본 A, kit.json 무변경)
 //
 // ─── 이 스크립트가 지키는 규칙 4가지 ────────────────────────────────────────
 // ① 안전영역: 인스타 그리드 썸네일은 4:5를 가운데 1:1로 자른다 → y 135~1215 밖으로
@@ -52,9 +53,27 @@ const YELLOW = "#FFD84D";                 // 제목 2줄째 강조 / CTA 행동 
 const CTA_BG = "#1A1A1A";
 const KR_FONTS = "Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif";
 const TAGLINE = "사진관 안 가도, 사진관보다";   // store-assets.mjs와 같은 문구(브랜드 일관)
-const AI_MARK = "Made with MOSPIC AI";     // 워터마크 겸 AI 고지
-const WATERMARK_PX = 32;                   // "12px 상당"
 const CTA_MIN_PX = 44;                     // "글자 하한 44px 상당"
+
+// ★2026-08-24 커버 리디자인 — 카드에서 브랜딩·AI 고지를 뺐다.
+//   워드마크는 08-follow 카드가 단독으로 담당하고, AI 고지는 캡션이 담당한다.
+//   앞 카드마다 로고를 박으면 광고물로 읽혀 "저장하고 싶은 무드"가 깨진다(타깃 2030 여성).
+const CREAM = "#F3E7CE";                   // B안 오버라인
+const LIME = "#D8FF3F";                    // C안 제목 2줄째 (형광)
+
+// ★A안 확정(2026-08-24) — 카드 4종이 공유하는 스타일 언어.
+//   커버에서만 쓰면 캐러셀을 넘길 때마다 다른 앱처럼 보인다. 배지 톤·강조 방식·
+//   그라데이션 규격을 한 벌로 묶어 02-ba·CTA·팔로우까지 같은 말을 쓰게 한다.
+const BADGE_FILL = "#ffffff";              // 배지 바탕 — 핑크에서 톤다운
+const BADGE_TEXT = "#1A1A1A";              // 배지 글씨
+const HL_FILL = "#000000", HL_OP = 0.42, HL_RX = 14;   // 강조 텍스트 뒤 하이라이트 바
+// --style=A|B|C — kit.json은 손대지 않고 커버 스타일만 갈아 끼운다(재실행만으로 비교).
+const STYLE = (() => {
+  const f = process.argv.slice(2).find((a) => /^--style=/i.test(a));
+  const v = f ? f.split("=")[1].toUpperCase() : "A";
+  if (!["A", "B", "C"].includes(v)) { console.error(`★--style 은 A|B|C 중 하나 (받은 값: ${v})`); process.exit(1); }
+  return v;
+})();
 const BANNED = ["무료", "0원", "공짜", "지브리", "픽사"];
 const EXT = /\.(jpe?g|png|webp)$/i;
 
@@ -126,6 +145,16 @@ async function fitSize(text, maxW, start, min, o = {}) {
 function textLayer(o) {
   const t = esc(o.text), a = attrs(o), op = o.opacity ?? 1;
   let halo = "";
+  // ★스티커 아웃라인: librsvg의 paint-order 지원이 버전마다 갈려서 stroke를 못 믿는다.
+  //   halo와 같은 수법으로 검정 글자를 원형으로 여러 번 깔아 굵은 테두리를 만든다.
+  if (o.outline) {
+    const r = o.outline;
+    for (let i = 0; i < 16; i++) {
+      const dx = Math.round(r * Math.cos((i / 16) * Math.PI * 2));
+      const dy = Math.round(r * Math.sin((i / 16) * Math.PI * 2));
+      halo += `<text x="${o.x + dx}" y="${o.y + dy}" ${a} fill="#000">${t}</text>`;
+    }
+  }
   if (o.halo) {
     const d = o.halo;
     for (const [dx, dy] of [[-d, 0], [d, 0], [0, -d], [0, d], [-d, -d], [d, -d], [-d, d], [d, d]])
@@ -170,66 +199,247 @@ function safeCheck(label, box) {
 }
 
 // ─── 01-cover ─────────────────────────────────────────────────────────────
-// 애프터1 풀블리드 + 하단 그라데이션 + 좌상단 배지 + 하단 좌측 2줄 제목 + 우상단 워드마크.
+// 스타일 3안(--style=A|B|C). 공통: 애프터1 풀블리드 + 하단 그라데이션 + 제목 2줄.
+// ★워드마크는 넣지 않는다(2026-08-24) — 브랜딩은 08-follow 카드 단독 담당.
 // ★제목·배지는 안전영역(y 135~1215) 안에 앉힌다 — 그래서 제목 블록 아래로 여백이 남는데,
 //   그건 낭비가 아니라 그리드 썸네일에서 제목이 살아남는 값이다.
-async function buildCover(dst, afterSrc, kit) {
-  const base = await coverCrop(afterSrc, W, H);
-  const grad = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
-    `<stop offset="0" stop-color="#000" stop-opacity="0"/>` +
-    `<stop offset="0.45" stop-color="#000" stop-opacity="0.42"/>` +
-    `<stop offset="1" stop-color="#000" stop-opacity="0.90"/></linearGradient></defs>` +
-    `<rect x="0" y="500" width="${W}" height="${H - 500}" fill="url(#g)"/></svg>`);
 
-  // 배지 — "픽레시피 {episode}"
-  const badgeText = `픽레시피 ${kit.episode}`;
-  const bo = { size: 44, weight: 900, spacing: 1 };
-  const bm = await measure(badgeText, bo);
-  const bPadX = 30, bPadY = 20;
-  const pillW = bm.w + bPadX * 2, pillH = (bm.dBot - bm.dTop + 1) + bPadY * 2;
-  const pillX = PAD, pillY = SAFE_TOP + 16;
-  const badgePill = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<rect x="${pillX}" y="${pillY}" width="${pillW}" height="${pillH}" rx="${Math.round(pillH / 2)}" fill="${PINK}"/></svg>`);
-  const badgeLayer = textLayer({ ...bo, text: badgeText, x: pillX + bPadX, y: pillY + bPadY - bm.dTop, fill: "#fff" });
+// 하단 그라데이션. depth = 어둠이 시작되는 y, peak = 맨 아래 불투명도.
+const gradLayer = (startY, peak, mid) => svgBuf(
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+  `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
+  `<stop offset="0" stop-color="#000" stop-opacity="0"/>` +
+  `<stop offset="0.45" stop-color="#000" stop-opacity="${mid}"/>` +
+  `<stop offset="1" stop-color="#000" stop-opacity="${peak}"/></linearGradient></defs>` +
+  `<rect x="0" y="${startY}" width="${W}" height="${H - startY}" fill="url(#g)"/></svg>`);
 
-  // 워드마크 — 배지와 같은 높이 중앙에 맞춘다
-  const wo = { size: 40, weight: 900, spacing: 5, anchor: "end" };
-  const wm = await measure("MOSPIC", wo);
-  const wordLayer = textLayer({ ...wo, text: "MOSPIC", x: W - PAD, fill: "#fff", opacity: 0.8, halo: 2,
-    y: Math.round(pillY + pillH / 2 - (wm.dTop + wm.dBot) / 2) });
+// 알약 배지 한 벌(바탕 + 글자). variant: filled | outline
+async function badge(text, o, x, y, { fill, textFill, stroke }) {
+  const m = await measure(text, o);
+  const padX = o.size < 30 ? 20 : 30, padY = o.size < 30 ? 12 : 20;
+  const w = m.w + padX * 2, h = (m.dBot - m.dTop + 1) + padY * 2;
+  const pill = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.round(h / 2)}"` +
+    ` fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="2.5"` : ""}/></svg>`);
+  const label = textLayer({ ...o, text, x: x + padX, y: y + padY - m.dTop, fill: textFill });
+  return { pill, label, box: { x, y, w, h } };
+}
 
-  // 제목 2줄 — 두 줄 다 들어가는 크기로 맞춰 같은 크기를 쓴다(한 덩어리로 읽히게)
-  const to = { weight: 900, spacing: -1 };
-  const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, 88, 44, to);
-  const f2 = await fitSize(kit.titleLine2, MAX_TEXT_W, 88, 44, to);
-  const tSize = Math.min(f1.size, f2.size);
-  const m1 = await measure(kit.titleLine1, { ...to, size: tSize });
-  const m2 = await measure(kit.titleLine2, { ...to, size: tSize });
-  if (f1.overflow || f2.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
-
-  const line2Base = Math.round(SAFE_BOT - 28 - m2.dBot);       // 2줄째 잉크 아랫변을 안전영역 안쪽에
-  const line1Base = Math.round(line2Base - tSize * 1.26);
-  const t1 = textLayer({ ...to, size: tSize, text: kit.titleLine1, x: PAD, y: line1Base, fill: "#fff", halo: 2 });
-  const t2 = textLayer({ ...to, size: tSize, text: kit.titleLine2, x: PAD, y: line2Base, fill: YELLOW, halo: 2 });
-
-  await sharp(base).composite([
-    { input: grad, left: 0, top: 0 },
-    { input: badgePill, left: 0, top: 0 }, { input: badgeLayer, left: 0, top: 0 },
-    { input: wordLayer, left: 0, top: 0 },
-    { input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 },
-  ]).png({ compressionLevel: 9 }).toFile(dst);
-
-  // ★게이트: 제목·배지 잉크가 정말 안전영역 안인지 레이어를 다시 재서 확인한다
-  const okBadge = safeCheck("커버 배지", { x: pillX, y: pillY, w: pillW, h: pillH });
-  const b1 = await alphaBox(await png(t1.toString()));
-  const b2 = await alphaBox(await png(t2.toString()));
-  const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
+// 강조 텍스트 뒤 하이라이트 바 — 잉크 상자에서 여백을 붙여 만든다.
+// ★글자 크기가 아니라 '실측 잉크'로 만드는 이유: 한글은 글꼴마다 어센더가 달라
+//   size 기반으로 계산하면 바가 글자를 덜 감싸거나 붕 뜬다.
+function hlBar(x, baseline, m, { padX = 16, padY = 12, anchor = "start" } = {}) {
+  const bx = Math.round(anchor === "middle" ? x - m.w / 2 - padX : x - padX);
+  const by = Math.round(baseline + m.dTop - padY);
+  const bw = Math.round(m.w + padX * 2), bh = Math.round((m.dBot - m.dTop + 1) + padY * 2);
   return {
-    line: `제목 ${tSize}px(요청 88 → ${f1.shrunk || f2.shrunk ? "자동 축소" : "그대로"}) 폭 ${Math.max(m1.w, m2.w)}/${MAX_TEXT_W}px · ` +
-      `잉크 y ${b1.y}~${b2.y + b2.h - 1} (안전 ${SAFE_TOP}~${SAFE_BOT}) ${okT && okBadge ? "OK" : "★NG"} · 배지 ${pillW}×${pillH}@(${pillX},${pillY})`,
+    layer: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+      `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${HL_RX}" fill="${HL_FILL}" fill-opacity="${HL_OP}"/></svg>`),
+    box: { x: bx, y: by, w: bw, h: bh },
   };
 }
+
+// 제목 2줄 — 같은 크기로 맞춰 한 덩어리로 읽히게 한다(A·C안).
+async function titlePair(kit, start, min, o) {
+  const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, start, min, o);
+  const f2 = await fitSize(kit.titleLine2, MAX_TEXT_W, start, min, o);
+  const size = Math.min(f1.size, f2.size);
+  return {
+    size,
+    m1: await measure(kit.titleLine1, { ...o, size }),
+    m2: await measure(kit.titleLine2, { ...o, size }),
+    overflow: f1.overflow || f2.overflow,
+    shrunk: f1.shrunk || f2.shrunk,
+  };
+}
+
+// ── 폴라로이드 인셋(A안) ──
+// 흰 테두리 + 아래 라벨 자리 + 회전. 회전은 sharp가 하고, 그림자는 같은 각도의 SVG 사각형.
+const POLA_ROT = -6;
+async function polaroid(beforeSrc, label, photo = 272, bd = 14, strip = 58) {
+  const cardW = photo + bd * 2, cardH = photo + bd + strip;
+  const shot = await sharp(beforeSrc).flatten({ background: "#ffffff" })
+    .resize(photo, photo, { fit: "cover", position: sharp.strategy.attention }).png().toBuffer();
+  const lo = { size: 26, weight: 700, spacing: 1, anchor: "middle" };
+  const lm = await measure(label, lo);
+  const labelSvg = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${cardW}" height="${cardH}">` +
+    `<text x="${cardW / 2}" y="${photo + bd + Math.round((strip + (lm.dBot - lm.dTop)) / 2) - 2}" ` +
+    `font-family="${KR_FONTS}" font-size="${lo.size}" font-weight="${lo.weight}" letter-spacing="1" ` +
+    `text-anchor="middle" fill="#5A5A5A">${esc(label)}</text></svg>`);
+  const card = await sharp({ create: { width: cardW, height: cardH, channels: 4, background: "#ffffff" } })
+    .composite([{ input: shot, left: bd, top: bd }, { input: labelSvg, left: 0, top: 0 }])
+    .png().toBuffer();
+  const rotated = await sharp(card).rotate(POLA_ROT, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const meta = await sharp(rotated).metadata();
+  return { rotated, w: meta.width, h: meta.height, cardW, cardH };
+}
+
+// 손그림풍 화살표 — 곡선 + 삼각 머리. 밝은 사진 위에서도 보이게 검정 밑선을 먼저 깐다.
+function scribbleArrow(pts, headAngle, { color = "#fff", width = 7 } = {}) {
+  const [x1, y1, cx, cy, x2, y2] = pts;
+  const d = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
+  const a = (headAngle * Math.PI) / 180, L = 26, S = 0.42;
+  const head = [
+    [x2, y2],
+    [x2 - L * Math.cos(a - S), y2 - L * Math.sin(a - S)],
+    [x2 - L * Math.cos(a + S), y2 - L * Math.sin(a + S)],
+  ].map(([x, y]) => `${Math.round(x)},${Math.round(y)}`).join(" ");
+  const stroke = (c, w) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
+    `<polygon points="${head}" fill="${c}" stroke="${c}" stroke-width="${w * 0.5}" stroke-linejoin="round"/>`;
+  return svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+    stroke("#000", width + 5) + stroke(color, width) + `</svg>`);
+}
+
+// ══ A안 — 폴라로이드 증거형 ══
+// "이 사진이 → 이렇게 됐다"를 카드 한 장에서 증명한다. 광고 문구보다 증거가 세다.
+async function coverA(dst, beforeSrc, afterSrc, kit) {
+  const base = await coverCrop(afterSrc, W, H);
+  const layers = [{ input: gradLayer(500, 0.9, 0.42), left: 0, top: 0 }];
+
+  // 배지 — 흰 바탕 + 검정 글씨(핑크에서 톤다운)
+  const b = await badge(`픽레시피 ${kit.episode}`, { size: 40, weight: 900, spacing: 1 },
+    PAD, SAFE_TOP + 16, { fill: BADGE_FILL, textFill: BADGE_TEXT });
+  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+
+  // 폴라로이드 인셋 — 우상단
+  const pola = await polaroid(beforeSrc, "원본");
+  const px = W - PAD - pola.w + 6, py = SAFE_TOP + 30;
+  const shadow = await sharp(svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+    `<rect x="${px + 14}" y="${py + 20}" width="${pola.cardW}" height="${pola.cardH}" rx="6" fill="#000" fill-opacity="0.34"` +
+    ` transform="rotate(${POLA_ROT} ${px + pola.cardW / 2} ${py + pola.cardH / 2})"/></svg>`)).blur(14).png().toBuffer();
+  layers.push({ input: shadow, left: 0, top: 0 }, { input: pola.rotated, left: px, top: py });
+
+  // 인셋 → 본 이미지로 향하는 화살표.
+  // ★짧고 급하게, 폴라로이드 바로 아래에만 둔다 — 길게 뽑으면 인물 얼굴을 가로질러
+  //   결과 사진을 훼손한다(첫 렌더에서 입술을 관통했다). 인물 사진은 대개 화면을 꽉 채워서
+  //   "빈 곳으로 뻗는" 화살표는 존재하지 않는다고 보는 게 맞다.
+  const ax = Math.round(px + pola.w * 0.46), ay = py + pola.h + 8;
+  layers.push({ input: scribbleArrow([ax, ay, ax - 16, ay + 34, ax - 40, ay + 68], 112, { width: 6 }), left: 0, top: 0 });
+
+  // 제목 2줄 — 1줄 흰(그림자) / 2줄 크림 옐로 + 반투명 검정 하이라이트 바
+  const to = { weight: 900, spacing: -1 };
+  const T = await titlePair(kit, 84, 44, to);
+  if (T.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
+  const l2 = Math.round(SAFE_BOT - 30 - T.m2.dBot);
+  const l1 = Math.round(l2 - T.size * 1.24);
+  const hl = hlBar(PAD, l2, T.m2);
+  layers.push({ input: hl.layer, left: 0, top: 0 });
+  const t1 = textLayer({ ...to, size: T.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", halo: 3 });
+  const t2 = textLayer({ ...to, size: T.size, text: kit.titleLine2, x: PAD, y: l2, fill: YELLOW });
+  layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
+
+  await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
+  const ok = safeCheck("커버 배지", b.box);
+  const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
+  const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
+  const okP = px >= 0 && px + pola.w <= W && py >= SAFE_TOP && py + pola.h <= SAFE_BOT;
+  if (!okP) fails.push(`커버 폴라로이드 인셋 이탈 — (${px},${py}) ${pola.w}×${pola.h}`);
+  return { line: `[A 폴라로이드] 제목 ${T.size}px${T.shrunk ? "(자동 축소)" : ""} 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
+    `배지 흰바탕 ${b.box.w}×${b.box.h} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h}` };
+}
+
+// ══ B안 — 매거진 미니멀형 ══
+// 장식을 걷고 굵기 대비만으로 승부. 광고 티가 가장 적다.
+async function coverB(dst, beforeSrc, afterSrc, kit) {
+  const base = await coverCrop(afterSrc, W, H);
+  // ★하단 55% 구간을 더 깊게(최대 0.97) — 흰 제목만으로 버텨야 하므로 바탕을 더 눌렀다
+  const layers = [{ input: gradLayer(Math.round(H * 0.45), 0.97, 0.55), left: 0, top: 0 }];
+
+  // 배지 — 아주 작은 흰 테두리 아웃라인.
+  // ★fill="none"으로 두면 밝은 사진 위에서 통째로 사라진다(첫 렌더에서 안 보였다).
+  //   미니멀을 지키면서 읽히게 하려면 최소한의 어두운 받침이 필요하다.
+  const b = await badge(`픽레시피 ${kit.episode}`, { size: 28, weight: 700, spacing: 2 },
+    PAD, SAFE_TOP + 14, { fill: "rgba(0,0,0,0.32)", textFill: "#fff", stroke: "#ffffff" });
+  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+
+  // 제목 — 1줄 가늘게·작게 / 2줄 굵게·크게 (굵기 대비)
+  const o1 = { weight: 400, spacing: 0 }, o2 = { weight: 900, spacing: -1.5 };
+  const f2 = await fitSize(kit.titleLine2, MAX_TEXT_W, 96, 48, o2);
+  // ★0.52는 너무 작았다 — 1줄이 제목이 아니라 캡션처럼 읽혔다. 굵기 대비로 승부하려면
+  //   1줄도 제목 크기여야 한다(가늘기만으로 위계가 생긴다).
+  const s2 = f2.size, s1 = Math.max(44, Math.round(s2 * 0.64));
+  const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, s1, 30, o1);
+  const m1 = await measure(kit.titleLine1, { ...o1, size: f1.size });
+  const m2 = await measure(kit.titleLine2, { ...o2, size: s2 });
+  if (f1.overflow || f2.overflow) fails.push(`${path.basename(dst)} 제목이 하한에서도 ${MAX_TEXT_W}px를 넘음`);
+
+  // 언더라인 바(4px) → 2줄 → 1줄 순서로 아래에서 쌓는다.
+  // ★첫 렌더의 180px는 2줄의 첫 단어만 밑줄 친 것처럼 보였다 — 우연처럼 읽히면 장식이 아니다.
+  const barY = SAFE_BOT - 34, barW = Math.min(320, Math.max(160, Math.round(m2.w * 0.42)));
+  const l2 = Math.round(barY - 26 - m2.dBot);
+  const l1 = Math.round(l2 + m2.dTop - 20 - m1.dBot);
+  // 오버라인 — 아주 작은 크림색, 1줄 위
+  const oo = { size: 32, weight: 700, spacing: 6 };
+  const om = await measure("사진 한 장이면", oo);
+  const ly = Math.round(l1 + m1.dTop - 26 - om.dBot);
+  layers.push(
+    { input: textLayer({ ...oo, text: "사진 한 장이면", x: PAD, y: ly, fill: CREAM, halo: 3 }), left: 0, top: 0 },
+    { input: textLayer({ ...o1, size: f1.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", halo: 3 }), left: 0, top: 0 },
+    { input: textLayer({ ...o2, size: s2, text: kit.titleLine2, x: PAD, y: l2, fill: "#fff", halo: 2 }), left: 0, top: 0 },
+    { input: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+      `<rect x="${PAD}" y="${barY}" width="${barW}" height="4" rx="2" fill="${PINK}"/></svg>`), left: 0, top: 0 });
+
+  await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
+  const ok = safeCheck("커버 배지", b.box);
+  const okBar = safeCheck("커버 언더라인", { x: PAD, y: barY, w: barW, h: 4 });
+  const bOver = await alphaBox(await png(textLayer({ ...oo, text: "사진 한 장이면", x: PAD, y: ly, fill: CREAM }).toString()));
+  const okO = safeCheck("커버 오버라인", bOver);
+  return { line: `[B 매거진] 오버라인 ${oo.size}px y${bOver.y} · 제목 ${f1.size}px(400) / ${s2}px(900) 잉크 y ${l1 + m1.dTop}~${l2 + m2.dBot} · ` +
+    `언더라인 ${barW}×4 y${barY} · 그라데 45%~ 0.97 ${ok && okBar && okO ? "OK" : "★NG"}` };
+}
+
+// ══ C안 — 네온 팝형 ══
+// 스티커 타이포 + 형광. 피드에서 가장 멀리서도 눈에 걸린다. 대신 톤이 세다.
+async function coverC(dst, beforeSrc, afterSrc, kit) {
+  const base = await coverCrop(afterSrc, W, H);
+  const layers = [{ input: gradLayer(560, 0.86, 0.36), left: 0, top: 0 }];
+
+  // 배지 — 노랑 필 + 검정 글씨, 영문
+  const b = await badge(`PICK RECIPE ${kit.episode}`, { size: 36, weight: 900, spacing: 2 },
+    PAD, SAFE_TOP + 16, { fill: YELLOW, textFill: "#141414" });
+  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+
+  // 제목 2줄 — 굵은 검정 아웃라인. 아웃라인이 6px 번지므로 폭 예산을 그만큼 줄인다.
+  const to = { weight: 900, spacing: -1 };
+  const OUT = 6;
+  const T = await titlePair({ ...kit }, 88, 44, to);
+  if (T.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
+  const l2 = Math.round(SAFE_BOT - 34 - T.m2.dBot - OUT);
+  const l1 = Math.round(l2 - T.size * 1.28);
+  const t1 = textLayer({ ...to, size: T.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", outline: OUT });
+  const t2 = textLayer({ ...to, size: T.size, text: kit.titleLine2, x: PAD, y: l2, fill: LIME, outline: OUT });
+  layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
+
+  // before 원형 썸네일 — 좌하단 + 화살표
+  const R = 96, D = R * 2;
+  const sq = await sharp(beforeSrc).flatten({ background: "#ffffff" })
+    .resize(D, D, { fit: "cover", position: sharp.strategy.attention }).png().toBuffer();
+  const mask = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}">` +
+    `<circle cx="${R}" cy="${R}" r="${R}" fill="#fff"/></svg>`);
+  const circle = await sharp(sq).composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
+  // ★좌측 + 제목 위. 첫 렌더는 우측에 놓았고 화살표가 제목 "그림이"를 관통했다 —
+  //   타이포를 가로지르는 장식은 무조건 결함이다. 제목 잉크 위쪽으로 클리어런스를 계산해 앉힌다.
+  const titleTop = l1 + T.m1.dTop;
+  const cx = PAD, cy = Math.max(SAFE_TOP + 90, titleTop - 62 - D);
+  layers.push(
+    { input: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+      `<circle cx="${cx + R}" cy="${cy + R}" r="${R + 5}" fill="none" stroke="#fff" stroke-width="6"/></svg>`), left: 0, top: 0 },
+    { input: circle, left: cx, top: cy },
+    // 원 오른쪽 아래에서 짧게 — 끝점을 제목 잉크보다 위에서 끊는다
+    { input: scribbleArrow([cx + D - 26, cy + D - 18, cx + D + 26, cy + D + 4, cx + D + 62, cy + D + 26], 32, { color: LIME, width: 8 }), left: 0, top: 0 });
+
+  await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
+  const ok = safeCheck("커버 배지", b.box);
+  const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
+  const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
+  const okC = cy >= SAFE_TOP && cy + D <= SAFE_BOT && cx >= 0 && cx + D <= W;
+  if (!okC) fails.push(`커버 원형 인셋 이탈 — (${cx},${cy}) ${D}×${D}`);
+  return { line: `[C 네온팝] 제목 ${T.size}px 아웃라인 ${OUT}px 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
+    `배지 노랑 ${b.box.w}×${b.box.h} · 원형인셋 ⌀${D}@(${cx},${cy}) ${okC ? "OK" : "★NG"}` };
+}
+
+const COVERS = { A: coverA, B: coverB, C: coverC };
+const buildCover = (dst, beforeSrc, afterSrc, kit) => COVERS[STYLE](dst, beforeSrc, afterSrc, kit);
 
 // ─── 02-ba ────────────────────────────────────────────────────────────────
 // 상하 분할(각 1080×675) + 좌상단 "전"/"후" 칩 + 중앙 화살표.
@@ -241,17 +451,12 @@ async function buildBA(dst, beforeSrc, afterSrc, kit) {
   const top = await bandCrop(beforeSrc, W, half);
   const bot = await bandCrop(afterSrc, W, half);
 
+  // ★A안 배지 톤 — 커버의 "픽레시피 01"과 같은 흰 바탕·검정 글씨.
+  //   검정 반투명 칩은 사진 밝기에 따라 읽힘이 흔들렸고, 무엇보다 커버와 다른 말을 썼다.
   const chip = async (label, absY) => {
-    const o = { size: 40, weight: 900, spacing: 1 };
-    const m = await measure(label, o);
-    const px = 26, py = 15;
-    const w = m.w + px * 2, h = (m.dBot - m.dTop + 1) + py * 2;
-    return {
-      pill: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-        `<rect x="${PAD}" y="${absY}" width="${w}" height="${h}" rx="${Math.round(h / 2)}" fill="#000" fill-opacity="0.55"/></svg>`),
-      text: textLayer({ ...o, text: label, x: PAD + px, y: absY + py - m.dTop, fill: "#fff" }),
-      box: `${w}×${h}@(${PAD},${absY})`,
-    };
+    const b = await badge(label, { size: 40, weight: 900, spacing: 1 }, PAD, absY,
+      { fill: BADGE_FILL, textFill: BADGE_TEXT });
+    return { pill: b.pill, text: b.label, box: `${b.box.w}×${b.box.h}@(${PAD},${absY})` };
   };
   const cBefore = await chip("전", 36);
   const cAfter = await chip("후", half + 36);
@@ -267,12 +472,12 @@ async function buildBA(dst, beforeSrc, afterSrc, kit) {
   const lo = { size: 36, weight: 700, anchor: "middle" };
   const lf = await fitSize(kit.conceptLabel, MAX_TEXT_W - 80, 36, 24, lo);
   const lm = await measure(kit.conceptLabel, { ...lo, size: lf.size });
-  const lPadX = 28, lPadY = 14;
-  const lw = lm.w + lPadX * 2, lh = (lm.dBot - lm.dTop + 1) + lPadY * 2;
-  const ly = cy + r + 26;
-  const labelPill = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<rect x="${Math.round(cx - lw / 2)}" y="${ly}" width="${lw}" height="${lh}" rx="${Math.round(lh / 2)}" fill="#000" fill-opacity="0.72"/></svg>`);
-  const labelText = textLayer({ ...lo, size: lf.size, text: kit.conceptLabel, x: cx, y: ly + lPadY - lm.dTop, fill: "#fff" });
+  // conceptLabel = 이 카드의 강조 한 줄 → 커버 2줄째와 같은 언어(하이라이트 바 + 크림 옐로)
+  const lBase = cy + r + 26 + 14 - lm.dTop;
+  const lHl = hlBar(cx, lBase, lm, { anchor: "middle", padX: 24 });
+  const labelPill = lHl.layer;
+  const labelText = textLayer({ ...lo, size: lf.size, text: kit.conceptLabel, x: cx, y: lBase, fill: YELLOW });
+  const lw = lHl.box.w, lh = lHl.box.h, ly = lHl.box.y;
 
   await sharp({ create: { width: W, height: H, channels: 3, background: "#000" } }).composite([
     { input: top, left: 0, top: 0 }, { input: bot, left: 0, top: half },
@@ -286,22 +491,14 @@ async function buildBA(dst, beforeSrc, afterSrc, kit) {
 }
 
 // ─── 03…-gallery ──────────────────────────────────────────────────────────
-// 애프터 한 장을 꽉 채우고 우하단에 작게 AI 고지.
-// ★헤일로를 반드시 깐다: 밝은 배경(하늘·흰 벽) 위에서 흰 70% 글자는 그냥 사라진다.
-//   이건 워터마크이자 AI 고지라 "안 보이는 경우"가 있으면 안 된다.
+// 애프터 한 장을 꽉 채운다. 글자는 0장.
+// ★워터마크("Made with MOSPIC AI")를 뺐다(2026-08-24): 결과 사진 자체가 유일한 주인공이고,
+//   AI 고지는 캡션이 담당한다. 게이트도 같이 뺐다 — 검사할 대상이 없어졌다.
 async function buildGallery(dst, src) {
   const base = await coverCrop(src, W, H);
-  const o = { size: WATERMARK_PX, weight: 700, anchor: "end" };
-  const m = await measure(AI_MARK, o);
-  const layer = textLayer({ ...o, text: AI_MARK, x: W - PAD, y: Math.round(H - 56 - m.dBot),
-    fill: "#fff", opacity: 0.7, halo: 2 });
-  await sharp(base).composite([{ input: layer, left: 0, top: 0 }]).png({ compressionLevel: 9 }).toFile(dst);
-
-  // ★워터마크 위치 게이트: 우하단 사분면 안에 있고 가장자리에 붙어 잘리지 않는가
-  const box = await alphaBox(await png(layer.toString()));
-  const ok = box && box.x > W / 2 && box.y > H / 2 && box.x + box.w - 1 <= W - PAD + 4 && box.y + box.h - 1 <= H - 24;
-  if (!ok) fails.push(`${path.basename(dst)} 워터마크 위치 이상 — ${JSON.stringify(box)}`);
-  return { line: `워터마크 ${WATERMARK_PX}px 잉크 (${box.x},${box.y}) ${box.w}×${box.h} · 우여백 ${W - (box.x + box.w)}px · 하여백 ${H - (box.y + box.h)}px ${ok ? "OK" : "★NG"}` };
+  await sharp(base).png({ compressionLevel: 9 }).toFile(dst);
+  // 글자 0 = 안전영역·헤일로 검사 대상이 없다. 규격은 공통 verify()가 본다.
+  return { line: "풀블리드 · 글자 0(워터마크 제거)" };
 }
 
 // ─── …-cta ────────────────────────────────────────────────────────────────
@@ -341,10 +538,20 @@ async function buildCTA(dst, kit) {
   const report = [];
   for (let i = 0; i < fitted.length; i++) {
     const f = fitted[i];
-    layers.push(textLayer({ ...f.o, size: f.size, text: f.text, x: W / 2, y: inkTop - f.m.dTop, fill: f.fill, opacity: f.op }));
+    const baseline = inkTop - f.m.dTop;
+    // ★행동 줄(②)에만 하이라이트 바 — 커버 2줄째와 같은 언어.
+    //   이 카드에서 사람이 실제로 해야 하는 일은 그 한 줄뿐이라 강조도 거기 하나뿐이다.
+    if (i === 1) layers.push(hlBar(W / 2, baseline, f.m, { anchor: "middle", padX: 22 }).layer);
+    layers.push(textLayer({ ...f.o, size: f.size, text: f.text, x: W / 2, y: baseline, fill: f.fill, opacity: f.op }));
     report.push(`${f.size}px`);
     inkTop += inkH[i] + (gaps[i] ?? 0);
   }
+
+  // ★시리즈 배지 — 커버와 같은 흰 바탕·검정 글씨. 단색 카드라 여기만 시리즈 표식이 없었다.
+  const cb = await badge(`픽레시피 ${kit.episode}`, { size: 34, weight: 900, spacing: 1 },
+    PAD, SAFE_TOP + 20, { fill: BADGE_FILL, textFill: BADGE_TEXT });
+  layers.unshift(cb.pill, cb.label);
+  safeCheck("CTA 배지", cb.box);
 
   const note = "업로드 5분 뒤부터 자동 발송돼요";
   const no = { size: CTA_MIN_PX, weight: 400, anchor: "middle" };
@@ -366,13 +573,9 @@ async function buildCTA(dst, kit) {
 //   열리고 닫힌다(같은 장이면 마지막 장이 커버의 재탕처럼 보인다).
 async function buildFollow(dst, src) {
   const base = await coverCrop(src, W, H);
+  // ★그라데이션도 공용 헬퍼로 — 같은 수식이 두 곳에 살면 한쪽만 고쳐지는 날이 온다
   const gTop = Math.round(H * 0.4);                             // 아래 60%
-  const grad = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
-    `<stop offset="0" stop-color="#000" stop-opacity="0"/>` +
-    `<stop offset="0.5" stop-color="#000" stop-opacity="0.55"/>` +
-    `<stop offset="1" stop-color="#000" stop-opacity="0.92"/></linearGradient></defs>` +
-    `<rect x="0" y="${gTop}" width="${W}" height="${H - gTop}" fill="url(#g)"/></svg>`);
+  const grad = gradLayer(gTop, 0.92, 0.55);
 
   // 아래에서 위로 쌓는다 — 맨 아래 안내 → 태그라인 → 워드마크
   const noteO = { size: 36, weight: 400, anchor: "middle" };
@@ -389,14 +592,21 @@ async function buildFollow(dst, src) {
   const mm = markF.m;
   const markInkBot = tagInkBot - (tm.dBot - tm.dTop + 1) - 40;
 
+  // ★안내 줄 = 이 카드에서 사람이 해야 하는 유일한 일(팔로우) → CTA 카드와 같은 규칙으로
+  //   하이라이트 바를 깐다. 0.55 불투명도로는 실제로 잘 안 읽혔다 — 바를 깔면서 1.0으로 올린다.
+  const noteBase = Math.round(noteInkBot - nm.dBot);
+  const nHl = hlBar(W / 2, noteBase, nm, { anchor: "middle", padX: 22, padY: 10 });
+
   await sharp(base).composite([
     { input: grad, left: 0, top: 0 },
     { input: textLayer({ ...markO, text: "MOSPIC", x: W / 2, y: Math.round(markInkBot - mm.dBot), fill: "#fff", halo: 3 }), left: 0, top: 0 },
     { input: textLayer({ ...tagO, text: TAGLINE, x: W / 2, y: Math.round(tagInkBot - tm.dBot), fill: "#fff", opacity: 0.7, halo: 2 }), left: 0, top: 0 },
-    { input: textLayer({ ...noteO, text: noteText, x: W / 2, y: Math.round(noteInkBot - nm.dBot), fill: "#fff", opacity: 0.55, halo: 2 }), left: 0, top: 0 },
+    { input: nHl.layer, left: 0, top: 0 },
+    { input: textLayer({ ...noteO, text: noteText, x: W / 2, y: noteBase, fill: "#fff", halo: 2 }), left: 0, top: 0 },
   ]).png({ compressionLevel: 9 }).toFile(dst);
 
-  return { line: `워드마크 ${markF.size}px 잉크바닥 y${markInkBot} · 태그라인 46px y${tagInkBot} · 안내 36px y${noteInkBot} · 그라데이션 y${gTop}~${H}(하단 60%)` };
+  safeCheck("팔로우 안내 바", nHl.box);
+  return { line: `워드마크 ${markF.size}px 잉크바닥 y${markInkBot} · 태그라인 46px y${tagInkBot} · 안내 36px y${noteInkBot} + 하이라이트바 ${nHl.box.w}×${nHl.box.h} · 그라데이션 y${gTop}~${H}(하단 60%)` };
 }
 
 // ─── caption.txt / dm.txt ─────────────────────────────────────────────────
@@ -547,10 +757,10 @@ async function main() {
     let no = 0;
     const pad = (n) => String(n).padStart(2, "0");
     const p = (name) => path.join(outDir, `${pad(++no)}-${name}.png`);
-    console.log(`\n■ ${slug} — 애프터 ${N}장 · 카드 ${N + 4}장`);
+    console.log(`\n■ ${slug} — 애프터 ${N}장 · 카드 ${N + 4}장 · 커버 스타일 ${STYLE}`);
     console.log(`  입력: ${path.basename(job.before)} + ${job.afterNames.join(", ")}`);
 
-    let f = p("cover");     console.log(`  01-cover   ${(await buildCover(f, afters[0], kit)).line}`); await verify(f);
+    let f = p("cover");     console.log(`  01-cover   ${(await buildCover(f, job.before, afters[0], kit)).line}`); await verify(f);
     f = p("ba");            console.log(`  02-ba      ${(await buildBA(f, job.before, afters[0], kit)).line}`); await verify(f);
     for (let i = 0; i < N; i++) {
       f = p("gallery");     console.log(`  ${pad(no)}-gallery ${(await buildGallery(f, afters[i])).line}`); await verify(f);
