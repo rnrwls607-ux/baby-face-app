@@ -48,6 +48,11 @@ const W = 1080, H = 1350;                 // 4:5 세로
 const SAFE_TOP = (H - W) / 2;             // 135 — 그리드 1:1 크롭의 윗선
 const SAFE_BOT = SAFE_TOP + W;            // 1215 — 아랫선
 const PAD = 64;                           // 좌우 안쪽 여백
+// ★그리드 안전존(2026-08-25) — 1:1 크롭선(135/1215)에 딱 붙이면 프로필 썸네일에서
+//   글자가 가장자리에 닿아 잘린 것처럼 읽힌다. 커버의 '무엇을 만드는가'를 말하는 요소
+//   (배지 뭉치·툴 칩·제목+하이라이트 바)는 이 안쪽 존에 앉힌다.
+const GRID_TOP = SAFE_TOP + 65;           // 200
+const GRID_BOT = SAFE_BOT - 85;           // 1130
 const MAX_TEXT_W = W - PAD * 2;           // 952
 
 const PINK = "#FF4B7C";                   // 배지 바탕
@@ -241,6 +246,79 @@ function hlBar(x, baseline, m, { padX = 16, padY = 12, anchor = "start" } = {}) 
   };
 }
 
+// 잉크가 그리드 안전존 안인지 — 커버 핵심 요소에만 적용
+function zoneCheck(label, box) {
+  const ok = box && box.y >= GRID_TOP && box.y + box.h - 1 <= GRID_BOT;
+  if (!ok) fails.push(`${label} 그리드 안전존 이탈 — y ${box ? `${box.y}~${box.y + box.h - 1}` : "없음"} (허용 ${GRID_TOP}~${GRID_BOT})`);
+  return ok;
+}
+
+// ── 스티커 배지 ──────────────────────────────────────────────────────────
+// 노랑 알약("픽레시피") + 오른쪽 끝에 살짝 겹치는 검정 원형 칩(회차 숫자) + 살짝 기울임.
+// ★왜 기울이나: 정렬이 딱 맞는 라벨은 UI로 읽히고, 살짝 틀어진 라벨은 '붙인 스티커'로
+//   읽힌다. 피드에서 손이 멈추는 건 후자다.
+// ★폭·높이를 실측 잉크에서 뽑는 이유는 hlBar와 같다 — 글자 크기로 계산하면 한글
+//   어센더 차이 때문에 알약이 글자를 덜 감싸거나 붕 뜬다.
+const STICKER_ROT = -3;
+async function stickerBadge(label, episode, x, y, { size = 40 } = {}) {
+  const lo = { size, weight: 900, spacing: 1 };
+  const lm = await measure(label, lo);
+  const eo = { size: Math.round(size * 0.82), weight: 900, spacing: 0 };
+  const em = await measure(String(episode), eo);
+
+  const padX = Math.round(size * 0.75), padY = Math.round(size * 0.5);
+  const pillH = (lm.dBot - lm.dTop + 1) + padY * 2;
+  const dia = Math.round(pillH * 1.06);
+  const lap = Math.round(dia * 0.34);                 // 알약과 겹치는 폭
+  // ★알약 폭에 겹침 폭을 더한다 — 안 더하면 원형 칩이 마지막 글자를 덮는다.
+  //   (첫 렌더에서 "픽레시피"의 "피"가 통째로 가려졌다. 잉크 실측은 맞았고 배치가 틀렸다.)
+  //   이렇게 두면 원은 글자 끝에서 정확히 padX 떨어져 시작하고, 겹치는 건 알약의 둥근 끝뿐이다.
+  const pillW = lm.w + padX * 2 + lap;
+  const cw = pillW + dia - lap, ch = Math.max(pillH, dia);
+  const pillY = Math.round((ch - pillH) / 2), circX = pillW - lap, circY = Math.round((ch - dia) / 2);
+  const ccx = circX + dia / 2, ccy = circY + dia / 2;
+
+  const body = (fillPill, fillLabel, fillCirc, fillNum) =>
+    `<rect x="0" y="${pillY}" width="${pillW}" height="${pillH}" rx="${Math.round(pillH / 2)}" fill="${fillPill}"/>` +
+    `<text x="${padX}" y="${pillY + padY - lm.dTop}" ${attrs(lo)} fill="${fillLabel}">${esc(label)}</text>` +
+    `<circle cx="${ccx}" cy="${ccy}" r="${dia / 2}" fill="${fillCirc}"/>` +
+    `<text x="${ccx}" y="${Math.round(ccy - (em.dTop + em.dBot) / 2)}" ${attrs({ ...eo, anchor: "middle" })} fill="${fillNum}">${esc(String(episode))}</text>`;
+
+  const card = `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}">${body(YELLOW, "#141414", "#141414", YELLOW)}</svg>`;
+  // 그림자는 같은 도형을 통째로 검게 그려 만든다 — 사각형 근사는 원형 칩 옆에서 티가 난다
+  const shade = `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}"><g opacity="0.34">${body("#000", "#000", "#000", "#000")}</g></svg>`;
+
+  const bg = { r: 0, g: 0, b: 0, alpha: 0 };
+  const rotated = await sharp(await png(card)).rotate(STICKER_ROT, { background: bg }).png().toBuffer();
+  const rotShade = await sharp(await sharp(await png(shade)).rotate(STICKER_ROT, { background: bg }).png().toBuffer())
+    .blur(9).png().toBuffer();
+  const meta = await sharp(rotated).metadata();
+
+  // 캔버스 전체 레이어로 돌려준다 — 호출부가 좌표를 다시 다루지 않게(합성 규약 통일)
+  const canvas = () => sharp({ create: { width: W, height: H, channels: 4, background: bg } });
+  return {
+    shadow: await canvas().composite([{ input: rotShade, left: x + 5, top: y + 9 }]).png().toBuffer(),
+    layer: await canvas().composite([{ input: rotated, left: x, top: y }]).png().toBuffer(),
+    box: { x, y, w: meta.width, h: meta.height },
+  };
+}
+
+// ★그리드 크롭 게이트 — 기하가 아니라 '실제로 잘리는지'를 픽셀로 본다.
+//   글자·배지 레이어만 투명 캔버스에 모아 1:1 중앙 크롭 전후의 잉크 픽셀 수를 비교한다.
+//   한 픽셀이라도 줄면 그만큼 썸네일에서 잘린 것이다.
+async function gridCropGate(dst, markLayers) {
+  const ink = await sharp({ create: { width: W, height: H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite(markLayers.map((input) => ({ input, left: 0, top: 0 }))).png().toBuffer();
+  const full = await alphaBox(ink);
+  const cropped = await alphaBox(await sharp(ink).extract({ left: 0, top: SAFE_TOP, width: W, height: W }).png().toBuffer());
+  const lost = (full?.n ?? 0) - (cropped?.n ?? 0);
+  if (lost !== 0) fails.push(`${path.basename(dst)} 그리드 크롭에서 잉크 ${lost}px 잘림 (잉크 y ${full?.y}~${full ? full.y + full.h - 1 : "?"})`);
+  // 검수용 산출 — 실제 프로필 썸네일과 같은 1080×1080
+  const crop = path.join(path.dirname(dst), "cover-gridcrop.png");
+  await sharp(dst).extract({ left: 0, top: SAFE_TOP, width: W, height: W }).png({ compressionLevel: 9 }).toFile(crop);
+  return { lost, full, line: `그리드크롭 잉크 ${full?.n ?? 0}px → 크롭 후 ${cropped?.n ?? 0}px · 손실 ${lost}px ${lost === 0 ? "OK" : "★NG"}` };
+}
+
 // 제목 2줄 — 같은 크기로 맞춰 한 덩어리로 읽히게 한다(A·C안).
 async function titlePair(kit, start, min, o) {
   const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, start, min, o);
@@ -299,9 +377,8 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
   const layers = [{ input: gradLayer(500, 0.9, 0.42), left: 0, top: 0 }];
 
   // 배지 — 흰 바탕 + 검정 글씨(핑크에서 톤다운)
-  const b = await badge(`픽레시피 ${kit.episode}`, { size: 40, weight: 900, spacing: 1 },
-    PAD, SAFE_TOP + 16, { fill: BADGE_FILL, textFill: BADGE_TEXT });
-  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+  const b = await stickerBadge("픽레시피", kit.episode, PAD, GRID_TOP);
+  layers.push({ input: b.shadow, left: 0, top: 0 }, { input: b.layer, left: 0, top: 0 });
 
   // 툴 보조 칩 — 배지 바로 아래. 배지보다 한 단계 작고 톤도 낮춘다(주인공은 배지가 아니라 제목이다).
   // ★폭은 hlBar와 같은 원리로 실측 잉크에서 뽑는다 — 글자 크기로 계산하면 한글 어센더 차이로 뜬다.
@@ -311,7 +388,7 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
 
   // 폴라로이드 인셋 — 우상단
   const pola = await polaroid(beforeSrc, "원본");
-  const px = W - PAD - pola.w + 6, py = SAFE_TOP + 30;
+  const px = W - PAD - pola.w + 6, py = GRID_TOP;
   const shadow = await sharp(svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
     `<rect x="${px + 14}" y="${py + 20}" width="${pola.cardW}" height="${pola.cardH}" rx="6" fill="#000" fill-opacity="0.34"` +
     ` transform="rotate(${POLA_ROT} ${px + pola.cardW / 2} ${py + pola.cardH / 2})"/></svg>`)).blur(14).png().toBuffer();
@@ -328,7 +405,8 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
   const to = { weight: 900, spacing: -1 };
   const T = await titlePair(kit, 84, 44, to);
   if (T.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
-  const l2 = Math.round(SAFE_BOT - 30 - T.m2.dBot);
+  // ★하이라이트 바 아랫변이 존 바닥(1130)에 닿게 — 그 아래 85px는 일부러 비워둔다
+  const l2 = Math.round(GRID_BOT - 12 - T.m2.dBot);
   const l1 = Math.round(l2 - T.size * 1.24);
   const hl = hlBar(PAD, l2, T.m2);
   layers.push({ input: hl.layer, left: 0, top: 0 });
@@ -337,13 +415,14 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
   layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  const ok = safeCheck("커버 배지", b.box) && safeCheck("커버 툴 칩", tc.box);
+  const ok = zoneCheck("커버 배지", b.box) && zoneCheck("커버 툴 칩", tc.box);
   const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
-  const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
+  const okT = zoneCheck("커버 제목 1줄", b1) && zoneCheck("커버 하이라이트 바", hl.box);
+  const gc = await gridCropGate(dst, [b.layer, tc.pill, tc.label, hl.layer, t1, t2]);
   const okP = px >= 0 && px + pola.w <= W && py >= SAFE_TOP && py + pola.h <= SAFE_BOT;
   if (!okP) fails.push(`커버 폴라로이드 인셋 이탈 — (${px},${py}) ${pola.w}×${pola.h}`);
   return { line: `[A 폴라로이드] 제목 ${T.size}px${T.shrunk ? "(자동 축소)" : ""} 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
-    `배지 흰바탕 ${b.box.w}×${b.box.h} · 툴칩 ${tc.box.w}×${tc.box.h}@y${tc.box.y} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h}` };
+    `스티커배지 ${b.box.w}×${b.box.h}@y${b.box.y} · 툴칩 ${tc.box.w}×${tc.box.h}@y${tc.box.y} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h} · ${gc.line}` };
 }
 
 // ══ B안 — 매거진 미니멀형 ══
@@ -560,9 +639,8 @@ async function buildCTA(dst, kit) {
   }
 
   // ★시리즈 배지 — 커버와 같은 흰 바탕·검정 글씨. 단색 카드라 여기만 시리즈 표식이 없었다.
-  const cb = await badge(`픽레시피 ${kit.episode}`, { size: 34, weight: 900, spacing: 1 },
-    PAD, SAFE_TOP + 20, { fill: BADGE_FILL, textFill: BADGE_TEXT });
-  layers.unshift(cb.pill, cb.label);
+  const cb = await stickerBadge("픽레시피", kit.episode, PAD, SAFE_TOP + 20, { size: 34 });
+  layers.unshift(cb.shadow, cb.layer);
   safeCheck("CTA 배지", cb.box);
 
   const note = "업로드 5분 뒤부터 자동 발송돼요";
