@@ -7,7 +7,9 @@
 // [입력] insta/raw/{slug}/
 //   before.jpg           1장   (jpg·jpeg·png·webp 모두 허용 — 리포 안 webp 자산을 그대로 쓰려고 넓혔다)
 //   after-1.jpg ~ after-N.jpg  (2~8장)
-//   kit.json { episode, titleLine1, titleLine2, conceptLabel, keyword?, tagsExtra?, dmPrompt }
+//   kit.json { episode, titleLine1, titleLine2, conceptLabel, keyword?, tagsExtra?, dmPrompt,
+//              checks?: [3줄]  — 캡션의 ✅ 자리표시를 이 문구로 채운다(없으면 "(수정)" 그대로)
+//              tool?: "ChatGPT·Gemini"  — 커버 보조 칩·CTA 한 줄·캡션/DM 안내에 함께 표기 }
 //
 // [출력] insta/out/{slug}/ — 업로드 순서대로 번호가 붙는다(01부터 그대로 올리면 된다)
 //   01-cover / 02-ba / 03…-gallery(애프터 장수만큼) / …-cta / …-follow / caption.txt / dm.txt
@@ -214,13 +216,13 @@ const gradLayer = (startY, peak, mid) => svgBuf(
   `<rect x="0" y="${startY}" width="${W}" height="${H - startY}" fill="url(#g)"/></svg>`);
 
 // 알약 배지 한 벌(바탕 + 글자). variant: filled | outline
-async function badge(text, o, x, y, { fill, textFill, stroke }) {
+async function badge(text, o, x, y, { fill, textFill, stroke, fillOpacity }) {
   const m = await measure(text, o);
   const padX = o.size < 30 ? 20 : 30, padY = o.size < 30 ? 12 : 20;
   const w = m.w + padX * 2, h = (m.dBot - m.dTop + 1) + padY * 2;
   const pill = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
     `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.round(h / 2)}"` +
-    ` fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="2.5"` : ""}/></svg>`);
+    ` fill="${fill}"${fillOpacity != null ? ` fill-opacity="${fillOpacity}"` : ""}${stroke ? ` stroke="${stroke}" stroke-width="2.5"` : ""}/></svg>`);
   const label = textLayer({ ...o, text, x: x + padX, y: y + padY - m.dTop, fill: textFill });
   return { pill, label, box: { x, y, w, h } };
 }
@@ -301,6 +303,12 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
     PAD, SAFE_TOP + 16, { fill: BADGE_FILL, textFill: BADGE_TEXT });
   layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
 
+  // 툴 보조 칩 — 배지 바로 아래. 배지보다 한 단계 작고 톤도 낮춘다(주인공은 배지가 아니라 제목이다).
+  // ★폭은 hlBar와 같은 원리로 실측 잉크에서 뽑는다 — 글자 크기로 계산하면 한글 어센더 차이로 뜬다.
+  const tc = await badge(`${kit.tool}에서 바로 사용`, { size: 28, weight: 700, spacing: 0 },
+    PAD, b.box.y + b.box.h + 10, { fill: "#000000", fillOpacity: 0.55, textFill: "#fff" });
+  layers.push({ input: tc.pill, left: 0, top: 0 }, { input: tc.label, left: 0, top: 0 });
+
   // 폴라로이드 인셋 — 우상단
   const pola = await polaroid(beforeSrc, "원본");
   const px = W - PAD - pola.w + 6, py = SAFE_TOP + 30;
@@ -329,13 +337,13 @@ async function coverA(dst, beforeSrc, afterSrc, kit) {
   layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  const ok = safeCheck("커버 배지", b.box);
+  const ok = safeCheck("커버 배지", b.box) && safeCheck("커버 툴 칩", tc.box);
   const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
   const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
   const okP = px >= 0 && px + pola.w <= W && py >= SAFE_TOP && py + pola.h <= SAFE_BOT;
   if (!okP) fails.push(`커버 폴라로이드 인셋 이탈 — (${px},${py}) ${pola.w}×${pola.h}`);
   return { line: `[A 폴라로이드] 제목 ${T.size}px${T.shrunk ? "(자동 축소)" : ""} 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
-    `배지 흰바탕 ${b.box.w}×${b.box.h} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h}` };
+    `배지 흰바탕 ${b.box.w}×${b.box.h} · 툴칩 ${tc.box.w}×${tc.box.h}@y${tc.box.y} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h}` };
 }
 
 // ══ B안 — 매거진 미니멀형 ══
@@ -508,8 +516,10 @@ async function buildGallery(dst, src) {
 async function buildCTA(dst, kit) {
   const L = [
     { text: `'${kit.titleLine2}' 레시피 받는 법`, start: 64, weight: 900, fill: "#fff", op: 1 },
-    { text: `① 팔로우  ② 댓글에 '${kit.keyword}'`, start: 58, weight: 900, fill: YELLOW, op: 1 },
-    { text: "정리된 레시피를 DM으로 보내드려요", start: 52, weight: 400, fill: "#fff", op: 0.86 },
+    // ★행동 줄 바로 위 — "레시피"가 뭘 하는 물건인지 여기서 한 번 말해준다
+    { text: `${kit.tool}에 붙여넣기만 하면 끝`, start: 56, weight: 400, fill: "#fff", op: 0.86 },
+    { text: `① 팔로우  ② 댓글에 '${kit.keyword}'`, start: 52, weight: 900, fill: YELLOW, op: 1, hl: true },
+    { text: "정리된 레시피를 DM으로 보내드려요", start: 48, weight: 400, fill: "#fff", op: 0.86 },
   ];
   const fitted = [];
   for (const l of L) {
@@ -529,7 +539,9 @@ async function buildCTA(dst, kit) {
   }
 
   // 잉크 높이 + 고정 간격으로 3줄 블록을 쌓고, 블록 중심을 y=620에 맞춘다
-  const gaps = [Math.round(fitted[0].size * 0.95), Math.round(fitted[1].size * 1.0)];
+  // ★줄 수에서 간격을 만든다 — 손으로 두 칸만 두면 줄이 늘었을 때 gaps[i] ?? 0 이 0이 되어
+  //   마지막 두 줄이 겹친다(툴 줄을 넣으면서 실제로 걸릴 뻔한 자리다).
+  const gaps = fitted.slice(0, -1).map((f) => Math.round(f.size * 0.95));
   const inkH = fitted.map((f) => f.m.dBot - f.m.dTop + 1);
   const blockH = inkH.reduce((a, b) => a + b, 0) + gaps[0] + gaps[1];
   let inkTop = Math.round(620 - blockH / 2);
@@ -541,7 +553,7 @@ async function buildCTA(dst, kit) {
     const baseline = inkTop - f.m.dTop;
     // ★행동 줄(②)에만 하이라이트 바 — 커버 2줄째와 같은 언어.
     //   이 카드에서 사람이 실제로 해야 하는 일은 그 한 줄뿐이라 강조도 거기 하나뿐이다.
-    if (i === 1) layers.push(hlBar(W / 2, baseline, f.m, { anchor: "middle", padX: 22 }).layer);
+    if (f.hl) layers.push(hlBar(W / 2, baseline, f.m, { anchor: "middle", padX: 22 }).layer);
     layers.push(textLayer({ ...f.o, size: f.size, text: f.text, x: W / 2, y: baseline, fill: f.fill, opacity: f.op }));
     report.push(`${f.size}px`);
     inkTop += inkH[i] + (gaps[i] ?? 0);
@@ -614,14 +626,20 @@ async function buildFollow(dst, src) {
 // 안 고치고 그대로 올라간다. 그래서 일부러 "(수정)" 표시를 남겨둔다.
 function buildCaption(kit) {
   const tags = ["#AI사진", "#프롬프트", "#aiart", "#aiphoto", ...kit.tagsExtra];
+  // checks 가 있으면 그 문구로, 없으면 "(수정)" 자리표시 그대로.
+  // ★자리표시를 그럴듯한 문장으로 자동 생성하지 않는 이유는 그대로다 — 안 고치고 그대로 올라간다.
+  const checkLines = kit.checks.length
+    ? kit.checks.map((c) => `✅ ${c}`)
+    : ["✅ (수정) 이 컨셉의 핵심 한 줄",
+       "✅ (수정) 사진 고를 때 챙길 것 한 줄",
+       "✅ (수정) 결과가 잘 나온 조건 한 줄"];
   return [
     "일단 저장부터 해두세요 📌",
     "",
     `[픽레시피 ${kit.episode} — ${kit.titleLine2}]`,
+    `🛠 ${kit.tool}에서 바로 쓸 수 있어요`,
     "",
-    "✅ (수정) 이 컨셉의 핵심 한 줄",
-    "✅ (수정) 사진 고를 때 챙길 것 한 줄",
-    "✅ (수정) 결과가 잘 나온 조건 한 줄",
+    ...checkLines,
     "",
     "✔ 같은 프롬프트라도 쓰는 모델·버전에 따라 결과가 달라져요",
     "✔ 주인공이 크게 나온 사진일수록 얼굴이 또렷하게 살아요",
@@ -639,6 +657,7 @@ function buildDM(kit) {
   return [
     `안녕하세요! 픽레시피 ${kit.episode} '${kit.titleLine2}' 레시피 보내드려요 🙌`,
     "",
+    `아래 전체를 복사해서 ${kit.tool}에 사진과 함께 넣어주세요.`,
     rule,
     kit.dmPrompt.trim(),
     rule,
@@ -682,6 +701,11 @@ function readSlug(slug) {
       const s = String(t).trim();
       return s.startsWith("#") ? s : `#${s}`;                   // # 를 빼먹어도 붙여준다
     }),
+    // ★캡션의 ✅ 자리표시를 대신할 3줄. 없으면 빈 배열 → "(수정)" 표시가 그대로 남는다.
+    //   빈 문자열은 걸러낸다 — 빈 ✅ 줄이 올라가는 건 자리표시보다 나쁘다.
+    checks: (Array.isArray(raw.checks) ? raw.checks : []).map((s) => String(s).trim()).filter(Boolean),
+    // ★프롬프트를 어디에 붙여넣는지. 이 말이 없으면 "레시피"가 뭔지 모르는 사람은 그냥 지나간다.
+    tool: String(raw.tool ?? "ChatGPT·Gemini").trim(),
     dmPrompt: String(raw.dmPrompt),
   };
 
@@ -732,7 +756,10 @@ async function main() {
     catch (e) { console.error(`★ ${e.message}`); process.exit(1); }
     job.caption = buildCaption(job.kit);
     job.dm = buildDM(job.kit);
-    violations.push(...lint(slug, "caption.txt", job.caption), ...lint(slug, "dm.txt", job.dm));
+    // ★checks 는 kit.json 원문으로도 한 번 더 본다 — 캡션 줄 번호만 알려주면
+    //   정작 고쳐야 할 파일(kit.json)을 못 찾는다.
+    violations.push(...lint(slug, "kit.json(checks)", job.kit.checks.join("\n")),
+      ...lint(slug, "caption.txt", job.caption), ...lint(slug, "dm.txt", job.dm));
     jobs.push(job);
   }
   if (violations.length) {
