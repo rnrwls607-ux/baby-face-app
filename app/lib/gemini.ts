@@ -14,6 +14,16 @@
 
 const TRANSIENT_STATUSES = new Set([429, 500, 502, 503, 504]);
 
+// ── 빠른 실패 한정 재시도 (2026-08-26 · digicam 6연속 실패 사건) ──────────────
+// 실측: Pro 혼잡 503이 1.9~9.1초에 즉시 돌아온다. 이건 "느린 실패"가 아니라 "빠른 실패"다.
+// ★과거 재시도 사고와 구분되는 지점: 그때는 200초 걸린 뒤 오는 실패를 재시도해서
+//   두 시도가 230초 예산을 나눠 갖고 재시도 도중 타임아웃으로 죽었다. 그래서 조건을
+//   상태코드가 아니라 "시간"으로 못박는다 — 1차가 15초 안에 끝났을 때만 재시도한다.
+//   최악 예산: 9(빠른 실패) + 2(대기) + 200(정상 생성) = 211초 < 230초.
+const FAST_FAIL_MS = 15000;   // 1차가 이 시간 안에 끝나야 재시도 자격
+const FAST_RETRY_WAIT_MS = 2000;
+const FAST_RETRY_STATUSES = new Set([429, 503]);  // 500/502/504는 제외 — 혼잡 신호가 아니다
+
 // ── 오류 원인 구분 (2026-07-25) ──────────────────────────────────────────────
 // 왜: 429(쿼터 소진)와 503(진짜 혼잡)이 같은 "요청이 많아요" 문구로 뭉뚱그려져
 //     원인 파악에 매번 몇 시간씩 걸렸다. 상태코드+구글 body 키워드로 4갈래로 나누고
@@ -69,12 +79,35 @@ function sleep(ms: number, signal?: AbortSignal | null): Promise<void> {
 }
 
 // Gemini fetch + 일시 오류 1회 자동 재시도.
-export async function fetchGeminiWithRetry(url: string, init: RequestInit, label = "gemini", retries = 1): Promise<Response> {
+export async function fetchGeminiWithRetry(url: string, init: RequestInit, label = "gemini", retries = 1, fastOnly = false): Promise<Response> {
   if (typeof init.body !== "string") {
     console.warn(`[${label}] retry 불가: init.body가 문자열이 아니라 재사용할 수 없음 — 단일 호출로 진행`);
     return fetch(url, init);
   }
   if (retries < 1) return fetch(url, init); // 단일 호출 — 시간 예산을 첫 시도에 전량 배정
+
+  // ★fastOnly = Pro 생성 계열 전용 엄격 모드. 인자를 넘기지 않는 기존 호출부(flash 110종)는
+  //   아래 블록을 타지 않으므로 동작이 1비트도 바뀌지 않는다.
+  if (fastOnly) {
+    const t0 = Date.now();
+    const first = await fetch(url, init);
+    const ms = Date.now() - t0;
+    if (!FAST_RETRY_STATUSES.has(first.status)) return first;
+    const reason = await first.text().then((x) => x.slice(0, 1200)).catch(() => "(본문 읽기 실패)");
+    const { tag } = classifyGeminiError(first.status, reason);
+    // 쿼터 소진은 2초 뒤에도 그대로다 — 재시도해봐야 같은 429를 한 번 더 받는다.
+    if (tag === "QUOTA") {
+      console.error(`[QUOTA][${label}] ${first.status} ${ms}ms — 재시도 안 함(한도 소진). 구글 응답: ${reason}`);
+      return new Response(reason, { status: first.status, headers: first.headers });
+    }
+    if (ms >= FAST_FAIL_MS) {
+      console.error(`[${tag}][${label}] ${first.status} ${ms}ms — 느린 실패라 재시도 안 함(예산 부족). 구글 응답: ${reason}`);
+      return new Response(reason, { status: first.status, headers: first.headers });
+    }
+    console.warn(`[${tag}][${label}] 빠른 실패 ${first.status} ${ms}ms → ${FAST_RETRY_WAIT_MS}ms 후 1회 재시도. 구글 응답: ${reason}`);
+    await sleep(FAST_RETRY_WAIT_MS, init.signal);
+    return fetch(url, init);
+  }
   const first = await fetch(url, init);
   if (!TRANSIENT_STATUSES.has(first.status)) return first;
   // ★재시도 흐름·타이밍은 그대로. 로그만 태그 + 원문 1200자로 확장(원인 판별용).

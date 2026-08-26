@@ -120,11 +120,16 @@ async function generateFamilyhanbok(image1DataUrl: string, image2DataUrl: string
         }),
         signal: ctrl.signal,
       },
-      "familyhanbok"
+      "familyhanbok",
+      1, // ★빠른 실패(429/503, 1차 <15초) 한정 1회 재시도 — 느린 실패는 fetcher가 거른다
+      true // fastOnly — Pro 예산(230초)을 지키는 엄격 모드
     );
   } catch (e: unknown) {
     clearTimeout(timer);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 140초를 넘겨 중단했어요. 다시 시도해주세요.");
+    if ((e as { name?: string })?.name === "AbortError") {
+      console.error(`[TIMEOUT][familyhanbok] 140초 무응답 ${Date.now() - t0}ms`);
+      throw new Error("이미지 생성이 140초를 넘겨 중단했어요. 다시 시도해주세요.");
+    }
     throw e;
   }
   clearTimeout(timer);

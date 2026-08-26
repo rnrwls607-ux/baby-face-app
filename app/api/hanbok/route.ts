@@ -106,7 +106,10 @@ async function generateHanbok(imageDataUrl: string): Promise<string> {
     ));
   } catch (e: unknown) {
     clearTimeout(timer);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
+    if ((e as { name?: string })?.name === "AbortError") {
+      console.error(`[TIMEOUT][hanbok] 230초 무응답 ${Date.now() - t0}ms`);
+      throw new Error("이미지 생성이 230초를 넘겨 중단했어요. 다시 시도해주세요.");
+    }
     throw e;
   }
   clearTimeout(timer);
