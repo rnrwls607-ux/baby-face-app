@@ -24,6 +24,13 @@ const FAST_FAIL_MS = 15000;   // 1차가 이 시간 안에 끝나야 재시도 �
 const FAST_RETRY_WAIT_MS = 2000;
 const FAST_RETRY_STATUSES = new Set([429, 503]);  // 500/502/504는 제외 — 혼잡 신호가 아니다
 
+// 엄격 재시도(fastOnly)까지 소진하고도 혼잡(429/503)으로 끝난 응답의 표식.
+// Response에 속성을 심지 않고 WeakSet으로 곁에 적는다 — 기존 호출부의 동작·타입에 완전 불가시.
+// 용도: 폴백 채택 route(digicam 파일럿 2호)가 "재시도 소진"을 판별하는 유일한 신호다.
+// 느린 503(재시도 미발동)과 재시도 소진 503은 경과 시간만으로는 겹쳐서 못 가른다.
+const fastRetryExhausted = new WeakSet<Response>();
+export const wasFastRetryExhausted = (res: Response): boolean => fastRetryExhausted.has(res);
+
 // ── 오류 원인 구분 (2026-07-25) ──────────────────────────────────────────────
 // 왜: 429(쿼터 소진)와 503(진짜 혼잡)이 같은 "요청이 많아요" 문구로 뭉뚱그려져
 //     원인 파악에 매번 몇 시간씩 걸렸다. 상태코드+구글 body 키워드로 4갈래로 나누고
@@ -106,7 +113,9 @@ export async function fetchGeminiWithRetry(url: string, init: RequestInit, label
     }
     console.warn(`[${tag}][${label}] 빠른 실패 ${first.status} ${ms}ms → ${FAST_RETRY_WAIT_MS}ms 후 1회 재시도. 구글 응답: ${reason}`);
     await sleep(FAST_RETRY_WAIT_MS, init.signal);
-    return fetch(url, init);
+    const second = await fetch(url, init);
+    if (FAST_RETRY_STATUSES.has(second.status)) fastRetryExhausted.add(second);
+    return second;
   }
   const first = await fetch(url, init);
   if (!TRANSIENT_STATUSES.has(first.status)) return first;
