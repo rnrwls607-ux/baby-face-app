@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
@@ -1200,6 +1200,54 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "genderswap",
     detailImage: "/details/genderswap.webp",
+    inputRule: "solo_face",
+  },
+  deskfigure: {
+    key: "deskfigure", audience: "all",
+    coinCost: 3,
+    title: "데스크 피규어",
+    subtitle: "책상 위 나만의 굿즈",
+    emoji: "🧸",
+    accent: "#A47551",
+    description: "사진 한 장이면 내 얼굴 그대로인 프리미엄 PVC 피규어로 만들어드려요. 개봉한 패키지와 3D 모델링 화면까지, 방금 언박싱한 책상 위 한 컷으로.",
+    examples: [
+      { emoji: "🧸", accent: "#A47551" },
+      { emoji: "📦", accent: "#EFE3D6" },
+      { emoji: "🖥️", accent: "#E4E9EF" },
+    ],
+    start: "deskfigure",
+    inputRule: "solo_face",
+  },
+  digicam: {
+    key: "digicam", audience: "all",
+    coinCost: 3,
+    title: "디지캠 스냅",
+    subtitle: "플래시 팡, Y2K 스냅",
+    emoji: "📸",
+    accent: "#5B7C99",
+    description: "2000년대 콤팩트 디카로 찍은 듯한 밤 스냅으로 만들어드려요. 플래시는 팡 터지고 색감은 그 시절 그대로, 얼굴만 화사하게.",
+    examples: [
+      { emoji: "📸", accent: "#5B7C99" },
+      { emoji: "🌃", accent: "#DCE5EE" },
+      { emoji: "✨", accent: "#EFEAFF" },
+    ],
+    start: "digicam",
+    inputRule: "solo_face",
+  },
+  airportsnap: {
+    key: "airportsnap", audience: "all",
+    coinCost: 3,
+    title: "공항패션 파파라치",
+    subtitle: "찍히듯 자연스럽게",
+    emoji: "✈️",
+    accent: "#33415C",
+    description: "공항 출국장을 걷는 연예인 공항패션 컷으로 만들어드려요. 캐리어를 끌고 걷는 자연스러운 순간을, 프레스 카메라에 찍히듯.",
+    examples: [
+      { emoji: "✈️", accent: "#33415C" },
+      { emoji: "🧳", accent: "#E3E7EE" },
+      { emoji: "🕶️", accent: "#EFEAFF" },
+    ],
+    start: "airportsnap",
     inputRule: "solo_face",
   },
   halloween: {
@@ -2941,5 +2989,8 @@ export function conceptForGo(go: string): Concept {
   if (go === "dresswedding") return CONCEPTS.dresswedding;
   if (go === "gyaru") return CONCEPTS.gyaru;
   if (go === "genderswap") return CONCEPTS.genderswap;
+  if (go === "deskfigure") return CONCEPTS.deskfigure;
+  if (go === "digicam") return CONCEPTS.digicam;
+  if (go === "airportsnap") return CONCEPTS.airportsnap;
   return CONCEPTS.soon;
 }

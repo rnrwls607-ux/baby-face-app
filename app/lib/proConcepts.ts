@@ -6,7 +6,7 @@
 // ★새 Pro 컨셉을 만들거나 엔진을 바꾸면 이 배열도 같이 고쳐야 한다(대조 게이트가 잡는다).
 // 실측 기준: 2026-08-13 · Pro 29종 / flash 108 / GPT 26.
 export const PRO_CONCEPTS: string[] = [
-  "campusgrad", "cheerglam", "couple", "coupletravel", "crewglam", "dresswedding",
+  "campusgrad", "cheerglam", "digicam", "airportsnap", "couple", "coupletravel", "crewglam", "dresswedding",
   "duofamily", "familyhanbok", "familypet", "fixnight", "fourcutcouple", "friend",
   "goldenhour", "guestlook", "hanbok", "hanbokcouple", "idolglam", "petbirthday",
   "petceo", "petgraduation", "petjob", "petmemorial", "petminhwa", "petreceipt",
