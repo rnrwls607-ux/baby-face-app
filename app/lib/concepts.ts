@@ -1216,6 +1216,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🖥️", accent: "#E4E9EF" },
     ],
     start: "deskfigure",
+    detailImage: "/details/deskfigure.webp",
     inputRule: "solo_face",
   },
   digicam: {
@@ -1232,6 +1233,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#EFEAFF" },
     ],
     start: "digicam",
+    detailImage: "/details/digicam.webp",
     inputRule: "solo_face",
   },
   airportsnap: {
@@ -1248,6 +1250,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🕶️", accent: "#EFEAFF" },
     ],
     start: "airportsnap",
+    detailImage: "/details/airportsnap.webp",
     inputRule: "solo_face",
   },
   halloween: {

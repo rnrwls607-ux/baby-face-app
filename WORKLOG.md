@@ -1,3 +1,30 @@
+## 2026-08-27 — 신규 3종 출시: deskfigure·digicam·airportsnap 홈 노출 + 배선 완결
+- [범위] 6bd7c46에서 route·page·8지점 배선은 이미 완결됐고, 이번은 "자산이 없어 잠가둔
+  홈 카드"를 여는 마감 커밋이다. 페이지·route 파일 무접촉
+- [0단계 감사] 8+2점에서 X는 예상된 2개뿐이었다 — 홈 카드 잠금(해제 대상)·detailImage
+  없음(추가 대상). 키 3종 모두 파일명과 정확히 일치해 rename 불필요.
+  ⑨PRO_CONCEPTS: digicam·airportsnap 등재 O, deskfigure는 GPT라 제외 확인.
+  ⑩audience 3종 all. 페이지 공통 장비는 gyaru·cheerglam과 동일한 8/8 — 변경 0
+- [webp 변환] 16.56MB → 1.54MB (90.7% 감소). 카드는 가로 1080 초과분만 축소
+  (deskfigure 1086→1080), 상세는 전부 가로 1080 이하라 무축소.
+  ★세로 최대 11,709px로 webp 한계 16,383 안이라 fit-inside 불필요했다
+- [★원본 PNG 미추적 유지] cards·details의 PNG 6장은 스테이징하지 않았다.
+  webp 산출물만 커밋 — BA·가이드 원료와 같은 관례
+- [게이트] ①8+2점 전항 O 재검증 ②로컬 dev 실측: 홈 카드 3종 실제 디코딩 확인
+  (naturalWidth 1080/896/896, 가시 O, 렌더 170×213) · 컨셉 3페이지 200 ·
+  webp 6장 200 image/webp ③route Pro grep 31 = PRO_CONCEPTS 31 (누락 0·잉여 0)
+  ④CONCEPTS 직조회 3종(conceptForGo 미사용) coin=3·aud=all·detail 실재·rule=solo_face
+  ⑤diff = 허용 범위 2파일 + webp 6장, 이미지 스테이징 그 외 0
+  ⑥"Compiled successfully in 38.3s" exit 0
+- [★눈으로 못 본 것 1건 — 정직 기록] 홈 상세 시트의 detailImage 렌더는 스크린샷으로
+  확인하지 못했다(프리뷰 탭이 클릭·네비게이션에서 반복 이탈). 대신 소비 지점
+  (page.tsx:1263 detail.detailImage 조건 분기)이 기존 컨셉과 동일 경로임을 확인하고,
+  데이터(CONCEPTS 직조회)와 파일(HTTP 200 image/webp) 양쪽을 각각 검증했다.
+  MJ 실기기에서 카드 탭 → 상세 시트 이미지 한 번만 봐주면 완결
+- 커밋 메시지: feat: 신규 3종 출시 — deskfigure·digicam·airportsnap 홈 노출+배선 완결
+- 다음에 할 것: [MJ] 실기기에서 3종 상세 시트 이미지 확인 · 생성 1회씩 실측
+  (digicam·airportsnap은 Pro라 저녁 시간대면 flash 폴백이 받아준다)
+
 ## 2026-08-27 — airportsnap: Pro 혼잡 시 flash 폴백 (digicam dfa4a6a 이식)
 - [근거 — 대조 실험으로 확정] 같은 입력·같은 시각대(22:49 KST) 연속 4콜:
   airportsnap 전문 8,290자 → 503 3.2초 / ★같은 순간 flash에 같은 프롬프트 → 성공 36초 /
