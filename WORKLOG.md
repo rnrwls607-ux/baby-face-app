@@ -1,3 +1,39 @@
+## 2026-08-27 — BA 배선: 신규 3종 (deskfigure·digicam·airportsnap 각 3쌍)
+- [범위] 자산 18장 변환 + BA_LIVE 3종 등재 + deskfigure pairs 상한 조정.
+  route·홈·concepts 다른 필드 무접촉
+- [★0단계 md5 대조 — 중복 3쌍 발견] 세 폴더 모두 대표 {키}.png가 폴더 안 다른 파일과
+  같은 파일이었다. deskfigure·digicam은 대표=애프터4(BA 미사용분)라 무해하지만,
+  ★airportsnap은 대표=애프터3(1390945eb2)이고 이 파일은 public/cards/airportsnap.png와도
+  동일 — 즉 홈 카드 썸네일과 BA 3번 애프터가 같은 사진이다. 짝 자체는 정상(비포3↔애프터3
+  동일 인물)이라 등록은 진행. details/airportsnap.png는 다른 파일(fc71ce36bd)
+- [원료 해상도 이상 1건] deskfigure_애프터3만 1536×1024 가로형(나머지는 전부 세로).
+  digicam_비포3·airportsnap_비포1은 941×1672로 유난히 길쭉
+- [크롭 정책 — 컨셉별 실측 결과] 기본 attention으로 18장 뽑은 뒤 확대 대조해서 2장만
+  @center 폴백(스니커즈 전례). deskfigure: after-3만 center(가로 원본, attention은
+  피규어를 오른쪽에 붙이고 옆 조각상을 끌어들임) · airportsnap: before-1만 center
+  (★attention이 정수리를 잘랐다 — 941×1672를 4:5로 좁히며 얼굴에 과하게 붙음) ·
+  digicam: 3쌍 전부 attention(before-3은 애프터의 얼굴 스케일과 맞아 center보다 나음)
+- [★교훈] 세로로 길쭉한 원본(941×1672급)에서는 attention이 "얼굴 확대"로 폭주해
+  머리 위가 잘린다. 사물·가로 원본만 center 후보로 보던 기준을 넓힌다 —
+  원본 세로비가 목표(4:5)보다 크게 길면 center를 함께 뽑아 눈으로 대조할 것
+- [검수 시트] 컨셉당 1장(원료 비포·애프터 | 산출 before·after, 3행) 생성해 9쌍 눈검사
+  → 짝 오배치 0 · 얼굴/피규어 잘림 0(2장 center 재변환 후 재검수). 제외 쌍 0
+- [pairs 조정] deskfigure만 [1,2]로 신설돼 있어 자산 3쌍 중 1쌍이 묻혔다 → [1,2,3]
+  (idolglam 전례 게이트). digicam·airportsnap은 이미 [1,2,3]
+- [BA pairs 폴백 줄 재확인] BeforeAfterHero는 렌더 전에 Image()로 사전 검증해 깨진
+  후보를 조용히 제외한다 — 숫자 없는 {키}-before.webp 404는 화면에 영향이 없다.
+  백로그(일괄 청소)는 유지하되 긴급도는 낮음
+- [게이트] ①쌍 수 정합: 자산 18/18 = pairs [1,2,3]×3 ②로컬 dev 실측 3종 전부
+  BA 이미지 6장 768×960 디코딩·인디케이터 3점(gyaru 2쌍 그대로 = 회귀 0)
+  ③diff = concepts.ts 1줄 + deskfigure/page.tsx 1줄 + webp 18장, 원료 스테이징 0
+  (.gitignore:44 /examples/) ④BA_LIVE 159종 원소 무접촉·꼬리 3개만 추가(162종,
+  중복 0) ⑤"✓ Compiled successfully in 15.3s"
+- [도구] 프리뷰 pane이 비표시라 screenshot이 5초 타임아웃 → headless Chrome을
+  --remote-debugging-port로 띄우고 CDP(Runtime.evaluate로 mospic_guide_* 플래그 심어
+  가이드 시트 선차단 → Page.captureScreenshot)로 캡처. 지난 세션의 "탭 이탈로 못 봤다"
+  한계를 해소한 방식이라 다음에도 재사용할 것
+- 커밋 메시지: BA 배선 — 신규 3종 (deskfigure·digicam·airportsnap 각 3쌍)
+
 ## 2026-08-27 — 신규 3종 출시: deskfigure·digicam·airportsnap 홈 노출 + 배선 완결
 - [범위] 6bd7c46에서 route·page·8지점 배선은 이미 완결됐고, 이번은 "자산이 없어 잠가둔
   홈 카드"를 여는 마감 커밋이다. 페이지·route 파일 무접촉
