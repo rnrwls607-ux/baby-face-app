@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withCoin } from "../../lib/coins";
-import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
+import { fetchGeminiWithRetry, geminiFriendlyError, classifyGeminiError, wasFastRetryExhausted } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
 export const runtime = "nodejs";
 export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제
 // 공항패션 파파라치 — 나노바나나 Pro (Pro 단일입력 route 구조 복제, 크롭 없음 = 원본 비율 유지)
 const GEMINI_MODEL = "gemini-3-pro-image";
+const FLASH_FALLBACK_MODEL = "gemini-3.1-flash-image"; // 혼잡 폴백 전용 — digicam(dfa4a6a) 이식
 function parseImage(dataUrl: string): { mimeType: string; data: string } {
   const m = dataUrl.match(/^data:(.+?);base64,(.+)$/);
   if (!m) return { mimeType: "image/jpeg", data: dataUrl.replace(/^data:.*;base64,/, "") };
@@ -154,26 +155,46 @@ resolution, no text, no watermark, no border.`;
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 230000);
   const t0 = Date.now();
+  // 요청을 상수로 뽑는다 — Pro와 flash 폴백이 "정확히 같은 요청"을 보내게 하는 구조적 보증
+  const geminiInit = {
+    method: "POST",
+    headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [
+        { text: prompt },
+        { inline_data: { mime_type: img.mimeType, data: img.data } },
+      ] }],
+      generationConfig: { responseModalities: ["IMAGE"] },
+    }),
+    signal: ctrl.signal,
+  };
   let res: Response;
   try {
     res = await fetchGeminiWithRetry(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-      {
-        method: "POST",
-        headers: { "x-goog-api-key": process.env.GEMINI_API_KEY || "", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [
-            { text: prompt },
-            { inline_data: { mime_type: img.mimeType, data: img.data } },
-          ] }],
-          generationConfig: { responseModalities: ["IMAGE"] },
-        }),
-        signal: ctrl.signal,
-      },
+      geminiInit,
       "airportsnap",
       1, // ★빠른 실패(429/503, 1차 <15초) 한정 1회 재시도 — 느린 실패는 fetcher가 거른다
       true // fastOnly — Pro 예산(230초)을 지키는 엄격 모드
     );
+    // ── flash 폴백 · digicam(dfa4a6a) 이식 — 대조 실험(8-27)으로 근거 확정 ────────
+    // Pro가 503으로 막힌 같은 순간, flash는 같은 8,290자 프롬프트로 36초 성공했다.
+    // 발동: 엄격 재시도까지 소진하고도 혼잡 429/503일 때만(wasFastRetryExhausted).
+    // ★타임아웃(AbortError)·쿼터 429·4xx·느린 503(재시도 미발동)·이미지 없음은 폴백 없이
+    //   기존 실패 경로 그대로 — 쿼터·4xx는 flash로 가도 똑같이 실패하고, 느린 실패는 예산이 없다.
+    if (wasFastRetryExhausted(res)) {
+      const failBody = await res.text().catch(() => "");
+      const { tag } = classifyGeminiError(res.status, failBody);
+      if (tag === "TRANSIENT") {
+        console.warn(`[FALLBACK][airportsnap] pro_failed=${res.status} ${Date.now() - t0}ms → flash 시도`);
+        const f0 = Date.now();
+        res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${FLASH_FALLBACK_MODEL}:generateContent`, geminiInit);
+        console.log(`[FALLBACK][airportsnap] engine=flash-fallback status=${res.status} ${res.ok ? "성공" : "실패"} ${Date.now() - f0}ms`);
+      } else {
+        // 폴백 부적격(예: 2차가 쿼터 429) — 본문을 읽어버렸으므로 같은 내용으로 재구성해 기존 경로로
+        res = new Response(failBody, { status: res.status, headers: res.headers });
+      }
+    }
   } catch (e: unknown) {
     clearTimeout(timer);
     if ((e as { name?: string })?.name === "AbortError") {

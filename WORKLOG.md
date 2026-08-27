@@ -1,3 +1,19 @@
+## 2026-08-27 — airportsnap: Pro 혼잡 시 flash 폴백 (digicam dfa4a6a 이식)
+- [근거 — 대조 실험으로 확정] 같은 입력·같은 시각대(22:49 KST) 연속 4콜:
+  airportsnap 전문 8,290자 → 503 3.2초 / ★같은 순간 flash에 같은 프롬프트 → 성공 36초 /
+  절반판 5,356자 → 503 3.5초(길이 무죄) / digicam 7,879자 → 503 2.2초(설정 무죄).
+  두 라우트의 차이는 폴백 유무뿐이었고, "같은 503인데 digicam만 살아남는" 가설이 실측 확정
+- [이식] digicam 패턴 3지점 그대로 — import 2심볼 · FLASH_FALLBACK_MODEL 상수 ·
+  init 상수화+폴백 블록. wasFastRetryExhausted는 공용 lib에 이미 있어 lib 접촉 0
+- [게이트] digicam 것 재사용 13항 전부 통과(성공 경로 폴백 0·FALLBACK 로그 0 /
+  빠른 503×2 → pro,pro,flash 200 / 느린 503·쿼터 429·2차 쿼터·4xx 폴백 0 /
+  flash도 503 → 실패 1회 정산) · 예산 32s+60s=92s<230s 동일 · 빌드 통과
+- [★저녁 시간대(22~24시) Pro 503 상습 확인 — 2일 연속 실측(8-26 23:30 · 8-27 22:49)]
+  폴백 확산 판단 기준: [FALLBACK] 발동 로그 축적 + flash 품질 불만 0 시
+  스타일 관대 컨셉부터
+- 커밋 메시지: feat(airportsnap): Pro 혼잡 시 flash 폴백 — digicam(dfa4a6a) 이식
+- 다음에 할 것: 파일럿 3종(hanbok·digicam·airportsnap) [FALLBACK] 로그 관찰 → 확산 판단
+
 ## 2026-08-27 — digicam: Pro 혼잡 시 flash 폴백 (파일럿 2호)
 - [발동 조건 — hanbok보다 좁게] 엄격 재시도(빠른 429/503 → 2초 → 재시도)까지 소진하고도
   혼잡 429/503일 때만 flash 1회. ★타임아웃·쿼터 429·4xx·느린 503(재시도 미발동)·
