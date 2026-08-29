@@ -1,18 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../../lib/auth";
 import { hasSameOriginal, makeThumbnail, saveHistoryItem } from "../../../lib/historyStore";
 
 export const runtime = "nodejs";
-
-function getUserId(request: NextRequest): string | null {
-  const cookie = request.cookies.get("kakao_user");
-  if (!cookie) return null;
-  try {
-    const user = JSON.parse(cookie.value);
-    return user.id ? String(user.id) : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function POST(request: NextRequest) {
   // 비로그인·서버 미설정이면 "조용히 스킵" → 기존 동작 그대로 (에러 아님)

@@ -7,14 +7,8 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN!,
 });
 
-function getUserId(request: NextRequest): string | null {
-  const cookie = request.cookies.get("kakao_user");
-  if (!cookie) return null;
-  try {
-    const user = JSON.parse(cookie.value);
-    return user.id ? String(user.id) : null;
-  } catch { return null; }
-}
+// ★신원 읽기 로컬 복제는 제거했다(2026-08-29 P0-1). 아래 봉인된 본문을 되살린다면
+//   반드시 `import { getUserId } from "../../../lib/auth"`를 쓸 것 — 평문 파싱은 위조를 통과시킨다.
 
 export async function POST(request: NextRequest) {
   // ⛔ 410 봉인 (2026-07-17): 이용권(bonus) 체계는 코인으로 세대교체됨 — 충전은 /api/coins/charge.

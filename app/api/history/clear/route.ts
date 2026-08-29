@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../../lib/auth";
 import { Redis } from "@upstash/redis";
 import { del } from "@vercel/blob";
 
@@ -8,17 +9,6 @@ const redis = process.env.KV_REST_API_URL
       token: process.env.KV_REST_API_TOKEN!,
     })
   : null;
-
-function getUserId(request: NextRequest): string | null {
-  const cookie = request.cookies.get("kakao_user");
-  if (!cookie) return null;
-  try {
-    const user = JSON.parse(cookie.value);
-    return user.id ? String(user.id) : null;
-  } catch {
-    return null;
-  }
-}
 
 // 로그인 사용자의 클라우드 히스토리 전체 삭제 (Blob 파일 + Redis 목록)
 export async function POST(request: NextRequest) {

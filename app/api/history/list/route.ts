@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../../lib/auth";
 import { Redis } from "@upstash/redis";
 import { CONCEPTS } from "../../../lib/concepts";
 
@@ -23,17 +24,6 @@ type CloudHistoryItem = {
 
 // 유료 원본 인덱스(withCoin이 차감 시 기록) — 생성은 됐는데 클라가 저장을 못 한 건이 여기 남는다.
 type OriginalItem = { id?: string; urls?: string[]; concept?: string; at?: number };
-
-function getUserId(request: NextRequest): string | null {
-  const cookie = request.cookies.get("kakao_user");
-  if (!cookie) return null;
-  try {
-    const user = JSON.parse(cookie.value);
-    return user.id ? String(user.id) : null;
-  } catch {
-    return null;
-  }
-}
 
 export async function GET(request: NextRequest) {
   const noStore = { headers: { "Cache-Control": "no-store, max-age=0" } };

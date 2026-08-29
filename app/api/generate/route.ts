@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../lib/auth";
 import { withCoin } from "../../lib/coins";
 import { fetchGeminiWithRetry, geminiFriendlyError } from "../../lib/gemini";
 import { stampAiMetadata } from "../../lib/aiMark";
@@ -16,11 +17,6 @@ const MODEL_FREE = "gemini-3.1-flash-image"; // Nano Banana 2
 const MODEL_PAID = "gemini-3.1-flash-image"; // (테스트) 빠른 모델
 
 // ── 유저 ID 쿠키 파싱 ──
-function getUserId(request: NextRequest): string | null {
-  const cookie = request.cookies.get("kakao_user");
-  if (!cookie) return null;
-  try { return String(JSON.parse(cookie.value).id) || null; } catch { return null; }
-}
 
 // data URL → { mimeType, data }
 function parseImage(input: string): { mimeType: string; data: string } {

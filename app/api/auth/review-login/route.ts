@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash, timingSafeEqual } from "crypto";
+import { signIdentity } from "../../../lib/auth";
 
 export const runtime = "nodejs";
 
@@ -55,11 +56,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid_code" }, { status: 401 });
   }
 
+  // ★서명 — 카카오 콜백과 동일한 관문(lib/auth의 signIdentity)을 쓴다.
+  //   비밀키가 없으면 심사 통로도 열지 않는다(무서명 쿠키는 어차피 검증에서 거부된다).
+  const signed = signIdentity(REVIEW_USER);
+  if (!signed) {
+    console.error("[review-login] AUTH_COOKIE_SECRET 미설정/미달 — 세션 발급 불가");
+    return NextResponse.json({ error: "not_configured" }, { status: 503 });
+  }
+
   const response = NextResponse.json({ ok: true, user: REVIEW_USER });
 
   // ★쿠키 옵션도 카카오 콜백과 완전히 동일하다 —
-  //   이름 kakao_user · JSON 문자열 · httpOnly · secure(운영만) · sameSite lax · 7일 · path "/".
-  response.cookies.set("kakao_user", JSON.stringify(REVIEW_USER), {
+  //   이름 kakao_user · 서명된 값 · httpOnly · secure(운영만) · sameSite lax · 7일 · path "/".
+  response.cookies.set("kakao_user", signed, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import { del } from "@vercel/blob";
+import { getUserId } from "../../../lib/auth";
 
 export const runtime = "nodejs";
 
@@ -16,19 +17,11 @@ const redis = process.env.KV_REST_API_URL
 // unlink 실패 시 쿠키를 지우지 않는다. (쿠키만 지우면 재로그인 때 계정이
 // 그대로 살아나는 "가짜 탈퇴"가 되므로 절대 금지)
 export async function POST(request: NextRequest) {
-  const userCookie = request.cookies.get("kakao_user");
-  if (!userCookie?.value) {
-    return NextResponse.json({ error: "로그인 상태가 아니에요." }, { status: 401 });
-  }
-
-  let userId = "";
-  try {
-    userId = String(JSON.parse(userCookie.value).id || "");
-  } catch {
-    /* 파싱 실패 → 아래에서 400 */
-  }
+  // ★서명 검증을 지난 신원만 탈퇴시킨다(2026-08-29 P0-1) — 위조 쿠키로 남의 계정을
+  //   지우는 경로를 닫는다. 서명 없음·불일치는 전부 401(비로그인)로 떨어진다.
+  const userId = getUserId(request);
   if (!userId) {
-    return NextResponse.json({ error: "사용자 정보를 확인할 수 없어요." }, { status: 400 });
+    return NextResponse.json({ error: "로그인 상태가 아니에요." }, { status: 401 });
   }
 
   const adminKey = process.env.KAKAO_ADMIN_KEY;

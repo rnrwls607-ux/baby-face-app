@@ -1,3 +1,48 @@
+## 2026-08-29 — security: 신원 쿠키 HMAC 서명 (P0-1) — 위조 차단
+- [★배포 선행조건] Vercel에 AUTH_COOKIE_SECRET(32자 이상 무작위)을 넣기 전에는
+  ★아무도 로그인 상태가 되지 않는다. env 없음 = 서명·검증 불가 = 전원 비로그인.
+  로컬 개발도 .env.local에 같은 키가 있어야 dev-login·카카오 로그인이 산다
+- [문제] kakao_user 쿠키가 평문 JSON이고 읽는 쪽이 JSON.parse만 했다. httpOnly는
+  JS 읽기를 막을 뿐, 사용자가 devtools·프록시로 값을 "바꾸는 것"은 못 막는다 →
+  아무 id나 써넣어 남의 히스토리 열람·웰컴코인 무한 파밍·관리자 사칭이 가능했다
+  (출시감사 P0-1). WORKLOG·주석에 이 쿠키를 서명하기로 한 결정이 없어 미인지 구멍
+- [형식] base64url(payload) + "." + base64url(HMAC-SHA256(그 base64url 문자열)).
+  ★서명 대상은 "인코딩된 문자열 자체" — JSON 재직렬화 차이(키 순서·공백)로 검증이
+  흔들리는 일을 원천 차단. 비교는 timingSafeEqual(길이 선검사 후 상수시간)
+- [★하위호환 없음 — 의도] 구형 무서명 쿠키를 받아주면 위조도 같이 받아주게 되어
+  수술이 무의미해진다. 실사용자가 MJ·테스터뿐인 지금이 무통 마이그레이션의 마지막
+  기회라 하위호환 코드를 넣지 않았다. 기존 세션은 재로그인 1회로 정리된다
+- [env 미설정 처리 = 전원 비로그인(잠기는 방향)] 기동 실패(fail-fast)가 아니라
+  기존 관례를 따랐다: RC_WEBHOOK_AUTH 없으면 404(iap-credit:46) · REVIEW_LOGIN_TOKEN
+  짧으면 404(review-login:38) · COIN_ADMIN_IDS 비면 전원 거부(admin.ts:17) — 전부
+  "열리는 방향"이 아니라 "잠기는 방향"으로 실패한다. 빌드 기동 실패로 만들면 env가
+  없는 CI·로컬 빌드까지 죽어 관례와도 어긋난다. 길이 32자 미달도 거부(review-login의
+  MIN_TOKEN_LEN 관례 이식), ★키 값은 로그에 절대 찍지 않는다
+- [단일 관문] 신원 읽기 복제를 전부 제거해 lib/auth 하나로 모았다. 서명 검증이 한
+  곳만 뚫려도 무의미하므로 분산 자체가 취약점이었다.
+  · 로컬 getUserId 정의 7곳 제거 → import (generate·history clear/delete/list/save·
+    usage·payments/confirm). payments/confirm은 410 봉인 라우트라 죽은 정의였고,
+    되살릴 때 lib/auth를 쓰라는 주석으로 대체
+  · ★감사 목록 밖 2곳 추가 발견: auth/me(쿠키를 그대로 JSON.parse해 돌려줘 위조
+    쿠키로도 화면이 "로그인"으로 보이던 구멍) · auth/withdraw(위조 쿠키로 남의 계정
+    탈퇴 시도 가능) → 둘 다 공용 관문 경유로 교정. 최종 kakao_user 직접 읽기 = 0곳
+  · 굽는 지점 3곳 전부 서명: 카카오 callback · review-login · dev-login.
+    비밀키 없으면 굽지 않고 사유를 알린다(무서명 쿠키는 어차피 거부되므로)
+- [게이트] ①위조 모의 7종 전부 차단(평문·서명없음·가짜서명·길이맞춘가짜·다른키서명·
+  payload교체·빈쿠키) + 위조 카카오는 게스트로 강등/ null ②정상 왕복 3/3
+  (getUserId·getUser.nickname·getAnyUserId) ③복제 잔재 0(로컬 정의 0 · 평문 파싱 0)
+  ④coins.ts md5 전후 동일(b8f3998557) ⑤"✓ Compiled successfully in 18.2s" exit 0
+- [실서버 확인] dev에서 위조 평문 쿠키로 5개 엔드포인트 실호출: auth/me
+  loggedIn:false · history/list items:[] · usage 게스트 기본값 · history/save
+  saved:false(쓰기 없음) · withdraw 401. 데이터 유출·쓰기 0
+- [남은 것] 게스트 쿠키(mospic_guest)는 서명하지 않는다 — 게스트는 권한이 아니라
+  "잔액 0 + IP 스코프 한도"라 위조해도 쿠키를 지우는 것과 같고, 발급 지점 proxy.ts는
+  이번 허용 범위 밖이었다
+- 커밋 메시지: security: 신원 쿠키 HMAC 서명 — 위조 차단(P0-1)
+- 다음에 할 것: [MJ] ①Vercel 환경변수 AUTH_COOKIE_SECRET 등록(32자+ 무작위) →
+  재배포 → 로그인 1회 실측 ②로컬 .env.local에도 같은 키 추가 ③기존 세션은 자동
+  로그아웃되므로 재로그인 1회 · 이후 P0-2(60s vs 240s 함수 예산) 확인
+
 ## 2026-08-29 — BA 배선: profileduo 2쌍 (2인 합성 관례) — 승인분 완결
 - [승인] 9496d31 라운드의 제안 그대로: 비포1+비포2↔애프터1 / 비포3+비포4↔애프터4
   (애프터3은 홈 썸네일과 동일 파일이라 회피). MJ 팀 구성 눈검사 완료

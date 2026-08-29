@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ensureWelcome, WELCOME_COINS } from "../../../../lib/coins";
+import { signIdentity } from "../../../../lib/auth";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -74,11 +75,19 @@ export async function GET(request: NextRequest) {
       console.error("[kakao] 웰컴 코인 지급 실패(로그인은 계속):", (e as { message?: string })?.message);
     }
 
+    // ★서명 — AUTH_COOKIE_SECRET이 없으면 로그인을 성립시키지 않는다(잠기는 방향).
+    //   무서명 쿠키를 구워봐야 getUserId가 거부하므로, 굽지 않고 사유를 알리는 편이 정직하다.
+    const signed = signIdentity(user);
+    if (!signed) {
+      console.error("[kakao] AUTH_COOKIE_SECRET 미설정/미달 — 로그인 불가");
+      return NextResponse.redirect(new URL("/?error=auth_not_configured", request.url));
+    }
+
     const dest = new URL("/", request.url);
     if (welcomed) dest.searchParams.set("welcome", String(WELCOME_COINS));
     const response = NextResponse.redirect(dest);
 
-    response.cookies.set("kakao_user", JSON.stringify(user), {
+    response.cookies.set("kakao_user", signed, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
