@@ -130,7 +130,7 @@ export default function ProfileduoPage() {
           <>
             {/* 결과 예시 — 각자 셀카 → 함께 화보 (2인 라인 전용 구성) */}
             {BA_LIVE.includes("profileduo") ? (
-              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
+              <BeforeAfterHero pairs={[1, 2].flatMap(n => [
                 { before: `/examples/ba/profileduo-before-${n}.webp`, after: `/examples/ba/profileduo-after-${n}.webp` },
                 { before: `/examples/ba/profileduo-before.webp`, after: `/examples/ba/profileduo-after-${n}.webp` },
               ])} />
