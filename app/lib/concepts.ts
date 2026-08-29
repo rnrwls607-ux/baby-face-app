@@ -1267,6 +1267,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌆", accent: "#EFEAFF" },
     ],
     start: "cinesnap",
+    detailImage: "/details/cinesnap.webp",
     inputRule: "solo_face",
   },
   schoolsnap: {
@@ -1283,6 +1284,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌸", accent: "#FFE0EC" },
     ],
     start: "schoolsnap",
+    detailImage: "/details/schoolsnap.webp",
     inputRule: "solo_face",
   },
   gravityad: {
@@ -1299,6 +1301,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "✨", accent: "#EFEAFF" },
     ],
     start: "gravityad",
+    detailImage: "/details/gravityad.webp",
   },
   feltdoll: {
     key: "feltdoll", audience: "all",
@@ -1314,6 +1317,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🪡", accent: "#E7F7EA" },
     ],
     start: "feltdoll",
+    detailImage: "/details/feltdoll.webp",
   },
   personalcolor: {
     key: "personalcolor", audience: "all",
@@ -1329,6 +1333,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧣", accent: "#E1ECFF" },
     ],
     start: "personalcolor",
+    detailImage: "/details/personalcolor.webp",
     inputRule: "solo_face",
   },
   monoactor: {
@@ -1345,6 +1350,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎬", accent: "#EFEAFF" },
     ],
     start: "monoactor",
+    detailImage: "/details/monoactor.webp",
     inputRule: "solo_face",
   },
   fortunecard: {
@@ -1361,6 +1367,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌸", accent: "#FFE0EC" },
     ],
     start: "fortunecard",
+    detailImage: "/details/fortunecard.webp",
     inputRule: "solo_face",
   },
   minichef: {
@@ -1377,6 +1384,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌿", accent: "#E7F7EA" },
     ],
     start: "minichef",
+    detailImage: "/details/minichef.webp",
   },
   poolside: {
     key: "poolside", audience: "all",
@@ -1392,6 +1400,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🍹", accent: "#FFEFD6" },
     ],
     start: "poolside",
+    detailImage: "/details/poolside.webp",
     inputRule: "solo_face",
   },
   snowsnap: {
@@ -1408,6 +1417,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🌨️", accent: "#EFEAFF" },
     ],
     start: "snowsnap",
+    detailImage: "/details/snowsnap.webp",
     inputRule: "solo_face",
   },
   profileduo: {
@@ -1424,6 +1434,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "📸", accent: "#E1ECFF" },
     ],
     start: "profileduo",
+    detailImage: "/details/profileduo.webp",
   },
   halloween: {
     key: "halloween", audience: "all",

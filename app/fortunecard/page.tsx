@@ -173,6 +173,7 @@ export default function FortunecardPage() {
             <StepIndicator current={3} />
             <p style={{ fontSize: 18, fontWeight: 900, color: "#111", textAlign: "center", margin: "0 0 16px" }}>완성됐어요! ✨</p>
             <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-6px 0 14px" }}>AI로 생성된 이미지예요<AiReportLink /></p>
+            <p style={{ fontSize: 11, color: "#BFC3CB", textAlign: "center", margin: "-10px 0 14px" }}>관상은 재미로 즐기는 컨셉이에요 · 실제 운세와 무관해요</p>
             <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 12 }}>
               <img src={result} alt="관상 화보" style={{ width: "100%", display: "block" }} />
             </div>

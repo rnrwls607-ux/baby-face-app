@@ -1,3 +1,31 @@
+## 2026-08-29 — 신규 11종 출시: 2차 배치(2-A·2-B·2-C) 홈 노출 + 배선 완결
+- [범위] 자산 22장 webp 변환 + detailImage 11 + 홈 카드 주석 해제 11 +
+  예약 수정 3건(카메라 2·고지 1). route 파일 전체 무접촉
+- [0단계 실사] 원본 PNG 22/22 실재·파일명=키 정확 일치·11종 전부 잠금·필드 0.
+  ★관례 확인: image: 필드는 Concept 타입에 없고 홈 카드 줄(주석 안에 준비됨)에만
+  있다 — concepts.ts에는 1차 배치(034e419) 전례대로 detailImage만 심었다
+- [webp 변환] 52.29MB → 5.85MB (88.8% 감소). 카드는 gravityad·feltdoll·minichef
+  3종만 1086→1080 축소, 상세는 전부 가로 898 이하 무축소.
+  세로 최대 11,731px(minichef)로 webp 한계 16,383 안 — fit-inside 불필요
+- [예약 1 — 카메라] gravityad·feltdoll UploadZone에 cameraFacing="environment"
+  각 1줄 추가(2-B에서 발견한 기본값 "user" 문제의 예약 수리, minichef 실측 형태 동일)
+- [예약 2 — 고지] fortunecard 결과 화면의 "AI로 생성된 이미지예요" 줄 바로 아래,
+  같은 스타일(fontSize 11 · #BFC3CB · 중앙)로 "관상은 재미로 즐기는 컨셉이에요 ·
+  실제 운세와 무관해요" 1줄 추가
+- [게이트] ①11종 노출+image·detailImage 실재 전항 OK ②로컬 dev 실측: 홈 카드
+  11종 DOM 존재+webp 디코딩(카드 1080/896·상세 8859~11731)·페이지 200·webp 22장
+  200 image/webp — CDP 캡처로 11장 실렌더 눈검사까지(상세 시트는 1차 판례 3축
+  검증으로 갈음) ③CONCEPTS 직조회 11종 coin=3·aud=all·detail 실재
+  ④diff = 허용 5파일+WORKLOG+webp 22장, 원본 PNG 스테이징 0 ⑤예약 수정 각 1줄
+  국소 확인 ⑥"✓ Compiled successfully in 48s" exit 0
+- [함정 재확인] 직전 프로덕션 빌드가 남긴 .next를 dev가 물면 홈까지 404 —
+  rm -rf .next 후 재기동으로 해소(스테일 turbopack 캐시 전례). 첫 DOM 질의는
+  하이드레이션 타이밍에 걸릴 수 있다 — 재질의로 판정할 것
+- 커밋 메시지: feat: 신규 11종 출시 — 2차 배치 홈 노출+배선 완결 (카메라·고지 예약분 포함)
+- 다음에 할 것: [MJ] 실기기에서 11종 카드 탭→상세→생성 1회씩 실측
+  (Pro 9종은 저녁 시간대면 혼잡 주의, profileduo는 성별 조합 교차 확인) ·
+  BA 쌍 자산 나오면 BA_LIVE 등록(b7f5d1e 전례)
+
 ## 2026-08-27 — BA 배선: 신규 3종 (deskfigure·digicam·airportsnap 각 3쌍)
 - [범위] 자산 18장 변환 + BA_LIVE 3종 등재 + deskfigure pairs 상한 조정.
   route·홈·concepts 다른 필드 무접촉
