@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "cinesnap" | "schoolsnap" | "gravityad" | "feltdoll" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
@@ -1253,7 +1253,68 @@ export const CONCEPTS: Record<string, Concept> = {
     detailImage: "/details/airportsnap.webp",
     inputRule: "solo_face",
   },
-  halloween: {
+  cinesnap: {
+    key: "cinesnap", audience: "all",
+    coinCost: 3,
+    title: "시네필름 스냅",
+    subtitle: "내 하루가 영화 한 장면",
+    emoji: "🎬",
+    accent: "#2C3A47",
+    description: "평범한 하루를 영화 속 한 장면처럼 만들어드려요. 골목 어귀나 카페 창가의 시네마틱한 빛과 색보정으로, OST가 들릴 것 같은 한 컷.",
+    examples: [
+      { emoji: "🎬", accent: "#2C3A47" },
+      { emoji: "🎞️", accent: "#E3E7EE" },
+      { emoji: "🌆", accent: "#EFEAFF" },
+    ],
+    start: "cinesnap",
+    inputRule: "solo_face",
+  },
+  schoolsnap: {
+    key: "schoolsnap", audience: "all",
+    coinCost: 3,
+    title: "교복 컨셉 스냅",
+    subtitle: "그 시절로, 더 예쁘게",
+    emoji: "🎀",
+    accent: "#4A5A8A",
+    description: "요즘 인기 있는 교복 컨셉 스냅으로 만들어드려요. 햇살 드는 캠퍼스와 밝은 교실을 배경으로, 그 시절 감성 그대로.",
+    examples: [
+      { emoji: "🎀", accent: "#4A5A8A" },
+      { emoji: "📚", accent: "#E7F7EA" },
+      { emoji: "🌸", accent: "#FFE0EC" },
+    ],
+    start: "schoolsnap",
+    inputRule: "solo_face",
+  },
+  gravityad: {
+    key: "gravityad", audience: "all",
+    coinCost: 3,
+    title: "3D 그래비티 광고컷",
+    subtitle: "제품이 주인공이 되는 순간",
+    emoji: "🧴",
+    accent: "#6C5CE7",
+    description: "제품 사진을 무중력에 떠 있는 광고 키비주얼로 만들어드려요. 재료가 터지듯 흩날리는 순간을 정지시킨, 대형 광고 같은 한 컷.",
+    examples: [
+      { emoji: "🧴", accent: "#6C5CE7" },
+      { emoji: "💧", accent: "#E1ECFF" },
+      { emoji: "✨", accent: "#EFEAFF" },
+    ],
+    start: "gravityad",
+  },
+  feltdoll: {
+    key: "feltdoll", audience: "all",
+    coinCost: 3,
+    title: "몽글 펠트 인형",
+    subtitle: "보들보들 나만의 인형",
+    emoji: "🧶",
+    accent: "#C98A6B",
+    description: "사진 속 주인공을 손으로 만든 니들 펠트 인형으로 만들어드려요. 보들보들한 양모 질감과 손끝 감성이 살아 있는 접사 컷. 사람도 반려동물도 됩니다.",
+    examples: [
+      { emoji: "🧶", accent: "#C98A6B" },
+      { emoji: "🧸", accent: "#FFEFD6" },
+      { emoji: "🪡", accent: "#E7F7EA" },
+    ],
+    start: "feltdoll",
+  },  halloween: {
     key: "halloween", audience: "all",
     coinCost: 3,
     title: "할로윈 변신",
@@ -2995,5 +3056,9 @@ export function conceptForGo(go: string): Concept {
   if (go === "deskfigure") return CONCEPTS.deskfigure;
   if (go === "digicam") return CONCEPTS.digicam;
   if (go === "airportsnap") return CONCEPTS.airportsnap;
+  if (go === "cinesnap") return CONCEPTS.cinesnap;
+  if (go === "schoolsnap") return CONCEPTS.schoolsnap;
+  if (go === "gravityad") return CONCEPTS.gravityad;
+  if (go === "feltdoll") return CONCEPTS.feltdoll;
   return CONCEPTS.soon;
 }

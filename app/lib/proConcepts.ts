@@ -11,6 +11,7 @@ export const PRO_CONCEPTS: string[] = [
   "goldenhour", "guestlook", "hanbok", "hanbokcouple", "idolglam", "petbirthday",
   "petceo", "petgraduation", "petjob", "petmemorial", "petminhwa", "petreceipt",
   "petroyal", "pettwo", "remindwedding", "season", "selfwedding",
+  "cinesnap", "schoolsnap",
 ];
 
 export const isProConcept = (key: string): boolean => PRO_CONCEPTS.includes(key);
