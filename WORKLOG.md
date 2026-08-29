@@ -1,3 +1,33 @@
+## 2026-08-29 — BA 배선: 신규 10종 (2차 배치) — profileduo 승인 대기 제외
+- [범위] 자산 60장 변환 + BA_LIVE 10종(162→172) + gyaru 복제 3종 pairs [1,2]→[1,2,3]
+  (템플릿 승계 잔재 — cheerglam 복제 7종은 [1,2,3]로 태어남, idolglam 전례)
+- [★profileduo 제외 — 지시대로 방안 보고 후 대기] 2인 BA 전례 실사: couple·friend 등
+  9종 라이브, before = 두 사람 개별 사진 좌우 합성 1장(768×960), 파일명 1인과 동일.
+  ★profileduo 원료는 비포 4장 = 개별 인물 4명(여여+남여 2팀 추정), 애프터 4장 =
+  여여 2·남여 2 — 1:1 매칭이 아니라 합성 설계(누가 한 팀인지·어느 애프터를 쓸지)에
+  MJ 판단 필요. 대표(썸네일) = 애프터3(남여)라 쌍 선택에 따라 중복 회피 가능
+- [md5 중복 — 11종 전수] 대표=애프터 중복이 11종 전부에 있고 그중 7종이 쌍 범위(1~3)
+  안: cinesnap·schoolsnap·personalcolor·poolside=애프터1, monoactor·snowsnap=애프터2,
+  profileduo=애프터3 (fortunecard·gravityad·feltdoll·minichef는 애프터4라 무해).
+  1차 airportsnap 판례대로 쌍 자체는 정상이라 등록 진행 — 홈 카드와 같은 사진이
+  BA에 한 번 더 나올 뿐. 교차 중복 1건: fortunecard_비포1 = poolside_비포1(같은 모델
+  셀카 재사용, 각 컨셉 안에서는 정상 쌍)
+- [크롭 — 1차 교훈 적용] 세로비<0.7 비포 7장 + 사물 12장 attention/center 대조 시트
+  선행 → center 14장 확정: schoolsnap 비포1(956×1645)·비포3(853×1844) 정수리 잘림,
+  gravityad·minichef 전 12장(펌프 헤드·병뚜껑 잘림, 사물 판례). 나머지 46장 attention
+  (monoactor·fortunecard 비포2 등 0.667급은 attention 무결 확인 후 유지)
+- [검수 시트] 10장 × 3쌍 = 30쌍 눈검사 통과 — 오배치 0 · 잘림 0 · 제외 0.
+  ★킷 ②표 재확인 지정 6종(personalcolor·monoactor·fortunecard·minichef·poolside·
+  snowsnap)의 2행 전부 비포2↔애프터2 동일 인물·소재 확인
+- [게이트] ①60 webp = 10종 × pairs[1,2,3] × 2 ②dev 실측: 10종 페이지 200 · BA 6장
+  768×960 디코딩·3점·깨짐 0 · CDP 캡처 10종 눈검사 · profileduo는 PreviewCard 폴백
+  확인(미등록 의도) ③diff = concepts.ts 1줄 + pairs 3줄 + webp 60장, 원료 0
+  ④BA_LIVE 기존 162종 원소 무접촉(꼬리 추가만) ⑤"✓ Compiled successfully in 15.9s"
+- 커밋 메시지: BA 배선 — 신규 10종 (2차 배치) · profileduo 별도 대기
+- 다음에 할 것: [MJ] profileduo 합성 방안 승인 — 제안: 비포1+비포2 합성↔애프터1,
+  비포3+비포4 합성↔애프터4(애프터3은 썸네일이라 회피), 2쌍 구성. 승인 시 합성→
+  ba-prep→BA_LIVE 1키 추가로 완결
+
 ## 2026-08-29 — 신규 11종 출시: 2차 배치(2-A·2-B·2-C) 홈 노출 + 배선 완결
 - [범위] 자산 22장 webp 변환 + detailImage 11 + 홈 카드 주석 해제 11 +
   예약 수정 3건(카메라 2·고지 1). route 파일 전체 무접촉

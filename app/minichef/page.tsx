@@ -115,7 +115,7 @@ export default function MinichefPage() {
           <>
             {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
             {BA_LIVE.includes("minichef") ? (
-              <BeforeAfterHero pairs={[1, 2].flatMap(n => [
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
                 { before: `/examples/ba/minichef-before-${n}.webp`, after: `/examples/ba/minichef-after-${n}.webp` },
                 { before: `/examples/ba/minichef-before.webp`, after: `/examples/ba/minichef-after-${n}.webp` },
               ])} />
