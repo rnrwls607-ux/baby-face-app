@@ -1,4 +1,8 @@
 ## 2026-08-29 — security: 신원 쿠키 HMAC 서명 (P0-1) — 위조 차단
+- [★후속 2026-08-31] AUTH_COOKIE_SECRET 프로덕션 등록 완료 — 서명 쿠키 라이브.
+  진단용 no_cookie 로그는 제거(비로그인 요청마다 쌓여 Hobby 1시간 보존을 잠식) —
+  실제 이상 신호(secret_missing·secret_short·legacy_plain·sig_mismatch·bad_payload·
+  bake_aborted·baked)는 유지
 - [★배포 선행조건] Vercel에 AUTH_COOKIE_SECRET(32자 이상 무작위)을 넣기 전에는
   ★아무도 로그인 상태가 되지 않는다. env 없음 = 서명·검증 불가 = 전원 비로그인.
   로컬 개발도 .env.local에 같은 키가 있어야 dev-login·카카오 로그인이 산다

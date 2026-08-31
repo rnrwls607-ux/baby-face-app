@@ -23,9 +23,10 @@ const SECRET_MIN_LEN = 32;
 //   REVIEW_LOGIN_TOKEN 짧으면 404(review-login), COIN_ADMIN_IDS 비면 전원 거부(admin.ts).
 //   전부 "열리는 방향"이 아니라 "잠기는 방향"으로 실패한다. 여기도 같다:
 //   비밀키가 없으면 서명도 검증도 불가 → 아무도 로그인 상태가 되지 않는다.
-// 🩺 원인 로깅 (2026-08-29, 로그인 불능 진단용) — Vercel Logs에서 "[auth]"로 검색한다.
+// 🩺 원인 로깅 — Vercel Logs에서 "[auth]"로 검색한다.
 // ★값·payload·서명은 절대 찍지 않는다. 찍는 것은 "어느 분기로 떨어졌는가"와 길이(숫자)뿐.
-// ★진단이 끝나면 no_cookie처럼 양이 많은 줄은 걷어낼 것 — 비로그인 요청마다 1줄씩 쌓인다.
+// ★남기는 기준: "실제 이상 신호"만. 정상 상태(비로그인 방문)는 찍지 않는다 —
+//   양이 많은 줄은 Vercel Hobby의 1시간 로그 보존을 잠식해 진짜 신호를 밀어낸다.
 function why(tag: string): null {
   console.warn(`[auth] ${tag}`);
   return null;
@@ -55,7 +56,11 @@ export function signIdentity(user: Identity): string | null {
 export function verifyIdentity(value: string | undefined): Identity | null {
   const key = secret();          // 실패 시 secret_missing / secret_short(len=N) 로그
   if (!key) return null;
-  if (!value) return why("no_cookie");
+  // 쿠키 없음 = 그냥 비로그인 방문자(정상 상태)라 로그를 남기지 않는다.
+  // 진단용 no_cookie 줄은 제거했다(2026-08-31) — 비로그인 요청마다 1줄씩 쌓여
+  // Vercel Hobby의 1시간 로그 보존을 잠식했다. 실제 이상 신호(secret_*·sig_mismatch·
+  // legacy_plain·bad_payload)는 그대로 남는다.
+  if (!value) return null;
   const dot = value.lastIndexOf(".");
   // 점이 없으면 구형 평문 JSON(또는 서명 없는 값) — 이 분기가 곧 마이그레이션 신호다
   if (dot <= 0 || dot === value.length - 1) return why("legacy_plain");
