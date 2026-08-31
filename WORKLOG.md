@@ -2413,3 +2413,55 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   (coin_3/coin_9/coin_30) 등록
 - Pro 폴백 확산 판단 — fetchGeminiWithFallback(fd31140)은 신설됐지만 호출부 없음.
   hanbok 파일럿(cd05fd9) 데이터 관찰 중, 확산 여부 미정
+
+## [기능개선 트랙] 2026-08-31 세션 마감 — 출시 전야 스냅샷
+
+- [출시 상태] Play 프로덕션 액세스 승인 · 프로덕션은 비활성(미게시) · 비공개 테스트
+  설치 23 · 인앱 상품 coin_3/coin_9/coin_30 활성 완료. ★남은 유일한 출시 블로커 =
+  RevenueCat 콘솔 미완(Android 앱 연결 → NEXT_PUBLIC_RC_ANDROID_KEY 발급 → 웹훅 URL
+  https://mospic.com/api/coins/iap-credit + RC_WEBHOOK_AUTH).
+  시퀀스: RC 콘솔 → 리허설 감사 → 프로덕션 게시. 트리거 문구 "출시 작업 가자"
+- [출시 감사] MOSPIC_출시감사.md — 12영역 평균 3.4/5, P0 1건·P1 5건.
+  ★파일 위치는 바탕화면 Ai프로젝트/ 하위(MJ가 이동, 원래 생성지는 바탕화면 루트)
+  · P0-1 신원 쿠키 HMAC 서명 = 완결. 52e1641(서명 도입·읽기 단일화) →
+    3b34790(원인 로깅) → 7e69250(no_cookie 로그 제거). AUTH_COOKIE_SECRET
+    프로덕션 등록 8/31, 웹 로그인 실측 OK
+  · P0-2 함수 시간 예산 = 종결. Vercel Fluid Compute "Enabled" 캡처 확인 →
+    maxDuration 240 선언이 실효(60초 절단 우려 해소)
+  · P1 5건 중 P1-5(신원 유틸 통일)는 P0-1과 함께 완료. 나머지 4건은 출시 후 2주 —
+    ★P1-1(유료 원본 Blob access:public)은 IAP 켜기 전에 재론할 것
+- [Pro 503 대응 — 완결 상태] 엄격 재시도(fastOnly) + 폴백 3종 체제.
+  ★수치 정정: "31종"은 7d20a30 당시 Pro 개수이고, 2차 배치(2-A·2-B·2-C)로 Pro가
+  8종 늘어 ★현재 PRO_CONCEPTS 39종 / fastOnly 적용 38종이다(예외 = hanbok, 아래).
+  · 재시도: 7d20a30 — (429|503) && 1차 <15초일 때만 1회, 대기 2초. 느린 실패·쿼터 제외
+  · 폴백 3종은 ★구현 방식이 둘로 갈린다 —
+      hanbok(cd05fd9) = fetchGeminiWithFallback 소프트컷 180초(Pro 꼬리를 흘리고
+        flash에 50초를 남기는 방식) → 그래서 fastOnly 미적용이 정상
+      digicam(dfa4a6a)·airportsnap(f0c7eba) = FLASH_FALLBACK_MODEL +
+        wasFastRetryExhausted 마커 방식(빠른 실패 소진 시에만 flash 1회)
+    ※출시감사 P1-3이 "폴백 2종"이라 적은 것은 FLASH_FALLBACK_MODEL만 grep한 탓 —
+      hanbok 방식이 빠져 있었다. 실제 3종이 맞다
+  · 저녁 22~24시 KST Pro 503 상습, 2일 연속 실측(8-26 23:30 · 8-27 22:49)
+  · 확산 기준 유지: [FALLBACK] 발동 로그 축적 + flash 품질 불만 0 → 스타일 관대 컨셉부터
+- [인스타] @mospic_ai — ep01(illust) 발행 완료, ep02(petminhwa) 렌더 완료·발행 대기.
+  산출 실측: insta/out/ep01-illust 10파일 · ep02-petminhwa 11파일(/insta/ gitignore).
+  커밋 체인: af55ec7(insta-kit 신설) → e7ee6c4(커버 스타일 A 확정+카드 규격 통일) →
+  c51b4b2(checks 캡션+tool 표기) → f7bd38a(그리드 크롭 안전존+스티커 배지).
+  스킬 mospic-insta-pickrecipe 등록 완료(회차 1건을 처음부터 발행까지 만드는 절차).
+  9계정 분석 → 플레이북 v1: 키워드 "모스픽" 선점 · 화·금 캐러셀 + 주말 릴스 ·
+  DM 문안에 앱으로 건너가는 다리 문단 배치
+- [프롬프트 검증 공장] 바탕화면 MOSPIC_프롬프트검증 — INDEX.md "생성일 2026-08-28 ·
+  컨셉 166종"(gemini-flash 108 / gemini-pro 31 / gpt 27). ★8/28 기준 스냅샷이라
+  A트랙 신규분은 미포함 — 재생성 전까지 이 수치로 읽을 것.
+  Chrome Claude 브라우저로 검증 진행 중(그룹 A~H, 5개씩 끊어서). 결산표 대기
+- [얼굴 검사] 분류 원칙과 113종 확정은 위 2026-08-18 항목(검사 113종 확정) 참조.
+  ★현재 수치는 123종 = 다장 65(id-*/biz-*) + 단일 58 — 1차 3종·2차 7종이 템플릿에서
+  얼굴검사를 그대로 물려받아 늘었다(48 → 58). 원칙 자체는 무변경
+- [교훈]
+  · Vercel 환경변수는 "등록"만으로 반영되지 않는다 — 등록 + Redeploy가 세트다
+    (AUTH_COOKIE_SECRET 넣고도 로그인이 안 되던 원인)
+  · 이 PC의 바탕화면 실경로는 OneDrive 하위다(C:\Users\...\OneDrive\바탕 화면).
+    C:\Users\...\Desktop 은 빈 껍데기 — 산출물을 못 찾으면 여기부터 의심
+  · kit.json 저장 시 Windows가 .txt를 덧붙이는 함정 재발(ep01·ep02 연속) — 렌더 전
+    파일명 확인
+  · Chrome이 2개 연결돼 있으면 브라우저 선택이 안 된다 — 하나만 남기고 진행
