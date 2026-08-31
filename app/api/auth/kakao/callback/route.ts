@@ -79,13 +79,16 @@ export async function GET(request: NextRequest) {
     //   무서명 쿠키를 구워봐야 getUserId가 거부하므로, 굽지 않고 사유를 알리는 편이 정직하다.
     const signed = signIdentity(user);
     if (!signed) {
-      console.error("[kakao] AUTH_COOKIE_SECRET 미설정/미달 — 로그인 불가");
+      console.error("[auth] bake_aborted — AUTH_COOKIE_SECRET 미설정/미달로 쿠키를 굽지 못함");
       return NextResponse.redirect(new URL("/?error=auth_not_configured", request.url));
     }
 
     const dest = new URL("/", request.url);
     if (welcomed) dest.searchParams.set("welcome", String(WELCOME_COINS));
     const response = NextResponse.redirect(dest);
+
+    // 🩺 진단(2026-08-29) — 쿠키가 실제로 서명돼 구워졌는지. uid만 찍는다(서명·payload 금지).
+    console.log(`[auth] baked uid=${user.id} welcomed=${welcomed}`);
 
     response.cookies.set("kakao_user", signed, {
       httpOnly: true,

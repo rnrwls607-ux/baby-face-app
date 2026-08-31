@@ -23,13 +23,18 @@ const SECRET_MIN_LEN = 32;
 //   REVIEW_LOGIN_TOKEN 짧으면 404(review-login), COIN_ADMIN_IDS 비면 전원 거부(admin.ts).
 //   전부 "열리는 방향"이 아니라 "잠기는 방향"으로 실패한다. 여기도 같다:
 //   비밀키가 없으면 서명도 검증도 불가 → 아무도 로그인 상태가 되지 않는다.
+// 🩺 원인 로깅 (2026-08-29, 로그인 불능 진단용) — Vercel Logs에서 "[auth]"로 검색한다.
+// ★값·payload·서명은 절대 찍지 않는다. 찍는 것은 "어느 분기로 떨어졌는가"와 길이(숫자)뿐.
+// ★진단이 끝나면 no_cookie처럼 양이 많은 줄은 걷어낼 것 — 비로그인 요청마다 1줄씩 쌓인다.
+function why(tag: string): null {
+  console.warn(`[auth] ${tag}`);
+  return null;
+}
+
 function secret(): string | null {
   const s = process.env.AUTH_COOKIE_SECRET || "";
-  if (s.length < SECRET_MIN_LEN) {
-    // 값은 절대 찍지 않는다 — 미설정/길이 미달 사실만 알린다(review-login 관례).
-    console.warn(`[auth] AUTH_COOKIE_SECRET ${s ? `길이 미달(최소 ${SECRET_MIN_LEN}자)` : "미설정"} — 전원 비로그인으로 동작`);
-    return null;
-  }
+  if (!s) return why("secret_missing");
+  if (s.length < SECRET_MIN_LEN) return why(`secret_short(len=${s.length})`);
   return s;
 }
 
@@ -48,22 +53,24 @@ export function signIdentity(user: Identity): string | null {
 
 // 서명 검증 후 payload를 돌려준다. 실패(서명 없음·불일치·비밀키 없음·깨진 JSON) = null.
 export function verifyIdentity(value: string | undefined): Identity | null {
-  const key = secret();
-  if (!key || !value) return null;
+  const key = secret();          // 실패 시 secret_missing / secret_short(len=N) 로그
+  if (!key) return null;
+  if (!value) return why("no_cookie");
   const dot = value.lastIndexOf(".");
-  if (dot <= 0 || dot === value.length - 1) return null; // 구형 평문 쿠키가 여기서 걸린다
+  // 점이 없으면 구형 평문 JSON(또는 서명 없는 값) — 이 분기가 곧 마이그레이션 신호다
+  if (dot <= 0 || dot === value.length - 1) return why("legacy_plain");
   const body = value.slice(0, dot);
   const sig = value.slice(dot + 1);
   const expect = mac(body, key);
   // timingSafeEqual은 길이가 다르면 던진다 — 먼저 거르고, 같을 때만 상수시간 비교.
-  if (sig.length !== expect.length) return null;
-  if (!timingSafeEqual(Buffer.from(sig), Buffer.from(expect))) return null;
+  if (sig.length !== expect.length) return why("sig_mismatch");
+  if (!timingSafeEqual(Buffer.from(sig), Buffer.from(expect))) return why("sig_mismatch");
   try {
     const parsed = JSON.parse(Buffer.from(body, "base64url").toString("utf8"));
-    if (!parsed || typeof parsed !== "object" || !parsed.id) return null;
+    if (!parsed || typeof parsed !== "object" || !parsed.id) return why("bad_payload");
     return { ...parsed, id: String(parsed.id) } as Identity;
   } catch {
-    return null;
+    return why("bad_payload");
   }
 }
 
