@@ -2465,3 +2465,43 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   · kit.json 저장 시 Windows가 .txt를 덧붙이는 함정 재발(ep01·ep02 연속) — 렌더 전
     파일명 확인
   · Chrome이 2개 연결돼 있으면 브라우저 선택이 안 된다 — 하나만 남기고 진행
+
+## [기능개선 트랙] 2026-08-31 — insta-kit v2: 결과 전면 포맷 전환
+
+- [전환 사유 3줄] 인스타 4계정 정밀 분석에서 반응 좋은 계정은 예외 없이 ①결과물 사진
+  전면(단색·그라데이션 카드 0/4) ②원본 셀카 노출 ③커버 타이포 슬롯 고정 ④마지막 장
+  CTA를 사진 위에 얹음 ⑤댓글→DM 문법을 쓴다. v1(A안: 노랑 스티커 배지·회차 칩·
+  하이라이트 바·툴 칩)은 이 문법과 다르다. v1은 scripts/insta-kit.v1.mjs로 보존하고
+  insta-kit.mjs를 v2로 전면 교체했다 — 7장 전부 배경이 결과물 사진이다
+- [스키마] kit.json v1 → v2. version·conceptKey·accent·pill·title{line1,line2,accent}·
+  meta·cta{question,fact[],keyword,action}·caption{hook,body[],question,saveLine,
+  hashtags[]}·firstComment·dm{recipe,deeplink,closing}. 입력 규칙도 바뀌었다 —
+  before-N/after-N 쌍 최대 4개(최소 2쌍), 폴더는 insta/raw/ep{NN}-{slug}/
+- [산출] 01-cover / 02~05-body / 06-cta / 07-follow + caption·firstcomment·dm·contact
+- [★폰트 — 파일 커밋 안 함] 지시는 "없으면 Noto를 받아 넣으라"였는데 실측해보니 이미
+  있다. 시스템 NotoSansKR-VF.ttf가 w400/500/700/900을 각각 다른 잉크량으로 렌더한다
+  (10530/12998/16214/19559). Malgun은 2단계뿐(400=500, 700=900)이라 Black·Medium을
+  못 낸다. 그래서 Noto 1순위 + 시작 시 웨이트 프로브(안 먹으면 즉시 중단)로 갈음했고
+  리포에 폰트·라이선스 파일을 넣지 않았다
+- [★좌표 조정 1건 — 게이트가 잡음] 본문 폴라로이드 지시 좌표 y880은 안전영역을 어긴다.
+  250×300 프레임이 -6° 회전 + 그림자로 실제 296×340이 되어 바닥이 y1219(허용 1210)가
+  된다. 안전영역 우선 원칙대로 y870으로 10px 올려 바닥 y1209로 맞췄다
+- [★게이트가 못 잡은 결함 1건 — 눈으로 발견] 첫 렌더에서 6개 게이트가 전부 PASS인데
+  컨택트시트를 보니 알약 안 글자가 전부 아래로 밀려 잘려 있었다. 원인은 베이스라인
+  수식의 잉여 항(+ib.h) — 잉크 top을 padY로 옮기는 이동량만 더해야 하는데 글자 높이를
+  한 번 더 더했다. v1 스티커 배지 사건("잉크 실측이 배치를 보증하지 않는다")과 같은
+  유형이다. 수식을 고치고, 알약을 만든 뒤 글자 잉크가 사각형 안에 있는지 되재는 게이트를
+  추가했다 — 같은 실수가 다시 나면 이제 자동으로 잡힌다
+- [함정] 경로에 공백이 있으면(이 PC "Hello G.BOX") import.meta.url이 %20으로 인코딩돼
+  mkdir이 EPERM으로 죽는다. fileURLToPath로 디코딩 필수(v1은 process.cwd()라 무사했다)
+- [게이트 결과] fixture 실행 ep03-deskfigure — ①규격 7장 1080×1350 PASS ②안전영역
+  21건 PASS ③금지어 린트 PASS ④accent 1회 PASS ⑤이미지 추적 변경 0건 PASS
+  ⑥딥링크 PASS ＋알약 글자 잘림 없음 PASS
+- [deskfigure 실사] 엔진 = gpt-image-2(app/api/deskfigure/route.ts:8, OPENAI_MODEL).
+  딥링크 = https://mospic.com/deskfigure — CONCEPTS.deskfigure.start="deskfigure" →
+  page.tsx onClick 체인 window.location.replace("/deskfigure") → app/deskfigure/page.tsx
+  실재 3단 확인. soon 폴백은 판정에 쓰지 않았고, 해석 실패 시 게이트 FAIL로 멈추게 했다
+- 빌드: "✓ Compiled successfully in 74s" exit 0
+- 커밋 메시지: feat(insta-kit): v2 포맷 — 결과 전면·원본 폴라로이드·CTA 3단 (7장) + kit.json v2
+- 다음에 할 것: [MJ] ep03 실물 사진 4쌍(before/after) + kit.json을 insta/raw/ep03-deskfigure/에
+  넣고 --fixture 없이 재실행 → 실사진 기준 레이아웃 재검수

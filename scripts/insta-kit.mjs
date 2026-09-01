@@ -1,895 +1,525 @@
-// 인스타 게시물 공장 — insta/raw/{slug} → insta/out/{slug} (4:5 세로 1080×1350 PNG 시리즈 + 캡션/DM)
+// 인스타 게시물 공장 v2 — insta/raw/{slug} → insta/out/{slug} (4:5 세로 1080×1350 PNG 7장 + 텍스트)
 //
-// 왜 별도 스크립트인가: ba-prep(768×960 앱 자산)·store-assets(플레이 콘솔 규격)와 목적이 다르다.
-// 여기 산출물은 앱에도 스토어에도 안 들어가고 인스타 업로드 폼에만 들어간다.
-// ★그래서 insta/ 전체가 .gitignore다 — 원료 사진도 산출 카드도 리포에 안 들어간다.
+// ★v1과 무엇이 다른가 (2026-08-31, 인스타 4계정 정밀 분석 결과)
+//   반응 좋은 계정은 예외 없이 ①결과물 사진 전면 ②원본 셀카 노출 ③커버 타이포 슬롯 고정
+//   ④마지막 장 CTA를 사진 위에 얹음 ⑤댓글→DM. v1(A안: 노랑 스티커 배지·회차 칩·하이라이트
+//   바·툴 칩)은 이 문법과 다르다. v1은 scripts/insta-kit.v1.mjs로 보존했고 이 파일이 v2다.
+//   가장 큰 변화: 단색·그라데이션 카드를 전부 없앴다. 7장 모두 배경이 결과물 사진이다.
 //
-// [입력] insta/raw/{slug}/
-//   before.jpg           1장   (jpg·jpeg·png·webp 모두 허용 — 리포 안 webp 자산을 그대로 쓰려고 넓혔다)
-//   after-1.jpg ~ after-N.jpg  (2~8장)
-//   kit.json { episode, titleLine1, titleLine2, conceptLabel, keyword?, tagsExtra?, dmPrompt,
-//              checks?: [3줄]  — 캡션의 ✅ 자리표시를 이 문구로 채운다(없으면 "(수정)" 그대로)
-//              tool?: "ChatGPT·Gemini"  — 커버 보조 칩·CTA 한 줄·캡션/DM 안내에 함께 표기 }
+// [입력] insta/raw/ep{NN}-{slug}/
+//   before-1.jpg ~ before-4.jpg · after-1.jpg ~ after-4.jpg (쌍으로 최대 4개, 최소 2쌍)
+//   kit.json (v2 스키마 — 아래 KIT_FIXTURE가 그 형태 그대로다)
 //
-// [출력] insta/out/{slug}/ — 업로드 순서대로 번호가 붙는다(01부터 그대로 올리면 된다)
-//   01-cover / 02-ba / 03…-gallery(애프터 장수만큼) / …-cta / …-follow / caption.txt / dm.txt
+// [출력] insta/out/ep{NN}-{slug}/ — 업로드 순서대로 번호가 붙는다
+//   01-cover / 02~05-body / 06-cta / 07-follow / caption.txt / firstcomment.txt / dm.txt / contact.png
 //
-// [사용법] 리포 루트에서
-//   node scripts/insta-kit.mjs            # insta/raw 아래 모든 slug
-//   node scripts/insta-kit.mjs voxel      # 특정 slug만
-//   node scripts/insta-kit.mjs voxel --style=B   # 커버 스타일 A|B|C (기본 A, kit.json 무변경)
+// [사용법]
+//   node scripts/insta-kit.mjs ep03-deskfigure
+//   node scripts/insta-kit.mjs ep03-deskfigure --fixture   # 원료 없이 회색 자리표시로 레이아웃 검증
 //
-// ─── 이 스크립트가 지키는 규칙 4가지 ────────────────────────────────────────
-// ① 안전영역: 인스타 그리드 썸네일은 4:5를 가운데 1:1로 자른다 → y 135~1215 밖으로
-//    커버의 제목·배지가 나가면 프로필 그리드에서 잘린다. 그래서 '재서' 넣는다(아래 ②).
-// ② 글자는 추정하지 않고 실측한다: librsvg에는 텍스트 메트릭 API가 없다.
-//    그래서 넓은 캔버스에 한 번 그려 잉크 상자를 재고(measure), 그 값으로 자리를 잡고
-//    크기를 줄인다(fitSize). 제목 길이가 컨셉마다 달라도 잘리지 않는 이유가 이것이다.
-// ③ 흰 글자에는 헤일로를 깐다: 밝은 사진 위에서 흰 글자는 그냥 사라진다.
-//    특히 "Made with MOSPIC AI"는 장식이 아니라 AI 고지다 — 안 보이면 안 된다.
-//    librsvg의 feDropShadow는 버전에 따라 무시될 수 있어 필터 대신 '여러 번 그리기'로 만든다.
-// ④ 금지어가 있으면 아무것도 만들지 않는다: 캡션·DM을 먼저 조립해 검사하고,
-//    한 slug라도 걸리면 이미지 생성 전에 통째로 멈춘다(반쯤 만들어진 폴더를 남기지 않는다).
-//
-// ─── "N px 상당"의 환산 근거 ──────────────────────────────────────────────
-// 캔버스는 1080px, 폰에서 게시물은 표시 폭 약 400px → 약 2.7배.
-//   워터마크 "12px 상당" → 캔버스 32px (표시 기준 약 12px)
-//   CTA "글자 하한 44px 상당" → ★캔버스 44px를 절대 하한으로 못박았다.
-//   자리표시가 아니라 게이트다 — 44px에서도 안 들어가면 줄이지 않고 실패로 보고한다.
+// ★폰트 — 파일을 리포에 넣지 않는다. 실측(2026-08-31)으로 시스템의 Noto Sans KR 가변폰트가
+//   w400/500/700/900을 각각 다른 잉크량으로 렌더하는 것을 확인했다(10530/12998/16214/19559).
+//   Malgun Gothic은 2단계뿐(400=500, 700=900)이라 Black·Medium을 표현하지 못한다.
+//   그래서 Noto를 1순위로 두고, 시작 시 웨이트가 실제로 먹는지 프로브해서 안 먹으면 멈춘다.
 import sharp from "sharp";
-import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync, rmSync, statSync } from "node:fs";
+import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
 
-const ROOT = process.cwd();
+// ★경로에 공백이 있으면(이 PC: "Hello G.BOX") import.meta.url이 %20으로 인코딩된다.
+//   fileURLToPath로 반드시 디코딩할 것 — 안 하면 mkdir이 EPERM으로 죽는다.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const RAW = path.join(ROOT, "insta", "raw");
 const OUT = path.join(ROOT, "insta", "out");
 
-const W = 1080, H = 1350;                 // 4:5 세로
-const SAFE_TOP = (H - W) / 2;             // 135 — 그리드 1:1 크롭의 윗선
-const SAFE_BOT = SAFE_TOP + W;            // 1215 — 아랫선
-const PAD = 64;                           // 좌우 안쪽 여백
-// ★그리드 안전존(2026-08-25) — 1:1 크롭선(135/1215)에 딱 붙이면 프로필 썸네일에서
-//   글자가 가장자리에 닿아 잘린 것처럼 읽힌다. 커버의 '무엇을 만드는가'를 말하는 요소
-//   (배지 뭉치·툴 칩·제목+하이라이트 바)는 이 안쪽 존에 앉힌다.
-const GRID_TOP = SAFE_TOP + 65;           // 200
-const GRID_BOT = SAFE_BOT - 85;           // 1130
-const MAX_TEXT_W = W - PAD * 2;           // 952
+const W = 1080, H = 1350;
+// 1:1 중앙 크롭선은 y135~1215. 핵심 요소는 그보다 안쪽(y140~1210 · x40~1040)에 둔다.
+const SAFE = { top: 140, bot: 1210, left: 40, right: 1040 };
+const FONTS = "Noto Sans KR, Malgun Gothic, Apple SD Gothic Neo, sans-serif";
+const DEFAULT_ACCENT = "#FF4F8B";
+const INK = "#1E1C1A";
+const TAGLINE = "사진관 안 가도, 사진관보다";   // ★v1 08-follow 자산 재사용(새로 만들지 않는다)
+const WORDMARK = "MOSPIC";
+const HANDLE = "@mospic_ai";
+const BANNED = ["무료", "0원", "공짜", "지브리", "픽사", "디즈니", "마블", "닌텐도", "포켓몬", "레고"];
 
-const PINK = "#FF4B7C";                   // 배지 바탕
-const YELLOW = "#FFD84D";                 // 제목 2줄째 강조 / CTA 행동 줄
-const CTA_BG = "#1A1A1A";
-const KR_FONTS = "Malgun Gothic, Apple SD Gothic Neo, Noto Sans KR, sans-serif";
-const TAGLINE = "사진관 안 가도, 사진관보다";   // store-assets.mjs와 같은 문구(브랜드 일관)
-const CTA_MIN_PX = 44;                     // "글자 하한 44px 상당"
-
-// ★2026-08-24 커버 리디자인 — 카드에서 브랜딩·AI 고지를 뺐다.
-//   워드마크는 08-follow 카드가 단독으로 담당하고, AI 고지는 캡션이 담당한다.
-//   앞 카드마다 로고를 박으면 광고물로 읽혀 "저장하고 싶은 무드"가 깨진다(타깃 2030 여성).
-const CREAM = "#F3E7CE";                   // B안 오버라인
-const LIME = "#D8FF3F";                    // C안 제목 2줄째 (형광)
-
-// ★A안 확정(2026-08-24) — 카드 4종이 공유하는 스타일 언어.
-//   커버에서만 쓰면 캐러셀을 넘길 때마다 다른 앱처럼 보인다. 배지 톤·강조 방식·
-//   그라데이션 규격을 한 벌로 묶어 02-ba·CTA·팔로우까지 같은 말을 쓰게 한다.
-const BADGE_FILL = "#ffffff";              // 배지 바탕 — 핑크에서 톤다운
-const BADGE_TEXT = "#1A1A1A";              // 배지 글씨
-const HL_FILL = "#000000", HL_OP = 0.42, HL_RX = 14;   // 강조 텍스트 뒤 하이라이트 바
-// --style=A|B|C — kit.json은 손대지 않고 커버 스타일만 갈아 끼운다(재실행만으로 비교).
-const STYLE = (() => {
-  const f = process.argv.slice(2).find((a) => /^--style=/i.test(a));
-  const v = f ? f.split("=")[1].toUpperCase() : "A";
-  if (!["A", "B", "C"].includes(v)) { console.error(`★--style 은 A|B|C 중 하나 (받은 값: ${v})`); process.exit(1); }
-  return v;
-})();
-const BANNED = ["무료", "0원", "공짜", "지브리", "픽사"];
-const EXT = /\.(jpe?g|png|webp)$/i;
-
-const fails = [];                          // 게이트 위반 — 마지막에 모아 보고하고 exit 1
-const notes = [];
-
-// ─── 기본 도구 ────────────────────────────────────────────────────────────
-const svgBuf = (s) => Buffer.from(s);
+const fails = [];
+const fail = (m) => { fails.push(m); };
+const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const svgBuf = (s) => Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${s}</svg>`);
 const png = (svg) => sharp(svgBuf(svg)).png().toBuffer();
-// ★XML 이스케이프: 제목에 & 나 < 가 하나만 들어가도 SVG 전체가 파싱 실패한다.
-const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
-// 투명 배경 위 '잉크'(알파가 있는 픽셀)의 경계 상자.
-// ★luminance가 아니라 alpha로 재는 이유: 흰 글자를 재야 한다(어두운 잉크 가정이 안 통한다).
-async function alphaBox(buf) {
+// ── 텍스트 측정: 실제 잉크 바운딩 박스를 픽셀로 잰다(게이트의 진실원) ──────────
+async function inkBox(buf) {
   const { data, info } = await sharp(buf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  let minX = 1e9, maxX = -1, minY = 1e9, maxY = -1, n = 0;
-  for (let y = 0; y < info.height; y++) {
-    for (let x = 0; x < info.width; x++) {
-      if (data[(y * info.width + x) * 4 + 3] < 16) continue;
-      if (x < minX) minX = x; if (x > maxX) maxX = x;
-      if (y < minY) minY = y; if (y > maxY) maxY = y;
-      n++;
-    }
+  let x0 = info.width, y0 = info.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < info.height; y++) for (let x = 0; x < info.width; x++) {
+    if (data[(y * info.width + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
   }
-  return n ? { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1, n } : null;
+  return x1 < 0 ? null : { x: x0, y: y0, w: x1 - x0 + 1, h: y1 - y0 + 1 };
 }
 
-const attrs = (o) =>
-  `font-family="${KR_FONTS}" font-size="${o.size}" font-weight="${o.weight ?? 400}"` +
-  ` letter-spacing="${o.spacing ?? 0}" text-anchor="${o.anchor ?? "start"}"`;
+function textSvg(o) {
+  const anchor = o.anchor ?? "start";
+  const fill = o.fill ?? "#fff";
+  const op = o.opacity === undefined ? "" : ` fill-opacity="${o.opacity}"`;
+  const sp = o.spacing ? ` letter-spacing="${o.spacing}"` : "";
+  return `<text x="${o.x}" y="${o.y}" font-family="${FONTS}" font-size="${o.size}" font-weight="${o.weight ?? 400}"` +
+    ` fill="${fill}"${op} text-anchor="${anchor}"${sp}>${esc(o.text)}</text>`;
+}
+const textLayer = (o) => png(textSvg(o));
 
-// 글자 한 줄의 실측 치수. 넓은 별도 캔버스에 그린다.
-// ★1080 캔버스에서 재면 안 된다: 긴 제목이 캔버스에 잘려 폭이 1080으로 '측정'되고,
-//   그러면 fitSize가 "들어간다"고 착각한다 — 잘린 제목이 그대로 나가는 경로다.
-// 반환 dTop/dBot = 베이스라인 기준 잉크 위/아래 오프셋 → 베이스라인이 아니라 잉크로 배치한다.
-const MEASURE_W = 3400;
-async function measure(text, o) {
-  if (!String(text).length) return { w: 0, h: 0, dTop: 0, dBot: 0 };
-  const h = Math.ceil(o.size * 3), base = Math.round(o.size * 2);
-  // ★재는 동안은 anchor를 무조건 start로 눕힌다. anchor="middle"/"end"를 그대로 재면
-  //   글자가 x=20에서 왼쪽으로 뻗어 캔버스 밖에서 잘리고 폭이 실제의 절반으로 측정된다
-  //   — 그러면 fitSize가 "들어간다"고 착각해 잘린 글자가 그대로 나간다(CTA에서 실제로 겪었다).
-  //   폭·높이는 anchor와 무관하니 눕혀서 재고, 배치할 때만 원래 anchor를 쓴다.
-  const box = await alphaBox(await png(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${MEASURE_W}" height="${h}">` +
-    `<text x="20" y="${base}" ${attrs({ ...o, anchor: "start" })} fill="#fff">${esc(text)}</text></svg>`));
-  if (!box) return { w: 0, h: 0, dTop: 0, dBot: 0 };
-  // 측정 캔버스마저 넘겼다면 그 측정값 자체가 거짓이다 — 조용히 쓰지 않고 올려보낸다
-  if (box.x + box.w >= MEASURE_W - 20) fails.push(`측정 캔버스(${MEASURE_W}px) 초과 — "${String(text).slice(0, 20)}…" ${o.size}px`);
-  return { w: box.w, h: box.h, dTop: box.y - base, dBot: box.y + box.h - 1 - base };
+// 제목 2줄 중 accent 단어 1개만 색을 바꾼다 — tspan으로 한 줄 안에서 나눈다
+function accentLineSvg(o) {
+  const i = o.text.indexOf(o.accentWord);
+  if (i < 0) return textSvg(o);
+  const a = esc(o.text.slice(0, i)), b = esc(o.accentWord), c = esc(o.text.slice(i + o.accentWord.length));
+  return `<text x="${o.x}" y="${o.y}" font-family="${FONTS}" font-size="${o.size}" font-weight="${o.weight}" fill="${o.fill}">` +
+    `${a}<tspan fill="${o.accent}">${b}</tspan>${c}</text>`;
 }
 
-// maxW 안에 들어가는 최대 글자 크기를 '실제로 그려서' 찾는다(비율 축소 후 재측정, 보통 2~3회 수렴).
-// min에서도 넘치면 줄이지 않고 overflow를 켜서 올려보낸다 — 조용히 잘리는 것보다 실패가 낫다.
-async function fitSize(text, maxW, start, min, o = {}) {
-  let size = start, m = await measure(text, { ...o, size });
-  for (let i = 0; i < 5 && m.w > maxW && size > min; i++) {
-    size = Math.max(min, Math.floor(size * (maxW / m.w)));
-    m = await measure(text, { ...o, size });
-  }
-  return { size, m, overflow: m.w > maxW, shrunk: size < start };
-}
+// ── 사진: 비율 유지 cover + 중앙 크롭 ────────────────────────────────────────
+const coverCrop = (src, w, h) => sharp(src).flatten({ background: "#111" })
+  .resize(w, h, { fit: "cover", position: "centre" }).png().toBuffer();
 
-// 캔버스 전체 크기의 투명 레이어에 글자만 그린다.
-// ★composite의 left/top을 0으로 고정하면 잉크 상자 좌표가 곧 캔버스 절대 좌표다
-//   — 안전영역 검사를 좌표 변환 없이 그대로 할 수 있다.
-function textLayer(o) {
-  const t = esc(o.text), a = attrs(o), op = o.opacity ?? 1;
-  let halo = "";
-  // ★스티커 아웃라인: librsvg의 paint-order 지원이 버전마다 갈려서 stroke를 못 믿는다.
-  //   halo와 같은 수법으로 검정 글자를 원형으로 여러 번 깔아 굵은 테두리를 만든다.
-  if (o.outline) {
-    const r = o.outline;
-    for (let i = 0; i < 16; i++) {
-      const dx = Math.round(r * Math.cos((i / 16) * Math.PI * 2));
-      const dy = Math.round(r * Math.sin((i / 16) * Math.PI * 2));
-      halo += `<text x="${o.x + dx}" y="${o.y + dy}" ${a} fill="#000">${t}</text>`;
-    }
-  }
-  if (o.halo) {
-    const d = o.halo;
-    for (const [dx, dy] of [[-d, 0], [d, 0], [0, -d], [0, d], [-d, -d], [d, -d], [-d, d], [d, d]])
-      halo += `<text x="${o.x + dx}" y="${o.y + dy}" ${a} fill="#000" fill-opacity="0.30">${t}</text>`;
-  }
-  return svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${halo}` +
-    `<text x="${o.x}" y="${o.y}" ${a} fill="${o.fill ?? "#fff"}" fill-opacity="${op}">${t}</text></svg>`);
-}
-
-const coverCrop = (src, w, h) => sharp(src)
-  .flatten({ background: "#ffffff" })                       // 투명 PNG → 흰 배경(ba-prep과 같은 관례)
-  .resize(w, h, { fit: "cover", position: sharp.strategy.attention })
-  .png().toBuffer();
-
-// 상하 분할 패널용 크롭 — 세로 원본에서 가로로 긴 띠를 '위로 치우쳐' 잘라낸다.
-// ★여기서 attention을 쓰지 않는 이유(실측): 비포 셀카에서 attention이 얼굴을 버리고
-//   티셔츠·창틀을 골라 '머리 없는 상반신'이 나왔다. 게다가 비포와 애프터가 서로 다른 자리를
-//   고르면 비교 카드로서 공정하지도 않다 — 같은 규칙으로 자르는 쪽이 맞다.
-//   0.08 = 세로 4%~54% 구간 → 잘 잡힌 세로 인물 사진의 머리·어깨가 들어오는 자리.
-const BAND_BIAS = 0.08;
-async function bandCrop(src, w, h) {
-  const scaled = await sharp(src).flatten({ background: "#ffffff" }).resize({ width: w }).png().toBuffer();
-  const { height: sh } = await sharp(scaled).metadata();
-  if (sh <= h) return sharp(scaled).resize(w, h, { fit: "cover", position: "centre" }).png().toBuffer();
-  return sharp(scaled).extract({ left: 0, top: Math.round((sh - h) * BAND_BIAS), width: w, height: h }).png().toBuffer();
-}
-
-// 산출물 검수 — 치수를 실제 파일에서 다시 읽는다(믿지 말고 재측정)
-const shots = [];
-async function verify(file) {
-  const m = await sharp(file).metadata();
-  const ok = m.width === W && m.height === H;
-  shots.push({ file: path.basename(file), w: m.width, h: m.height, kb: (statSync(file).size / 1024).toFixed(0), ok });
-  if (!ok) fails.push(`${path.basename(file)} 치수 ${m.width}×${m.height} (기대 ${W}×${H})`);
-}
-
-// 잉크가 안전영역(가운데 1:1) 안에 있는지 — 커버의 제목·배지에만 적용되는 게이트
-function safeCheck(label, box) {
-  const ok = box && box.y >= SAFE_TOP && box.y + box.h - 1 <= SAFE_BOT && box.x >= 0 && box.x + box.w - 1 <= W - 1;
-  if (!ok) fails.push(`${label} 안전영역 이탈 — 잉크 y ${box ? `${box.y}~${box.y + box.h - 1}` : "없음"} (허용 ${SAFE_TOP}~${SAFE_BOT})`);
-  return ok;
-}
-
-// ─── 01-cover ─────────────────────────────────────────────────────────────
-// 스타일 3안(--style=A|B|C). 공통: 애프터1 풀블리드 + 하단 그라데이션 + 제목 2줄.
-// ★워드마크는 넣지 않는다(2026-08-24) — 브랜딩은 08-follow 카드 단독 담당.
-// ★제목·배지는 안전영역(y 135~1215) 안에 앉힌다 — 그래서 제목 블록 아래로 여백이 남는데,
-//   그건 낭비가 아니라 그리드 썸네일에서 제목이 살아남는 값이다.
-
-// 하단 그라데이션. depth = 어둠이 시작되는 y, peak = 맨 아래 불투명도.
-const gradLayer = (startY, peak, mid) => svgBuf(
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
+// 하단 검정 세로 그라데이션 (y760→1350, 최대 알파 200/255)
+const bottomGrad = () => png(
   `<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">` +
-  `<stop offset="0" stop-color="#000" stop-opacity="0"/>` +
-  `<stop offset="0.45" stop-color="#000" stop-opacity="${mid}"/>` +
-  `<stop offset="1" stop-color="#000" stop-opacity="${peak}"/></linearGradient></defs>` +
-  `<rect x="0" y="${startY}" width="${W}" height="${H - startY}" fill="url(#g)"/></svg>`);
+  `<stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="${(200 / 255).toFixed(3)}"/>` +
+  `</linearGradient></defs><rect x="0" y="760" width="${W}" height="${H - 760}" fill="url(#g)"/>`);
 
-// 알약 배지 한 벌(바탕 + 글자). variant: filled | outline
-async function badge(text, o, x, y, { fill, textFill, stroke, fillOpacity }) {
-  const m = await measure(text, o);
-  const padX = o.size < 30 ? 20 : 30, padY = o.size < 30 ? 12 : 20;
-  const w = m.w + padX * 2, h = (m.dBot - m.dTop + 1) + padY * 2;
-  const pill = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${Math.round(h / 2)}"` +
-    ` fill="${fill}"${fillOpacity != null ? ` fill-opacity="${fillOpacity}"` : ""}${stroke ? ` stroke="${stroke}" stroke-width="2.5"` : ""}/></svg>`);
-  const label = textLayer({ ...o, text, x: x + padX, y: y + padY - m.dTop, fill: textFill });
-  return { pill, label, box: { x, y, w, h } };
+const dim = (alpha) => png(`<rect width="${W}" height="${H}" fill="#000" fill-opacity="${(alpha / 255).toFixed(3)}"/>`);
+
+// ── 원본 셀카 폴라로이드 ─────────────────────────────────────────────────────
+// 흰 프레임 250×300, 내부 여백 12, 하단 라벨 영역 70. 회전은 sharp가 알파와 함께 처리.
+const POLA = { w: 250, h: 300, pad: 12, label: 70 };
+async function polaroid(src, deg) {
+  const innerW = POLA.w - POLA.pad * 2;
+  const innerH = POLA.h - POLA.pad - POLA.label;
+  const photo = await sharp(src).flatten({ background: "#ddd" })
+    .resize(innerW, innerH, { fit: "cover", position: "centre" }).png().toBuffer();
+  const frame = await sharp({ create: { width: POLA.w, height: POLA.h, channels: 4, background: "#ffffff" } })
+    .composite([
+      { input: photo, left: POLA.pad, top: POLA.pad },
+      {
+        input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${POLA.w}" height="${POLA.h}">` +
+          `<text x="${POLA.w / 2}" y="${POLA.h - 26}" font-family="${FONTS}" font-size="22" font-weight="500" fill="${INK}" text-anchor="middle">원본 셀카</text></svg>`),
+        left: 0, top: 0,
+      },
+    ]).png().toBuffer();
+  // 그림자: 살짝 키운 검정 판을 blur해서 뒤에 깔고, 그 위에 회전한 프레임을 얹는다
+  const rot = await sharp(frame).rotate(deg, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
+  const m = await sharp(rot).metadata();
+  const shadow = await sharp({ create: { width: m.width, height: m.height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([{ input: await sharp(rot).extractChannel("alpha").toColourspace("b-w").png().toBuffer(), blend: "over" }])
+    .blur(10).png().toBuffer();
+  const out = await sharp({ create: { width: m.width + 16, height: m.height + 16, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite([
+      { input: await sharp(shadow).linear(0.45, 0).png().toBuffer(), left: 8, top: 12 },
+      { input: rot, left: 0, top: 0 },
+    ]).png().toBuffer();
+  return { buf: out, w: m.width + 16, h: m.height + 16 };
 }
 
-// 강조 텍스트 뒤 하이라이트 바 — 잉크 상자에서 여백을 붙여 만든다.
-// ★글자 크기가 아니라 '실측 잉크'로 만드는 이유: 한글은 글꼴마다 어센더가 달라
-//   size 기반으로 계산하면 바가 글자를 덜 감싸거나 붕 뜬다.
-function hlBar(x, baseline, m, { padX = 16, padY = 12, anchor = "start" } = {}) {
-  const bx = Math.round(anchor === "middle" ? x - m.w / 2 - padX : x - padX);
-  const by = Math.round(baseline + m.dTop - padY);
-  const bw = Math.round(m.w + padX * 2), bh = Math.round((m.dBot - m.dTop + 1) + padY * 2);
-  return {
-    layer: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-      `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${HL_RX}" fill="${HL_FILL}" fill-opacity="${HL_OP}"/></svg>`),
-    box: { x: bx, y: by, w: bw, h: bh },
-  };
+// ── 알약(pill) ───────────────────────────────────────────────────────────────
+// ★교훈(v1 스티커 배지 사건과 같은 유형): "잉크를 쟀다"가 "배치가 맞다"를 보증하지 않는다.
+//   프로브를 (40,200) 베이스라인으로 그린 뒤, 잉크 top(ib.y)을 padY로 옮기는 이동량만큼만
+//   베이스라인을 움직여야 한다 → y = 200 + (padY - ib.y). 여기에 ib.h를 더하면 글자가
+//   제 높이만큼 아래로 밀려 알약 밖으로 나간다(첫 렌더에서 실제로 그렇게 잘렸다).
+//   그래서 만든 뒤 알약 안 텍스트 잉크가 사각형 안에 있는지 되재서 게이트로 올린다.
+async function pill(text, o) {
+  const size = o.size, padX = o.padX ?? 30, padY = o.padY ?? 16;
+  const PX = 40, PY = 200;
+  const probe = await textLayer({ text, size, weight: o.weight ?? 500, x: PX, y: PY, fill: "#fff" });
+  const ib = await inkBox(probe);
+  const w = ib.w + padX * 2, h = ib.h + padY * 2;
+  const r = Math.round(h / 2);
+  const bg = o.bg ?? "#ffffff";
+  const bgOp = o.bgOpacity === undefined ? 1 : o.bgOpacity;
+  const bx = PX + (padX - ib.x), by = PY + (padY - ib.y);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">` +
+    `<rect width="${w}" height="${h}" rx="${r}" ry="${r}" fill="${bg}" fill-opacity="${bgOp}"/>` +
+    `<text x="${bx}" y="${by}" font-family="${FONTS}" font-size="${size}" font-weight="${o.weight ?? 500}" fill="${o.fill ?? INK}">${esc(text)}</text></svg>`;
+  const buf = await sharp(Buffer.from(svg)).png().toBuffer();
+
+  // 되재기 — 글자만 따로 같은 좌표로 그려 잉크가 알약 안에 완전히 들어갔는지 확인
+  const only = await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">` +
+    `<text x="${bx}" y="${by}" font-family="${FONTS}" font-size="${size}" font-weight="${o.weight ?? 500}" fill="#000">${esc(text)}</text></svg>`)).png().toBuffer();
+  const tb = await inkBox(only);
+  if (!tb || tb.x < 1 || tb.y < 1 || tb.x + tb.w > w - 1 || tb.y + tb.h > h - 1) {
+    fail(`알약 글자 잘림 — "${text}" 글자 x${tb?.x}~${tb ? tb.x + tb.w - 1 : "?"} y${tb?.y}~${tb ? tb.y + tb.h - 1 : "?"} vs 알약 ${w}×${h}`);
+  }
+  return { buf, w, h };
 }
 
-// 잉크가 그리드 안전존 안인지 — 커버 핵심 요소에만 적용
-function zoneCheck(label, box) {
-  const ok = box && box.y >= GRID_TOP && box.y + box.h - 1 <= GRID_BOT;
-  if (!ok) fails.push(`${label} 그리드 안전존 이탈 — y ${box ? `${box.y}~${box.y + box.h - 1}` : "없음"} (허용 ${GRID_TOP}~${GRID_BOT})`);
-  return ok;
+// ── 안전영역 게이트 ──────────────────────────────────────────────────────────
+const boxes = [];
+function safeCheck(name, box) {
+  boxes.push({ name, box });
+  const bad = box.x < SAFE.left || box.y < SAFE.top || box.x + box.w - 1 > SAFE.right || box.y + box.h - 1 > SAFE.bot;
+  if (bad) fail(`안전영역 위반 — ${name}: x${box.x}~${box.x + box.w - 1} y${box.y}~${box.y + box.h - 1} (허용 x${SAFE.left}~${SAFE.right} y${SAFE.top}~${SAFE.bot})`);
+  return !bad;
 }
 
-// ── 스티커 배지 ──────────────────────────────────────────────────────────
-// 노랑 알약("픽레시피") + 오른쪽 끝에 살짝 겹치는 검정 원형 칩(회차 숫자) + 살짝 기울임.
-// ★왜 기울이나: 정렬이 딱 맞는 라벨은 UI로 읽히고, 살짝 틀어진 라벨은 '붙인 스티커'로
-//   읽힌다. 피드에서 손이 멈추는 건 후자다.
-// ★폭·높이를 실측 잉크에서 뽑는 이유는 hlBar와 같다 — 글자 크기로 계산하면 한글
-//   어센더 차이 때문에 알약이 글자를 덜 감싸거나 붕 뜬다.
-const STICKER_ROT = -3;
-async function stickerBadge(label, episode, x, y, { size = 40 } = {}) {
-  const lo = { size, weight: 900, spacing: 1 };
-  const lm = await measure(label, lo);
-  const eo = { size: Math.round(size * 0.82), weight: 900, spacing: 0 };
-  const em = await measure(String(episode), eo);
-
-  const padX = Math.round(size * 0.75), padY = Math.round(size * 0.5);
-  const pillH = (lm.dBot - lm.dTop + 1) + padY * 2;
-  const dia = Math.round(pillH * 1.06);
-  const lap = Math.round(dia * 0.34);                 // 알약과 겹치는 폭
-  // ★알약 폭에 겹침 폭을 더한다 — 안 더하면 원형 칩이 마지막 글자를 덮는다.
-  //   (첫 렌더에서 "픽레시피"의 "피"가 통째로 가려졌다. 잉크 실측은 맞았고 배치가 틀렸다.)
-  //   이렇게 두면 원은 글자 끝에서 정확히 padX 떨어져 시작하고, 겹치는 건 알약의 둥근 끝뿐이다.
-  const pillW = lm.w + padX * 2 + lap;
-  const cw = pillW + dia - lap, ch = Math.max(pillH, dia);
-  const pillY = Math.round((ch - pillH) / 2), circX = pillW - lap, circY = Math.round((ch - dia) / 2);
-  const ccx = circX + dia / 2, ccy = circY + dia / 2;
-
-  const body = (fillPill, fillLabel, fillCirc, fillNum) =>
-    `<rect x="0" y="${pillY}" width="${pillW}" height="${pillH}" rx="${Math.round(pillH / 2)}" fill="${fillPill}"/>` +
-    `<text x="${padX}" y="${pillY + padY - lm.dTop}" ${attrs(lo)} fill="${fillLabel}">${esc(label)}</text>` +
-    `<circle cx="${ccx}" cy="${ccy}" r="${dia / 2}" fill="${fillCirc}"/>` +
-    `<text x="${ccx}" y="${Math.round(ccy - (em.dTop + em.dBot) / 2)}" ${attrs({ ...eo, anchor: "middle" })} fill="${fillNum}">${esc(String(episode))}</text>`;
-
-  const card = `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}">${body(YELLOW, "#141414", "#141414", YELLOW)}</svg>`;
-  // 그림자는 같은 도형을 통째로 검게 그려 만든다 — 사각형 근사는 원형 칩 옆에서 티가 난다
-  const shade = `<svg xmlns="http://www.w3.org/2000/svg" width="${cw}" height="${ch}"><g opacity="0.34">${body("#000", "#000", "#000", "#000")}</g></svg>`;
-
-  const bg = { r: 0, g: 0, b: 0, alpha: 0 };
-  const rotated = await sharp(await png(card)).rotate(STICKER_ROT, { background: bg }).png().toBuffer();
-  const rotShade = await sharp(await sharp(await png(shade)).rotate(STICKER_ROT, { background: bg }).png().toBuffer())
-    .blur(9).png().toBuffer();
-  const meta = await sharp(rotated).metadata();
-
-  // 캔버스 전체 레이어로 돌려준다 — 호출부가 좌표를 다시 다루지 않게(합성 규약 통일)
-  const canvas = () => sharp({ create: { width: W, height: H, channels: 4, background: bg } });
-  return {
-    shadow: await canvas().composite([{ input: rotShade, left: x + 5, top: y + 9 }]).png().toBuffer(),
-    layer: await canvas().composite([{ input: rotated, left: x, top: y }]).png().toBuffer(),
-    box: { x, y, w: meta.width, h: meta.height },
-  };
+// ── 자리표시 이미지(fixture) ─────────────────────────────────────────────────
+async function placeholder(label, light) {
+  const bg = light ? "#c9c9c9" : "#4a4a4a";
+  const fg = light ? "#4a4a4a" : "#d8d8d8";
+  return sharp({ create: { width: 1080, height: 1350, channels: 4, background: bg } })
+    .composite([{
+      input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350">` +
+        `<text x="540" y="675" font-family="${FONTS}" font-size="64" font-weight="700" fill="${fg}" text-anchor="middle">${esc(label)}</text></svg>`),
+      left: 0, top: 0,
+    }]).png().toBuffer();
 }
 
-// ★그리드 크롭 게이트 — 기하가 아니라 '실제로 잘리는지'를 픽셀로 본다.
-//   글자·배지 레이어만 투명 캔버스에 모아 1:1 중앙 크롭 전후의 잉크 픽셀 수를 비교한다.
-//   한 픽셀이라도 줄면 그만큼 썸네일에서 잘린 것이다.
-async function gridCropGate(dst, markLayers) {
-  const ink = await sharp({ create: { width: W, height: H, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-    .composite(markLayers.map((input) => ({ input, left: 0, top: 0 }))).png().toBuffer();
-  const full = await alphaBox(ink);
-  const cropped = await alphaBox(await sharp(ink).extract({ left: 0, top: SAFE_TOP, width: W, height: W }).png().toBuffer());
-  const lost = (full?.n ?? 0) - (cropped?.n ?? 0);
-  if (lost !== 0) fails.push(`${path.basename(dst)} 그리드 크롭에서 잉크 ${lost}px 잘림 (잉크 y ${full?.y}~${full ? full.y + full.h - 1 : "?"})`);
-  // 검수용 산출 — 실제 프로필 썸네일과 같은 1080×1080
-  const crop = path.join(path.dirname(dst), "cover-gridcrop.png");
-  await sharp(dst).extract({ left: 0, top: SAFE_TOP, width: W, height: W }).png({ compressionLevel: 9 }).toFile(crop);
-  return { lost, full, line: `그리드크롭 잉크 ${full?.n ?? 0}px → 크롭 후 ${cropped?.n ?? 0}px · 손실 ${lost}px ${lost === 0 ? "OK" : "★NG"}` };
+// ── kit.json v2 기본값(fixture용) ────────────────────────────────────────────
+const KIT_FIXTURE = {
+  version: 2, episode: "03", slug: "deskfigure", conceptKey: "deskfigure", conceptLabel: "데스크 피규어",
+  accent: DEFAULT_ACCENT,
+  pill: "데스크 피규어 · 셀카 1장으로",
+  title: { line1: "셀카 한 장이", line2: "피규어가 됐다", accent: "피규어" },
+  meta: "4 CUTS · 셀카 1장",
+  cta: {
+    question: "이 컨셉, 마음에 드세요?",
+    fact: ["MOSPIC 안 179개 컨셉 중 하나예요.", "셀카 1장, 3분이면 이 피규어가 나와요."],
+    keyword: "모스픽",
+    action: "댓글에 모스픽 → 레시피 + 링크 DM",
+  },
+  caption: {
+    hook: "책상 위에 내 피규어가 서 있으면, 볼 때마다 웃음이 날까요?",
+    body: [
+      "셀카 한 장을 올리면 1/7 스케일 PVC 피규어처럼 만들어 줍니다. 개봉한 박스와 모니터의 3D 원형까지 한 컷에 담겨요.",
+      "얼굴은 그대로 두고 재질만 바뀌는 게 핵심이라, 아는 사람이 보면 바로 누군지 알아봅니다.",
+    ],
+    question: "여러분은 어떤 포즈로 세워두고 싶어요?",
+    saveLine: "나중에 만들어보려면 저장해두세요",
+    hashtags: ["#피규어", "#AI사진", "#모스픽"],
+  },
+  firstComment: "결과 자랑 스레드 열어둡니다 — 만드신 분들 여기에 올려주세요!",
+  dm: {
+    recipe: "Turn this selfie into a hyper-realistic photo of a 1/7 scale collectible PVC figure of the person, displayed on a work desk with its opened retail box and a monitor showing the 3D sculpt.",
+    deeplink: "auto",
+    closing: "결과 나오면 첫 댓글에 자랑해 주세요 — 하이라이트에 올려드려요.",
+  },
+};
+
+// ── 딥링크 해석 — CONCEPTS 직접 조회 + onClick 체인. soon 폴백은 쓰지 않는다 ──
+function resolveDeeplink(conceptKey) {
+  const con = readFileSync(path.join(ROOT, "app/lib/concepts.ts"), "utf8").replace(/\r\n/g, "\n");
+  const blk = con.slice(con.indexOf("export const CONCEPTS"), con.indexOf("\n};\n", con.indexOf("export const CONCEPTS")));
+  const entry = blk.match(new RegExp(`\\n  ${conceptKey}:\\s*\\{[\\s\\S]*?\\n  \\},`));
+  if (!entry) return { ok: false, why: `CONCEPTS에 "${conceptKey}" 없음` };
+  const start = (entry[0].match(/start:\s*"([^"]*)"/) || [])[1];
+  if (!start || start === "soon") return { ok: false, why: `start가 없거나 soon 폴백("${start}")` };
+  const home = readFileSync(path.join(ROOT, "app/page.tsx"), "utf8").replace(/\r\n/g, "\n");
+  const click = home.match(new RegExp(`detail\\.start === "${start}"\\) \\{ window\\.location\\.replace\\("([^"]+)"\\); \\}`));
+  if (!click) return { ok: false, why: `page.tsx onClick 체인에 start="${start}" 분기 없음` };
+  const route = click[1];
+  if (!existsSync(path.join(ROOT, "app", route.replace(/^\//, ""), "page.tsx"))) return { ok: false, why: `페이지 폴더 app${route} 없음` };
+  return { ok: true, url: `https://mospic.com${route}`, route, start };
 }
 
-// 제목 2줄 — 같은 크기로 맞춰 한 덩어리로 읽히게 한다(A·C안).
-async function titlePair(kit, start, min, o) {
-  const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, start, min, o);
-  const f2 = await fitSize(kit.titleLine2, MAX_TEXT_W, start, min, o);
-  const size = Math.min(f1.size, f2.size);
-  return {
-    size,
-    m1: await measure(kit.titleLine1, { ...o, size }),
-    m2: await measure(kit.titleLine2, { ...o, size }),
-    overflow: f1.overflow || f2.overflow,
-    shrunk: f1.shrunk || f2.shrunk,
-  };
+// ── 카드 빌더 ────────────────────────────────────────────────────────────────
+const WM = { text: HANDLE, size: 28, weight: 500, spacing: 3, anchor: "middle", fill: "#fff", opacity: 170 / 255 };
+
+async function watermark() {
+  const probe = await textLayer({ ...WM, x: W / 2, y: 84 });
+  return { layer: probe, box: await inkBox(probe) };
 }
 
-// ── 폴라로이드 인셋(A안) ──
-// 흰 테두리 + 아래 라벨 자리 + 회전. 회전은 sharp가 하고, 그림자는 같은 각도의 SVG 사각형.
-const POLA_ROT = -6;
-async function polaroid(beforeSrc, label, photo = 272, bd = 14, strip = 58) {
-  const cardW = photo + bd * 2, cardH = photo + bd + strip;
-  const shot = await sharp(beforeSrc).flatten({ background: "#ffffff" })
-    .resize(photo, photo, { fit: "cover", position: sharp.strategy.attention }).png().toBuffer();
-  const lo = { size: 26, weight: 700, spacing: 1, anchor: "middle" };
-  const lm = await measure(label, lo);
-  const labelSvg = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${cardW}" height="${cardH}">` +
-    `<text x="${cardW / 2}" y="${photo + bd + Math.round((strip + (lm.dBot - lm.dTop)) / 2) - 2}" ` +
-    `font-family="${KR_FONTS}" font-size="${lo.size}" font-weight="${lo.weight}" letter-spacing="1" ` +
-    `text-anchor="middle" fill="#5A5A5A">${esc(label)}</text></svg>`);
-  const card = await sharp({ create: { width: cardW, height: cardH, channels: 4, background: "#ffffff" } })
-    .composite([{ input: shot, left: bd, top: bd }, { input: labelSvg, left: 0, top: 0 }])
-    .png().toBuffer();
-  const rotated = await sharp(card).rotate(POLA_ROT, { background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer();
-  const meta = await sharp(rotated).metadata();
-  return { rotated, w: meta.width, h: meta.height, cardW, cardH };
-}
-
-// 손그림풍 화살표 — 곡선 + 삼각 머리. 밝은 사진 위에서도 보이게 검정 밑선을 먼저 깐다.
-function scribbleArrow(pts, headAngle, { color = "#fff", width = 7 } = {}) {
-  const [x1, y1, cx, cy, x2, y2] = pts;
-  const d = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-  const a = (headAngle * Math.PI) / 180, L = 26, S = 0.42;
-  const head = [
-    [x2, y2],
-    [x2 - L * Math.cos(a - S), y2 - L * Math.sin(a - S)],
-    [x2 - L * Math.cos(a + S), y2 - L * Math.sin(a + S)],
-  ].map(([x, y]) => `${Math.round(x)},${Math.round(y)}`).join(" ");
-  const stroke = (c, w) => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>` +
-    `<polygon points="${head}" fill="${c}" stroke="${c}" stroke-width="${w * 0.5}" stroke-linejoin="round"/>`;
-  return svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    stroke("#000", width + 5) + stroke(color, width) + `</svg>`);
-}
-
-// ══ A안 — 폴라로이드 증거형 ══
-// "이 사진이 → 이렇게 됐다"를 카드 한 장에서 증명한다. 광고 문구보다 증거가 세다.
-async function coverA(dst, beforeSrc, afterSrc, kit) {
+async function buildCover(dst, afterSrc, beforeSrc, kit, accent) {
   const base = await coverCrop(afterSrc, W, H);
-  const layers = [{ input: gradLayer(500, 0.9, 0.42), left: 0, top: 0 }];
+  const layers = [{ input: await bottomGrad(), left: 0, top: 0 }];
 
-  // 배지 — 흰 바탕 + 검정 글씨(핑크에서 톤다운)
-  const b = await stickerBadge("픽레시피", kit.episode, PAD, GRID_TOP);
-  layers.push({ input: b.shadow, left: 0, top: 0 }, { input: b.layer, left: 0, top: 0 });
+  const wm = await watermark();
+  layers.push({ input: wm.layer, left: 0, top: 0 });
 
-  // 툴 보조 칩 — 배지 바로 아래. 배지보다 한 단계 작고 톤도 낮춘다(주인공은 배지가 아니라 제목이다).
-  // ★폭은 hlBar와 같은 원리로 실측 잉크에서 뽑는다 — 글자 크기로 계산하면 한글 어센더 차이로 뜬다.
-  const tc = await badge(`${kit.tool}에서 바로 사용`, { size: 28, weight: 700, spacing: 0 },
-    PAD, b.box.y + b.box.h + 10, { fill: "#000000", fillOpacity: 0.55, textFill: "#fff" });
-  layers.push({ input: tc.pill, left: 0, top: 0 }, { input: tc.label, left: 0, top: 0 });
+  const pola = await polaroid(beforeSrc, 6);
+  const polaAt = { x: 720, y: 150 };
+  layers.push({ input: pola.buf, left: polaAt.x, top: polaAt.y });
+  safeCheck("커버 폴라로이드", { x: polaAt.x, y: polaAt.y, w: pola.w, h: pola.h });
 
-  // 폴라로이드 인셋 — 우상단
-  const pola = await polaroid(beforeSrc, "원본");
-  const px = W - PAD - pola.w + 6, py = GRID_TOP;
-  const shadow = await sharp(svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<rect x="${px + 14}" y="${py + 20}" width="${pola.cardW}" height="${pola.cardH}" rx="6" fill="#000" fill-opacity="0.34"` +
-    ` transform="rotate(${POLA_ROT} ${px + pola.cardW / 2} ${py + pola.cardH / 2})"/></svg>`)).blur(14).png().toBuffer();
-  layers.push({ input: shadow, left: 0, top: 0 }, { input: pola.rotated, left: px, top: py });
+  const pl = await pill(kit.pill, { size: 30, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
+  layers.push({ input: pl.buf, left: 72, top: 880 });
+  safeCheck("커버 알약", { x: 72, y: 880, w: pl.w, h: pl.h });
 
-  // 인셋 → 본 이미지로 향하는 화살표.
-  // ★짧고 급하게, 폴라로이드 바로 아래에만 둔다 — 길게 뽑으면 인물 얼굴을 가로질러
-  //   결과 사진을 훼손한다(첫 렌더에서 입술을 관통했다). 인물 사진은 대개 화면을 꽉 채워서
-  //   "빈 곳으로 뻗는" 화살표는 존재하지 않는다고 보는 게 맞다.
-  const ax = Math.round(px + pola.w * 0.46), ay = py + pola.h + 8;
-  layers.push({ input: scribbleArrow([ax, ay, ax - 16, ay + 34, ax - 40, ay + 68], 112, { width: 6 }), left: 0, top: 0 });
+  // 제목 2줄 96px Black, 줄간격 18 — 잉크 기준으로 배치해 안전영역을 정확히 잰다
+  const T = { size: 96, weight: 900, fill: "#fff" };
+  const l1 = await png(textSvg({ ...T, x: 72, y: 980 + 96, text: kit.title.line1 }));
+  const b1 = await inkBox(l1);
+  const y2 = b1.y + b1.h + 18;
+  const l2 = await png(accentLineSvg({ ...T, x: 72, y: y2 + 96, text: kit.title.line2, accentWord: kit.title.accent, accent }));
+  const b2 = await inkBox(l2);
+  layers.push({ input: l1, left: 0, top: 0 }, { input: l2, left: 0, top: 0 });
+  safeCheck("커버 제목1", b1);
+  safeCheck("커버 제목2", b2);
 
-  // 제목 2줄 — 1줄 흰(그림자) / 2줄 크림 옐로 + 반투명 검정 하이라이트 바
-  const to = { weight: 900, spacing: -1 };
-  const T = await titlePair(kit, 84, 44, to);
-  if (T.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
-  // ★하이라이트 바 아랫변이 존 바닥(1130)에 닿게 — 그 아래 85px는 일부러 비워둔다
-  const l2 = Math.round(GRID_BOT - 12 - T.m2.dBot);
-  const l1 = Math.round(l2 - T.size * 1.24);
-  const hl = hlBar(PAD, l2, T.m2);
-  layers.push({ input: hl.layer, left: 0, top: 0 });
-  const t1 = textLayer({ ...to, size: T.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", halo: 3 });
-  const t2 = textLayer({ ...to, size: T.size, text: kit.titleLine2, x: PAD, y: l2, fill: YELLOW });
-  layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
+  const meta = await textLayer({ text: kit.meta, size: 26, weight: 500, x: W - 72, y: 1198, anchor: "end", fill: "#fff", opacity: 200 / 255 });
+  layers.push({ input: meta, left: 0, top: 0 });
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  const ok = zoneCheck("커버 배지", b.box) && zoneCheck("커버 툴 칩", tc.box);
-  const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
-  const okT = zoneCheck("커버 제목 1줄", b1) && zoneCheck("커버 하이라이트 바", hl.box);
-  const gc = await gridCropGate(dst, [b.layer, tc.pill, tc.label, hl.layer, t1, t2]);
-  const okP = px >= 0 && px + pola.w <= W && py >= SAFE_TOP && py + pola.h <= SAFE_BOT;
-  if (!okP) fails.push(`커버 폴라로이드 인셋 이탈 — (${px},${py}) ${pola.w}×${pola.h}`);
-  return { line: `[A 폴라로이드] 제목 ${T.size}px${T.shrunk ? "(자동 축소)" : ""} 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
-    `스티커배지 ${b.box.w}×${b.box.h}@y${b.box.y} · 툴칩 ${tc.box.w}×${tc.box.h}@y${tc.box.y} · 인셋 ${pola.w}×${pola.h}@(${px},${py}) ${POLA_ROT}° ${okP ? "OK" : "★NG"} · 하이라이트바 ${hl.box.w}×${hl.box.h} · ${gc.line}` };
+  return `커버 — 폴라로이드 ${pola.w}×${pola.h} @(${polaAt.x},${polaAt.y}) · 알약 ${pl.w}×${pl.h} · 제목 y${b1.y}~${b2.y + b2.h - 1}`;
 }
 
-// ══ B안 — 매거진 미니멀형 ══
-// 장식을 걷고 굵기 대비만으로 승부. 광고 티가 가장 적다.
-async function coverB(dst, beforeSrc, afterSrc, kit) {
+async function buildBody(dst, afterSrc, beforeSrc, n) {
   const base = await coverCrop(afterSrc, W, H);
-  // ★하단 55% 구간을 더 깊게(최대 0.97) — 흰 제목만으로 버텨야 하므로 바탕을 더 눌렀다
-  const layers = [{ input: gradLayer(Math.round(H * 0.45), 0.97, 0.55), left: 0, top: 0 }];
+  const layers = [{ input: await bottomGrad(), left: 0, top: 0 }];
 
-  // 배지 — 아주 작은 흰 테두리 아웃라인.
-  // ★fill="none"으로 두면 밝은 사진 위에서 통째로 사라진다(첫 렌더에서 안 보였다).
-  //   미니멀을 지키면서 읽히게 하려면 최소한의 어두운 받침이 필요하다.
-  const b = await badge(`픽레시피 ${kit.episode}`, { size: 28, weight: 700, spacing: 2 },
-    PAD, SAFE_TOP + 14, { fill: "rgba(0,0,0,0.32)", textFill: "#fff", stroke: "#ffffff" });
-  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+  // 대형 번호 — 안전영역 예외(의도)
+  layers.push({ input: await textLayer({ text: String(n).padStart(2, "0"), size: 260, weight: 900, x: W - 60, y: 40 + 200, anchor: "end", fill: "#fff", opacity: 40 / 255 }), left: 0, top: 0 });
 
-  // 제목 — 1줄 가늘게·작게 / 2줄 굵게·크게 (굵기 대비)
-  const o1 = { weight: 400, spacing: 0 }, o2 = { weight: 900, spacing: -1.5 };
-  const f2 = await fitSize(kit.titleLine2, MAX_TEXT_W, 96, 48, o2);
-  // ★0.52는 너무 작았다 — 1줄이 제목이 아니라 캡션처럼 읽혔다. 굵기 대비로 승부하려면
-  //   1줄도 제목 크기여야 한다(가늘기만으로 위계가 생긴다).
-  const s2 = f2.size, s1 = Math.max(44, Math.round(s2 * 0.64));
-  const f1 = await fitSize(kit.titleLine1, MAX_TEXT_W, s1, 30, o1);
-  const m1 = await measure(kit.titleLine1, { ...o1, size: f1.size });
-  const m2 = await measure(kit.titleLine2, { ...o2, size: s2 });
-  if (f1.overflow || f2.overflow) fails.push(`${path.basename(dst)} 제목이 하한에서도 ${MAX_TEXT_W}px를 넘음`);
+  // ★좌표 조정(스펙 y880 → 870): 폴라로이드는 250×300이지만 -6° 회전 + 그림자 여백으로
+  //   실제 296×340이 된다. y880에 두면 바닥이 y1219로 안전영역(1210)을 9px 넘는다.
+  //   안전영역이 우선이라는 지시에 따라 10px 올렸다 — 바닥 y1209.
+  const POLA_Y = 870;
+  const pola = await polaroid(beforeSrc, -6);
+  layers.push({ input: pola.buf, left: 60, top: POLA_Y });
+  safeCheck(`본문${n} 폴라로이드`, { x: 60, y: POLA_Y, w: pola.w, h: pola.h });
 
-  // 언더라인 바(4px) → 2줄 → 1줄 순서로 아래에서 쌓는다.
-  // ★첫 렌더의 180px는 2줄의 첫 단어만 밑줄 친 것처럼 보였다 — 우연처럼 읽히면 장식이 아니다.
-  const barY = SAFE_BOT - 34, barW = Math.min(320, Math.max(160, Math.round(m2.w * 0.42)));
-  const l2 = Math.round(barY - 26 - m2.dBot);
-  const l1 = Math.round(l2 + m2.dTop - 20 - m1.dBot);
-  // 오버라인 — 아주 작은 크림색, 1줄 위
-  const oo = { size: 32, weight: 700, spacing: 6 };
-  const om = await measure("사진 한 장이면", oo);
-  const ly = Math.round(l1 + m1.dTop - 26 - om.dBot);
-  layers.push(
-    { input: textLayer({ ...oo, text: "사진 한 장이면", x: PAD, y: ly, fill: CREAM, halo: 3 }), left: 0, top: 0 },
-    { input: textLayer({ ...o1, size: f1.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", halo: 3 }), left: 0, top: 0 },
-    { input: textLayer({ ...o2, size: s2, text: kit.titleLine2, x: PAD, y: l2, fill: "#fff", halo: 2 }), left: 0, top: 0 },
-    { input: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-      `<rect x="${PAD}" y="${barY}" width="${barW}" height="4" rx="2" fill="${PINK}"/></svg>`), left: 0, top: 0 });
+  const pl = await pill("셀카 1장 · 3분", { size: 26, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
+  layers.push({ input: pl.buf, left: 372, top: 1126 });
+  safeCheck(`본문${n} 알약`, { x: 372, y: 1126, w: pl.w, h: pl.h });
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  const ok = safeCheck("커버 배지", b.box);
-  const okBar = safeCheck("커버 언더라인", { x: PAD, y: barY, w: barW, h: 4 });
-  const bOver = await alphaBox(await png(textLayer({ ...oo, text: "사진 한 장이면", x: PAD, y: ly, fill: CREAM }).toString()));
-  const okO = safeCheck("커버 오버라인", bOver);
-  return { line: `[B 매거진] 오버라인 ${oo.size}px y${bOver.y} · 제목 ${f1.size}px(400) / ${s2}px(900) 잉크 y ${l1 + m1.dTop}~${l2 + m2.dBot} · ` +
-    `언더라인 ${barW}×4 y${barY} · 그라데 45%~ 0.97 ${ok && okBar && okO ? "OK" : "★NG"}` };
+  return `본문${n} — 번호 260px(알파40) · 폴라로이드 ${pola.w}×${pola.h} @(60,${POLA_Y}) 바닥y${POLA_Y + pola.h - 1} · 알약 ${pl.w}×${pl.h}`;
 }
 
-// ══ C안 — 네온 팝형 ══
-// 스티커 타이포 + 형광. 피드에서 가장 멀리서도 눈에 걸린다. 대신 톤이 세다.
-async function coverC(dst, beforeSrc, afterSrc, kit) {
+// 쉼표 기준 2줄 나눔(없으면 길이 기준 자동)
+function splitTwo(s) {
+  const i = s.indexOf(",");
+  if (i > 0 && i < s.length - 1) return [s.slice(0, i + 1).trim(), s.slice(i + 1).trim()];
+  const mid = Math.ceil(s.length / 2);
+  const sp = s.lastIndexOf(" ", mid);
+  return sp > 0 ? [s.slice(0, sp).trim(), s.slice(sp + 1).trim()] : [s, ""];
+}
+
+async function buildCta(dst, afterSrc, kit, accent) {
   const base = await coverCrop(afterSrc, W, H);
-  const layers = [{ input: gradLayer(560, 0.86, 0.36), left: 0, top: 0 }];
+  const layers = [{ input: await dim(120), left: 0, top: 0 }];
+  const wm = await watermark();
+  layers.push({ input: wm.layer, left: 0, top: 0 });
 
-  // 배지 — 노랑 필 + 검정 글씨, 영문
-  const b = await badge(`PICK RECIPE ${kit.episode}`, { size: 36, weight: 900, spacing: 2 },
-    PAD, SAFE_TOP + 16, { fill: YELLOW, textFill: "#141414" });
-  layers.push({ input: b.pill, left: 0, top: 0 }, { input: b.label, left: 0, top: 0 });
+  const [q1, q2] = splitTwo(kit.cta.question);
+  const Q = { size: 72, weight: 900, fill: "#fff", x: 72 };
+  const qa = await png(textSvg({ ...Q, y: 430 + 72, text: q1 }));
+  const ba = await inkBox(qa);
+  layers.push({ input: qa, left: 0, top: 0 });
+  safeCheck("CTA 질문1", ba);
+  if (q2) {
+    const qb = await png(textSvg({ ...Q, y: ba.y + ba.h + 18 + 72, text: q2 }));
+    const bb = await inkBox(qb);
+    layers.push({ input: qb, left: 0, top: 0 });
+    safeCheck("CTA 질문2", bb);
+  }
 
-  // 제목 2줄 — 굵은 검정 아웃라인. 아웃라인이 6px 번지므로 폭 예산을 그만큼 줄인다.
-  const to = { weight: 900, spacing: -1 };
-  const OUT = 6;
-  const T = await titlePair({ ...kit }, 88, 44, to);
-  if (T.overflow) fails.push(`${path.basename(dst)} 제목이 44px에서도 ${MAX_TEXT_W}px를 넘음`);
-  const l2 = Math.round(SAFE_BOT - 34 - T.m2.dBot - OUT);
-  const l1 = Math.round(l2 - T.size * 1.28);
-  const t1 = textLayer({ ...to, size: T.size, text: kit.titleLine1, x: PAD, y: l1, fill: "#fff", outline: OUT });
-  const t2 = textLayer({ ...to, size: T.size, text: kit.titleLine2, x: PAD, y: l2, fill: LIME, outline: OUT });
-  layers.push({ input: t1, left: 0, top: 0 }, { input: t2, left: 0, top: 0 });
+  for (const [i, line] of (kit.cta.fact || []).slice(0, 2).entries()) {
+    const y = i === 0 ? 660 : 712;
+    const l = await png(textSvg({ text: line, size: 36, weight: 500, x: 72, y: y + 36, fill: "#fff", opacity: 215 / 255 }));
+    layers.push({ input: l, left: 0, top: 0 });
+    safeCheck(`CTA 사실${i + 1}`, await inkBox(l));
+  }
 
-  // before 원형 썸네일 — 좌하단 + 화살표
-  const R = 96, D = R * 2;
-  const sq = await sharp(beforeSrc).flatten({ background: "#ffffff" })
-    .resize(D, D, { fit: "cover", position: sharp.strategy.attention }).png().toBuffer();
-  const mask = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${D}" height="${D}">` +
-    `<circle cx="${R}" cy="${R}" r="${R}" fill="#fff"/></svg>`);
-  const circle = await sharp(sq).composite([{ input: mask, blend: "dest-in" }]).png().toBuffer();
-  // ★좌측 + 제목 위. 첫 렌더는 우측에 놓았고 화살표가 제목 "그림이"를 관통했다 —
-  //   타이포를 가로지르는 장식은 무조건 결함이다. 제목 잉크 위쪽으로 클리어런스를 계산해 앉힌다.
-  const titleTop = l1 + T.m1.dTop;
-  const cx = PAD, cy = Math.max(SAFE_TOP + 90, titleTop - 62 - D);
-  layers.push(
-    { input: svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-      `<circle cx="${cx + R}" cy="${cy + R}" r="${R + 5}" fill="none" stroke="#fff" stroke-width="6"/></svg>`), left: 0, top: 0 },
-    { input: circle, left: cx, top: cy },
-    // 원 오른쪽 아래에서 짧게 — 끝점을 제목 잉크보다 위에서 끊는다
-    { input: scribbleArrow([cx + D - 26, cy + D - 18, cx + D + 26, cy + D + 4, cx + D + 62, cy + D + 26], 32, { color: LIME, width: 8 }), left: 0, top: 0 });
+  const act = await pill(kit.cta.action, { size: 34, weight: 500, padX: 34, padY: 18, bg: accent, fill: "#280A18" });
+  layers.push({ input: act.buf, left: 72, top: 830 });
+  safeCheck("CTA 액션 알약", { x: 72, y: 830, w: act.w, h: act.h });
+
+  const dmLine = await png(textSvg({ text: "DM 요청 폴더도 확인해 주세요", size: 26, weight: 400, x: 72, y: 950 + 26, fill: "#fff", opacity: 170 / 255 }));
+  layers.push({ input: dmLine, left: 0, top: 0 });
+  safeCheck("CTA 안내", await inkBox(dmLine));
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  const ok = safeCheck("커버 배지", b.box);
-  const b1 = await alphaBox(await png(t1.toString())), b2 = await alphaBox(await png(t2.toString()));
-  const okT = safeCheck("커버 제목 1줄", b1) && safeCheck("커버 제목 2줄", b2);
-  const okC = cy >= SAFE_TOP && cy + D <= SAFE_BOT && cx >= 0 && cx + D <= W;
-  if (!okC) fails.push(`커버 원형 인셋 이탈 — (${cx},${cy}) ${D}×${D}`);
-  return { line: `[C 네온팝] 제목 ${T.size}px 아웃라인 ${OUT}px 잉크 y ${b1.y}~${b2.y + b2.h - 1} ${okT && ok ? "OK" : "★NG"} · ` +
-    `배지 노랑 ${b.box.w}×${b.box.h} · 원형인셋 ⌀${D}@(${cx},${cy}) ${okC ? "OK" : "★NG"}` };
+  return `CTA — 질문 ${q2 ? 2 : 1}줄 72px · 사실 2줄 · 액션 알약 ${act.w}×${act.h}(accent)`;
 }
 
-const COVERS = { A: coverA, B: coverB, C: coverC };
-const buildCover = (dst, beforeSrc, afterSrc, kit) => COVERS[STYLE](dst, beforeSrc, afterSrc, kit);
+async function buildFollow(dst, afterSrc) {
+  const base = await coverCrop(afterSrc, W, H);
+  const layers = [{ input: await dim(140), left: 0, top: 0 }];
 
-// ─── 02-ba ────────────────────────────────────────────────────────────────
-// 상하 분할(각 1080×675) + 좌상단 "전"/"후" 칩 + 중앙 화살표.
-// ★conceptLabel은 여기 화살표 아래에 넣는다: 커버는 안전영역 계산이 빡빡하고 캡션 템플릿은
-//   고정이다. 화살표 옆이 이 카드에서 유일하게 비어 있는 자리이고, 무엇이 무엇으로 바뀌는지
-//   말해주기에도 제일 맞는 자리다.
-async function buildBA(dst, beforeSrc, afterSrc, kit) {
-  const half = H / 2;                                          // 675
-  const top = await bandCrop(beforeSrc, W, half);
-  const bot = await bandCrop(afterSrc, W, half);
+  // ★v1 08-follow 자산 그대로 — 워드마크 + 태그라인. 새 자산을 만들지 않는다.
+  const mark = await png(textSvg({ text: WORDMARK, size: 128, weight: 900, spacing: 8, x: W / 2, y: 620, anchor: "middle", fill: "#fff" }));
+  const mb = await inkBox(mark);
+  layers.push({ input: mark, left: 0, top: 0 });
+  safeCheck("팔로우 워드마크", mb);
 
-  // ★A안 배지 톤 — 커버의 "픽레시피 01"과 같은 흰 바탕·검정 글씨.
-  //   검정 반투명 칩은 사진 밝기에 따라 읽힘이 흔들렸고, 무엇보다 커버와 다른 말을 썼다.
-  const chip = async (label, absY) => {
-    const b = await badge(label, { size: 40, weight: 900, spacing: 1 }, PAD, absY,
-      { fill: BADGE_FILL, textFill: BADGE_TEXT });
-    return { pill: b.pill, text: b.label, box: `${b.box.w}×${b.box.h}@(${PAD},${absY})` };
-  };
-  const cBefore = await chip("전", 36);
-  const cAfter = await chip("후", half + 36);
+  const tag = await png(textSvg({ text: TAGLINE, size: 46, weight: 400, x: W / 2, y: mb.y + mb.h + 46 + 46, anchor: "middle", fill: "#fff", opacity: 0.75 }));
+  const tb = await inkBox(tag);
+  layers.push({ input: tag, left: 0, top: 0 });
+  safeCheck("팔로우 태그라인", tb);
 
-  // 화살표 — 분할선 위에 흰 원 + 아래쪽 셰브론
-  const cx = W / 2, cy = half, r = 54;
-  const arrow = svgBuf(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">` +
-    `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff"/>` +
-    `<path d="M ${cx - 23} ${cy - 11} L ${cx} ${cy + 13} L ${cx + 23} ${cy - 11}" fill="none" ` +
-    `stroke="${CTA_BG}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+  const pl = await pill(`${HANDLE} 팔로우`, { size: 32, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
+  const px = Math.round((W - pl.w) / 2), py = 1080;
+  layers.push({ input: pl.buf, left: px, top: py });
+  safeCheck("팔로우 알약", { x: px, y: py, w: pl.w, h: pl.h });
 
-  // conceptLabel 알약 — 원 바로 아래 가운데
-  const lo = { size: 36, weight: 700, anchor: "middle" };
-  const lf = await fitSize(kit.conceptLabel, MAX_TEXT_W - 80, 36, 24, lo);
-  const lm = await measure(kit.conceptLabel, { ...lo, size: lf.size });
-  // conceptLabel = 이 카드의 강조 한 줄 → 커버 2줄째와 같은 언어(하이라이트 바 + 크림 옐로)
-  const lBase = cy + r + 26 + 14 - lm.dTop;
-  const lHl = hlBar(cx, lBase, lm, { anchor: "middle", padX: 24 });
-  const labelPill = lHl.layer;
-  const labelText = textLayer({ ...lo, size: lf.size, text: kit.conceptLabel, x: cx, y: lBase, fill: YELLOW });
-  const lw = lHl.box.w, lh = lHl.box.h, ly = lHl.box.y;
-
-  await sharp({ create: { width: W, height: H, channels: 3, background: "#000" } }).composite([
-    { input: top, left: 0, top: 0 }, { input: bot, left: 0, top: half },
-    { input: cBefore.pill, left: 0, top: 0 }, { input: cBefore.text, left: 0, top: 0 },
-    { input: cAfter.pill, left: 0, top: 0 }, { input: cAfter.text, left: 0, top: 0 },
-    { input: arrow, left: 0, top: 0 },
-    { input: labelPill, left: 0, top: 0 }, { input: labelText, left: 0, top: 0 },
-  ]).png({ compressionLevel: 9 }).toFile(dst);
-
-  return { line: `분할 ${W}×${half} ×2 · 칩 전 ${cBefore.box} / 후 ${cAfter.box} · 화살표 r${r}@(${cx},${cy}) · 라벨 ${lf.size}px ${lw}×${lh}@y${ly}` };
+  await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
+  return `팔로우 — 워드마크 128px y${mb.y} · 태그라인 46px y${tb.y} · 알약 ${pl.w}×${pl.h}`;
 }
 
-// ─── 03…-gallery ──────────────────────────────────────────────────────────
-// 애프터 한 장을 꽉 채운다. 글자는 0장.
-// ★워터마크("Made with MOSPIC AI")를 뺐다(2026-08-24): 결과 사진 자체가 유일한 주인공이고,
-//   AI 고지는 캡션이 담당한다. 게이트도 같이 뺐다 — 검사할 대상이 없어졌다.
-async function buildGallery(dst, src) {
-  const base = await coverCrop(src, W, H);
-  await sharp(base).png({ compressionLevel: 9 }).toFile(dst);
-  // 글자 0 = 안전영역·헤일로 검사 대상이 없다. 규격은 공통 verify()가 본다.
-  return { line: "풀블리드 · 글자 0(워터마크 제거)" };
-}
-
-// ─── …-cta ────────────────────────────────────────────────────────────────
-// 어두운 단색 + 가운데 정렬 3줄 + 하단 안내 한 줄.
-// ★행동 줄(①②)만 노란색이다: 이 카드에서 사람이 실제로 해야 하는 일은 그 한 줄뿐이라
-//   색을 거기 하나에만 쓴다. 강조를 두 군데 이상 주면 강조가 아니게 된다.
-async function buildCTA(dst, kit) {
-  const L = [
-    { text: `'${kit.titleLine2}' 레시피 받는 법`, start: 64, weight: 900, fill: "#fff", op: 1 },
-    // ★행동 줄 바로 위 — "레시피"가 뭘 하는 물건인지 여기서 한 번 말해준다
-    { text: `${kit.tool}에 붙여넣기만 하면 끝`, start: 56, weight: 400, fill: "#fff", op: 0.86 },
-    { text: `① 팔로우  ② 댓글에 '${kit.keyword}'`, start: 52, weight: 900, fill: YELLOW, op: 1, hl: true },
-    { text: "정리된 레시피를 DM으로 보내드려요", start: 48, weight: 400, fill: "#fff", op: 0.86 },
-  ];
-  const fitted = [];
-  for (const l of L) {
-    const o = { weight: l.weight, anchor: "middle" };
-    const f = await fitSize(l.text, MAX_TEXT_W, l.start, CTA_MIN_PX, o);
-    // ★하한에서도 안 들어가면 더 줄이지 않고 실패로 올린다(44px 하한이 곧 게이트다)
-    if (f.overflow) fails.push(`${path.basename(dst)} "${l.text}" 가 ${CTA_MIN_PX}px에서도 ${MAX_TEXT_W}px를 넘음`);
-    fitted.push({ ...l, o, size: f.size, m: f.m });
-  }
-  // ★크기 서열을 지킨다: 제목이 길어 1줄이 줄면 아래 줄도 같이 내린다.
-  //   안 하면 제목 54px 아래 행동 줄 58px 이 되어 위계가 뒤집힌다(실측으로 봤다).
-  for (let i = 1; i < fitted.length; i++) {
-    const capped = Math.max(CTA_MIN_PX, Math.min(fitted[i].size, fitted[i - 1].size - 4));
-    if (capped === fitted[i].size) continue;
-    fitted[i].size = capped;
-    fitted[i].m = await measure(fitted[i].text, { ...fitted[i].o, size: capped });
-  }
-
-  // 잉크 높이 + 고정 간격으로 3줄 블록을 쌓고, 블록 중심을 y=620에 맞춘다
-  // ★줄 수에서 간격을 만든다 — 손으로 두 칸만 두면 줄이 늘었을 때 gaps[i] ?? 0 이 0이 되어
-  //   마지막 두 줄이 겹친다(툴 줄을 넣으면서 실제로 걸릴 뻔한 자리다).
-  const gaps = fitted.slice(0, -1).map((f) => Math.round(f.size * 0.95));
-  const inkH = fitted.map((f) => f.m.dBot - f.m.dTop + 1);
-  const blockH = inkH.reduce((a, b) => a + b, 0) + gaps[0] + gaps[1];
-  let inkTop = Math.round(620 - blockH / 2);
-
-  const layers = [];
-  const report = [];
-  for (let i = 0; i < fitted.length; i++) {
-    const f = fitted[i];
-    const baseline = inkTop - f.m.dTop;
-    // ★행동 줄(②)에만 하이라이트 바 — 커버 2줄째와 같은 언어.
-    //   이 카드에서 사람이 실제로 해야 하는 일은 그 한 줄뿐이라 강조도 거기 하나뿐이다.
-    if (f.hl) layers.push(hlBar(W / 2, baseline, f.m, { anchor: "middle", padX: 22 }).layer);
-    layers.push(textLayer({ ...f.o, size: f.size, text: f.text, x: W / 2, y: baseline, fill: f.fill, opacity: f.op }));
-    report.push(`${f.size}px`);
-    inkTop += inkH[i] + (gaps[i] ?? 0);
-  }
-
-  // ★시리즈 배지 — 커버와 같은 흰 바탕·검정 글씨. 단색 카드라 여기만 시리즈 표식이 없었다.
-  const cb = await stickerBadge("픽레시피", kit.episode, PAD, SAFE_TOP + 20, { size: 34 });
-  layers.unshift(cb.shadow, cb.layer);
-  safeCheck("CTA 배지", cb.box);
-
-  const note = "업로드 5분 뒤부터 자동 발송돼요";
-  const no = { size: CTA_MIN_PX, weight: 400, anchor: "middle" };
-  const nm = await measure(note, no);
-  layers.push(textLayer({ ...no, text: note, x: W / 2, y: Math.round(SAFE_BOT - 40 - nm.dBot), fill: "#fff", opacity: 0.55 }));
-
-  await sharp({ create: { width: W, height: H, channels: 3, background: CTA_BG } })
-    .composite(layers.map((input) => ({ input, left: 0, top: 0 })))
-    .png({ compressionLevel: 9 }).toFile(dst);
-
-  const minPx = Math.min(...fitted.map((f) => f.size), CTA_MIN_PX);
-  if (minPx < CTA_MIN_PX) fails.push(`${path.basename(dst)} 글자 ${minPx}px < 하한 ${CTA_MIN_PX}px`);
-  return { line: `3줄 ${report.join(" / ")} + 안내 ${CTA_MIN_PX}px · 최소 ${minPx}px ≥ 하한 ${CTA_MIN_PX}px ${minPx >= CTA_MIN_PX ? "OK" : "★NG"}` };
-}
-
-// ─── …-follow ─────────────────────────────────────────────────────────────
-// 애프터 한 장 풀블리드 + 하단 60% 어두운 그라데이션 + 대형 워드마크 + 태그라인 + 팔로우 유도.
-// ★쓰는 사진은 '마지막 애프터'다: 커버가 애프터1이라, 캐러셀이 시작과 끝에 다른 얼굴로
-//   열리고 닫힌다(같은 장이면 마지막 장이 커버의 재탕처럼 보인다).
-async function buildFollow(dst, src) {
-  const base = await coverCrop(src, W, H);
-  // ★그라데이션도 공용 헬퍼로 — 같은 수식이 두 곳에 살면 한쪽만 고쳐지는 날이 온다
-  const gTop = Math.round(H * 0.4);                             // 아래 60%
-  const grad = gradLayer(gTop, 0.92, 0.55);
-
-  // 아래에서 위로 쌓는다 — 맨 아래 안내 → 태그라인 → 워드마크
-  const noteO = { size: 36, weight: 400, anchor: "middle" };
-  const noteText = "다음 픽레시피가 궁금하다면 팔로우";
-  const nm = await measure(noteText, noteO);
-  const noteInkBot = SAFE_BOT - 24;
-
-  const tagO = { size: 46, weight: 400, anchor: "middle" };
-  const tm = await measure(TAGLINE, tagO);
-  const tagInkBot = noteInkBot - (nm.dBot - nm.dTop + 1) - 34;
-
-  const markF = await fitSize("MOSPIC", MAX_TEXT_W, 128, 64, { weight: 900, spacing: 8, anchor: "middle" });
-  const markO = { size: markF.size, weight: 900, spacing: 8, anchor: "middle" };
-  const mm = markF.m;
-  const markInkBot = tagInkBot - (tm.dBot - tm.dTop + 1) - 40;
-
-  // ★안내 줄 = 이 카드에서 사람이 해야 하는 유일한 일(팔로우) → CTA 카드와 같은 규칙으로
-  //   하이라이트 바를 깐다. 0.55 불투명도로는 실제로 잘 안 읽혔다 — 바를 깔면서 1.0으로 올린다.
-  const noteBase = Math.round(noteInkBot - nm.dBot);
-  const nHl = hlBar(W / 2, noteBase, nm, { anchor: "middle", padX: 22, padY: 10 });
-
-  await sharp(base).composite([
-    { input: grad, left: 0, top: 0 },
-    { input: textLayer({ ...markO, text: "MOSPIC", x: W / 2, y: Math.round(markInkBot - mm.dBot), fill: "#fff", halo: 3 }), left: 0, top: 0 },
-    { input: textLayer({ ...tagO, text: TAGLINE, x: W / 2, y: Math.round(tagInkBot - tm.dBot), fill: "#fff", opacity: 0.7, halo: 2 }), left: 0, top: 0 },
-    { input: nHl.layer, left: 0, top: 0 },
-    { input: textLayer({ ...noteO, text: noteText, x: W / 2, y: noteBase, fill: "#fff", halo: 2 }), left: 0, top: 0 },
-  ]).png({ compressionLevel: 9 }).toFile(dst);
-
-  safeCheck("팔로우 안내 바", nHl.box);
-  return { line: `워드마크 ${markF.size}px 잉크바닥 y${markInkBot} · 태그라인 46px y${tagInkBot} · 안내 36px y${noteInkBot} + 하이라이트바 ${nHl.box.w}×${nHl.box.h} · 그라데이션 y${gTop}~${H}(하단 60%)` };
-}
-
-// ─── caption.txt / dm.txt ─────────────────────────────────────────────────
-// ✅ 3줄은 자리표시다 — MJ가 컨셉마다 손으로 고치는 자리. 그럴듯한 문장을 지어 넣으면
-// 안 고치고 그대로 올라간다. 그래서 일부러 "(수정)" 표시를 남겨둔다.
+// ── 텍스트 산출물 ────────────────────────────────────────────────────────────
 function buildCaption(kit) {
-  const tags = ["#AI사진", "#프롬프트", "#aiart", "#aiphoto", ...kit.tagsExtra];
-  // checks 가 있으면 그 문구로, 없으면 "(수정)" 자리표시 그대로.
-  // ★자리표시를 그럴듯한 문장으로 자동 생성하지 않는 이유는 그대로다 — 안 고치고 그대로 올라간다.
-  const checkLines = kit.checks.length
-    ? kit.checks.map((c) => `✅ ${c}`)
-    : ["✅ (수정) 이 컨셉의 핵심 한 줄",
-       "✅ (수정) 사진 고를 때 챙길 것 한 줄",
-       "✅ (수정) 결과가 잘 나온 조건 한 줄"];
-  return [
-    "일단 저장부터 해두세요 📌",
-    "",
-    `[픽레시피 ${kit.episode} — ${kit.titleLine2}]`,
-    `🛠 ${kit.tool}에서 바로 쓸 수 있어요`,
-    "",
-    ...checkLines,
-    "",
-    "✔ 같은 프롬프트라도 쓰는 모델·버전에 따라 결과가 달라져요",
-    "✔ 주인공이 크게 나온 사진일수록 얼굴이 또렷하게 살아요",
-    "",
-    `팔로우하고 댓글에 '${kit.keyword}' 남겨주시면 정리된 레시피를 DM으로 보내드려요`,
-    "(업로드 5분 뒤부터 자동 발송돼요)",
-    "",
-    tags.join(" "),
-    "",
-  ].join("\n");
+  const c = kit.caption;
+  const ctaLine = `댓글에 "${kit.cta.keyword}" 남겨주시면 레시피와 바로 가는 링크를 DM으로 보내드려요.`;
+  const parts = [c.hook, "", ...c.body.flatMap((b) => [b, ""]), c.question, ctaLine];
+  if (c.saveLine) parts.push(c.saveLine);
+  parts.push("", (c.hashtags || []).join(" "));
+  let text = parts.join("\n");
+  if (text.length > 900) {
+    // 900자 초과 — CTA를 훅 바로 아래에도 한 번 더
+    const p2 = [c.hook, "", ctaLine, "", ...c.body.flatMap((b) => [b, ""]), c.question, ctaLine];
+    if (c.saveLine) p2.push(c.saveLine);
+    p2.push("", (c.hashtags || []).join(" "));
+    text = p2.join("\n");
+  }
+  return text;
 }
+const buildDm = (kit, url) => [
+  "안녕하세요! 요청 주신 레시피 보내드려요 🙌",
+  "",
+  kit.dm.recipe,
+  "",
+  `앱에서 바로 만들기: ${url} (셀카 1장, 3분)`,
+  "",
+  kit.dm.closing,
+].join("\n");
 
-function buildDM(kit) {
-  const rule = "──────────────────────────────";
-  return [
-    `안녕하세요! 픽레시피 ${kit.episode} '${kit.titleLine2}' 레시피 보내드려요 🙌`,
-    "",
-    `아래 전체를 복사해서 ${kit.tool}에 사진과 함께 넣어주세요.`,
-    rule,
-    kit.dmPrompt.trim(),
-    rule,
-    "",
-    "💡 팁: 주인공이 크게 나온 사진일수록 얼굴이 또렷하게 살아요.",
-    "",
-    "증명사진·프로필처럼 내 얼굴 그대로여야 하는 사진은 프롬프트로 하면 얼굴이 자꾸 달라지죠? " +
-    "그게 MOSPIC 앱이 하는 일이에요. 사진 1장, 30초. 가입하면 웰컴 코인 3개 → mospic.com",
-    "",
-  ].join("\n");
-}
-
-// 금지어 린트 — 걸린 단어와 그 단어가 있는 줄을 그대로 돌려준다(어디를 고쳐야 하는지 바로 보이게)
-function lint(slug, file, text) {
+function lint(where, text) {
   const hits = [];
   text.split("\n").forEach((line, i) => {
-    for (const w of BANNED) if (line.includes(w)) hits.push(`${slug}/${file}:${i + 1} "${w}" — ${line.trim()}`);
+    for (const w of BANNED) if (line.includes(w)) hits.push(`${where}:${i + 1} "${w}" — ${line.trim()}`);
   });
   return hits;
 }
 
-// ─── slug 읽기 ────────────────────────────────────────────────────────────
-function readSlug(slug) {
-  const dir = path.join(RAW, slug);
-  const kitPath = path.join(dir, "kit.json");
-  if (!existsSync(kitPath)) throw new Error(`${slug}: kit.json 이 없습니다 (${path.relative(ROOT, kitPath)})`);
-  let raw;
-  try { raw = JSON.parse(readFileSync(kitPath, "utf8")); }
-  catch (e) { throw new Error(`${slug}: kit.json 파싱 실패 — ${e.message}`); }
-
-  for (const k of ["episode", "titleLine1", "titleLine2", "conceptLabel", "dmPrompt"])
-    if (!raw[k] || !String(raw[k]).trim()) throw new Error(`${slug}: kit.json 에 ${k} 가 비어 있습니다`);
-
-  const kit = {
-    episode: String(raw.episode).trim(),
-    titleLine1: String(raw.titleLine1).trim(),
-    titleLine2: String(raw.titleLine2).trim(),
-    conceptLabel: String(raw.conceptLabel).trim(),
-    keyword: String(raw.keyword ?? "모스픽").trim(),          // 기본 키워드
-    tagsExtra: (Array.isArray(raw.tagsExtra) ? raw.tagsExtra : []).map((t) => {
-      const s = String(t).trim();
-      return s.startsWith("#") ? s : `#${s}`;                   // # 를 빼먹어도 붙여준다
-    }),
-    // ★캡션의 ✅ 자리표시를 대신할 3줄. 없으면 빈 배열 → "(수정)" 표시가 그대로 남는다.
-    //   빈 문자열은 걸러낸다 — 빈 ✅ 줄이 올라가는 건 자리표시보다 나쁘다.
-    checks: (Array.isArray(raw.checks) ? raw.checks : []).map((s) => String(s).trim()).filter(Boolean),
-    // ★프롬프트를 어디에 붙여넣는지. 이 말이 없으면 "레시피"가 뭔지 모르는 사람은 그냥 지나간다.
-    tool: String(raw.tool ?? "ChatGPT·Gemini").trim(),
-    dmPrompt: String(raw.dmPrompt),
+// ── 메인 ─────────────────────────────────────────────────────────────────────
+async function fontProbe() {
+  const ink = async (w) => {
+    const b = await sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="140"><text x="10" y="100" font-family="${FONTS}" font-size="80" font-weight="${w}" fill="#fff">셀카 한 장</text></svg>`)).greyscale().raw().toBuffer();
+    let n = 0; for (const v of b) if (v > 128) n++; return n;
   };
-
-  const files = readdirSync(dir).filter((f) => EXT.test(f));
-  const before = files.find((f) => /^before\./i.test(f));
-  if (!before) throw new Error(`${slug}: before.(jpg|jpeg|png|webp) 가 없습니다`);
-  const afters = files
-    .map((f) => ({ f, n: (f.match(/^after-(\d+)\./i) || [])[1] }))
-    .filter((x) => x.n !== undefined)
-    .sort((a, b) => Number(a.n) - Number(b.n))
-    .map((x) => x.f);
-  // ★2~8장을 강제한다: 1장이면 커버·BA·갤러리·팔로우가 전부 같은 사진이 되어
-  //   캐러셀로서 의미가 없고, 8장을 넘기면 슬라이드가 12장을 넘어 앞부분만 보게 된다.
-  if (afters.length < 2 || afters.length > 8)
-    throw new Error(`${slug}: after 사진이 ${afters.length}장 — 2~8장이어야 합니다 (after-1 … after-N)`);
-
-  return { slug, dir, kit, before: path.join(dir, before), afters: afters.map((f) => path.join(dir, f)), afterNames: afters };
+  const [r, m, bk] = [await ink(400), await ink(500), await ink(900)];
+  if (r === 0) { console.error("★한글이 렌더되지 않습니다 — Noto Sans KR 또는 맑은 고딕을 설치한 뒤 다시 실행하세요."); process.exit(1); }
+  if (!(bk > m && m > r)) { console.error(`★폰트 웨이트가 반영되지 않습니다(400=${r} 500=${m} 900=${bk}) — Noto Sans KR(가변)이 필요합니다.`); process.exit(1); }
+  return `폰트 OK — 잉크 400=${r} 500=${m} 900=${bk} (Black·Medium 구분됨)`;
 }
 
-// ─── main ─────────────────────────────────────────────────────────────────
-async function main() {
-  if (!existsSync(RAW)) {
-    console.error(`원료 폴더가 없습니다: ${path.relative(ROOT, RAW)}`);
-    console.error("  insta/raw/{slug}/ 에 before.jpg · after-1.jpg… · kit.json 을 넣어주세요.");
-    process.exit(1);
+async function run(slug, fixture) {
+  const rawDir = path.join(RAW, slug);
+  const outDir = path.join(OUT, slug);
+  mkdirSync(outDir, { recursive: true });
+  for (const f of existsSync(outDir) ? readdirSync(outDir) : []) rmSync(path.join(outDir, f), { force: true });
+
+  // kit.json
+  let kit = KIT_FIXTURE;
+  const kitPath = path.join(rawDir, "kit.json");
+  if (existsSync(kitPath)) kit = JSON.parse(readFileSync(kitPath, "utf8"));
+  else if (!fixture) { console.error(`★kit.json 없음: ${kitPath}`); process.exit(1); }
+  else console.log("  kit.json 없음 → fixture 기본값 사용");
+  const accent = kit.accent || DEFAULT_ACCENT;
+
+  // 쌍 수집
+  const pairs = [];
+  for (let n = 1; n <= 4; n++) {
+    const a = ["jpg", "jpeg", "png", "webp"].map((e) => path.join(rawDir, `after-${n}.${e}`)).find(existsSync);
+    const b = ["jpg", "jpeg", "png", "webp"].map((e) => path.join(rawDir, `before-${n}.${e}`)).find(existsSync);
+    if (a && b) pairs.push({ n, after: a, before: b });
+    else if (fixture) pairs.push({ n, after: await placeholder(`after-${n}.jpg`, false), before: await placeholder(`before-${n}.jpg`, true) });
   }
-  const asked = process.argv.slice(2).filter((a) => !a.startsWith("-"));
-  const slugs = asked.length ? asked
-    : readdirSync(RAW).filter((d) => statSync(path.join(RAW, d)).isDirectory());
-  if (!slugs.length) { console.error(`${path.relative(ROOT, RAW)} 아래에 slug 폴더가 없습니다`); process.exit(1); }
+  if (pairs.length < 2) { console.error(`★쌍이 ${pairs.length}개 — 최소 2쌍 필요`); process.exit(1); }
+  console.log(`  쌍 ${pairs.length}개${fixture ? " (fixture 자리표시)" : ""}`);
 
-  // ★한글 렌더 게이트: 폰트를 못 찾으면 글자 없는 카드가 조용히 나간다. 만들기 전에 막는다.
-  const probe = await alphaBox(await png(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="120">` +
-    `<text x="10" y="90" font-family="${KR_FONTS}" font-size="60" fill="#fff">${esc(TAGLINE)}</text></svg>`));
-  if (!probe || probe.n < 100) {
-    console.error("★한글이 렌더되지 않습니다 — 한글 폰트(맑은 고딕/Noto Sans KR)를 설치한 뒤 다시 실행하세요.");
-    process.exit(1);
+  // 딥링크
+  const dl = resolveDeeplink(kit.conceptKey);
+  if (!dl.ok) { fail(`딥링크 해석 실패 — ${dl.why}`); }
+
+  // 카드
+  const lines = [];
+  lines.push(await buildCover(path.join(outDir, "01-cover.png"), pairs[0].after, pairs[0].before, kit, accent));
+  for (const [i, p] of pairs.entries()) {
+    lines.push(await buildBody(path.join(outDir, `${String(i + 2).padStart(2, "0")}-body.png`), p.after, p.before, i + 1));
   }
+  const ctaNo = String(pairs.length + 2).padStart(2, "0");
+  const folNo = String(pairs.length + 3).padStart(2, "0");
+  lines.push(await buildCta(path.join(outDir, `${ctaNo}-cta.png`), pairs[0].after, kit, accent));
+  lines.push(await buildFollow(path.join(outDir, `${folNo}-follow.png`), (pairs[2] || pairs[pairs.length - 1]).after));
 
-  // 1단계: 전 slug를 읽고 캡션·DM을 먼저 조립해 금지어를 본다.
-  // ★이미지보다 글을 먼저 검사하는 이유: 한 slug라도 걸리면 통째로 멈춰서
-  //   반쯤 만들어진 out 폴더를 남기지 않는다("생성 중단"의 뜻이 그거다).
-  const jobs = [], violations = [];
-  for (const slug of slugs) {
-    let job;
-    try { job = readSlug(slug); }
-    catch (e) { console.error(`★ ${e.message}`); process.exit(1); }
-    job.caption = buildCaption(job.kit);
-    job.dm = buildDM(job.kit);
-    // ★checks 는 kit.json 원문으로도 한 번 더 본다 — 캡션 줄 번호만 알려주면
-    //   정작 고쳐야 할 파일(kit.json)을 못 찾는다.
-    violations.push(...lint(slug, "kit.json(checks)", job.kit.checks.join("\n")),
-      ...lint(slug, "caption.txt", job.caption), ...lint(slug, "dm.txt", job.dm));
-    jobs.push(job);
+  // 텍스트
+  const caption = buildCaption(kit);
+  const dmUrl = dl.ok ? (kit.dm.deeplink === "auto" ? dl.url : kit.dm.deeplink) : "(해석 실패)";
+  const dmText = buildDm(kit, dmUrl);
+  writeFileSync(path.join(outDir, "caption.txt"), caption, "utf8");
+  writeFileSync(path.join(outDir, "firstcomment.txt"), kit.firstComment, "utf8");
+  writeFileSync(path.join(outDir, "dm.txt"), dmText, "utf8");
+
+  // ── 게이트 ──
+  const files = readdirSync(outDir).filter((f) => f.endsWith(".png") && f !== "contact.png").sort();
+  const specBad = [];
+  for (const f of files) {
+    const m = await sharp(path.join(outDir, f)).metadata();
+    if (m.width !== W || m.height !== H) specBad.push(`${f} ${m.width}×${m.height}`);
   }
-  if (violations.length) {
-    console.error(`\n★금지어 발견 — 생성을 중단합니다 (${violations.length}건). 아무 파일도 만들지 않았습니다.`);
-    console.error(`  금지어: ${BANNED.join(" · ")}`);
-    for (const v of violations) console.error(`  · ${v}`);
-    console.error("\n  kit.json 의 해당 문구를 고친 뒤 다시 실행하세요.");
-    process.exit(1);
+  if (specBad.length) fail(`규격 위반: ${specBad.join(", ")}`);
+
+  const lintHits = [
+    ...lint("caption.txt", caption), ...lint("dm.txt", dmText), ...lint("firstcomment.txt", kit.firstComment),
+    ...lint("kit.json", JSON.stringify(kit, null, 1)),
+  ];
+  if (lintHits.length) fail(`금지어 ${lintHits.length}건:\n      ${lintHits.join("\n      ")}`);
+
+  const acc = kit.title.accent;
+  const accN = acc ? kit.title.line2.split(acc).length - 1 : 0;
+  if (accN !== 1) fail(`accent 단어 "${acc}"가 line2에 ${accN}회 (정확히 1회여야 함)`);
+
+  // 컨택트시트 (가로 4열)
+  const CW = 270, CH = Math.round(CW * H / W), LB = 22, G = 8;
+  const cols = 4, rows = Math.ceil(files.length / cols);
+  const comp = [];
+  for (const [i, f] of files.entries()) {
+    const x = G + (i % cols) * (CW + G), y = G + Math.floor(i / cols) * (CH + LB + G);
+    comp.push({ input: await sharp(path.join(outDir, f)).resize(CW, CH).png().toBuffer(), left: x, top: y });
+    comp.push({
+      input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${LB}"><text x="2" y="16" font-family="${FONTS}" font-size="14" font-weight="500" fill="#111">${esc(f)}</text></svg>`),
+      left: x, top: y + CH,
+    });
   }
+  const contact = path.join(outDir, "contact.png");
+  await sharp({ create: { width: cols * (CW + G) + G, height: rows * (CH + LB + G) + G, channels: 3, background: "#F2F4F7" } })
+    .composite(comp).png().toFile(contact);
 
-  // 2단계: 생성
-  for (const job of jobs) {
-    const { slug, kit, afters } = job;
-    const outDir = path.join(OUT, slug);
-    if (!path.resolve(outDir).startsWith(path.resolve(OUT) + path.sep)) throw new Error(`출력 경로 이상: ${outDir}`);
-    // ★매번 비우고 시작한다: 애프터가 5장에서 3장으로 줄면 지난 회차의 06·07 카드가
-    //   남아 있다가 그대로 업로드된다. 실제로 사고 나는 자리다.
-    rmSync(outDir, { recursive: true, force: true });
-    mkdirSync(outDir, { recursive: true });
-
-    const N = afters.length;
-    let no = 0;
-    const pad = (n) => String(n).padStart(2, "0");
-    const p = (name) => path.join(outDir, `${pad(++no)}-${name}.png`);
-    console.log(`\n■ ${slug} — 애프터 ${N}장 · 카드 ${N + 4}장 · 커버 스타일 ${STYLE}`);
-    console.log(`  입력: ${path.basename(job.before)} + ${job.afterNames.join(", ")}`);
-
-    let f = p("cover");     console.log(`  01-cover   ${(await buildCover(f, job.before, afters[0], kit)).line}`); await verify(f);
-    f = p("ba");            console.log(`  02-ba      ${(await buildBA(f, job.before, afters[0], kit)).line}`); await verify(f);
-    for (let i = 0; i < N; i++) {
-      f = p("gallery");     console.log(`  ${pad(no)}-gallery ${(await buildGallery(f, afters[i])).line}`); await verify(f);
-    }
-    f = p("cta");           console.log(`  ${pad(no)}-cta     ${(await buildCTA(f, kit)).line}`); await verify(f);
-    f = p("follow");        console.log(`  ${pad(no)}-follow  ${(await buildFollow(f, afters[N - 1])).line}`); await verify(f);
-
-    writeFileSync(path.join(outDir, "caption.txt"), job.caption, "utf8");
-    writeFileSync(path.join(outDir, "dm.txt"), job.dm, "utf8");
-    console.log(`  caption.txt · dm.txt — 금지어 0건 (검사: ${BANNED.join(" · ")})`);
-    notes.push(`${slug}: ${N + 4}장 + caption/dm → ${path.relative(ROOT, outDir)}`);
-  }
-
-  // ─── 최종 보고 ──────────────────────────────────────────────────────────
-  const bad = shots.filter((s) => !s.ok);
-  console.log(`\n[검수] 산출 ${shots.length}장 · 규격 ${W}×${H} ${bad.length ? `★NG ${bad.length}장` : "전량 OK"}`);
-  console.log(`       용량 ${Math.min(...shots.map((s) => +s.kb))}~${Math.max(...shots.map((s) => +s.kb))}KB`);
-  for (const n of notes) console.log(`       ${n}`);
-  if (fails.length) {
-    console.error(`\n★게이트 실패 ${fails.length}건`);
-    for (const x of fails) console.error(`  · ${x}`);
-    process.exit(1);
-  }
-  console.log("\n완료 — insta/out/{slug} 를 번호 순서대로 인스타에 올리면 됩니다. (insta/ 는 전체가 gitignore)");
+  return { lines, files, caption, dmText, dl, contact, outDir, kit };
 }
 
-main().catch((e) => { console.error("★실패:", e.message); process.exit(1); });
+// ── 진입점 ───────────────────────────────────────────────────────────────────
+const args = process.argv.slice(2);
+const fixture = args.includes("--fixture");
+const slugs = args.filter((a) => !a.startsWith("--"));
+if (!slugs.length) { console.error("사용법: node scripts/insta-kit.mjs ep03-deskfigure [--fixture]"); process.exit(1); }
+
+console.log(await fontProbe());
+for (const slug of slugs) {
+  console.log(`\n■ ${slug}${fixture ? "  [fixture]" : ""}`);
+  const r = await run(slug, fixture);
+  for (const l of r.lines) console.log(`  ${l}`);
+  console.log(`\n  ── 게이트 ──`);
+  console.log(`  ① 규격 1080×1350 ${r.files.length}장 : ${fails.some((f) => f.startsWith("규격")) ? "FAIL" : "PASS"}`);
+  console.log(`  ② 안전영역 (검사 ${boxes.length}건)   : ${fails.some((f) => f.startsWith("안전영역")) ? "FAIL" : "PASS"}`);
+  console.log(`  ③ 금지어 린트                : ${fails.some((f) => f.startsWith("금지어")) ? "FAIL" : "PASS"}`);
+  console.log(`  ④ accent 단어 1회            : ${fails.some((f) => f.startsWith("accent")) ? "FAIL" : "PASS"}`);
+  // ⑤ 이미지가 git 추적 변경에 올라오지 않았는지 — insta/는 gitignore라 원래 0이어야 한다
+  const imgTracked = execSync("git status --porcelain", { cwd: ROOT, encoding: "utf8" })
+    .split("\n").filter((l) => l && !l.startsWith("??") && /\.(jpg|jpeg|png|webp)$/i.test(l.trim()));
+  if (imgTracked.length) fail(`이미지 추적 변경 ${imgTracked.length}건:\n      ${imgTracked.join("\n      ")}`);
+  console.log(`  ⑤ 이미지 추적 변경 0건       : ${imgTracked.length ? "FAIL — " + imgTracked.length + "건" : "PASS"}`);
+  console.log(`  ＋ 알약 글자 잘림 없음        : ${fails.some((f) => f.startsWith("알약")) ? "FAIL" : "PASS"}`);
+  console.log(`  ⑥ 딥링크 해석                : ${r.dl.ok ? `PASS — ${r.dl.url}` : "FAIL — " + r.dl.why}`);
+  console.log(`\n  캡션 ${r.caption.length}자 · DM ${r.dmText.length}자`);
+  console.log(`  출력: ${r.outDir}`);
+  console.log(`  컨택트시트: ${r.contact}`);
+}
+if (fails.length) {
+  console.log(`\n★FAIL ${fails.length}건`);
+  for (const f of fails) console.log(`  - ${f}`);
+  process.exit(1);
+}
+console.log("\n■ 게이트 전항 PASS");
