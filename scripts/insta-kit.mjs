@@ -183,7 +183,7 @@ const KIT_FIXTURE = {
   meta: "4 CUTS · 셀카 1장",
   cta: {
     question: "이 컨셉, 마음에 드세요?",
-    fact: ["MOSPIC 안 179개 컨셉 중 하나예요.", "셀카 1장, 3분이면 이 피규어가 나와요."],
+    fact: ["MOSPIC 안 179개 컨셉 중 하나예요.", "셀카 1장, 1분이면 이 피규어가 나와요."],
     keyword: "모스픽",
     action: "댓글에 모스픽 → 레시피 + 링크 DM",
   },
@@ -229,19 +229,34 @@ async function watermark() {
   return { layer: probe, box: await inkBox(probe) };
 }
 
-async function buildCover(dst, afterSrc, beforeSrc, kit, accent) {
+// ── 커버 알약 스타일 (v2.1) ─────────────────────────────────────────────────
+// accent(기본) = 강조색 배경 + 흰 Bold / dark = 어두운 배경 + accent 글자 / white = v2 방식
+function pillStyleOpts(style, accent) {
+  if (style === "dark") return { size: 36, weight: 700, padX: 32, padY: 16, bg: "#141210", bgOpacity: 230 / 255, fill: accent };
+  if (style === "white") return { size: 30, weight: 500, padX: 30, padY: 16, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK };
+  return { size: 36, weight: 700, padX: 32, padY: 16, bg: accent, bgOpacity: 1, fill: "#ffffff" };
+}
+
+async function buildCover(dst, afterSrc, beforeSrc, kit, accent, styleOverride) {
   const base = await coverCrop(afterSrc, W, H);
   const layers = [{ input: await bottomGrad(), left: 0, top: 0 }];
 
   const wm = await watermark();
   layers.push({ input: wm.layer, left: 0, top: 0 });
 
-  const pola = await polaroid(beforeSrc, 6);
-  const polaAt = { x: 720, y: 150 };
-  layers.push({ input: pola.buf, left: polaAt.x, top: polaAt.y });
-  safeCheck("커버 폴라로이드", { x: polaAt.x, y: polaAt.y, w: pola.w, h: pola.h });
+  // ★v2.1 — 커버 폴라로이드는 옵션이다(기본 false). 커버는 결과물 한 장으로 승부하고,
+  //   원본 대비는 02장부터 보여준다. kit.coverPolaroid=true면 예전처럼 우상단에 넣는다.
+  let polaNote = "폴라로이드 없음";
+  if (kit.coverPolaroid === true) {
+    const pola = await polaroid(beforeSrc, 6);
+    const at = { x: 720, y: 150 };
+    layers.push({ input: pola.buf, left: at.x, top: at.y });
+    safeCheck("커버 폴라로이드", { x: at.x, y: at.y, w: pola.w, h: pola.h });
+    polaNote = `폴라로이드 ${pola.w}×${pola.h} @(${at.x},${at.y})`;
+  }
 
-  const pl = await pill(kit.pill, { size: 30, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
+  const style = styleOverride || kit.pillStyle || "accent";
+  const pl = await pill(kit.pill, pillStyleOpts(style, accent));
   layers.push({ input: pl.buf, left: 72, top: 880 });
   safeCheck("커버 알약", { x: 72, y: 880, w: pl.w, h: pl.h });
 
@@ -256,14 +271,19 @@ async function buildCover(dst, afterSrc, beforeSrc, kit, accent) {
   safeCheck("커버 제목1", b1);
   safeCheck("커버 제목2", b2);
 
-  const meta = await textLayer({ text: kit.meta, size: 26, weight: 500, x: W - 72, y: 1198, anchor: "end", fill: "#fff", opacity: 200 / 255 });
-  layers.push({ input: meta, left: 0, top: 0 });
+  // ★v2.1 — meta가 비었거나 없으면 아예 렌더하지 않는다(빈 문자열이 투명 레이어로 남지 않게)
+  let metaNote = "메타 없음";
+  if (kit.meta && String(kit.meta).trim()) {
+    const meta = await textLayer({ text: kit.meta, size: 26, weight: 500, x: W - 72, y: 1198, anchor: "end", fill: "#fff", opacity: 200 / 255 });
+    layers.push({ input: meta, left: 0, top: 0 });
+    metaNote = `메타 "${kit.meta}"`;
+  }
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  return `커버 — 폴라로이드 ${pola.w}×${pola.h} @(${polaAt.x},${polaAt.y}) · 알약 ${pl.w}×${pl.h} · 제목 y${b1.y}~${b2.y + b2.h - 1}`;
+  return `커버[${style}] — ${polaNote} · 알약 ${pl.w}×${pl.h} · 제목 y${b1.y}~${b2.y + b2.h - 1} · ${metaNote}`;
 }
 
-async function buildBody(dst, afterSrc, beforeSrc, n) {
+async function buildBody(dst, afterSrc, beforeSrc, n, kit2) {
   const base = await coverCrop(afterSrc, W, H);
   const layers = [{ input: await bottomGrad(), left: 0, top: 0 }];
 
@@ -278,12 +298,18 @@ async function buildBody(dst, afterSrc, beforeSrc, n) {
   layers.push({ input: pola.buf, left: 60, top: POLA_Y });
   safeCheck(`본문${n} 폴라로이드`, { x: 60, y: POLA_Y, w: pola.w, h: pola.h });
 
-  const pl = await pill("셀카 1장 · 3분", { size: 26, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
-  layers.push({ input: pl.buf, left: 372, top: 1126 });
-  safeCheck(`본문${n} 알약`, { x: 372, y: 1126, w: pl.w, h: pl.h });
+  // ★v2.1 — 본문 알약은 기본으로 넣지 않는다. 같은 문구가 4장 반복되면 소음이 된다.
+  //   kit.bodyPill에 문자열이 있을 때만 예전 자리(372,1126)에 렌더한다.
+  let pillNote = "알약 없음";
+  if (kit2.bodyPill && String(kit2.bodyPill).trim()) {
+    const pl = await pill(kit2.bodyPill, { size: 26, weight: 500, bg: "#ffffff", bgOpacity: 215 / 255, fill: INK });
+    layers.push({ input: pl.buf, left: 372, top: 1126 });
+    safeCheck(`본문${n} 알약`, { x: 372, y: 1126, w: pl.w, h: pl.h });
+    pillNote = `알약 ${pl.w}×${pl.h} "${kit2.bodyPill}"`;
+  }
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  return `본문${n} — 번호 260px(알파40) · 폴라로이드 ${pola.w}×${pola.h} @(60,${POLA_Y}) 바닥y${POLA_Y + pola.h - 1} · 알약 ${pl.w}×${pl.h}`;
+  return `본문${n} — 번호 260px(알파40) · 폴라로이드 ${pola.w}×${pola.h} @(60,${POLA_Y}) 바닥y${POLA_Y + pola.h - 1} · ${pillNote}`;
 }
 
 // 쉼표 기준 2줄 나눔(없으면 길이 기준 자동)
@@ -321,16 +347,30 @@ async function buildCta(dst, afterSrc, kit, accent) {
     safeCheck(`CTA 사실${i + 1}`, await inkBox(l));
   }
 
-  const act = await pill(kit.cta.action, { size: 34, weight: 500, padX: 34, padY: 18, bg: accent, fill: "#280A18" });
-  layers.push({ input: act.buf, left: 72, top: 830 });
-  safeCheck("CTA 액션 알약", { x: 72, y: 830, w: act.w, h: act.h });
+  // ★v2.1 행동 영역 — 알약(무엇을) + 보조문(그러면 무슨 일이) + 안내. 아래로 흘러가며 쌓는다.
+  const ACT_Y = 830;
+  const act = await pill(kit.cta.action, { size: 38, weight: 700, padX: 34, padY: 18, bg: accent, fill: "#ffffff" });
+  layers.push({ input: act.buf, left: 72, top: ACT_Y });
+  safeCheck("CTA 액션 알약", { x: 72, y: ACT_Y, w: act.w, h: act.h });
 
-  const dmLine = await png(textSvg({ text: "DM 요청 폴더도 확인해 주세요", size: 26, weight: 400, x: 72, y: 950 + 26, fill: "#fff", opacity: 170 / 255 }));
+  let flowY = ACT_Y + act.h;           // 알약 바닥
+  let subNote = "보조문 없음";
+  if (kit.cta.actionSub && String(kit.cta.actionSub).trim()) {
+    const sub = await png(textSvg({ text: kit.cta.actionSub, size: 34, weight: 500, x: 72, y: flowY + 22 + 34, fill: "#fff", opacity: 230 / 255 }));
+    const sb = await inkBox(sub);
+    layers.push({ input: sub, left: 0, top: 0 });
+    safeCheck("CTA 보조문", sb);
+    flowY = sb.y + sb.h;
+    subNote = `보조문 34px y${sb.y}`;
+  }
+
+  const dmLine = await png(textSvg({ text: "DM 요청 폴더도 확인해 주세요", size: 26, weight: 400, x: 72, y: flowY + 64 + 26, fill: "#fff", opacity: 170 / 255 }));
+  const db = await inkBox(dmLine);
   layers.push({ input: dmLine, left: 0, top: 0 });
-  safeCheck("CTA 안내", await inkBox(dmLine));
+  safeCheck("CTA 안내", db);
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  return `CTA — 질문 ${q2 ? 2 : 1}줄 72px · 사실 2줄 · 액션 알약 ${act.w}×${act.h}(accent)`;
+  return `CTA — 질문 ${q2 ? 2 : 1}줄 72px · 사실 2줄 · 액션 알약 ${act.w}×${act.h}(accent 38px Bold) · ${subNote} · 안내 y${db.y}`;
 }
 
 async function buildFollow(dst, afterSrc) {
@@ -379,7 +419,7 @@ const buildDm = (kit, url) => [
   "",
   kit.dm.recipe,
   "",
-  `앱에서 바로 만들기: ${url} (셀카 1장, 3분)`,
+  `앱에서 바로 만들기: ${url} (셀카 1장, 1분)`,
   "",
   kit.dm.closing,
 ].join("\n");
@@ -436,8 +476,10 @@ async function run(slug, fixture) {
   // 카드
   const lines = [];
   lines.push(await buildCover(path.join(outDir, "01-cover.png"), pairs[0].after, pairs[0].before, kit, accent));
+  // ★선택 비교용 — dark 알약판을 한 장 더 낸다. 컨택트시트에는 넣지 않는다(기본만 보여준다).
+  lines.push(await buildCover(path.join(outDir, "01-cover-pill-dark.png"), pairs[0].after, pairs[0].before, kit, accent, "dark"));
   for (const [i, p] of pairs.entries()) {
-    lines.push(await buildBody(path.join(outDir, `${String(i + 2).padStart(2, "0")}-body.png`), p.after, p.before, i + 1));
+    lines.push(await buildBody(path.join(outDir, `${String(i + 2).padStart(2, "0")}-body.png`), p.after, p.before, i + 1, kit));
   }
   const ctaNo = String(pairs.length + 2).padStart(2, "0");
   const folNo = String(pairs.length + 3).padStart(2, "0");
@@ -454,6 +496,8 @@ async function run(slug, fixture) {
 
   // ── 게이트 ──
   const files = readdirSync(outDir).filter((f) => f.endsWith(".png") && f !== "contact.png").sort();
+  // 컨택트시트에는 기본 커버만 — dark 비교판은 규격·게이트 대상이되 시트에서는 뺀다
+  const sheetFiles = files.filter((f) => f !== "01-cover-pill-dark.png");
   const specBad = [];
   for (const f of files) {
     const m = await sharp(path.join(outDir, f)).metadata();
@@ -475,7 +519,7 @@ async function run(slug, fixture) {
   const CW = 270, CH = Math.round(CW * H / W), LB = 22, G = 8;
   const cols = 4, rows = Math.ceil(files.length / cols);
   const comp = [];
-  for (const [i, f] of files.entries()) {
+  for (const [i, f] of sheetFiles.entries()) {
     const x = G + (i % cols) * (CW + G), y = G + Math.floor(i / cols) * (CH + LB + G);
     comp.push({ input: await sharp(path.join(outDir, f)).resize(CW, CH).png().toBuffer(), left: x, top: y });
     comp.push({

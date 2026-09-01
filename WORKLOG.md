@@ -2505,3 +2505,22 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
 - 커밋 메시지: feat(insta-kit): v2 포맷 — 결과 전면·원본 폴라로이드·CTA 3단 (7장) + kit.json v2
 - 다음에 할 것: [MJ] ep03 실물 사진 4쌍(before/after) + kit.json을 insta/raw/ep03-deskfigure/에
   넣고 --fixture 없이 재실행 → 실사진 기준 레이아웃 재검수
+
+## [기능개선 트랙] 2026-08-31 — insta-kit v2.1: 커버 정리·알약 강조·CTA 문장화
+
+- [커버 단순화] 커버 폴라로이드를 kit.coverPolaroid(기본 false)로 내리고 kit.meta는
+  빈 값이면 렌더 자체를 건너뛴다. 커버는 결과물 한 장으로 승부하고 원본 대비는 02장부터
+  보여준다 — 캡션 문구도 "2장부터 구석에 있는 폴라로이드가 원본이에요"로 맞췄다
+- [알약 강조] kit.pillStyle 신설 — accent(기본, 강조색 배경+흰 Bold 36px) / dark
+  (#141210 알파230 + accent 글자) / white(v2 방식). 선택 비교용으로 01-cover-pill-dark.png를
+  한 장 더 내되 컨택트시트에는 기본만 싣는다
+- [본문 소음 제거] 4장 반복되던 "셀카 1장 · 3분" 알약을 뺐다. kit.bodyPill에 문자열이
+  있을 때만 렌더(기본 없음)
+- [CTA 2단 문장화] 알약(38px Bold, 무엇을) → 보조문 kit.cta.actionSub(34px Medium,
+  그러면 무슨 일이) → 안내 순으로 아래로 흘러가게 재구성. 좌표를 고정하지 않고 앞 요소의
+  잉크 바닥에서 이어 붙여, 문구 길이가 바뀌어도 간격이 유지된다
+- [1분 표기] 스크립트·kit.json의 "3분"을 전부 "1분"으로. 잔존 0건(스크립트·kit.json·
+  산출 txt 3종 전수 검색). 앞으로 기본값은 1분
+- [게이트] ep03 실물 재렌더 — 규격 8장 PASS(dark 비교판 포함) · 안전영역 20건 PASS ·
+  금지어 PASS · accent 1회 PASS · 이미지 추적 0건 PASS · 알약 글자 잘림 없음 PASS ·
+  딥링크 PASS(https://mospic.com/deskfigure). 빌드 "Compiled successfully in 58s" exit 0
