@@ -1,0 +1,26 @@
+{
+  "key": "schoolsnap",
+  "name": "교복 컨셉 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "prompt": { "source": "route" },
+  "duo": null,
+  "beforeSize": "1024x1536",
+  "befores": [
+    {
+      "file": "schoolsnap_비포1.png",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s, attractive with a bright friendly look, medium-length dark hair, plain casual clothes, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "schoolsnap_비포2.png",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s, pretty with a soft cheerful vibe, long dark hair tied loosely, plain everyday top, taken indoors under slightly dim ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "schoolsnap_비포3.png",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his mid-20s, good-looking with a clean natural style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["닮음+글램", "교복 마크·명찰 0", "남성 룩", "배경 글자 0"],
+  "meta": { "chip": "인생샷", "emoji": "🎀", "color": "#4A5A8A", "subtitle": "그 시절로, 더 예쁘게" }
+}

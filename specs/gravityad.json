@@ -1,0 +1,26 @@
+{
+  "key": "gravityad",
+  "name": "3D 그래비티 광고컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "prompt": { "source": "route" },
+  "duo": null,
+  "beforeSize": "1024x1536",
+  "befores": [
+    {
+      "file": "gravityad_비포1.png",
+      "prompt": "A casual smartphone photo of a skincare product — a simple pump bottle with a plain minimal label design (abstract geometric shapes only, no readable text) — sitting on a cluttered bathroom shelf under ordinary indoor lighting. Slightly imperfect amateur framing, mild shadows, everyday background. Realistic phone-camera quality. No watermark."
+    },
+    {
+      "file": "gravityad_비포2.png",
+      "prompt": "A casual smartphone photo of a glass bottle of orange juice with a simple label showing only an abstract fruit illustration (no readable text), standing on a kitchen counter with everyday clutter around it, ordinary indoor lighting, slightly imperfect amateur framing. Realistic phone-camera quality. No watermark."
+    },
+    {
+      "file": "gravityad_비포3.png",
+      "prompt": "A casual smartphone photo of a small handmade scented candle in a frosted glass jar with a plain kraft-paper label showing only a simple abstract stamp mark (no readable text), sitting on a messy desk under warm ordinary room lighting, slightly imperfect amateur framing. Realistic phone-camera quality. No watermark."
+    }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["제품 형태·라벨 보존", "무중력 부유감", "재료 흩날림 정지컷", "글자 0"],
+  "meta": { "chip": "상품", "emoji": "🧴", "color": "#6C5CE7", "subtitle": "제품이 주인공이 되는 순간" }
+}

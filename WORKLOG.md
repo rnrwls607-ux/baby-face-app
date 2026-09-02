@@ -2581,3 +2581,35 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
 - [게이트] ep03 실물 재렌더 — 규격 8장 PASS(dark 비교판 포함) · 안전영역 20건 PASS ·
   금지어 PASS · accent 1회 PASS · 이미지 추적 0건 PASS · 알약 글자 잘림 없음 PASS ·
   딥링크 PASS(https://mospic.com/deskfigure). 빌드 "Compiled successfully in 58s" exit 0
+
+## 2026-09-02 — 컨셉 자동화 1호: harvest.mjs (비포·애프터 수확 + 컨택트 시트)
+
+- [무엇을 없앴나] 컨셉 검증 원료를 만드는 왕복 — 비포 3장 수배 → 앱에 한 장씩 올려 애프터
+  4장 수확 → 이름 붙여 폴더에 정리 — 을 명령 한 줄로 접었다. 산출물은 검증·킷·BA 공통 원료
+- [★등가의 근거 3겹] ①프롬프트는 손으로 안 옮긴다 — route.ts를 TS 트랜스파일 + VM 평가로
+  재추출하고 md5를 찍는다(지난 배치 게이트 3과 같은 평가기를 harvest 안에 내장, 스크래치
+  의존 제거) ②재시도·오류분류는 app/lib/gemini.ts를 ★문자 복제가 아니라 그대로 import 한다
+  ③엔드포인트·모델명·body·파싱을 route와 같은 모양으로 맞추고 근거 route 줄을 주석에 남김
+- [★gemini.ts import 성립] gemini.ts는 import 0줄인 순수 fetch 모듈이고 Node 24는 .ts
+  타입 스트리핑이 기본이라 .mjs에서 그냥 읽힌다(실측). 복제본이 없으니 드리프트도 없다 —
+  앞으로 서버 유틸을 스크립트에서 쓸 때의 기본 수법으로 삼는다
+- [route와 일부러 다른 것] stampAiMetadata(AI 도장)·크롭 안 함 = 원료는 원본 보존, 규격화는
+  ba-prep 몫 / withCoin 안 탐 = 대신 --max-cost 상한으로 막음
+- [안전장치] ★기본이 dry-run — --run 없으면 외부 호출 정확히 0건. 예상비용 > --max-cost면
+  중단. 이미 있는 파일은 스킵(--force로 재생성). --out으로 산출 루트 우회(파일럿용)
+- [단가표는 가정치] Pro ₩300·flash ₩50·GPT ₩150 상수. 실측 청구액 나오면 이 표만 고친다
+- [게이트] dry-run 2종 호출 0 PASS · 프롬프트 md5 schoolsnap 94bb1e76·gravityad e8ca8326
+  = 지난 배치 값과 일치 PASS · 파일럿 4호출 4/4 성공(₩750 가정) · app/ diff 0 · examples/
+  스테이징 0(gitignore) PASS
+- [파일럿에서 드러난 것] ①Pro 503이 실제로 떴고 gemini.ts의 fastOnly 재시도(6.5초 빠른
+  실패 → 2초 대기 → 성공)가 스크립트에서 그대로 작동 — import 방식이 살아있다는 실증
+  ②schoolsnap 애프터가 MJ 수확본과 같은 896×1200 ③GPT edits의 size:"auto"는 입력 비율을
+  따라가므로 비포 비율이 애프터 비율을 결정한다(gravityad: MJ 3:4 vs 파일럿 2:3)
+- [spec 스키마] specs/{키}.json — key·name·engine·inputType·prompt(route|file)·duo·
+  beforeSize·befores[]·afters{count,map}·verdicts·meta. afters.map이 애프터N↔비포N 배선.
+  duo는 genders 조합마다 buildPrompt를 따로 평가한다. detail-page·new-concept 스크립트도
+  같은 파일을 읽을 전제로 확장 가능하게 잡았다
+- [백로그] sharp가 package.json 미선언(next 전이 의존에 얹힘 — ba-prep·insta-kit도 동일).
+  당장은 못 찾을 때 원인 문구를 내도록만 막아뒀고, 직접 선언 여부는 결정 대기
+- 다음에 할 것: 단가 실측 후 PRICE 상수 교정 / duo spec 1개(profileduo)로 2인 경로 실증 /
+  detail-page·new-concept 스크립트가 같은 spec을 읽도록 2호·3호 설계
