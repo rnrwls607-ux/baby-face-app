@@ -1,3 +1,50 @@
+## 2026-09-02 — ★2차 배치 14종 완결 (검증 21 → 통과 14 → route 4 → 출시 2 → BA 3)
+- [규모] 컨셉 166 → 180종 / route 165 → 179 / PRO_CONCEPTS 31 → 39 / BA_LIVE 159 → 173
+- [통과 14] 1차: deskfigure(GPT)·digicam(Pro)·airportsnap(Pro) / 2-A: cinesnap·schoolsnap(Pro)·
+  gravityad·feltdoll(GPT) / 2-B: personalcolor·monoactor·fortunecard(Pro)·minichef(GPT) /
+  2-C: poolside·snowsnap·profileduo(Pro, 2인 성별 칩)
+- [탈락·보류] 탈락 oldmoney(v3까지)·marathon·petid(pet 겹침)·boxtoy(글자 헌법 충돌) /
+  보류 droneview(v3 "인생샷 각도" 방향 확정 상태로 큐)·chibisticker(다중 셀 리스크, 네컷 동면 연동) /
+  할로윈 리프레시 = A 확정(기존 그대로, 작업 0)
+- [커밋 체인] route: 6bd7c46(1차 3종) · 4583041(2-A) · 0001765(2-B) · 9dac378(2-C) /
+  출시: 034e419(1차) · 5a87413(11종, 카메라·고지 예약분 포함) / BA: b7f5d1e(1차 9쌍) ·
+  9496d31(10종 30쌍) · 3b24b41(profileduo 2쌍, 2인 합성 관례 380+8+380)
+- [★공정 표준 신설] 스크래치 파일 확정 → 생성기가 파일 읽어 삽입 → VM 평가기로 route 재추출
+  md5 대조 (손으로 옮긴 구간 0 = 재구성 여지 구조적 0). 4회 전부 4/4 일치
+- [★사고 1 — 검증 프롬프트 조립식] "personalcolor 전문 복사 + SCENE 교체" 방식으로 발급했더니
+  MJ가 SCENE 블록만 단독 투입 → 외모 엔진(INTENSITY·FACE ORDER·SKIN·RELIGHT) 없이 껍데기만
+  돌아가 poolside 오판정("답 없다"). 전문 재발급 후 통과·복권. 새 규칙: 검증 프롬프트도
+  조립식 금지, 전문으로만 발급 (헌법 3조 "전문 직접 제공"의 검증판)
+- [★사고 2 — 2-A 조립 결함] 생성기 blocks.replace(/\n$/,"")가 마지막 블록 개행까지 지워
+  concepts.ts에 "},  halloween: {" 한 줄 붙음. 빌드는 통과(TS 유효). 2-B에서 발견·수리 +
+  생성기 원인 제거
+- [★사고 3 — 2인 성별 하드코딩] profileduo 검증본이 "Person 1 is a woman. Person 2 is a
+  woman." 고정이라 남성 입력이 여자화. route에서 성별 2곳만 파라미터화(buildPrompt), 세 조합
+  VM 평가로 5행 단독 변화 증명 — 2인 라인 "성별 칩 필수" 판례 재확인
+- [판례 — Pro 티어1 글램 사다리] v1(10%, INTENSITY 없음) → v2(INTENSITY+15%+AIM HIGH) →
+  v3(18%+"idol group visual center"). digicam은 v1 승인(INTENSITY 층 탈락), airportsnap·
+  cinesnap·schoolsnap v2, personalcolor·monoactor·fortunecard·poolside·snowsnap v3.
+  ★같은 Pro라도 컨셉별로 층 반응이 갈린다 — 실측 없이 층 고정 금지
+- [판례 — 얼굴 죽는 컨셉은 조명 수술] 골든아워·앰버 광이 얼굴을 누렇게 만드는 증상은 수치
+  인상이 아니라 "얼굴엔 중성 클린 키라이트, 따뜻한 광은 배경으로 격하" 수술로 해결
+  (fortunecard v2 성공). oldmoney는 같은 수술 후에도 탈락 = 조명 수술의 한계 판례
+- [판례 — 엔진 반전] gravityad v1은 GPT 어색·Pro 우세였으나 v2(동세·조명 강화) 뒤 GPT 승.
+  "광고 문법이 진해질수록 GPT" 후보 판례. feltdoll도 GPT 채택
+- [판례 — BA 크롭] 세로비 과다 원본(941×1672급)에서 attention이 얼굴 확대로 폭주해 정수리
+  절단 (airportsnap·schoolsnap 재현). 사물(gravityad·minichef)·가로 원본은 center 우선.
+  2인 BA = 좌 380 + 흰 구분선 8 + 우 380 = 768×960 합성 관례(픽셀 실측)
+- [판례 — 킷 상세페이지] 스킬 축약 발급 사고(가독성 수치 창작·내보내기 금지 누락) → MJ 지적
+  → 스킬 실물 재독 후 완전판으로만 발급. 썸네일 프레임은 07-28 폐지 확정 유지, "커피 한 잔
+  값" 금지, 소요시간 "약 1분"
+- [부수 수리] 2-B: minichef cameraFacing="environment"(food 실사, UploadZone 기본값 "user"
+  발견) / 5a87413: gravityad·feltdoll 카메라 2줄 + fortunecard 결과 화면 재미 고지 1줄 /
+  2-C: friend 라벨 오기(geminiFriendlyError "couple") 미전파 + PreviewCard 교체
+- 다음에 할 것: [MJ] 11종 실기기 실측(profileduo 남-여 조합·fortunecard 고지·카메라 방향) /
+  인스타 픽레시피 재개(deskfigure·cinesnap·profileduo 간판 후보) / 12월 fortunecard 신년
+  마케팅 예약 / [백로그] friend geminiFriendlyError "couple" 라벨 1줄 · product/figure
+  cameraFacing 기본값 · airportsnap 애프터3=썸네일 중복(무해, 교체 선택) ·
+  MOSPIC_외모마스터_v1.md 리포 미추적(정본 로컬 단독 — 커밋 여부 결정 대기)
+
 ## 2026-08-29 — security: 신원 쿠키 HMAC 서명 (P0-1) — 위조 차단
 - [★후속 2026-08-31] AUTH_COOKIE_SECRET 프로덕션 등록 완료 — 서명 쿠키 라이브.
   진단용 no_cookie 로그는 제거(비로그인 요청마다 쌓여 Hobby 1시간 보존을 잠식) —
@@ -2402,6 +2449,12 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   ffefea29b7), travel·halloween·era는 자기 사본, y2k·fashion은 CORE 상수 없음
 - [백로그] BA pairs의 숫자 없는 폴백 줄({키}-before.webp)이 159개 페이지 전부에서
   404 — 화면 무영향, 일괄 청소 대상
+- [승인 판례 체인 확장 09-02] travel v6 → digicam v1 → airportsnap v2(INTENSITY) →
+  cinesnap·schoolsnap v2 → personalcolor·monoactor·fortunecard·poolside·snowsnap v3(18%) →
+  profileduo(부록 B 첫 실전, 15%). 탈락: oldmoney v1~v3(조명 수술 후에도)
+- [마스터 부록 D 후보] ①INTENSITY 층은 Pro 컨셉별 반응 갈림(digicam 탈락/airportsnap 승인)
+  ②18% SMALL FACE는 3종 실측 통과, 왜곡 보고 0 ③"얼굴 죽는 컨셉 = 조명 격리 수술" 처방
+  ④monoactor 흑백 변형(헤어 톤 매핑 줄 교체) — 마스터 vN 개정은 A/B+MJ 승인 후 별도
 
 ## 다음 후보
 - 2인+ 얼굴 검사 11종 — multi_face 반대 규칙(2인 이상이어야 정상) 판정 분기 필요,
@@ -2413,6 +2466,10 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   (coin_3/coin_9/coin_30) 등록
 - Pro 폴백 확산 판단 — fetchGeminiWithFallback(fd31140)은 신설됐지만 호출부 없음.
   hanbok 파일럿(cd05fd9) 데이터 관찰 중, 확산 여부 미정
+- droneview 재개 — v3 "저고도 4~7m·인물 프레임 1/3~1/2·30~45° 하이앵글" 방향 확정 상태.
+  Pro·NB2 재A/B부터
+- chibisticker — 네컷 3형제 스트립 품질 해결 시 함께 재론(다중 셀 일관성 동일 리스크)
+- B2B 묶음 마케팅 — gravityad·minichef 출시됨. 상품·음식 B2B 트랙 시작 시 세트 노출
 
 ## [기능개선 트랙] 2026-08-31 세션 마감 — 출시 전야 스냅샷
 
