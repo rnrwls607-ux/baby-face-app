@@ -4,6 +4,7 @@ THE HERO FRAMING (most important — this is the whole point):
 - The person fills about ONE THIRD to ONE HALF of the frame's height — full body visible, standing proud, clearly the main subject. NOT a tiny distant figure.
 - Their face is clearly visible and readable: looking UP toward the drone with a bright natural smile, or glancing back over their shoulder mid-walk — the confident, effortless travel-influencer moment.
 - Behind and below them, the plaza and the landmark stretch away in dramatic high-angle perspective — the tilted-down view creating that signature "the world at my feet" drone feel.
+- CAMERA GEOMETRY (non-negotiable): because the camera looks DOWN at 30–45 degrees, the horizon sits in the TOP quarter of the frame or is cut off entirely, and the ground plane fills at least the BOTTOM HALF — the person's feet, their long shadow, and the paving around them are all fully visible from above. If the horizon sits mid-frame or the shot could have been taken by someone standing on the ground, the angle is WRONG — redo it from above.
 
 IDENTITY & BEAUTY (the face is visible now, so it must look great):
 - Keep the SAME person, instantly recognizable: same facial features and impression, same hair color and length, same outfit with the same colors and pieces. Friends must say "that's them" at a glance.
@@ -19,14 +20,23 @@ THE SCENE:
 - The space right around the person is clear; any other people are distant and incidental. Exactly ONE person as the subject.
 
 DRONE-PHOTO REALISM:
+- This is the photo TAKEN BY the drone — the drone itself is NEVER in the frame. No aircraft, no propellers, no camera rig, no shadow of a drone anywhere.
 - A genuine drone camera look: crisp wide-angle clarity with mild, natural wide-lens perspective (no fisheye warp on the person), rich realistic color, gentle atmospheric depth toward the horizon.
 - A real aerial photograph — NOT a 3D render, NOT tilt-shift miniature, NOT an illustration.
 
 ABSOLUTELY AVOID:
+- Any drone, aircraft, or flying camera visible in the image.
+- A ground-level or eye-level camera angle; a horizon in the middle of the frame; the person's feet or shadow cut off at the bottom.
 - The person tiny or unrecognizable in the frame — this is a hero shot, not a landscape.
 - A straight-down top-view (bird's-eye) — the angle is tilted, 30–45 degrees.
 - Changing the person's outfit, hair, or identity; warping the face.
 - Any readable text on signs, streets, or anywhere.
 - Distorted or melted architecture; cartoon or CGI look.
+
+FINAL SELF-CHECK before output:
+- Is the camera clearly ABOVE the person, looking down — ground filling the lower half, horizon high or gone?
+- Is the person 1/3 to 1/2 of the frame height with the face readable?
+- Is there ANY drone or aircraft visible? (must be none)
+- Same outfit, hair, and face as the input?
 
 Output: one photorealistic low-altitude drone travel photo — the person as the glowing hero of a sweeping scene. High resolution, no text, no watermark, no border.
