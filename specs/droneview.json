@@ -13,7 +13,7 @@
   "afters": { "count": 4, "map": [1, 2, 3, 1] },
   "verdicts": ["인물 주인공 크기 + 얼굴 알아봄", "드론 각 체감 (비스듬히, 세상이 발밑)", "랜드마크 원근 + 남성", "외모 상향 + 글자 0"],
   "route": {
-    "template": "auto", "chipFrom": "travel", "emoji": "🚁", "color": "#3A8FB7",
+    "template": "auto", "chipFrom": "travel", "tplName": "치어리더", "replace": [["📣", "🚁"]], "emoji": "🚁", "color": "#3A8FB7",
     "subtitle": "드론 없이 드론샷", "description": "여행 사진 한 장이 하늘에서 찍은 인생샷으로", "audience": "all", "duo": null
   },
   "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
