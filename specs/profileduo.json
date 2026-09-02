@@ -1,0 +1,42 @@
+{
+  "key": "profileduo",
+  "name": "베프 프로필 스냅",
+  "engine": "pro",
+  "inputType": "duo",
+  "prompt": { "source": "route" },
+  "duo": { "genders": [["female","female"],["male","female"]] },
+  "befores": [
+    { "file": "profileduo_비포1.png", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s, attractive with a bright warm look, long dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "profileduo_비포2.png", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s with a clearly DIFFERENT look from typical — short bob-cut dark hair, distinct facial features, a calm cool vibe, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "profileduo_비포3.png", "prompt": "A casual smartphone selfie of a fictional Korean man in his late 20s, good-looking with a clean friendly style, short dark hair, plain t-shirt, taken indoors under ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "profileduo_비포4.png", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s, pretty with a soft cheerful vibe, medium-length dark hair with light waves, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [[1,2],[1,2],[3,4],[3,4]], "genders": [0,0,1,1] },
+  "verdicts": ["각자 닮음 + ANTI-CLONE", "둘 다 글램 균등", "남-여: 남성 여자화 0", "남-여 안정성"],
+  "route": {
+    "template": "friend", "chipFrom": "friend", "emoji": "👯", "color": "#E8A0B4",
+    "subtitle": "우리 둘, 나란히", "description": "각자의 셀카 2장이면 나란히 웃는 베프 프로필 완성", "audience": "all",
+    "duo": { "genders": true }
+  },
+  "ba": { "pairs": [[[1,2],1],[[3,4],4]] },
+  "detail": {
+    "layout": "2to1",
+    "signature": { "color": "#E8A0B4", "bg": "#FFF8F6", "name": "소프트 피치" },
+    "hero": { "sub": "따로 찍어도, 함께인 것처럼", "tags": ["#베프사진","#우정샷","#투샷"], "image": "profileduo_애프터1.png" },
+    "pain": ["베프랑 제대로 찍은 투샷이 한 장도 없어요 👯", "멀리 살아서 만나야 찍는데, 만나면 또 까먹어요", "각자 셀카는 많은데 '우리' 사진은 없네요"],
+    "solution": "MOSPIC 베프 프로필 스냅 — 각자의 셀카 2장이면, 나란히 웃는 우리 완성",
+    "pairs": [
+      { "before": ["profileduo_비포1.png","profileduo_비포2.png"], "after": "profileduo_애프터1.png", "caption": "각자 찍은 셀카 두 장이 → 어깨 기댄 우리의 투샷으로" }
+    ],
+    "points": [
+      { "title": "합성 티 안 나요", "body": "두 사람이 같은 빛, 같은 공간에서 진짜 함께 찍은 것처럼 — 어깨 기대고, 웃음이 번지는 자연스러운 순간으로.", "chips": ["같은 조명","같은 공간","자연스러운 포즈"] },
+      { "title": "각자 자기 얼굴 그대로", "body": "두 얼굴이 절대 섞이지 않아요 — 각자 자기 사진 기준으로 알아볼 수 있게, 그리고 둘 다 인생 최고로 잘 나온 버전으로.", "chips": ["얼굴 섞임 0","각자 풀 보정","한눈에 알아봄"] },
+      { "title": "친구·연인·남매 누구든", "body": "성별 조합도 자유롭게 선택 — 우정샷, 커플 프로필, 가족 투샷까지.", "images": ["profileduo_애프터3.png","profileduo_애프터2.png"], "imageCaption": "남녀 조합도, 여여 조합도 자연스럽게" }
+    ],
+    "price": { "offline": "둘이 시간 맞추기 + 스냅 촬영 수만 원~ + 이동·준비", "mospic": "합리적인 가격 · 약 1분 · 각자 셀카 한 장씩으로" },
+    "guide": ["두 사람 각각 정면 얼굴이 또렷한 사진 1장씩이 필요해요", "얼굴을 가리는 머리카락·모자는 피해주세요", "각 사람의 성별을 골라주시면 더 정확해요"],
+    "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
+    "aiNotice": "본 결과물은 AI로 생성된 이미지입니다.",
+    "cta": { "copy": "오늘, 우리의 투샷을 만들어보세요", "button": "베프 프로필 만들기" }
+  }
+}
