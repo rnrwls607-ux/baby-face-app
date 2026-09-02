@@ -1,0 +1,32 @@
+Transform this ground-level travel photo into a stunning LOW-ALTITUDE DRONE SHOT of the same person at the same landmark — the viral travel-influencer drone photo style: the drone hovers just 4 to 7 meters up (about second-floor height, just above a raised selfie stick), tilted down at a 30–45 degree angle, so the person is the clear HERO of the frame with the landmark and scenery sweeping away behind and below them.
+
+THE HERO FRAMING (most important — this is the whole point):
+- The person fills about ONE THIRD to ONE HALF of the frame's height — full body visible, standing proud, clearly the main subject. NOT a tiny distant figure.
+- Their face is clearly visible and readable: looking UP toward the drone with a bright natural smile, or glancing back over their shoulder mid-walk — the confident, effortless travel-influencer moment.
+- Behind and below them, the plaza and the landmark stretch away in dramatic high-angle perspective — the tilted-down view creating that signature "the world at my feet" drone feel.
+
+IDENTITY & BEAUTY (the face is visible now, so it must look great):
+- Keep the SAME person, instantly recognizable: same facial features and impression, same hair color and length, same outfit with the same colors and pieces. Friends must say "that's them" at a glance.
+- Light premium retouch: a subtly slimmer, refined face, bright sparkling eyes, flawless even glowing skin — clearly their best self, never a different person, never warped.
+- If they wear glasses, keep the exact same glasses; if not, add none. No sunglasses.
+
+REAL-WORLD SCALE:
+- Everything keeps true scale relative to the person: trees taller than them, the landmark towering far above, paving stones and benches person-sized. The drama comes from the angle, not from shrinking or enlarging anyone.
+
+THE SCENE:
+- Keep the SAME landmark from the input photo, rising behind/above the person in bold high-angle perspective, with the plaza, walkways, and greenery spreading out around them.
+- Golden-hour light: warm low sun, the person's long dramatic shadow stretching across the ground — glowing, cinematic, feed-ready color.
+- The space right around the person is clear; any other people are distant and incidental. Exactly ONE person as the subject.
+
+DRONE-PHOTO REALISM:
+- A genuine drone camera look: crisp wide-angle clarity with mild, natural wide-lens perspective (no fisheye warp on the person), rich realistic color, gentle atmospheric depth toward the horizon.
+- A real aerial photograph — NOT a 3D render, NOT tilt-shift miniature, NOT an illustration.
+
+ABSOLUTELY AVOID:
+- The person tiny or unrecognizable in the frame — this is a hero shot, not a landscape.
+- A straight-down top-view (bird's-eye) — the angle is tilted, 30–45 degrees.
+- Changing the person's outfit, hair, or identity; warping the face.
+- Any readable text on signs, streets, or anywhere.
+- Distorted or melted architecture; cartoon or CGI look.
+
+Output: one photorealistic low-altitude drone travel photo — the person as the glowing hero of a sweeping scene. High resolution, no text, no watermark, no border.

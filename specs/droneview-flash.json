@@ -1,0 +1,145 @@
+{
+  "key": "droneview",
+  "name": "드론뷰 여행샷",
+  "engine": "flash",
+  "inputType": "person",
+  "prompt": {
+    "source": "file",
+    "path": "specs/droneview.prompt.txt"
+  },
+  "duo": null,
+  "befores": [
+    {
+      "file": "droneview_비포1.png",
+      "prompt": "A realistic tourist photo of a fictional Korean woman in her late 20s standing in front of a famous European landmark (a tall iron lattice tower in a large open plaza), full body visible, photographed by a friend at ground level. She wears a beige trench coat and white sneakers, long dark hair. Ordinary daylight, casual travel-photo framing with the landmark behind her. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "droneview_비포2.png",
+      "prompt": "A realistic tourist photo of a fictional Korean woman in her mid-20s standing on a seaside promenade in a Mediterranean-style town with white buildings and blue sea behind her, full body visible, photographed by a friend at ground level. She wears a light summer dress and a small crossbody bag, medium-length dark hair. Bright daylight, casual travel-photo framing. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "droneview_비포3.png",
+      "prompt": "A realistic tourist photo of a fictional Korean man in his late 20s standing in front of a large traditional Asian temple gate in a wide courtyard, full body visible, photographed by a friend at ground level. He wears a navy jacket, jeans and sneakers, short dark hair. Ordinary daylight, casual travel-photo framing. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
+  ],
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
+  "verdicts": [
+    "인물 주인공 크기 + 얼굴 알아봄",
+    "드론 각 체감 (비스듬히, 세상이 발밑)",
+    "랜드마크 원근 + 남성",
+    "외모 상향 + 글자 0"
+  ],
+  "route": {
+    "template": "auto",
+    "chipFrom": "travel",
+    "emoji": "🚁",
+    "color": "#3A8FB7",
+    "subtitle": "드론 없이 드론샷",
+    "description": "여행 사진 한 장이 하늘에서 찍은 인생샷으로",
+    "audience": "all",
+    "duo": null
+  },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
+  "detail": {
+    "layout": "ba",
+    "signature": {
+      "color": "#3A8FB7",
+      "bg": "#F6FAFC",
+      "name": "스카이 블루"
+    },
+    "hero": {
+      "sub": "드론 없이, 드론샷",
+      "tags": [
+        "#드론샷",
+        "#여행인생샷",
+        "#항공뷰"
+      ],
+      "image": "droneview_애프터1.png"
+    },
+    "pain": [
+      "여행 사진, 다 똑같은 정면 인증샷이에요 🚁",
+      "드론샷 찍고 싶은데 드론은 비싸고 반입도 까다로워요",
+      "요즘 유행하는 항공 앵글, 나도 하나 갖고 싶어요"
+    ],
+    "solution": "MOSPIC 드론뷰 여행샷 — 여행 사진 한 장이면, 하늘에서 찍은 인생샷 완성",
+    "pairs": [
+      {
+        "before": "droneview_비포1.png",
+        "after": "droneview_애프터1.png",
+        "caption": "정면에서 찍은 인증샷이 → 하늘에서 내려다본 인생샷으로"
+      },
+      {
+        "before": "droneview_비포2.png",
+        "after": "droneview_애프터2.png",
+        "caption": "평범한 여행 컷이 → 세상이 발밑에 펼쳐지는 드론 앵글로"
+      }
+    ],
+    "points": [
+      {
+        "title": "요즘 유행하는 그 앵글",
+        "body": "드론이 2층 높이에서 비스듬히 내려다본 구도 — 내가 주인공이고, 랜드마크와 풍경이 뒤로 쫙 펼쳐져요.",
+        "chips": [
+          "저고도 드론 앵글",
+          "인물 주인공",
+          "풍경 파노라마"
+        ]
+      },
+      {
+        "title": "그래도 나는 나",
+        "body": "옷도 머리도 얼굴도 그대로, 표정은 더 화사하게 — 하늘에서 봐도 한눈에 알아봐요.",
+        "chips": [
+          "착장 유지",
+          "얼굴 알아봄",
+          "은은한 보정"
+        ]
+      },
+      {
+        "title": "여행 피드가 달라져요",
+        "body": "같은 여행, 다른 시점 — 남들과 다른 항공 앵글 한 장이 피드의 하이라이트가 돼요.",
+        "images": [
+          "droneview_애프터3.png",
+          "droneview_애프터4.png"
+        ],
+        "imageCaption": "랜드마크가 달라도, 앵글은 늘 드론"
+      }
+    ],
+    "price": {
+      "offline": "드론 구매 수십만 원 + 촬영 허가·반입 절차 + 조종 연습",
+      "mospic": "합리적인 가격 · 약 1분 · 여행 사진 한 장으로"
+    },
+    "guide": [
+      "랜드마크나 배경이 뒤에 보이는 전신·상반신 사진을 추천해요",
+      "얼굴이 또렷하게 보이는 밝은 사진이 좋아요",
+      "원본 화질이 좋을수록 풍경 디테일도 살아나요"
+    ],
+    "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
+    "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 실제 항공 촬영이 아닌 연출 이미지예요.",
+    "cta": {
+      "copy": "오늘, 여행 사진을 하늘에서 다시 찍어보세요",
+      "button": "드론뷰 만들기"
+    }
+  }
+}
