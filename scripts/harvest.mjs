@@ -23,7 +23,8 @@
 // ★기본이 dry-run이다. --run 을 붙이지 않으면 외부 호출이 정확히 0건이다.
 //
 // 사용법
-//   node scripts/harvest.mjs --spec specs/schoolsnap.json                 (dry-run, 호출 0)
+//   node scripts/harvest.mjs --spec specs/schoolsnap.json                 ★수동(호출 0)
+//   node scripts/harvest.mjs --spec specs/schoolsnap.json --dry-run       API 계획만
 //   node scripts/harvest.mjs --spec specs/schoolsnap.json --run
 //   node scripts/harvest.mjs --spec specs/schoolsnap.json --befores --run
 //   node scripts/harvest.mjs --spec specs/schoolsnap.json --run --only 1 --out examples/ba/_pilot
@@ -37,6 +38,7 @@ import vm from "node:vm";
 import crypto from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
+import * as pool from "./lib/pool.mjs";
 
 // ★경로에 공백이 있으면(이 PC: "Hello G.BOX") import.meta.url이 %20으로 인코딩된다.
 //   fileURLToPath로 반드시 디코딩할 것 — 안 하면 mkdir·readFileSync가 통째로 죽는다.
@@ -78,17 +80,19 @@ const MODEL = {
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const a = { spec: null, befores: false, afters: false, run: false, force: false,
+  // ★기본은 manual(비용 0). --run 을 붙였을 때만 API를 부른다.
+  const a = { spec: null, befores: false, afters: false, run: false, manual: true, force: false,
               only: null, out: "examples/ba", maxCost: 3000, sheetOnly: false };
   for (let i = 0; i < argv.length; i++) {
     const t = argv[i];
     if (t === "--spec") a.spec = argv[++i];
     else if (t === "--befores") a.befores = true;
     else if (t === "--afters") a.afters = true;
-    else if (t === "--run") a.run = true;
-    else if (t === "--dry-run") a.run = false;
+    else if (t === "--run") { a.run = true; a.manual = false; }
+    else if (t === "--dry-run") { a.run = false; a.manual = false; }   // API 계획만 출력
+    else if (t === "--manual") a.manual = true;
     else if (t === "--force") a.force = true;
-    else if (t === "--sheet-only") a.sheetOnly = true;
+    else if (t === "--sheet-only") { a.sheetOnly = true; a.manual = false; }
     else if (t === "--only") a.only = argv[++i].split(",").map((x) => Number(x.trim())).filter(Boolean);
     else if (t === "--out") a.out = argv[++i];
     else if (t === "--max-cost") a.maxCost = Number(argv[++i]);
@@ -350,6 +354,138 @@ async function buildSheet(dir, key, rows, label) {
   return out;
 }
 
+// ── 수동 모드 ────────────────────────────────────────────────────────────────
+// 검증 비용 0 경로. 비포는 풀에서 복사하고, 애프터는 MJ가 스튜디오(웹 UI)에서 만든다.
+// 이 스크립트는 ①비포를 깔아주고 ②무엇을 어디서 어떻게 만들지 체크리스트로 적어주고
+// ③파일이 다 들어오면 시트를 만들어 준다. 외부 호출은 한 건도 하지 않는다.
+const STUDIO = {
+  pro: "Gemini 3 Pro Image (스튜디오)",
+  flash: "Nano Banana 2",
+  gpt: "웹 ChatGPT",
+};
+
+async function runManual() {
+  fs.mkdirSync(outDir, { recursive: true });
+  const st = pool.stats();
+  console.log(`\n  ── 수동 모드 (외부 호출 0)`);
+  console.log(`     풀: ${st ? `${st.total}장 (female ${st.female.noglasses}+안경 ${st.female.glasses} · male ${st.male.noglasses}+안경 ${st.male.glasses})` : "★없음 — examples/ba/_pool 을 먼저 만들 것"}`);
+
+  // ① 비포 — 힌트대로 풀에서 고른다. 사물·음식·펫·특수 장면은 MJ 몫.
+  const person = ["person", "duo"].includes(spec.inputType);
+  const hints = spec.befores.map((b, i) => b.pool ?? (person ? (pool.DEFAULT_HINTS[i] ?? "female") : "custom"));
+  const picked = pool.pick(hints);
+  const usedNames = [];
+  console.log(`\n  ── 비포`);
+  for (const [i, b] of spec.befores.entries()) {
+    const dst = path.join(outDir, b.file);
+    const p = picked[i];
+    if (!p.file) { console.log(`     비포${i + 1}  ${b.file}  ← ★${p.reason} (힌트 ${p.hint})`); continue; }
+    if (fs.existsSync(dst) && !args.force) { console.log(`     비포${i + 1}  ${b.file}  이미 있음 — 건너뜀`); usedNames.push(p.file); continue; }
+    fs.copyFileSync(path.join(ROOT, pool.POOL_DIR, p.file), dst);
+    usedNames.push(p.file);
+    console.log(`     비포${i + 1}  ${b.file}  ← 풀 ${p.file}${p.reused ? " (재사용 — 미사용분 소진)" : ""}`);
+  }
+  if (usedNames.length) fs.writeFileSync(path.join(outDir, "USED_POOL.txt"), usedNames.join("\n") + "\n", "utf8");
+
+  // ② 체크리스트
+  const md = buildChecklist(picked);
+  const clPath = path.join(outDir, `${spec.key}_수확체크리스트.md`);
+  fs.writeFileSync(clPath, md, "utf8");
+  console.log(`\n  체크리스트: ${path.relative(ROOT, clPath).split(path.sep).join("/")} (${md.split("\n").length}줄)`);
+
+  // ③ 애프터 감지
+  const missing = [];
+  for (let n = 1; n <= spec.afters.count; n++) {
+    if (!fs.existsSync(path.join(outDir, `${spec.key}_애프터${n}.png`))) missing.push(n);
+  }
+  if (missing.length) {
+    console.log(`\n  ── 남은 애프터 ${missing.length}장`);
+    for (const n of missing) console.log(`     ${spec.key}_애프터${n}.png  — 체크리스트의 "애프터 ${n}" 항목 참고`);
+    console.log(`\n  다 만들어서 위 이름으로 ${path.relative(ROOT, outDir).split(path.sep).join("/")} 에 넣고 이 명령을 다시 돌리면 시트가 나온다.\n`);
+    return;
+  }
+
+  const rows = [];
+  for (let n = 1; n <= spec.afters.count; n++) {
+    const m = (spec.afters.map || [])[n - 1];
+    const bi = (Array.isArray(m) ? m[0] : m) - 1;
+    rows.push({
+      before: spec.befores[bi] ? path.join(outDir, spec.befores[bi].file) : null,
+      after: path.join(outDir, `${spec.key}_애프터${n}.png`),
+    });
+  }
+  const sheet = await buildSheet(outDir, spec.key, rows,
+    `${spec.key} · ${spec.engine} · prompt md5 ${md5(prompts[0].text).slice(0, 8)} · ${new Date().toISOString().slice(0, 10)}`);
+  console.log(`\n  애프터 ${spec.afters.count}장 전부 확인 · 시트: ${path.relative(ROOT, sheet).split(path.sep).join("/")}`);
+
+  console.log(`\n  ── 판정표 골격 (G2에 채워 넣을 것)`);
+  console.log(`     | 컷 | ${(spec.verdicts || []).join(" | ")} |`);
+  console.log(`     |---|${(spec.verdicts || []).map(() => "---").join("|")}|`);
+  for (let n = 1; n <= spec.afters.count; n++) console.log(`     | 애프터${n} |${(spec.verdicts || []).map(() => "  ").join("|")}|`);
+  console.log("");
+}
+
+function buildChecklist(picked) {
+  const L = [];
+  L.push(`# ${spec.key} 수확 체크리스트 — ${spec.name || ""}`);
+  L.push("");
+  L.push(`- 엔진: **${spec.engine}** → 스튜디오 **${STUDIO[spec.engine]}**`);
+  L.push(`- 입력 종류: ${spec.inputType}`);
+  L.push(`- 저장 위치: \`${path.relative(ROOT, outDir).split(path.sep).join("/")}\``);
+  L.push(`- 프롬프트 출처: ${spec.prompt?.source === "file" ? spec.prompt.path : `app/api/${spec.key}/route.ts (VM 재추출)`} · md5 \`${md5(prompts[0].text).slice(0, 8)}\``);
+  L.push("");
+  L.push("## 비포");
+  L.push("");
+  L.push("| # | 파일 | 출처 |");
+  L.push("|---|---|---|");
+  for (const [i, b] of spec.befores.entries()) {
+    const p = picked[i];
+    L.push(`| ${i + 1} | \`${b.file}\` | ${p.file ? `풀 \`${p.file}\`` : `**★MJ가 ChatGPT에서 생성** — 아래 프롬프트 사용`} |`);
+  }
+  for (const [i, b] of spec.befores.entries()) {
+    if (picked[i].file) continue;
+    L.push("");
+    L.push(`### 비포 ${i + 1} 생성 프롬프트 (\`${b.file}\`)`);
+    L.push("");
+    L.push("```");
+    L.push(b.prompt || "(spec에 프롬프트 없음)");
+    L.push("```");
+  }
+  L.push("");
+  L.push("## 애프터");
+  for (let n = 1; n <= spec.afters.count; n++) {
+    const m = (spec.afters.map || [])[n - 1];
+    const idx = Array.isArray(m) ? m : [m];
+    const inputs = idx.map((k) => spec.befores[k - 1]?.file || `★비포${k} 없음`);
+    const pi = spec.duo ? Math.min(n - 1, prompts.length - 1) : 0;
+    const pr = prompts[pi];
+    L.push("");
+    L.push(`### 애프터 ${n}`);
+    L.push("");
+    L.push(`- **입력 비포**: ${inputs.map((f) => `\`${f}\``).join(" + ")}${spec.duo ? "  (순서 = Person 1, 2)" : ""}`);
+    L.push(`- **스튜디오**: ${STUDIO[spec.engine]}`);
+    if (spec.duo) L.push(`- **성별 조합**: ${pr.label}`);
+    L.push(`- **저장 파일명**: \`${spec.key}_애프터${n}.png\``);
+    L.push(`- **판정 포인트**: ${(spec.verdicts || [])[n - 1] || "(spec에 verdicts 없음)"}`);
+    L.push("");
+    L.push(`- **프롬프트 전문** (${pr.text.length}자 · md5 \`${md5(pr.text).slice(0, 8)}\`) — 아래를 통째로 복사해서 넣을 것:`);
+    L.push("");
+    L.push("```");
+    L.push(pr.text);
+    L.push("```");
+  }
+  L.push("");
+  L.push("---");
+  L.push("");
+  L.push(`애프터 ${spec.afters.count}장을 위 이름으로 저장한 뒤 다시 실행하면 컨택트 시트와 판정표 골격이 나온다:`);
+  L.push("");
+  L.push("```");
+  L.push(`node scripts/harvest.mjs --spec ${args.spec}`);
+  L.push("```");
+  L.push("");
+  return L.join("\n");
+}
+
 // ── main ────────────────────────────────────────────────────────────────────
 const args = parseArgs(process.argv.slice(2));
 const spec = JSON.parse(rd(path.join(ROOT, args.spec)));
@@ -367,6 +503,7 @@ console.log(`  산출 위치: ${path.relative(ROOT, outDir).split(path.sep).join
 
 // 1) 프롬프트 확보 — 손으로 옮긴 구간 0
 const prompts = resolvePrompts(spec);
+if (args.manual) { await runManual(); process.exit(0); }
 console.log(`\n  ── 프롬프트 (${spec.prompt?.source === "file" ? "파일" : "route 재추출"})`);
 for (const p of prompts) console.log(`     ${p.label.padEnd(16)} ${String(p.text.length).padStart(5)}자 · md5 ${md5(p.text).slice(0, 8)}`);
 

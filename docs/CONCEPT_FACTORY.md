@@ -27,7 +27,10 @@
 
 ## 2. 파이프라인 (spec 2파일 → 출시)
 specs/{키}.json + specs/{키}.prompt.txt 작성
-→ node scripts/harvest.mjs --spec specs/{키}.json --dry-run → --run --max-cost 3000   (비포 3 + 애프터 4 + 시트)
+→ node scripts/harvest.mjs --spec specs/{키}.json   ★수동 기본(외부 호출 0): 비포를 풀에서 깔고 체크리스트를 낸다
+→ [MJ] 체크리스트대로 스튜디오(Pro=Gemini 3 Pro Image · GPT=웹 ChatGPT · flash=Nano Banana 2)에서 애프터 4장 생성 → 지정 파일명으로 저장
+→ 같은 명령 재실행 → 파일 감지 → 컨택트 시트 + 판정표 골격
+   (API 수확은 옵션: --dry-run 으로 비용 계획 확인 후 --run --max-cost 3000. 비용이 급할 때만)
 → [G2] 시트 경로 + 판정표 제시, 멈춤
 → 통과: node scripts/new-concept.mjs --spec specs/{키}.json --stage route --run   (자동 커밋·푸시, 홈 잠금)
 → node scripts/detail-page.mjs --spec specs/{키}.json --thumb N   (N = 판정표 최고 컷)
@@ -72,6 +75,7 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
   SELF-CHECK에 "Is the enhancement CLEARLY visible … A timid result is a failure." / AVOID에 "A timid, under-retouched result…" 짝으로 추가.
 - 따뜻한 광(골든아워·촛불·앰버) 장면: Light 줄을 "얼굴엔 bright CLEAN neutral-toned key light, 따뜻한 광은 BACKGROUND로 격하 + ★must NEVER tint the face yellow" 형태로. 겨울·수영장은 "pale/gray·glare-flattened 금지".
 - 2인: 마스터 부록 B(ROLL CALL·per-person·ANTI-CLONE) 문자 그대로. 성별 문구 "Person 1 is a woman."만 파라미터.
+- ★인물 비포는 풀 재사용이 기본이다(examples/ba/_pool, 219장 · POOL.md). 신규 생성은 사물·음식·펫·특수 장면(랜드마크 등)만 — spec의 befores[].pool 에 "custom"을 주면 체크리스트가 "MJ가 ChatGPT에서 생성" 항목으로 뽑아준다. 힌트는 "female"/"male"/"female-glasses"/"male-glasses", 인물인데 힌트가 없으면 기본 [female, female-glasses, male]. 풀은 미사용분을 먼저 배정한다(USED_POOL.txt로 추적).
 - 비포 프롬프트 표준: "A casual smartphone selfie of a fictional Korean {woman/man} in {her/his} {나이}, {한 줄 인상}, {머리}, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." 사물은 라벨을 추상 도형으로(글자 0). 여성 2·남성 1이 기본, 안경 모델 1은 정체성 단서 판정용으로 권장.
 - 상세 카피 규칙(detail 필드): 서브카피 1줄 / 말풍선 3개(타겟 언어, 이모지 1) / 해결 선언 "MOSPIC {컨셉} — 사진 한 장이면, …" / 대비 캡션 "A가 → B로" / POINT 1 풀세팅·2 "그래도 나는 나"·3 용도 확장(이미지 2장) / 가격 offline은 실제 시세 구체적, mospic은 "합리적인 가격 · 약 1분 · 사진 한 장으로" / 가이드 3 / AI 고지에 컨셉 고유 면책(재미·자체 디자인·실물 아님) / CTA "오늘, …" + "{컨셉} 만들기". 소요시간 "약 1분", "커피 한 잔 값" 금지.
 
