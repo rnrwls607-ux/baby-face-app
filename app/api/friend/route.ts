@@ -125,7 +125,7 @@ async function generateFriend(image1DataUrl: string, image2DataUrl: string, gend
   }
   clearTimeout(timer);
   console.log(`[friend] model=${GEMINI_MODEL} g1=${gender1} g2=${gender2} status=${res.status} ${Date.now() - t0}ms`);
-  if (!res.ok) throw new Error(await geminiFriendlyError(res, "couple"));
+  if (!res.ok) throw new Error(await geminiFriendlyError(res, "friend"));
   const data = await res.json();
   const respParts = data?.candidates?.[0]?.content?.parts || [];
   const imgParts = respParts.filter((p: { inlineData?: { data?: string }; inline_data?: { data?: string } }) => p?.inlineData?.data || p?.inline_data?.data);

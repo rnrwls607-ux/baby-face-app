@@ -135,7 +135,7 @@ export default function CinesnapPage() {
               max={1}
               onPick={files => handleUpload(files[0])}
               onRemove={() => { setImage(""); faceCheck.clear(); }}
-              cameraFacing="environment"
+              cameraFacing="user"
             />
             <FaceCheckNote
               notes={faceCheck.notes}

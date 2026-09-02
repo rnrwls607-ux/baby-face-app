@@ -2687,3 +2687,20 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   허용 범위 밖) — 다음에 harvest 손댈 때 합칠 것 ②cheerglam 계열 8종 cameraFacing 수리
 - 다음에 할 것: 실제 신규 컨셉 1종으로 route→launch→ba 3스테이지 완주 / duo 경로(friend
   템플릿·성별 파라미터화·380+8+380 합성)는 코드만 있고 실물 미검증
+
+## 2026-09-02 — 백로그 일괄 수리: 카메라 방향 10종 + friend 라벨
+
+- [무엇을 고쳤나] 업로드 버튼이 여는 카메라가 컨셉과 반대였던 10종. 로직 변경 0, 각 파일 1줄
+  · 사람 8종 environment → user: cheerglam·schoolsnap·poolside·snowsnap·cinesnap·
+    personalcolor·monoactor·fortunecard (셀카 컨셉인데 후면 카메라가 열렸다)
+  · 사물 2종 미지정 → environment 명시: product·figure (UploadZone 기본값이 "user"라
+    ★지정을 안 하면 셀카 카메라가 열린다 — minichef 때 실측으로 확인된 함정)
+  · app/api/friend/route.ts 에러 라벨 "couple" → "friend" (복제 잔재 오기)
+- [★원인] person×pro 템플릿 cheerglam이 environment였고 복제로 7종에 번졌다. 3호
+  new-concept.mjs 매핑표에서 person을 "user"로 못박아 신규에는 안 번지게 해뒀고, 이번에
+  기존분을 따라잡았다 — 템플릿의 값 하나가 8종으로 번지는 구조라는 게 이 건의 교훈이다
+- [게이트] 앵커 11건 전수 사전검증(각 1회) 후 적용 · diff 11파일 각 ±1줄(교체 9 · 추가 2) ·
+  그 외 파일 0 · 빌드 "Compiled successfully in 25.6s" exit 0
+- [★실렌더 검증] dev에서 HTML의 capture 속성 실측 — schoolsnap=user · cheerglam=user ·
+  product=environment · figure=environment. 페이지 5종 전부 200.
+  ★CSS 선언이 아니라 실제로 그려진 속성을 봤다(선언과 렌더가 갈리는 게 이 계열의 함정)

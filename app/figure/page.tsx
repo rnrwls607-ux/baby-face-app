@@ -123,6 +123,7 @@ export default function FigurePage() {
               max={1}
               onPick={files => handleUpload(files[0])}
               onRemove={() => setImage("")}
+              cameraFacing="environment"
             />
             <TipChips tips={[{ icon: "expand", label: "대상 또렷하게" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "level", label: "배경 단순하게" }]} />
             <PrivacyLine />
