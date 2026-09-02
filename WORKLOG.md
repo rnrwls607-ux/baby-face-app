@@ -1,3 +1,9 @@
+## 2026-09-02 — 신규 컨셉 신설: droneview (드론뷰 여행샷)
+- [스테이지] new-concept.mjs --stage route · 템플릿 person:pro → cheerglam
+- [프롬프트] specs/droneview.prompt.txt → route 삽입 · md5 cc4e951d · 재추출 일치
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-02 — ★2차 배치 14종 완결 (검증 21 → 통과 14 → route 4 → 출시 2 → BA 3)
 - [규모] 컨셉 166 → 180종 / route 165 → 179 / PRO_CONCEPTS 31 → 39 / BA_LIVE 159 → 173
 - [통과 14] 1차: deskfigure(GPT)·digicam(Pro)·airportsnap(Pro) / 2-A: cinesnap·schoolsnap(Pro)·
