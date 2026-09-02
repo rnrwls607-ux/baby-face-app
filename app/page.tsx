@@ -412,7 +412,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       { id: "snowsnap", title: "첫눈 스냅", subtitle: "첫눈처럼 설레는", emoji: "❄️", accent: "#7FA8C9", image: "/cards/snowsnap.webp", badge: "NEW", tags: ["인생샷"], go: "snowsnap" },
       { id: "profileduo", title: "베프 프로필 스냅", subtitle: "우리 둘, 나란히", emoji: "👯", accent: "#E8A0B4", image: "/cards/profileduo.webp", badge: "NEW", tags: ["우정"], go: "profileduo" },
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
-      // { id: "droneview", title: "드론뷰 여행샷", subtitle: "드론 없이 드론샷", emoji: "🚁", accent: "#3A8FB7", image: "/cards/droneview.webp", badge: "NEW", tags: ["인생샷"], go: "droneview" },
+      { id: "droneview", title: "드론뷰 여행샷", subtitle: "드론 없이 드론샷", emoji: "🚁", accent: "#3A8FB7", image: "/cards/droneview.webp", badge: "NEW", tags: ["인생샷"], go: "droneview" },
       { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
