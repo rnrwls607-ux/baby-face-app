@@ -238,3 +238,19 @@ img { display: block; max-width: 100%; }
   background: #E3E1DD; color: #6E6C68; font-size: var(--t-label); font-weight: 700;
   border-radius: 12px; padding: 16px; line-height: 1.4; word-break: break-all;
 }
+
+/* ── POINT 보조 요소 (스키마 확장 2026-09-02) ─────────────────────────────── */
+/* 수작업본에 있던 두 가지를 스키마로 끌어올렸다:
+   ① POINT 본문 아래 아이콘 칩 3개 가로 배열  ② POINT 이미지 밑 보조 캡션 */
+.point__chips { display: flex; justify-content: center; gap: 16px; padding-top: 32px; }
+.point__chip {
+  flex: 1 1 0; min-width: 0; text-align: center;
+  background: var(--card); border: 2px solid var(--line); border-radius: var(--r);
+  padding: 26px 14px; font-size: var(--t-label); font-weight: 700; letter-spacing: -.02em;
+  line-height: 1.35;
+}
+.point__chip i { display: block; font-style: normal; font-size: 44px; padding-bottom: 12px; }
+.point__cap {
+  text-align: center; font-size: var(--t-caption); color: var(--sub);
+  padding-top: 22px; letter-spacing: -.025em; line-height: 1.45;
+}

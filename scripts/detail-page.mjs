@@ -224,11 +224,21 @@ async function build() {
     } else if (p.image) {
       media = `<div class="point__img">${await img(p.image, 952, await fitH(p.image, 952, 800, 1270))}</div>`;
     }
+    // 칩 — "아이콘 라벨" 또는 그냥 라벨. 수작업본 규격대로 가로 3칸.
+    const chips = p.chips?.length
+      ? `<div class="point__chips">${p.chips.map((c) => {
+          const m = String(c).match(/^(\p{Extended_Pictographic}️?)\s*(.+)$/u);
+          return `<span class="point__chip">${m ? `<i>${esc(m[1])}</i>${esc(m[2])}` : esc(c)}</span>`;
+        }).join("")}</div>`
+      : "";
+    const cap = p.imageCaption && media ? `<p class="point__cap">${esc(p.imageCaption)}</p>` : "";
     pts.push(`<div class="point">
     <span class="point__badge">POINT ${i + 1}</span>
     <h3 class="point__title">${esc(p.title)}</h3>
     <p class="point__body">${esc(p.body)}</p>
+    ${chips}
     ${media}
+    ${cap}
   </div>`);
   }
   s.push(`<section class="section pad" style="padding-top:0">${pts.join("")}</section>`);

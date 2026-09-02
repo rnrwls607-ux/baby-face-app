@@ -2650,3 +2650,40 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   POINT 이미지 밑 보조 캡션. detail 스키마에 필드가 없어서다. 필요하면 스키마 확장 건
 - 다음에 할 것: 나머지 컨셉 spec 채우기(detail 블록이 있어야 렌더 가능) / layout "2to1"을
   profileduo로 실증(코드는 있으나 실물 미검증) / 3호 new-concept 스크립트 설계
+
+## 2026-09-02 — 컨셉 자동화 3호: new-concept.mjs (route/launch/ba 오케스트레이터)
+
+- [무엇인가] 지난 배치에서 매번 스크래치 스크립트를 새로 써서 돌리던 3단 공정을 spec.json
+  하나로 실행하는 스테이지로 굳혔다. ★새 로직 발명 없음 — 4583041(route)·5a87413(launch)·
+  9496d31(ba)의 절차를 옮기고, 손으로 적던 앵커만 "지금 리포의 꼬리 키"에서 자동으로 뽑게 했다
+- [★스크래치 의존 절단] gen-routes·gen-pages·wire4·wire11·ba-wire10 은 전부 임시 폴더에만
+  있었다(270개 중). 세션이 지나면 사라진다 → scripts/lib/ 5개 모듈로 리포에 내장:
+  repo(EOL·앵커 계획기) · prompt(VM 평가기) · wiring(8지점) · templates(복제) · git · worklog
+- [★모든 스테이지 3원칙] ①시작 전 작업 트리 클린 확인 ②앵커 전수 사전검증 — 하나라도
+  어긋나면 파일을 한 글자도 안 쓰고 중단 ③게이트 하나라도 FAIL이면 커밋 안 하고 롤백
+  (git checkout + 새 파일 삭제 + 빈 디렉터리 정리). 기본은 dry-run
+- [템플릿 매핑 10조합 확정 — 실측] person×pro=cheerglam / person×gpt=gyaru /
+  person×flash=age / product·food·pet×gpt=gyaru(가이드만 교체) / 동 ×pro=cheerglam /
+  duo×pro=friend. 조합마다 guide·cameraFacing·faceCheck·uploadLabel을 표로 못박았다
+- [★발견 — cheerglam 계열 8종이 후면 카메라] person×pro 템플릿 cheerglam이
+  cameraFacing="environment"다(사람 컨셉인데 셀카가 안 열린다). 복제로 schoolsnap·poolside·
+  snowsnap·cinesnap·personalcolor·monoactor·fortunecard까지 번졌다. 매핑표에서는 person을
+  "user"로 못박아 신규 컨셉에는 안 번지게 했다 — ★기존 8종 수리는 별건(백로그)
+- [★사고 1 — 내가 써넣은 이름을 잔재로 잡았다] route 헤더 주석에 출처 템플릿명을 적는데,
+  잔재 검사를 그 뒤에 돌려 항상 실패했다. 검사를 주석 삽입 "앞"으로 옮겨 해결
+- [★사고 2 — page 치환 4형태 누락] CheerglamPage·CONCEPTS.cheerglam·"cheerglam.png"·
+  /examples/ba/cheerglam- 를 놓쳐 잔재 8건. 치환을 순서 있는 공용 목록(applySubs)으로 뽑아
+  route/page가 같이 쓰게 했다. ★긴 형태를 먼저 바꾸지 않으면 짧은 규칙이 먼저 먹는다
+- [멱등성 3/3] schoolsnap으로 검사 — route는 "이미 8/8 → 신설 전용이라 중단",
+  launch는 "카드 열림·detailImage 있음 → 변경 0", ba는 "BA_LIVE 포함·pairs=[1,2,3] → 변경 0"
+- [파일럿] _pilotconcept(임시 키, schoolsnap 프롬프트 복사)로 route 스테이지 실호출 →
+  게이트 9/9 PASS(배선 8/8 · 카드 잠금 · PRO 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5
+  94bb1e76 일치 · 템플릿 무접촉 · 변경파일=예상 · 이미지 0 · 빌드) → --no-commit 롤백 →
+  ★app/ 최종 diff 0 증명(추적 변경 0 · 잔재 파일 0 · 3파일에 키 0건)
+- [detail 스키마 확장] points[].chips(아이콘 칩 3개 가로 배열)·points[].imageCaption
+  (이미지 밑 보조 캡션 42px) 추가 — 수작업본에 있는데 자동본에 없던 두 요소를 메웠다.
+  spec에 ba.pairs도 추가(비포N↔애프터N, duo는 [[1,2],1] 합성 지정)
+- [백로그] ①VM 평가기가 harvest.mjs와 lib/prompt.mjs 두 벌이다(이번 라운드 harvest가 수정
+  허용 범위 밖) — 다음에 harvest 손댈 때 합칠 것 ②cheerglam 계열 8종 cameraFacing 수리
+- 다음에 할 것: 실제 신규 컨셉 1종으로 route→launch→ba 3스테이지 완주 / duo 경로(friend
+  템플릿·성별 파라미터화·380+8+380 합성)는 코드만 있고 실물 미검증
