@@ -44,6 +44,7 @@ route: template("auto"|키) · chipFrom(기존 컨셉 키) · emoji · color · 
 ba: pairs [[1,1],[2,2],[3,3]] (duo: [[[1,2],1],[[3,4],4]])
 detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3],image} · pain[3] · solution · pairs[2]{before,after,caption} · points[3]{title,body,chips[3],image|images[2],imageCaption} · ★price{header,offline,mospic} · guide[3] · privacy · aiNotice · cta{copy,button}
 - 잔재 검사는 키 어간만 잡는다 — 한글·이모지는 tplName·replace로 막는다. 실행 전 메모리 선조립로 잔재 0 확인.
+- ★템플릿 고유 한글 문구는 scripts/lib/templates.mjs의 TEMPLATE_PHRASES 목록이 잡는다(cheerglam: "치어리더"·"여성 스타일링 전용 컨셉이에요"·"📣"). 새 템플릿을 쓰면 그 목록부터 채운다. 대상 고지 줄은 spec의 route.audience가 템플릿과 다르면 자동으로 빠진다.
 
 ## 4. 엔진·템플릿 지도
 - Pro: 얼굴 중심 화보·장면 재구성. GPT: 원본 보존 편집(제품 라벨·글자), 광고 문법 진할수록, 오브제화(피규어·펠트). flash: 색·톤·질감 변환.

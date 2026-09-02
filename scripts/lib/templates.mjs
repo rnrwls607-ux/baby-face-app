@@ -28,6 +28,29 @@ export const TEMPLATES = {
   "duo:pro":      { tpl: "friend",    tplFn: "Friend",    promptStyle: "duo",    guide: "family",         camera: null,          faceCheck: false, uploadLabel: null, duo: true },
 };
 
+// ── 템플릿별 "컨셉 고유 한글 문구·이모지" 목록 ────────────────────────────────
+// ★왜 필요한가: 잔재 검사는 키 어간(cheerglam/Cheerglam/CHEERGLAM)만 잡는다. 한글 문구는
+//   한 글자도 안 걸리고 조용히 통과해 라이브까지 간다. 실제로 droneview가
+//   "여성 스타일링 전용 컨셉이에요"를 달고 배포됐다(2026-09-03). 그래서 템플릿마다
+//   그 컨셉에서만 참인 문구를 여기 적어두고, 조립 뒤에 남아 있으면 실패시킨다.
+//   spec의 route.tplName / route.replace 로 지우거나 바꾸면 통과한다.
+export const TEMPLATE_PHRASES = {
+  cheerglam: ["치어리더", "여성 스타일링 전용 컨셉이에요", "📣"],
+  gyaru: ["갸루", "갸루 메이크오버"],
+  age: [],
+  friend: ["베프", "친구"],
+};
+
+// 템플릿에만 참인 "대상 고지" 줄 — 새 컨셉의 audience가 다르면 통째로 뺀다.
+// (문구 목록으로 잡아 실패시키기만 하면 person×pro 신규가 매번 replace 보일러플레이트를
+//  써야 한다. 조건이 명확하니 자동으로 떼는 게 맞다.)
+const AUDIENCE_NOTICE = {
+  cheerglam: {
+    audience: "female",
+    block: `            {/* 컨셉 범위 고지 — 앱의 보조문 톤(작은 회색). 결과가 기대와 다른 사고를 앞단에서 막는다 */}\n            <p style={{ fontSize: 12, color: "#9B9B9B", margin: "10px 2px 0", lineHeight: 1.6 }}>여성 스타일링 전용 컨셉이에요.</p>\n`,
+  },
+};
+
 export function pickTemplate(spec) {
   const k = `${spec.inputType}:${spec.engine}`;
   const t = TEMPLATES[k];
@@ -150,11 +173,20 @@ export function buildPage(key, spec, tpl) {
   // 식별자·경로 치환
   out = applySubs(out, tpl, key);
 
-  // 한글 문구 — spec이 준 것만 바꾼다. 안 주면 템플릿 문구가 그대로 남으므로 아래에서 경고한다.
+  // 대상 고지 줄 — 템플릿의 audience와 다르면 통째로 뺀다
+  const notice = AUDIENCE_NOTICE[tpl.tpl];
+  if (notice && (r.audience || "all") !== notice.audience) {
+    const n = out.split(notice.block).length - 1;
+    if (n === 1) out = out.replace(notice.block, "");
+    else if (n > 1) fail(`${key}: 대상 고지 줄 앵커 ${n}회`);
+  }
+
+  // 한글 문구 — spec이 준 것만 바꾼다. 안 주면 템플릿 문구가 그대로 남으므로 아래에서 잡는다.
   if (r.tplName) out = out.split(r.tplName).join(spec.name);
   for (const [from, to] of r.replace || []) out = out.split(from).join(to);
 
   assertNoLeftover(out, tpl.tpl, key, "page");
+  assertNoPhrases(out, tpl.tpl, key, "page");
   return { text: out, koLeft: r.tplName ? (out.split(r.tplName).length - 1) : null };
 }
 
@@ -190,6 +222,19 @@ export function assertNoLeftover(text, tplKey, key, what) {
     if (n) hits.push(`${s}×${n}`);
   }
   if (hits.length) fail(`${key} ${what}: 템플릿 키 잔재 ${hits.join(", ")} — 치환 규칙을 보완할 것`);
+}
+
+// ★한글 문구 잔재 검사 — 어간 검사가 못 잡는 것을 여기서 잡는다(위 TEMPLATE_PHRASES 주석 참고).
+export function assertNoPhrases(text, tplKey, key, what) {
+  const hits = [];
+  for (const ph of TEMPLATE_PHRASES[tplKey] || []) {
+    const n = text.split(ph).length - 1;
+    if (n) hits.push(`"${ph}"×${n}`);
+  }
+  if (hits.length) {
+    fail(`${key} ${what}: 템플릿 고유 문구 잔재 ${hits.join(", ")}\n` +
+         `   → spec의 route.tplName(이름 치환) 또는 route.replace(["from","to"])로 처리할 것.`);
+  }
 }
 
 export const fnName = (key) => key.replace(/(^|[-_])([a-z])/g, (_, __, c) => c.toUpperCase());
