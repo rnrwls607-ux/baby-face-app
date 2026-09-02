@@ -144,8 +144,6 @@ export default function FortunecardPage() {
               single
             />
             <TipChips tips={[{ icon: "face", label: "정면 얼굴" }, { icon: "sun", label: "밝은 곳에서" }, { icon: "expand", label: "상반신이 보이게" }]} />
-            {/* 컨셉 범위 고지 — 앱의 보조문 톤(작은 회색). 결과가 기대와 다른 사고를 앞단에서 막는다 */}
-            <p style={{ fontSize: 12, color: "#9B9B9B", margin: "10px 2px 0", lineHeight: 1.6 }}>여성 스타일링 전용 컨셉이에요.</p>
             <PrivacyLine />
             <ProCongestionHint concept="fortunecard" />
             <button onClick={handleSubmit} disabled={loading || !image}
