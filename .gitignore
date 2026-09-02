@@ -51,3 +51,6 @@ next-env.d.ts
 
 # 인스타 게시물 공장 — 원료 사진도 산출 카드도 리포에 안 들어간다(scripts/insta-kit.mjs)
 /insta/
+
+# 상세페이지 자동 렌더의 중간 산출 HTML — 이미지를 data URI로 품고 있어 수 MB다(scripts/detail-page.mjs)
+/scripts/detail-template/out/

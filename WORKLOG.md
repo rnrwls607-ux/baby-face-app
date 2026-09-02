@@ -2613,3 +2613,40 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   당장은 못 찾을 때 원인 문구를 내도록만 막아뒀고, 직접 선언 여부는 결정 대기
 - 다음에 할 것: 단가 실측 후 PRICE 상수 교정 / duo spec 1개(profileduo)로 2인 경로 실증 /
   detail-page·new-concept 스크립트가 같은 spec을 읽도록 2호·3호 설계
+
+## 2026-09-02 — 컨셉 자동화 2호: detail-page.mjs (spec → 상세페이지 1080 렌더)
+
+- [무엇을 대체하나] 킷 ③(Claude Design으로 상세 HTML 짜기)+④(GoFullPage 캡처)를 없앴다.
+  원료(examples/ba/{키}/)와 문안(specs/{키}.json 의 detail 블록)만 있으면 사람 손 없이
+  public/details/{키}.png + public/cards/{키}.png 가 나온다
+- [★규격 실측 — 수작업본은 폭이 제각각이었다] public/details 208장의 가로 분포가
+  886~1210px로 흩어져 있다(GoFullPage가 브라우저 창 폭을 그대로 찍는다). 최신 11종은
+  894~898px. 자동본은 뷰포트를 1080으로 못박고 ★캡처가 정확히 1080이 아니면 실패시킨다 —
+  규격이 안 흔들리는 게 자동화의 값어치다
+- [레퍼런스 환산] schoolsnap·gravityad·cinesnap을 실측해 1080 기준으로 환산(계수 1.207):
+  히어로 제목 127 / 섹션 제목 66 / POINT 소제목 66 / 캡션 41 / 본문 37 / 워드마크 28,
+  섹션 간 여백 중앙값 62. 이 위에 킷 하한(본문32·캡션40·섹션56·히어로64)을 덮었다
+- [★글자 하한은 CSS가 아니라 DOM에서 검사] CSS에 32px이라 적은 것과 실제로 32px로 그려진
+  것은 다른 문제다(상속·폰트 폴백). 캡처 직전 모든 텍스트 노드의 computed font-size를
+  훑어 하나라도 미달이면 캡처를 버린다. 그래서 템플릿의 모든 글자를 32px 이상으로 뒀다
+- [★사고 1 — 자리표시자를 주석에 적었다가 페이지 전멸] index.html 주석에 치환 마커를
+  원문으로 써 뒀더니 replace가 주석 쪽을 먼저 먹어 CSS·본문이 통째로 안 들어갔다. 게이트
+  4개가 동시에 FAIL로 떠서 즉시 잡힘. 주석에서 마커를 빼고 ★치환 잔존 검사를 게이트로 추가
+- [★사고 2 — 히어로 cover 크롭이 정수리·병 바닥을 잘랐다] 고정 1080×940으로 자르니
+  attention이 얼굴/제품으로 확대 폭주(BA 08-29 판례와 같은 함정). 히어로·POINT 큰 이미지는
+  ★원본 비율을 따라 높이를 정하고(하한 900·상한 1440), 잘라야 할 때만 inputType으로
+  무엇을 지킬지 정한다 — 사람은 top(얼굴이 위), 사물·음식은 centre. 비교 시트로 확인
+- [폰트] app/layout.tsx와 같은 Pretendard CDN(jsdelivr v1.3.9)을 쓴다. 도달 확인(200,
+  @font-face 92개). 앱 화면과 글자 모양이 같아야 하므로 로컬 폰트로 갈아끼우지 말 것
+- [크롬] puppeteer가 아니라 ★puppeteer-core + 이 PC의 크롬을 쓴다 — Chromium 다운로드 0.
+  CHROME_PATH 환경변수로 덮을 수 있고, 못 찾으면 그 문구를 내고 멈춘다
+- [게이트] schoolsnap·gravityad 각각 5항 전항 PASS — 가로 정확히 1080 · 글자 하한 미달
+  0건 · 히어로 1440(≥900) · 가로 넘침 0(scrollWidth 1080) · 금지어 0.
+  산출 schoolsnap 1080×9625 3.5MB / gravityad 1080×11613 6.7MB
+- [부수] harvest beforeSize 기본값을 1088x1456(3:4)로. gpt-image-2가 16배수 커스텀 크기를
+  받는다는 걸 실호출로 확인(₩150). BA 카드가 3:4라 여기서 맞춰 두면 ba-prep 크롭이 거의
+  손을 안 댄다 / sharp·puppeteer-core를 devDependencies에 정식 선언(전이 의존 탈피)
+- [백로그] 자동본에 없는 수작업본 요소 2가지 — POINT 아래 아이콘 칩 3개(감성 교복룩 등),
+  POINT 이미지 밑 보조 캡션. detail 스키마에 필드가 없어서다. 필요하면 스키마 확장 건
+- 다음에 할 것: 나머지 컨셉 spec 채우기(detail 블록이 있어야 렌더 가능) / layout "2to1"을
+  profileduo로 실증(코드는 있으나 실물 미검증) / 3호 new-concept 스크립트 설계

@@ -215,7 +215,9 @@ function resolvePrompts(spec) {
 const parseDataUrl = (b64, mime = "image/png") => ({ mimeType: mime, data: b64 });
 
 // 비포 — OpenAI /v1/images/generations (리포에 전례가 없는 유일한 신규 형식)
-// gpt-image-2는 1024x1536(세로) 프리셋을 지원한다.
+// gpt-image-2는 1024x1536(2:3) 프리셋과, 두 변이 16의 배수이면 커스텀 크기도 받는다.
+// ★기본값은 1088x1456(3:4) — 실호출로 수용 확인함. BA 카드가 3:4라 여기서 맞춰 두면
+//   ba-prep 크롭이 거의 손을 안 대도 된다(2:3으로 뽑으면 위아래를 크게 잘라내야 한다).
 async function callGptGenerate(prompt, size) {
   const res = await fetch("https://api.openai.com/v1/images/generations", {
     method: "POST",
@@ -377,7 +379,7 @@ if (args.befores) {
     const dst = path.join(outDir, b.file);
     const skip = fs.existsSync(dst) && !args.force;
     plan.push({ kind: "before", n, dst, skip, cost: PRICE.gpt, model: "gpt-image-2 (generations)",
-                prompt: b.prompt, size: b.size || spec.beforeSize || "1024x1536" });
+                prompt: b.prompt, size: b.size || spec.beforeSize || "1088x1456" });
   }
 }
 if (args.afters) {

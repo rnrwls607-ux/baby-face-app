@@ -1,0 +1,21 @@
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<!-- MOSPIC 상세페이지 골격. detail-page.mjs 가 아래 네 개의 자리표시자
+     (TITLE / STYLE / VARS / CONTENT — 각각 앞뒤로 밑줄 두 개)를 치환한다.
+     ★자리표시자 이름을 주석 안에 원문 그대로 쓰지 말 것 — replace 가 주석 쪽을
+       먼저 집어삼켜 페이지가 통째로 깨진다(2026-09-02에 실제로 밟은 함정).
+     ★Pretendard는 app/layout.tsx와 같은 CDN을 쓴다 — 앱 화면과 글자 모양이 같아야
+       하므로 로컬 폰트로 갈아끼우지 말 것. 렌더 시 document.fonts.ready 를 기다린다. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+__STYLE__
+</style>
+<style>
+:root {
+__VARS__
+}
+</style>
+<div class="page">
+__CONTENT__
+</div>

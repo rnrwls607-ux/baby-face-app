@@ -3,9 +3,11 @@
   "name": "3D 그래비티 광고컷",
   "engine": "gpt",
   "inputType": "product",
-  "prompt": { "source": "route" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
-  "beforeSize": "1024x1536",
+  "beforeSize": "1088x1456",
   "befores": [
     {
       "file": "gravityad_비포1.png",
@@ -20,7 +22,96 @@
       "prompt": "A casual smartphone photo of a small handmade scented candle in a frosted glass jar with a plain kraft-paper label showing only a simple abstract stamp mark (no readable text), sitting on a messy desk under warm ordinary room lighting, slightly imperfect amateur framing. Realistic phone-camera quality. No watermark."
     }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
-  "verdicts": ["제품 형태·라벨 보존", "무중력 부유감", "재료 흩날림 정지컷", "글자 0"],
-  "meta": { "chip": "상품", "emoji": "🧴", "color": "#6C5CE7", "subtitle": "제품이 주인공이 되는 순간" }
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
+  "verdicts": [
+    "제품 형태·라벨 보존",
+    "무중력 부유감",
+    "재료 흩날림 정지컷",
+    "글자 0"
+  ],
+  "meta": {
+    "chip": "상품",
+    "emoji": "🧴",
+    "color": "#6C5CE7",
+    "subtitle": "제품이 주인공이 되는 순간"
+  },
+  "detail": {
+    "signature": {
+      "color": "#6C5CE7",
+      "bg": "#FAFAF8",
+      "name": "딥 바이올렛",
+      "block": "#26262E",
+      "blockInk": "#F5F5F5"
+    },
+    "hero": {
+      "sub": "제품이 주인공이 되는 순간",
+      "tags": [
+        "#광고키비주얼",
+        "#상세페이지소재",
+        "#셀러필수"
+      ],
+      "image": "gravityad_애프터1.png"
+    },
+    "painHeader": "사장님, 이런 적 있으세요?",
+    "pain": [
+      "광고 소재 하나에 수십만 원은 부담이에요 💸",
+      "폰으로 찍으면 아무리 해도 '광고 느낌'이 안 나요",
+      "경쟁 상품 상세페이지는 다 화보던데..."
+    ],
+    "solution": "MOSPIC 그래비티 광고컷 — 제품 사진 한 장이면, 광고대행사급 키비주얼 완성",
+    "pairs": [
+      {
+        "before": "gravityad_비포1.png",
+        "after": "gravityad_애프터1.png",
+        "caption": "선반 위 그냥 찍은 컷이 → 물방울 터지는 히어로컷으로"
+      },
+      {
+        "before": "gravityad_비포2.png",
+        "after": "gravityad_애프터2.png",
+        "caption": "주방에서 찍은 한 장이 → 과즙 튀는 광고 한 컷으로"
+      }
+    ],
+    "points": [
+      {
+        "title": "라벨·글자·색은 그대로",
+        "body": "제품의 라벨과 로고, 진짜 색은 픽셀 그대로 보존돼요 — 고객이 받는 그 제품, 그대로 광고가 돼요.",
+        "image": null
+      },
+      {
+        "title": "제품에 맞는 연출을 알아서",
+        "body": "화장품엔 물방울과 리퀴드, 음료엔 과즙 스플래시, 캔들엔 은은한 입자 — 제품이 뭔지 읽고 어울리는 폭발을 설계해요.",
+        "image": "gravityad_애프터3.png"
+      },
+      {
+        "title": "상세페이지·광고·SNS 어디든",
+        "body": "스마트스토어 대표 이미지, 인스타 피드, 배너 소재까지 — 한 장으로 다 써요.",
+        "image": "gravityad_애프터4.png"
+      }
+    ],
+    "price": {
+      "header": "광고컷 한 장, 원래 이만큼 듭니다",
+      "offline": "광고 촬영 스튜디오 컷당 수만~수십만 원 + 기획·보정 기간",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "라벨·로고 글자가 또렷하게 보이게 찍어주세요",
+      "빛 반사·강한 그림자는 최소화해 주세요",
+      "제품 전체가 잘리지 않게, 배경은 단순할수록 좋아요"
+    ],
+    "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요. 타사 브랜드 제품의 상표 사용에 대한 책임은 이용자에게 있어요.",
+    "aiNotice": "본 결과물은 AI로 생성된 이미지입니다.",
+    "cta": {
+      "copy": "오늘, 내 제품을 주인공으로 만들어보세요",
+      "button": "광고컷 만들기"
+    },
+    "layout": "ba"
+  }
 }

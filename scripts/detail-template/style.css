@@ -1,0 +1,240 @@
+/* MOSPIC 상세페이지 템플릿 — 폭 1080 고정, 세로 가변
+ *
+ * 치수의 출처: public/details/ 의 MJ 수작업본(schoolsnap·gravityad·cinesnap)을
+ * 실측해 1080 기준으로 환산한 값이다. 원본은 895~898px 폭으로 캡처돼 있어
+ * 환산계수 1.207을 곱했다. 그 위에 킷 규격의 하한(본문 32 / 캡션·소제목 40 /
+ * 섹션 제목 56 / 히어로 카피 64)을 덮어씌웠다 — 둘이 부딪히면 하한이 이긴다.
+ *
+ * ★모든 글자는 32px 이상이다. 라벨·각주처럼 작아 보이는 요소도 32 밑으로 내리지 않는다
+ *   (렌더 게이트가 DOM computed style을 전수 검사해서 하나라도 미달이면 실패한다).
+ * ★가로 넘침은 overflow 숨김으로 덮지 않는다. box-sizing과 고정폭으로 실제로 안 넘긴다.
+ */
+
+:root {
+  --w: 1080px;
+  --gutter: 64px;                /* 좌우 여백 — 콘텐츠 폭 952 */
+  --bg: #FAFAF8;
+  --card: #FFFFFF;
+  --ink: #191919;
+  --sub: #7C7C7C;                /* 실측본 #9B9B9B보다 살짝 진하게 — 32px 회색 본문 가독 */
+  --line: #ECEAE6;
+  --pink: #FF4B7C;               /* CTA·뱃지 전용. 면적 5% 이하 */
+  --r: 18px;
+
+  /* spec에서 주입 */
+  --sig: #4A5A8A;
+  --sig-bg: #FFFDF8;
+  --block: #2A3550;
+  --block-ink: #FFFFFF;
+
+  /* 타이포 스케일 (1080 기준) */
+  --t-wordmark: 32px;
+  --t-hero-sub: 44px;
+  --t-hero: 104px;
+  --t-tag: 40px;
+  --t-section: 68px;
+  --t-section-sub: 36px;
+  --t-badge: 34px;
+  --t-point: 64px;
+  --t-body: 38px;
+  --t-caption: 42px;
+  --t-label: 32px;
+  --t-cta: 68px;
+  --t-button: 48px;
+  --t-foot: 32px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: var(--w);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Pretendard Variable", Pretendard, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;          /* 한글 단어가 어절 중간에서 안 끊기게 */
+}
+
+.page { width: var(--w); overflow: visible; }
+.pad { padding-left: var(--gutter); padding-right: var(--gutter); }
+img { display: block; max-width: 100%; }
+
+/* ── 1. 워드마크 ─────────────────────────────────────────────────────────── */
+.wordmark { display: flex; justify-content: center; padding: 56px 0 40px; }
+.wordmark img { height: 44px; width: auto; }
+.wordmark--foot { padding: 72px 0 88px; opacity: .45; }
+
+/* ── 2. 히어로 ───────────────────────────────────────────────────────────── */
+.hero { background: var(--sig-bg); padding-bottom: 0; }
+.hero__sub {
+  text-align: center; font-size: var(--t-hero-sub); font-weight: 700;
+  color: var(--sig); letter-spacing: -.02em; padding-bottom: 24px;
+}
+.hero__title {
+  text-align: center; font-size: var(--t-hero); font-weight: 800;
+  line-height: 1.18; letter-spacing: -.035em; padding-bottom: 56px;
+}
+/* 풀블리드 — 정확히 1080, 좌우 여백 없음 */
+.hero__img { width: var(--w); height: auto; display: block; }  /* 높이는 스크립트가 원본 비율로 계산해 넣는다 */
+.hero__tags {
+  display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
+  padding: 48px var(--gutter) 88px; background: var(--sig-bg);
+}
+.tag {
+  font-size: var(--t-tag); font-weight: 700; letter-spacing: -.02em;
+  padding: 18px 34px; border-radius: 999px;
+  background: #EFEEF6; color: #5B5B6B;
+}
+.tag--hot { background: var(--pink); color: #fff; }
+
+/* ── 3. 고민 공감 ────────────────────────────────────────────────────────── */
+.section { padding-top: 88px; padding-bottom: 88px; }
+.section__title {
+  text-align: center; font-size: var(--t-section); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.3;
+}
+.section__sub {
+  text-align: center; font-size: var(--t-section-sub); color: var(--sub);
+  padding-top: 20px; letter-spacing: -.02em;
+}
+.bubbles { display: flex; flex-direction: column; gap: 24px; padding-top: 56px; }
+.bubble {
+  font-size: var(--t-body); line-height: 1.5; letter-spacing: -.02em;
+  padding: 30px 36px; border-radius: 24px; max-width: 760px;
+  background: var(--card); border: 2px solid var(--line);
+}
+.bubble:nth-child(2) { align-self: flex-end; background: #F0EFF7; border-color: #E4E2F0; }
+
+/* ── 4. 해결 선언 (컬러블록) ─────────────────────────────────────────────── */
+.solve { background: var(--block); color: var(--block-ink); padding: 96px var(--gutter); text-align: center; }
+.solve__label {
+  font-size: var(--t-label); font-weight: 700; letter-spacing: .18em;
+  opacity: .72; padding-bottom: 28px;
+}
+.solve__copy { font-size: var(--t-section); font-weight: 800; line-height: 1.34; letter-spacing: -.03em; }
+.solve__copy em { font-style: normal; color: var(--pink); }
+.solve__steps {
+  display: inline-flex; align-items: center; gap: 20px; margin-top: 44px;
+  padding: 20px 36px; border-radius: 999px;
+  background: rgba(255, 255, 255, .12); font-size: var(--t-label); font-weight: 600;
+}
+.solve__steps span { opacity: .5; }
+
+/* ── 5. 대비 (BEFORE/AFTER) ──────────────────────────────────────────────── */
+.pairs { display: flex; flex-direction: column; gap: 40px; padding-top: 56px; }
+.pair { background: var(--card); border: 2px solid var(--line); border-radius: var(--r); padding: 24px; }
+.pair__row { display: flex; gap: 24px; position: relative; }
+.pair__cell { position: relative; width: 440px; flex: 0 0 440px; }
+.pair__cell img { width: 440px; height: 587px; object-fit: cover; border-radius: 12px; }
+.pair__tag {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  font-size: var(--t-label); font-weight: 700; letter-spacing: -.01em;
+  padding: 10px 20px; border-radius: 10px; color: #fff; background: rgba(25, 25, 25, .82);
+}
+.pair__tag--after { background: var(--pink); }
+.pair__arrow {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
+  width: 76px; height: 76px; border-radius: 50%; background: var(--pink); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; font-weight: 700; box-shadow: 0 6px 20px rgba(255, 75, 124, .38);
+}
+.pair__caption {
+  text-align: center; font-size: var(--t-caption); font-weight: 700;
+  letter-spacing: -.025em; padding-top: 26px; color: var(--ink);
+}
+.pair__caption b { color: var(--pink); font-weight: 800; }
+
+/* layout "2to1" — 비포 2칸 → 아래로 큰 애프터 1칸 */
+.pair--2to1 .pair__row { justify-content: center; }
+.pair--2to1 .pair__down {
+  display: flex; justify-content: center; font-size: 48px; color: var(--pink);
+  font-weight: 800; padding: 18px 0;
+}
+.pair--2to1 .pair__big img { width: 904px; height: 1130px; object-fit: cover; border-radius: 12px; margin: 0 auto; }
+
+/* ── 6. POINT ────────────────────────────────────────────────────────────── */
+.point { padding-top: 88px; }
+.point__badge {
+  display: block; width: fit-content; margin: 0 auto 28px;
+  font-size: var(--t-badge); font-weight: 800; letter-spacing: .16em;
+  color: #fff; background: var(--block); padding: 16px 40px; border-radius: 999px;
+}
+.point__title {
+  text-align: center; font-size: var(--t-point); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.32;
+}
+.point__body {
+  text-align: center; font-size: var(--t-body); line-height: 1.62;
+  color: var(--sub); padding-top: 24px; letter-spacing: -.02em;
+}
+.point__img { padding-top: 40px; }
+.point__img img { width: 952px; height: auto; border-radius: var(--r); }
+.point__imgs { display: flex; gap: 24px; padding-top: 40px; }
+.point__imgs img { width: 464px; height: 619px; object-fit: cover; border-radius: var(--r); }
+
+/* ── 7. 가격 대비 ────────────────────────────────────────────────────────── */
+.price { display: flex; gap: 24px; padding-top: 56px; align-items: stretch; }
+.price__card {
+  flex: 1 1 0; min-width: 0; border-radius: var(--r); padding: 40px 32px;
+  background: #F1F0EC; border: 2px solid var(--line);
+}
+.price__card--mospic { background: #FFF5F8; border: 3px solid var(--pink); }
+.price__head {
+  font-size: var(--t-label); font-weight: 800; letter-spacing: -.01em;
+  padding-bottom: 24px; color: var(--sub);
+}
+.price__card--mospic .price__head { color: var(--pink); }
+.price__item {
+  display: flex; gap: 14px; font-size: var(--t-body); line-height: 1.5;
+  letter-spacing: -.02em; padding: 12px 0;
+}
+.price__item i { font-style: normal; flex: 0 0 auto; color: var(--sub); font-weight: 700; }
+.price__card--mospic .price__item i { color: var(--pink); }
+.price__foot {
+  text-align: center; font-size: var(--t-foot); color: var(--sub);
+  padding-top: 32px; letter-spacing: -.02em;
+}
+
+/* ── 8. 입력 가이드 ──────────────────────────────────────────────────────── */
+.guide { display: flex; flex-direction: column; gap: 16px; padding-top: 56px; }
+.guide__row {
+  display: flex; align-items: center; gap: 24px;
+  background: var(--card); border: 2px solid var(--line);
+  border-radius: var(--r); padding: 28px 32px;
+}
+.guide__no {
+  font-size: var(--t-label); font-weight: 800; color: var(--sig);
+  flex: 0 0 auto; letter-spacing: .02em;
+}
+.guide__txt { font-size: var(--t-body); letter-spacing: -.02em; line-height: 1.45; }
+
+/* ── 9~10. 안심 박스 · AI 고지 ───────────────────────────────────────────── */
+.privacy {
+  display: flex; gap: 20px; align-items: flex-start; margin-top: 24px;
+  background: #F1F0EC; border-radius: var(--r); padding: 32px 36px;
+}
+.privacy__icon { font-size: 36px; line-height: 1.3; flex: 0 0 auto; }
+.privacy__txt { font-size: var(--t-foot); line-height: 1.55; color: var(--sub); letter-spacing: -.02em; }
+.ai-notice {
+  text-align: center; font-size: var(--t-foot); color: #A2A2A2;
+  padding: 40px var(--gutter) 0; line-height: 1.5; letter-spacing: -.02em;
+}
+
+/* ── 11~12. CTA ──────────────────────────────────────────────────────────── */
+.cta { text-align: center; padding: 96px var(--gutter) 0; }
+.cta__copy { font-size: var(--t-cta); font-weight: 800; line-height: 1.34; letter-spacing: -.03em; }
+.cta__copy em { font-style: normal; color: var(--pink); }
+.cta__btn {
+  display: inline-block; margin-top: 48px;
+  background: var(--pink); color: #fff; font-size: var(--t-button); font-weight: 800;
+  letter-spacing: -.02em; padding: 34px 72px; border-radius: 999px;
+  box-shadow: 0 10px 28px rgba(255, 75, 124, .3);
+}
+.cta__foot { font-size: var(--t-foot); color: var(--sub); padding-top: 28px; letter-spacing: -.02em; }
+
+/* 이미지가 없을 때 — 회색 자리표시 + 파일명 (렌더는 계속하고 경고만 남긴다) */
+.ph {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  background: #E3E1DD; color: #6E6C68; font-size: var(--t-label); font-weight: 700;
+  border-radius: 12px; padding: 16px; line-height: 1.4; word-break: break-all;
+}
