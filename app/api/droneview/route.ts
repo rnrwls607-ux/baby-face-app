@@ -26,8 +26,10 @@ IDENTITY & BEAUTY (the face is visible now, so it must look great):
 - Light premium retouch: a subtly slimmer, refined face, bright sparkling eyes, flawless even glowing skin — clearly their best self, never a different person, never warped.
 - If they wear glasses, keep the exact same glasses; if not, add none. No sunglasses.
 
-REAL-WORLD SCALE:
-- Everything keeps true scale relative to the person: trees taller than them, the landmark towering far above, paving stones and benches person-sized. The drama comes from the angle, not from shrinking or enlarging anyone.
+REAL-WORLD SCALE (non-negotiable — a giant person is a FAILURE):
+- The person is a normal adult of about 1.7 m. Everything in frame must agree with that: a single-story building or gate is 2–3 times their height, a mature tree 3–5 times, a doorway just taller than them, benches and railings hip-height, and any other people at a similar distance appear the SAME size as the subject.
+- FIELD OF VIEW at 4–7 m altitude covers only the ground within roughly 15–20 meters of the person — the plaza around them and the landmark rising behind, NOT the entire palace, park, or city seen from above. If the whole landmark complex fits in the frame from above, the altitude is WRONG and the person will look like a giant — pull the view in close.
+- The person looks large because the drone is CLOSE, never because they are big.
 
 THE SCENE:
 - Keep the SAME landmark from the input photo, rising behind/above the person in bold high-angle perspective, with the plaza, walkways, and greenery spreading out around them.
@@ -41,6 +43,7 @@ DRONE-PHOTO REALISM:
 
 ABSOLUTELY AVOID:
 - Any drone, aircraft, or flying camera visible in the image.
+- A giant-looking person; buildings or trees that look small next to them; an entire landmark complex visible from above.
 - A ground-level or eye-level camera angle; a horizon in the middle of the frame; the person's feet or shadow cut off at the bottom.
 - The person tiny or unrecognizable in the frame — this is a hero shot, not a landscape.
 - A straight-down top-view (bird's-eye) — the angle is tilted, 30–45 degrees.
@@ -53,6 +56,7 @@ FINAL SELF-CHECK before output:
 - Is the person 1/3 to 1/2 of the frame height with the face readable?
 - Is there ANY drone or aircraft visible? (must be none)
 - Same outfit, hair, and face as the input?
+- Compare the person to the nearest door, step, or passer-by — would they be over 2 m tall? If yes, FAIL and rebuild at true scale.
 
 Output: one photorealistic low-altitude drone travel photo — the person as the glowing hero of a sweeping scene. High resolution, no text, no watermark, no border.
 `;

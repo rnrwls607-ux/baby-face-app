@@ -98,3 +98,7 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 
 ## 9. 백로그 (파이프라인)
 harvest: --src(비포 재사용 경로) · --force 범위를 스테이지별로 · VM 평가기 lib/prompt.mjs로 통합 / 4호 qc 자동 필터(글자·얼굴 유사도·인원수) / 기존 상세 1080 재생성(spec 채우면 detail-page로) / airportsnap 애프터3=썸네일 중복(무해)
+★재출시(refresh) 3건 — 2026-09-03 droneview v6에서 드러남:
+1. new-concept에 --stage refresh 신설(프롬프트 교체 + 상세·webp·BA 자산 갱신). 지금은 launch·ba가 멱등이라 우회해야 하고, 우회 절차가 문서에만 있다.
+2. spec 재직렬화 버그 — route 스테이지가 prompt.source를 고칠 때 JSON.stringify로 파일 전체를 재포맷한다(droneview에서 +130/-20). 문자 치환으로 바꿀 것.
+3. harvest --prompt-file 오버라이드 — 출시된 컨셉은 spec이 source:"route"라 새 프롬프트 버전을 검증할 수 없다. v6 재수확이 v5로 돌아 ₩1,200을 헛썼다.
