@@ -20,6 +20,7 @@
 6. 금지어·금지물: "무료/0원/공짜", 실명 브랜드·IP·실존 인물·특정 영화/애니, 읽히는 글자(강화 봉쇄 "Every surface BARE… Even illegible text shapes are a failure"), 실존 학교 마크·명찰, 무속·종교 이미지.
 7. 얼굴 신원: 아는 사람이 한눈에 알아봐야 한다. 점은 지울 수만 있고 새로 못 그린다. 안경 유지·추가 금지·선글라스 금지.
 8. 게이트 전항 통과 시에만 커밋. 하나라도 FAIL → 롤백·보고. "Compiled successfully" 원문 + exit 0.
+8-1. ★package.json·lockfile·next.config·네이티브 모듈이 바뀐 커밋은 push 후 node scripts/smoke.mjs PASS까지 미완료다. "Compiled successfully"는 런타임을 보증하지 않는다 — sharp 0.35의 libvips 8.18이 Vercel linux-x64에서 dlopen 실패해 생성·업스케일·코인·로그인 콜백이 23시간 죽었고 빌드는 매번 통과했다. 스모크의 핵심은 ★GET 405다(생성 라우트에 GET 핸들러가 없으므로 모듈이 정상 로드되면 405, 로드가 깨지면 500 text/html이 온다 — POST는 정상적인 입력 검증 실패와 섞여 신호가 되지 못한다).
 9. concepts.ts·page.tsx CRLF, key: 앵커, 개행 보존. 템플릿 값(cameraFacing 등)은 매핑표를 따르고 복제하지 않는다. 템플릿의 버그는 신설분에서 고치고 원본은 무접촉 보고.
 10. 프로덕션 Redis/Blob 접촉 0. API 호출은 harvest만, 비용 상한 플래그 필수.
 11. 2인 컨셉은 성별 칩 필수 + 성별 문구만 파라미터화(buildPrompt) + 세 조합 VM diff 증명.

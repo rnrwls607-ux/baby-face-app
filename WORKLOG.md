@@ -2821,3 +2821,25 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
 - [교훈] 스크립트용으로 라이브러리를 새로 깔 때 ★버전이 올라가면 런타임 바이너리도 바뀐다.
   로컬(Windows)에서 도는 것이 Vercel(linux-x64)에서 도는 것을 보증하지 않는다.
   네이티브 모듈은 "이미 앱이 쓰고 있는 버전"에 맞춰 깔 것 — 새 최신판을 끌어오지 말 것
+
+## 2026-09-03 — 장애 후속: 스모크 게이트 + 클라이언트 안전화 + fixture 분리
+
+- [스모크 게이트 신설] scripts/smoke.mjs — 배포 후 프로덕션 4건을 15초 간격으로 폴링해
+  전부 기대값이면 exit 0. usage=200 json(대조군) · schoolsnap=405(aiMark→sharp) ·
+  idstyle=405(sharp 직접) · auth/kakao=307(historyStore→sharp, 리다이렉트 미추적).
+  ★핵심은 GET 405다 — 생성 라우트에 GET 핸들러가 없으므로 모듈이 정상 로드되면 405,
+  로드가 깨지면 500 text/html이 온다. POST는 정상적인 입력 검증 실패와 섞여 신호가 못 된다.
+  플레이북 §1에 8-1로 못박음: 의존성·설정·네이티브 모듈이 바뀐 커밋은 smoke PASS까지 미완료
+- [P1 — 응답 형식 확인 후 파싱] 생성 페이지 ★181개. res.json()을 상태 확인보다 먼저
+  부르고 있어서 HTML 응답이 오면 "<!DOCTYPE" is not valid JSON 원문이 사용자에게 그대로
+  노출됐다(이번 장애를 MJ가 그 문구로 겪은 이유). content-type이 application/json이 아니면
+  "일시적인 오류예요. 잠시 후 다시 눌러주세요."로 던지게 앞에 2줄 삽입
+- [P2 — compress onerror] ★180개. img.onerror가 없어 디코드 실패(HEIC 등) 시 Promise가
+  영원히 미결 → 235초 abort로만 끝났다. new Promise(res =>) → ((res, rej) =>) 로 바꾸고
+  img.src 직전에 onerror에서 reject. ★app/upscale/page.tsx는 compress 형태가 달라 무접촉
+- [★EOL 함정] page.tsx 181개의 줄끝이 갈린다 — CRLF 154 · LF 27 · 혼합 0. grep으로 세면
+  0으로 나와서 node로 파일별 판정해야 했다. 파일별 원래 형태를 되돌려 써서 diff가
+  180개 +4/-1 · 1개(upscale) +2/-0 = +722/-180. ★파일 전체가 바뀐 곳 0개 = EOL 보존 증거
+- [fixture 분리] insta-kit --fixture 출력을 insta/out/_fixture/{slug}/로 뺐다. 09-03에
+  fixture가 발행 대기 중인 ep03 실물 카드를 회색 자리표시로 덮어 재생성해야 했다.
+  실행 후 실물 폴더의 파일 수·mtime 불변을 검사해 로그로 남기고, 바뀌면 게이트 FAIL

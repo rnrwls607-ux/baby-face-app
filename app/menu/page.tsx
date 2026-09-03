@@ -65,7 +65,7 @@ export default function MenuPage() {
   const toBase64 = (f: File): Promise<string> => new Promise((res, rej) => {
     const r = new FileReader(); r.readAsDataURL(f); r.onload = () => res(r.result as string); r.onerror = rej;
   });
-  const compress = (b64: string): Promise<string> => new Promise(res => {
+  const compress = (b64: string): Promise<string> => new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => {
       const c = document.createElement("canvas");
@@ -74,6 +74,7 @@ export default function MenuPage() {
       c.width = w; c.height = h; c.getContext("2d")!.drawImage(img, 0, 0, w, h);
       res(c.toDataURL("image/jpeg", 0.9));
     };
+    img.onerror = () => rej(new Error("사진을 읽지 못했어요. 다른 사진으로 시도해주세요."));
     img.src = b64;
   });
   const handleUpload = async (file: File) => { setImage(await toBase64(file)); };
@@ -92,6 +93,8 @@ export default function MenuPage() {
         signal: ctrl.signal,
       });
       clearTimeout(tid);
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) throw new Error("일시적인 오류예요. 잠시 후 다시 눌러주세요.");
       const data = await res.json();
       // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
       if (res.status === 401) { openLoginSheet(); return; }

@@ -74,6 +74,8 @@ export default function UpscalePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: c, scale: 4 }),
       });
+      const ct = res.headers.get("content-type") || "";
+      if (!ct.includes("application/json")) throw new Error("일시적인 오류예요. 잠시 후 다시 눌러주세요.");
       const data = await res.json();
       // 비로그인(401) → 전역 로그인 유도 시트 (에러칸 중복 표시 금지)
       if (res.status === 401) { openLoginSheet(); return; }

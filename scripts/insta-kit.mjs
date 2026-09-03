@@ -22,7 +22,7 @@
 //   Malgun Gothic은 2단계뿐(400=500, 700=900)이라 Black·Medium을 표현하지 못한다.
 //   그래서 Noto를 1순위로 두고, 시작 시 웨이트가 실제로 먹는지 프로브해서 안 먹으면 멈춘다.
 import sharp from "sharp";
-import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync, rmSync } from "node:fs";
+import { mkdirSync, readdirSync, existsSync, readFileSync, writeFileSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "node:child_process";
@@ -505,7 +505,13 @@ async function fontProbe() {
 
 async function run(slug, fixture) {
   const rawDir = path.join(RAW, slug);
-  const outDir = path.join(OUT, slug);
+  // ★--fixture는 회색 자리표시로 레이아웃만 보는 모드다. 실물 출력 폴더에 쓰면 발행 대기 중인
+  //   카드가 자리표시로 덮인다(2026-09-03에 실제로 덮어 재생성해야 했다) → 별도 폴더로 뺀다.
+  const realDir = path.join(OUT, slug);
+  const outDir = fixture ? path.join(OUT, "_fixture", slug) : realDir;
+  const realBefore = fixture && existsSync(realDir)
+    ? readdirSync(realDir).map((f) => f + ":" + statSync(path.join(realDir, f)).mtimeMs).sort().join("|")
+    : null;
   mkdirSync(outDir, { recursive: true });
   for (const f of existsSync(outDir) ? readdirSync(outDir) : []) rmSync(path.join(outDir, f), { force: true });
 
@@ -595,7 +601,7 @@ async function run(slug, fixture) {
   await sharp({ create: { width: cols * (CW + G) + G, height: rows * (CH + LB + G) + G, channels: 3, background: "#F2F4F7" } })
     .composite(comp).png().toFile(contact);
 
-  return { lines, files, caption, dmText, dl, contact, grid: path.join(outDir, GRID_PNG), outDir, kit };
+  return { lines, files, caption, dmText, dl, contact, grid: path.join(outDir, GRID_PNG), outDir, realDir, realBefore, kit };
 }
 
 // ── 진입점 ───────────────────────────────────────────────────────────────────
@@ -626,6 +632,16 @@ for (const slug of slugs) {
   console.log(`  출력: ${r.outDir}`);
   console.log(`  컨택트시트: ${r.contact}`);
   console.log(`  그리드 미리보기: ${r.grid}`);
+  if (fixture) {
+    const after = existsSync(r.realDir)
+      ? readdirSync(r.realDir).map((f) => f + ":" + statSync(path.join(r.realDir, f)).mtimeMs).sort().join("|")
+      : null;
+    const same = r.realBefore === after;
+    const n = after ? after.split("|").length : 0;
+    console.log(`  [fixture] 실물 폴더 무접촉: ${same ? "확인" : "★변경됨"} — ${r.realDir} (파일 ${n}개, mtime 불변 ${same ? "예" : "아니오"})`);
+    if (!same) fail("fixture 실행이 실물 출력 폴더를 건드렸다");
+  }
+
 }
 if (fails.length) {
   console.log(`\n★FAIL ${fails.length}건`);
