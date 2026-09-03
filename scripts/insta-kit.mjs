@@ -162,6 +162,21 @@ function safeCheck(name, box) {
   return !bad;
 }
 
+// ── 그리드 안전영역 게이트 (v2.2) ────────────────────────────────────────────
+// ★프로필 그리드는 4:5 커버를 그대로 안 보여준다. 좌우·하단을 잘라 확대하고(실측 좌 ~110px,
+//   하 ~180px) 좌하단에 조회수 오버레이를 얹는다. 그래서 1:1 안전영역(SAFE)을 통과해도
+//   그리드에서는 제목이 잘려 나간다 — v2.1 커버가 실제로 그랬다(제목 y994~1209, x72).
+//   커버의 "읽혀야 하는 것"(알약·제목 2줄)은 이 상자 안에 있어야 한다. 1px 이탈도 FAIL.
+//   ※본문·CTA·팔로우 카드는 캐러셀에서 넘겨 보는 장이라 이 게이트를 적용하지 않는다.
+const GRID_SAFE = { left: 130, right: 950, top: 160, bot: 1100 };
+const gridBoxes = [];
+function gridCheck(name, box) {
+  gridBoxes.push({ name, box });
+  const bad = box.x < GRID_SAFE.left || box.y < GRID_SAFE.top || box.x + box.w - 1 > GRID_SAFE.right || box.y + box.h - 1 > GRID_SAFE.bot;
+  if (bad) fail(`그리드 안전 위반 — ${name}: x${box.x}~${box.x + box.w - 1} y${box.y}~${box.y + box.h - 1} (허용 x${GRID_SAFE.left}~${GRID_SAFE.right} y${GRID_SAFE.top}~${GRID_SAFE.bot})`);
+  return !bad;
+}
+
 // ── 자리표시 이미지(fixture) ─────────────────────────────────────────────────
 async function placeholder(label, light) {
   const bg = light ? "#c9c9c9" : "#4a4a4a";
@@ -255,21 +270,46 @@ async function buildCover(dst, afterSrc, beforeSrc, kit, accent, styleOverride) 
     polaNote = `폴라로이드 ${pola.w}×${pola.h} @(${at.x},${at.y})`;
   }
 
+  // ★v2.2 — 그리드 안전 배치. x·y는 kit로 조정 가능(회차 사진에 따라 얼굴을 피해야 할 때가 있다).
+  const TX = Number.isFinite(kit.coverTextX) ? kit.coverTextX : 130;
+  const TY = Number.isFinite(kit.coverTextY) ? kit.coverTextY : 870;
+  const PILL_Y = 780;
+
   const style = styleOverride || kit.pillStyle || "accent";
   const pl = await pill(kit.pill, pillStyleOpts(style, accent));
-  layers.push({ input: pl.buf, left: 72, top: 880 });
-  safeCheck("커버 알약", { x: 72, y: 880, w: pl.w, h: pl.h });
+  layers.push({ input: pl.buf, left: TX, top: PILL_Y });
+  safeCheck("커버 알약", { x: TX, y: PILL_Y, w: pl.w, h: pl.h });
+  gridCheck("커버 알약", { x: TX, y: PILL_Y, w: pl.w, h: pl.h });
 
-  // 제목 2줄 96px Black, 줄간격 18 — 잉크 기준으로 배치해 안전영역을 정확히 잰다
-  const T = { size: 96, weight: 900, fill: "#fff" };
-  const l1 = await png(textSvg({ ...T, x: 72, y: 980 + 96, text: kit.title.line1 }));
-  const b1 = await inkBox(l1);
-  const y2 = b1.y + b1.h + 18;
-  const l2 = await png(accentLineSvg({ ...T, x: 72, y: y2 + 96, text: kit.title.line2, accentWord: kit.title.accent, accent }));
-  const b2 = await inkBox(l2);
+  // 제목 2줄 — 잉크 상단이 정확히 목표 y에 오도록 두 번 그린다(1차 측정 → 보정 후 재렌더).
+  // 베이스라인을 그대로 y로 쓰면 글꼴마다 잉크가 어디 앉을지 달라져 게이트가 흔들린다.
+  const LINE_GAP = 18;
+  const titleSizes = [96, 90, 84];   // x950을 넘으면 순서대로 줄인다
+  let size = titleSizes[0], l1, b1, l2, b2, shrinkNote = "";
+  for (const s of titleSizes) {
+    size = s;
+    const T = { size: s, weight: 900, fill: "#fff" };
+    const draw1 = async (baseY) => png(textSvg({ ...T, x: TX, y: baseY, text: kit.title.line1 }));
+    l1 = await draw1(TY + s);
+    b1 = await inkBox(l1);
+    l1 = await draw1(TY + s + (TY - b1.y));           // 잉크 상단 = TY
+    b1 = await inkBox(l1);
+
+    const y2 = TY + s + LINE_GAP;                     // 스펙: 둘째 줄 = 첫 줄 + size + 18
+    const draw2 = async (baseY) => png(accentLineSvg({ ...T, x: TX, y: baseY, text: kit.title.line2, accentWord: kit.title.accent, accent }));
+    l2 = await draw2(y2 + s);
+    b2 = await inkBox(l2);
+    l2 = await draw2(y2 + s + (y2 - b2.y));           // 잉크 상단 = y2
+    b2 = await inkBox(l2);
+
+    const right = Math.max(b1.x + b1.w - 1, b2.x + b2.w - 1);
+    if (right <= GRID_SAFE.right) { if (s !== titleSizes[0]) shrinkNote = ` (${titleSizes[0]}→${s} 축소: 오른쪽 ${right})`; break; }
+    if (s === titleSizes[titleSizes.length - 1]) shrinkNote = ` (★${s}로도 오른쪽 ${right} — 게이트가 잡는다)`;
+    else console.log(`     제목이 x${GRID_SAFE.right}를 넘어(오른쪽 ${right}) ${s}→${titleSizes[titleSizes.indexOf(s) + 1]}로 줄인다`);
+  }
   layers.push({ input: l1, left: 0, top: 0 }, { input: l2, left: 0, top: 0 });
-  safeCheck("커버 제목1", b1);
-  safeCheck("커버 제목2", b2);
+  for (const [nm, bx] of [["커버 제목1", b1], ["커버 제목2", b2]]) { safeCheck(nm, bx); gridCheck(nm, bx); }
+  const titleNote = `제목 ${size}px${shrinkNote} x${b1.x}~${Math.max(b1.x + b1.w, b2.x + b2.w) - 1} y${b1.y}~${b2.y + b2.h - 1}`;
 
   // ★v2.1 — meta가 비었거나 없으면 아예 렌더하지 않는다(빈 문자열이 투명 레이어로 남지 않게)
   let metaNote = "메타 없음";
@@ -280,7 +320,26 @@ async function buildCover(dst, afterSrc, beforeSrc, kit, accent, styleOverride) 
   }
 
   await sharp(base).composite(layers).png({ compressionLevel: 9 }).toFile(dst);
-  return `커버[${style}] — ${polaNote} · 알약 ${pl.w}×${pl.h} · 제목 y${b1.y}~${b2.y + b2.h - 1} · ${metaNote}`;
+  return `커버[${style}] — ${polaNote} · 알약 ${pl.w}×${pl.h} @(${TX},${PILL_Y}) · ${titleNote} · ${metaNote}`;
+}
+
+// ── 그리드 미리보기 (v2.2) ───────────────────────────────────────────────────
+// 인스타 프로필 그리드가 실제로 보여주는 범위를 잘라서 그대로 저장한다. 좌하단에는
+// 조회수 오버레이가 앉을 자리를 흰 반투명 알약으로 표시 — 여기에 글자가 겹치면 안 된다.
+const GRID_CROP = { left: 110, top: 100, right: 970, bot: 1170 };
+async function buildGridPreview(coverPath, dst) {
+  const w = GRID_CROP.right - GRID_CROP.left;      // 860
+  const h = GRID_CROP.bot - GRID_CROP.top;         // 1070
+  const OW = 120, OH = 44, M = 16;                 // 조회수 오버레이 자리
+  const badge = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${OW}" height="${OH}">` +
+    `<rect width="${OW}" height="${OH}" rx="${OH / 2}" fill="#ffffff" fill-opacity="0.72"/>` +
+    `<text x="${OW / 2}" y="${OH / 2 + 8}" font-family="${FONTS}" font-size="22" font-weight="700" fill="#141210" text-anchor="middle">👁 0</text></svg>`);
+  await sharp(coverPath)
+    .extract({ left: GRID_CROP.left, top: GRID_CROP.top, width: w, height: h })
+    .composite([{ input: badge, left: M, top: h - OH - M }])
+    .png({ compressionLevel: 9 }).toFile(dst);
+  return `그리드 미리보기 — ${w}×${h} (커버 x${GRID_CROP.left}~${GRID_CROP.right - 1} y${GRID_CROP.top}~${GRID_CROP.bot - 1}) · 조회수 자리 ${OW}×${OH} 좌하단`;
 }
 
 async function buildBody(dst, afterSrc, beforeSrc, n, kit2) {
@@ -478,6 +537,7 @@ async function run(slug, fixture) {
   lines.push(await buildCover(path.join(outDir, "01-cover.png"), pairs[0].after, pairs[0].before, kit, accent));
   // ★선택 비교용 — dark 알약판을 한 장 더 낸다. 컨택트시트에는 넣지 않는다(기본만 보여준다).
   lines.push(await buildCover(path.join(outDir, "01-cover-pill-dark.png"), pairs[0].after, pairs[0].before, kit, accent, "dark"));
+  lines.push(await buildGridPreview(path.join(outDir, "01-cover.png"), path.join(outDir, "01-cover-grid.png")));
   for (const [i, p] of pairs.entries()) {
     lines.push(await buildBody(path.join(outDir, `${String(i + 2).padStart(2, "0")}-body.png`), p.after, p.before, i + 1, kit));
   }
@@ -495,9 +555,12 @@ async function run(slug, fixture) {
   writeFileSync(path.join(outDir, "dm.txt"), dmText, "utf8");
 
   // ── 게이트 ──
-  const files = readdirSync(outDir).filter((f) => f.endsWith(".png") && f !== "contact.png").sort();
-  // 컨택트시트에는 기본 커버만 — dark 비교판은 규격·게이트 대상이되 시트에서는 뺀다
-  const sheetFiles = files.filter((f) => f !== "01-cover-pill-dark.png");
+  const GRID_PNG = "01-cover-grid.png";
+  // ★그리드 미리보기는 검수용이라 1080×1350이 아니다 — 규격 게이트에서 뺀다.
+  const files = readdirSync(outDir).filter((f) => f.endsWith(".png") && f !== "contact.png" && f !== GRID_PNG).sort();
+  // 컨택트시트에는 기본 커버만 — dark 비교판은 규격·게이트 대상이되 시트에서는 뺀다.
+  // 대신 마지막 칸에 그리드 미리보기를 붙인다(8칸).
+  const sheetFiles = [...files.filter((f) => f !== "01-cover-pill-dark.png"), GRID_PNG];
   const specBad = [];
   for (const f of files) {
     const m = await sharp(path.join(outDir, f)).metadata();
@@ -517,13 +580,14 @@ async function run(slug, fixture) {
 
   // 컨택트시트 (가로 4열)
   const CW = 270, CH = Math.round(CW * H / W), LB = 22, G = 8;
-  const cols = 4, rows = Math.ceil(files.length / cols);
+  const cols = 4, rows = Math.ceil(sheetFiles.length / cols);
   const comp = [];
   for (const [i, f] of sheetFiles.entries()) {
     const x = G + (i % cols) * (CW + G), y = G + Math.floor(i / cols) * (CH + LB + G);
-    comp.push({ input: await sharp(path.join(outDir, f)).resize(CW, CH).png().toBuffer(), left: x, top: y });
+    const isGrid = f === GRID_PNG;
+    comp.push({ input: await sharp(path.join(outDir, f)).resize(CW, CH, isGrid ? { fit: "contain", background: "#F2F4F7" } : undefined).png().toBuffer(), left: x, top: y });
     comp.push({
-      input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${LB}"><text x="2" y="16" font-family="${FONTS}" font-size="14" font-weight="500" fill="#111">${esc(f)}</text></svg>`),
+      input: Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${CW}" height="${LB}"><text x="2" y="16" font-family="${FONTS}" font-size="14" font-weight="${isGrid ? 700 : 500}" fill="${isGrid ? "#C2185B" : "#111"}">${esc(isGrid ? "그리드 썸네일 — " + f : f)}</text></svg>`),
       left: x, top: y + CH,
     });
   }
@@ -531,7 +595,7 @@ async function run(slug, fixture) {
   await sharp({ create: { width: cols * (CW + G) + G, height: rows * (CH + LB + G) + G, channels: 3, background: "#F2F4F7" } })
     .composite(comp).png().toFile(contact);
 
-  return { lines, files, caption, dmText, dl, contact, outDir, kit };
+  return { lines, files, caption, dmText, dl, contact, grid: path.join(outDir, GRID_PNG), outDir, kit };
 }
 
 // ── 진입점 ───────────────────────────────────────────────────────────────────
@@ -557,9 +621,11 @@ for (const slug of slugs) {
   console.log(`  ⑤ 이미지 추적 변경 0건       : ${imgTracked.length ? "FAIL — " + imgTracked.length + "건" : "PASS"}`);
   console.log(`  ＋ 알약 글자 잘림 없음        : ${fails.some((f) => f.startsWith("알약")) ? "FAIL" : "PASS"}`);
   console.log(`  ⑥ 딥링크 해석                : ${r.dl.ok ? `PASS — ${r.dl.url}` : "FAIL — " + r.dl.why}`);
+  console.log(`  ⑦ 그리드 안전 (검사 ${gridBoxes.length}건) : ${fails.some((f) => f.startsWith("그리드 안전")) ? "FAIL" : "PASS"}`);
   console.log(`\n  캡션 ${r.caption.length}자 · DM ${r.dmText.length}자`);
   console.log(`  출력: ${r.outDir}`);
   console.log(`  컨택트시트: ${r.contact}`);
+  console.log(`  그리드 미리보기: ${r.grid}`);
 }
 if (fails.length) {
   console.log(`\n★FAIL ${fails.length}건`);
