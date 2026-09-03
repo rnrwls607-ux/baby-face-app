@@ -2799,3 +2799,25 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   GET /api/usage=200(json) · GET /api/schoolsnap=405 · GET /api/idstyle=405.
   ★GET 405가 핵심 신호다: 라우트에 GET이 없으므로 모듈이 정상 로드되면 405, 로드가 깨지면
   500 HTML이 나온다. POST 500은 정상 검증 실패와 구분이 안 돼 신호가 되지 못한다
+
+## 2026-09-03 — ★사고 원인 정정: sharp 0.35의 libvips 8.18이 Vercel 런타임에서 dlopen 실패
+
+- [정정] 바로 위 항목에서 원인을 "devDependencies로 빠져 설치가 안 됐다"로 적었는데 그것은
+  절반만 맞다. dependencies로 되돌린 9456e0b를 배포해도 ★500이 그대로였다.
+  Vercel 함수 로그 원문: `Could not load the "sharp" module using the linux-x64 runtime
+  ERR_DLOPEN_FAILED: libvips-cpp.so.8.18.6`
+- [진짜 원인] c1d9f61에서 깔린 sharp ★0.35.4가 @img/sharp-libvips-linux-x64 1.3.3
+  (libvips 8.18.6)을 끌고 온다. 이 바이너리가 Vercel 런타임에서 dlopen에 실패한다.
+  c1d9f61 이전에는 next의 전이 의존 0.34.5(libvips 1.2.4 = 8.17.x)였고 정상이었다.
+  즉 devDeps 이동은 방아쇠였고, 총알은 ★메이저 마이너 업그레이드였다
+- [조치] sharp를 ^0.34.5로 고정(dependencies 유지). 락파일 실측 —
+  node_modules/sharp 0.34.5 · @img/sharp-linux-x64 0.34.5 ·
+  @img/sharp-libvips-linux-x64 ★1.2.4 · next 하위 별도 sharp 소멸(최상위로 통합).
+  로컬 실동작 확인: sharp 0.34.5 / libvips 8.17.3
+- [영향 범위 — 로그인 콜백 포함] sharp를 (간접 포함) import하는 라우트 전부:
+  생성 라우트 179종(aiMark) · idstyle · upscale · coins(historyStore 경유) ·
+  ★auth/kakao 콜백(historyStore 경유)까지. 즉 로그인도 안 됐다.
+  sharp 무관 라우트(usage · validate-photo)만 살아 있었다
+- [교훈] 스크립트용으로 라이브러리를 새로 깔 때 ★버전이 올라가면 런타임 바이너리도 바뀐다.
+  로컬(Windows)에서 도는 것이 Vercel(linux-x64)에서 도는 것을 보증하지 않는다.
+  네이티브 모듈은 "이미 앱이 쓰고 있는 버전"에 맞춰 깔 것 — 새 최신판을 끌어오지 말 것
