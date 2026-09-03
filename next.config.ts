@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["@upstash/redis"],
+  // ★sharp는 네이티브 바이너리라 번들에 말아넣으면 안 된다 — 서버 외부 패키지로 둔다.
+  //   (2026-09-03 c1d9f61 회귀 수습: devDependencies로 옮겨져 프로덕션에서 통째로 빠졌고,
+  //    sharp를 import하는 라우트가 전부 모듈 로드 실패 → HTML 500이 됐다.)
+  serverExternalPackages: ["@upstash/redis", "sharp"],
   async headers() {
     return [
       {

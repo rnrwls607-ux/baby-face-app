@@ -2776,3 +2776,26 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
   "그리드 썸네일" 라벨로 붙어 8칸. ★규격 게이트에서는 제외(1080×1350이 아니다)
 - [ep03 실측] 게이트 ①~⑦ 전항 PASS — 알약 268×67 @(130,780) · 제목 96px 유지(축소 없음)
   x131~685 y870~1075 · 그리드 안전 검사 6건 · 조회수 자리와 제목 바닥 사이 35px 여유
+
+## 2026-09-03 — ★사고: 프로덕션 생성 전면 장애 (sharp가 devDependencies로 빠짐)
+
+- [증상] 앱에서 생성 시 "<!DOCTYPE" is not valid JSON. 라이브 API가 JSON이 아니라 Next의
+  HTML 500 페이지(__next_error__)를 돌려줬고, 클라이언트의 res.json()이 그걸 파싱하다 던졌다
+- [원인] c1d9f61(09-02 23:02, detail-page 2호)에서 `npm install --save-dev sharp puppeteer-core`
+  를 돌리며 sharp가 devDependencies로 올라갔다. 그전에는 next의 전이 의존(프로덕션)으로
+  살아 있었는데, 최상위 0.35.4가 next의 0.34.5를 흡수하면서 락파일의 node_modules/sharp가
+  `"dev": true`가 됐다 → Vercel 프로덕션 빌드(--omit=dev)가 설치하지 않는다 →
+  ★sharp를 import하는 모든 모듈이 로드 실패 → 그 라우트 전부 HTML 500
+- [영향] 09-02 23:02 ~ 2026-09-03 22:05 복구까지. sharp를 (간접 포함) import하는 라우트 전부:
+  aiMark 경유 생성 라우트 179종 · idstyle · upscale · coins(historyStore 경유) 등.
+  ★즉 코인 생성 기능 전체가 죽어 있었다. sharp 무관 라우트(usage·validate-photo)는 정상이었다
+- [진단이 늦은 이유] 09-03 1차 진단에서 대조군으로 schoolsnap을 썼는데 ★그 대조군도 같은
+  원인으로 죽어 있었다. "둘 다 500이니 droneview 회귀가 아니다"로 결론냈다. 대조군은
+  "정상이라고 검증된 것"이어야 한다 — 같은 의존성 그래프에 있는 것은 대조군이 아니다
+- [조치] sharp를 dependencies로 되돌리고(버전 그대로 ^0.35.4) npm install →
+  락파일에서 `"dev": true` 소멸 확인, @img/sharp-linux-x64 v0.35.4(optional) 존재 확인.
+  next.config.ts serverExternalPackages에 "sharp" 추가(네이티브 바이너리 번들 제외)
+- [★재발 방지] 프로덕션 스모크 테스트를 push 게이트에 넣는다 — 배포 후
+  GET /api/usage=200(json) · GET /api/schoolsnap=405 · GET /api/idstyle=405.
+  ★GET 405가 핵심 신호다: 라우트에 GET이 없으므로 모듈이 정상 로드되면 405, 로드가 깨지면
+  500 HTML이 나온다. POST 500은 정상 검증 실패와 구분이 안 돼 신호가 되지 못한다
