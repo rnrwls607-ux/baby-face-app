@@ -36,15 +36,18 @@ export const GLAM = {
 };
 export const glamLabel = (g) => (GLAM[g] ? `외모 ${g}단계(${GLAM[g].label})` : `외모 ?단계(${g})`);
 
-// ★Light 줄 뷰티 절 — v3 필수 문자열(MJ 등록본). 따뜻한 광 격리 처방은 이 절 "뒤에 덧붙이는" 형태만 허용.
+// ★Light 줄 뷰티 절 정본 (2026-09-05 MJ 결정)
+//   v3 = snowsnap 원형 그대로. "the face glowing warm and fresh"가 필수 구다 — 이 구가 빠진 절은 v3가 아니다.
+//   v2 = cinesnap 계열("bright soft key … noticeably brighter and prettier"). v3에서는 불허.
+//   따뜻한 광 격리 처방(노랑/창백 금지)은 이 절 "뒤에 덧붙이는" 형태만 허용 — 대체 금지.
 export const LIGHT_BEAUTY_V3 =
+  "flawless beauty lighting on the person — a bright, CLEAN, neutral-toned soft key light with delicate catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING, idol-grade luminous, the face glowing warm and fresh, every feature crisp";
+export const LIGHT_BEAUTY_V2 =
   "flawless beauty lighting on the person — a bright soft key light with delicate catchlights, gentle fill, and a clean rim light, clearly BEAUTIFYING, idol-grade luminous, the face glowing noticeably brighter and prettier than everything around it, every feature crisp";
-// 원형 snowsnap 계열(라이브 v3 8종 실사용)의 변형 — 승인 변형으로 함께 받는다. MJ가 한쪽으로 모으면 여기서 뺀다.
-export const LIGHT_BEAUTY_V3_SNOW =
-  "flawless beauty lighting on the person — a bright, CLEAN, neutral-toned soft key light with delicate catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING, idol-grade luminous";
+export const LIGHT_MUST_V3 = "the face glowing warm and fresh";
 const LIGHT_FORMS = {
-  v3: [LIGHT_BEAUTY_V3, LIGHT_BEAUTY_V3_SNOW],
-  v2: [LIGHT_BEAUTY_V3],
+  v3: [LIGHT_BEAUTY_V3],
+  v2: [LIGHT_BEAUTY_V2],
   v1: null, // v1은 토큰 검사(플래시·역광 등 변형이 많다)
 };
 const LIGHT_TOKENS = ["flawless beauty lighting on the person", "delicate catchlights", "gentle fill", "idol-grade luminous", "every feature crisp"];
@@ -145,8 +148,14 @@ export function glamCheck(text, opt = {}) {
     const forms = LIGHT_FORMS[level];
     let li = -1, formName = "";
     if (forms) {
-      for (const f of forms) { const i = Tci.indexOf(normCI(f)); if (i >= 0) { li = i; formName = f === LIGHT_BEAUTY_V3 ? "MJ 등록본" : "snowsnap 변형"; break; } }
-      if (li < 0) { failures.push(`Light 뷰티 절 없음(${level} 필수 문자열 ${forms.length}형 모두 불일치)`); detail.push(...nearDiff(norm(forms[0]).slice(0, 120), T)); }
+      for (const f of forms) { const i = Tci.indexOf(normCI(f)); if (i >= 0) { li = i; formName = level === "v3" ? "v3 정본(snowsnap 원형)" : "v2 정본(cinesnap 문형)"; break; } }
+      if (li < 0) {
+        let hint = "";
+        if (level === "v3" && Tci.includes(normCI(LIGHT_BEAUTY_V2))) hint = " — cinesnap(v2) 문형은 v3에서 불허";
+        else if (level === "v3" && !Tci.includes(LIGHT_MUST_V3)) hint = ` — 필수 구 "${LIGHT_MUST_V3}" 없음`;
+        failures.push(`Light 뷰티 절 불일치(${level} 정본)${hint}`);
+        detail.push(...nearDiff(norm(forms[0]).slice(0, 120), T));
+      }
     } else {
       const lack = LIGHT_TOKENS.filter((t) => !Tci.includes(t));
       li = Tci.indexOf(LIGHT_TOKENS[0]);

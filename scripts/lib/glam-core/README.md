@@ -15,4 +15,18 @@
 - v2: 위와 같되 15% · AIM HIGH "top-tier celebrity visual" · SELF-CHECK 2문항이 "slimmer"
 - v1: INTENSITY·AIM HIGH 없음 · 10% · SELF-CHECK 공통 4문항 · AVOID 공통 8항 · Output의 "no text"는 슬롯(digicam 날짜 스탬프 예외)
 
+## Light 줄 뷰티 절 정본 (2026-09-05 MJ 결정)
+
+- v3 = snowsnap 원형 그대로: "a bright, CLEAN, neutral-toned soft key light with delicate catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING, idol-grade luminous, **the face glowing warm and fresh**, every feature crisp" — "the face glowing warm and fresh"가 필수 구. 격리 처방(노랑/창백 금지)은 뒤 덧붙임만.
+- v2 = cinesnap 계열: "a bright soft key light … clean rim light … the face glowing noticeably brighter and prettier than everything around it, every feature crisp". v3에서 불허.
+
+## 승인 변형 (검사 예외 없음 — 라이브는 그대로, 신규엔 미적용)
+
+| 컨셉 | 층 | 변형 내용 |
+|---|---|---|
+| monoactor | v3 | 흑백 — 헤어 줄·SELF-CHECK 헤어 문항을 "tone faithfully mapped to monochrome"으로, Light를 45° 조각광(sculpting)으로 재작성 |
+| airportsnap | v1.5 | 10%인데 RETOUCH INTENSITY·timid 항목 보유, FRAMING three-quarter(mid-thigh) |
+| 라이브 v3 8종 (autumnsnap·trenchlook·examcheer·xmasvintage·campsnap·picnicsnap·fortunecard·poolside) | v3 | Light 절에서 "the face glowing warm and fresh" 구 누락(+NEUTRAL 대문자) — autumnsnap A/B 판정 후 처리 |
+| personalcolor | v3 | Light 절이 cinesnap(v2) 문형 |
+
 정본 변경 = MJ 승인 사항. 바꾸면 이 표의 md5를 갱신한다.

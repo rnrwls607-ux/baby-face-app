@@ -90,7 +90,9 @@ export function evalRouteResolving(src, expr, seed = {}) {
       tried.add(id);
       const init = sliceInitializer(src, new RegExp("(?:const|let)\\s+" + id + "\\s*(?::[^=]+)?=\\s*"));
       if (!init) throw new Error(`${e.message} — 소스에 const ${id} 선언 없음`);
-      bind[id] = "@@" + init;
+      // 초기화식에 await가 있으면 요청 본문(formData·json)에서 오는 값이다 — 동기 샌드박스에서는 평가할 수
+      // 없으니 undefined로 묶고 기본 분기(|| 기본값)를 타게 한다. campusgrad·dresswedding·travel 전례.
+      bind[id] = /\bawait\b/.test(init) ? undefined : "@@" + init;
     }
   }
   throw new Error("해소 반복 초과");

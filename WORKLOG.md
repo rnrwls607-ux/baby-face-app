@@ -1,3 +1,10 @@
+## 2026-09-05 — Light 뷰티 절 정본화 + autumnsnap v1↔v2 A/B 준비 (⚠️ MJ 판정 대기)
+- [정본] glam-check v3 Light = snowsnap 원형 전문("the face glowing warm and fresh" 필수 구) · v2 = cinesnap 문형(v3에서 불허). README에 승인 변형 표(monoactor 흑백 · airportsnap v1.5 · 라이브 v3 8종 warm-and-fresh 누락 · personalcolor v2 문형) — 검사 예외 없음, 신규에만 적용
+- [회귀] 정본 변경 후 라이브 스캔: snowsnap·cinesnap·schoolsnap·digicam PASS / trenchlook 등 v3 8종·personalcolor·monoactor은 Light FAIL(의도된 결과 — 재수확 전까지 이 spec들로 harvest 못 돈다)
+- [autumnsnap v2] specs/autumnsnap.prompt.txt Light 절만 교체(warm and fresh 복원 + NEUTRAL→neutral, 노랑 금지 처방은 뒤 유지) → 8461자 md5 3a7c7593, glam-check PASS(22구간). spec prompt를 file로 되돌림(라이브 route는 v1 d7a10aab 그대로). 기존 애프터·시트 → examples/ba/autumnsnap/_v1/, harvest --run --afters --max-cost 1500 → 4장 ₩1,200
+- [대조 시트] examples/ba/autumnsnap/autumnsnap_대조시트_v1v2.png — 행=같은 비포 4쌍(1·2·3·1), 열=비포·v1·v2. ★멈춤: MJ 판정 후 라이브 route 교체(refresh 스테이지 없음 → 수동 절차)
+- [VM 평가기] lib/prompt.mjs: 해소 대상 const 초기화식에 await(요청 본문값)가 있으면 undefined로 묶어 기본 분기 — campusgrad(c65776a9)·dresswedding(87f3e345)·travel(0b11a2aa) 추출 가능. 백로그 §9에 기록
+
 ## 2026-09-05 — 외모 드리프트 감사 + 코어 잠금 시스템 (glam-core · glam-check)
 - [감사 A] VM 재추출로 snowsnap(원형 575ae443) ↔ autumnsnap·trenchlook·examcheer·xmasvintage·campsnap·picnicsnap 줄 단위 diff. 표준 블록 drift 6종 모두 0줄(xmasvintage는 Output 컨셉명이 길어 줄바꿈만 재배치, 정규화 일치). 엔진 gemini-3-pro-image · maxDuration 240 전부 동일
 - [Light 줄] 6종 전부 "bright, CLEAN, NEUTRAL-toned … crisp rim light, clearly BEAUTIFYING, idol-grade luminous, every feature crisp" + 따뜻한 광 BACKGROUND 격리(뒤에 덧붙임). 원형 snowsnap은 "the face glowing warm and fresh" 구가 더 있고 격리 처방이 겨울 cool tone용. MJ가 등록 지시한 뷰티 절("…a bright soft key light … clean rim light … glowing noticeably brighter and prettier…")은 cinesnap·schoolsnap(v2)·personalcolor(v3) 문형 — snowsnap 계열 8종과 문형이 둘로 갈려 있다(🎯 통합 여부 MJ 결정)

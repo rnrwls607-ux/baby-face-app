@@ -72,7 +72,7 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
   2 = v1 코어(digicam 승인본) · 3 = v2 코어(cinesnap 승인본) · 4 = v3 코어(snowsnap 승인본) · 5 = v3+조명·씬 교체 후보(승인본 없음, 검사는 v3 코어)
   ★코어 정본 = scripts/lib/glam-core/{v1,v2,v3}-core.txt — route에서 VM으로 뽑은 승인본에서 슬롯만 마커로 바꾼 것(손으로 옮긴 글자 0).
   가변 슬롯은 {{컨셉명}}·{{헤어꼬리}}·{{SCENE}}·{{POSE}}·{{*}}(장면 전용 SELF-CHECK/AVOID 문항 자리)뿐. 그 외 구간은 공백 정규화 후 순서대로 문자 일치해야 한다.
-  ★Light 줄 뷰티 절은 v3 필수 문자열(glam-check.mjs LIGHT_BEAUTY_V3, 원형 snowsnap 변형 함께 허용). 따뜻한 광 격리 처방(부록 A)은 이 절 뒤에 덧붙이는 형태만 — 대체 금지.
+  ★Light 줄 뷰티 절 정본(09-05 MJ 결정): v3 = snowsnap 원형 그대로 — "a bright, CLEAN, neutral-toned soft key light … crisp rim light, clearly BEAUTIFYING, idol-grade luminous, the face glowing warm and fresh, every feature crisp"("the face glowing warm and fresh" 필수 구). v2 = cinesnap 문형("bright soft key … noticeably brighter and prettier"), v3에서 불허. 따뜻한 광 격리 처방(부록 A)은 이 절 뒤에 덧붙이는 형태만 — 대체 금지. 라이브 v3 8종은 이 구가 빠져 있다 → autumnsnap A/B 판정 후 처리(README 승인 변형 표).
   정본을 바꾸려면 코어 파일을 고치고 md5를 README에 기록한다(MJ 승인 후). 검사기가 아니라 정본이 진실원이다.
 - ★Pro 글램 사다리(승인 변형, 마스터 부록 D 후보): 
   v1 = 마스터 원판(10%, INTENSITY 없음) — flash·일부 Pro(digicam 승인)
@@ -138,6 +138,7 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
   · 대안(권장): /api/admin/live-check 신설 — adminGate 통과 후 서버 내부에서 generate 함수를
     직접 호출(withCoin 우회 = 코인 차감 0). MJ가 브라우저에서 버튼 1회. app/ 수정이 필요해
     이번 범위 밖이라 제안만 남긴다.
+VM 평가기(lib/prompt.mjs): 요청값(await formData/json)에서 오는 const는 undefined로 묶어 기본 분기를 탄다(09-05, campusgrad·dresswedding·travel 추출 가능) — 분기 컨셉은 기본값 프롬프트만 검사된다. harvest.mjs 안의 사본은 아직 구판(통합 백로그).
 harvest: --src(비포 재사용 경로) · --force 범위를 스테이지별로 · VM 평가기 lib/prompt.mjs로 통합 / 4호 qc 자동 필터(글자·얼굴 유사도·인원수) / 기존 상세 1080 재생성(spec 채우면 detail-page로) / airportsnap 애프터3=썸네일 중복(무해)
 ★재출시(refresh) 3건 — 2026-09-03 droneview v6에서 드러남:
 1. new-concept에 --stage refresh 신설(프롬프트 교체 + 상세·webp·BA 자산 갱신). 지금은 launch·ba가 멱등이라 우회해야 하고, 우회 절차가 문서에만 있다.
