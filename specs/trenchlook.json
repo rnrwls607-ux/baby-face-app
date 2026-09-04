@@ -3,28 +3,92 @@
   "name": "트렌치코트 가을 화보",
   "engine": "pro",
   "inputType": "person",
-  "prompt": { "source": "file", "path": "specs/trenchlook.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
-    { "file": "trenchlook_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s, chic with a calm confident look, long dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "trenchlook_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin metal-frame glasses, a soft intellectual vibe, medium-length dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "trenchlook_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his late 20s, good-looking with a clean modern style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+    {
+      "file": "trenchlook_비포1.png",
+      "pool": "female",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s, chic with a calm confident look, long dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "trenchlook_비포2.png",
+      "pool": "female-glasses",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin metal-frame glasses, a soft intellectual vibe, medium-length dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "trenchlook_비포3.png",
+      "pool": "male",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his late 20s, good-looking with a clean modern style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
-  "verdicts": ["닮음+글램", "걷다 멈춘 캔디드(정면 정지 아님)", "남성 룩", "얼굴 노랗지 않음 · 글자 0"],
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
+  "verdicts": [
+    "닮음+글램",
+    "걷다 멈춘 캔디드(정면 정지 아님)",
+    "남성 룩",
+    "얼굴 노랗지 않음 · 글자 0"
+  ],
   "route": {
-    "template": "auto", "chipFrom": "snowsnap", "tplName": "치어리더", "replace": [["📣", "🧥"]],
-    "emoji": "🧥", "color": "#8B6B4E",
+    "template": "auto",
+    "chipFrom": "snowsnap",
+    "tplName": "치어리더",
+    "replace": [
+      [
+        "📣",
+        "🧥"
+      ]
+    ],
+    "emoji": "🧥",
+    "color": "#8B6B4E",
     "subtitle": "걷다 멈춘, 그 한 컷",
     "description": "낙엽 진 도심 거리에서 트렌치코트 차림으로 걷다 멈춘 듯한 화보로 만들어드려요. 포즈를 잡은 사진이 아니라, 지나가다 찍힌 한 컷처럼.",
-    "audience": "all", "duo": null
+    "audience": "all",
+    "duo": null
   },
-  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
   "detail": {
     "layout": "ba",
-    "signature": { "color": "#8B6B4E", "bg": "#FBF8F4", "name": "카멜 브라운" },
-    "hero": { "sub": "걷다 멈춘, 그 한 컷", "tags": ["#트렌치코트", "#가을화보", "#거리스냅"], "image": "trenchlook_애프터1.png" },
+    "signature": {
+      "color": "#8B6B4E",
+      "bg": "#FBF8F4",
+      "name": "카멜 브라운"
+    },
+    "hero": {
+      "sub": "걷다 멈춘, 그 한 컷",
+      "tags": [
+        "#트렌치코트",
+        "#가을화보",
+        "#거리스냅"
+      ],
+      "image": "trenchlook_애프터1.png"
+    },
     "painHeader": "이런 적 있으세요?",
     "pain": [
       "화보 같은 거리 사진, 찍어보고 싶었어요 🧥",
@@ -33,22 +97,61 @@
     ],
     "solution": "MOSPIC 트렌치코트 가을 화보 — 사진 한 장이면, 거리에서 찍힌 듯한 화보 완성",
     "pairs": [
-      { "before": "trenchlook_비포1.png", "after": "trenchlook_애프터1.png", "caption": "평범한 실내 셀카가 → 낙엽 거리의 트렌치 화보로" },
-      { "before": "trenchlook_비포2.png", "after": "trenchlook_애프터2.png", "caption": "수수한 일상 컷이 → 걷다 멈춘 순간의 한 컷으로" }
+      {
+        "before": "trenchlook_비포1.png",
+        "after": "trenchlook_애프터1.png",
+        "caption": "평범한 실내 셀카가 → 낙엽 거리의 트렌치 화보로"
+      },
+      {
+        "before": "trenchlook_비포2.png",
+        "after": "trenchlook_애프터2.png",
+        "caption": "수수한 일상 컷이 → 걷다 멈춘 순간의 한 컷으로"
+      }
     ],
     "points": [
-      { "title": "포즈가 아니라 순간", "body": "걷다가 문득 돌아본 그 찰나로 잡아요. 정면을 보고 서 있는 사진과는 공기가 다릅니다.", "chips": ["🚶 걷는 순간", "🍂 낙엽 거리", "📷 에디토리얼"] },
-      { "title": "코트 핏이 살아요", "body": "길게 떨어지는 트렌치와 니트, 목선까지 깔끔하게 — 옷이 예뻐 보이는 각도로 잡아드려요.", "chips": ["롱 트렌치", "니트 레이어드", "깔끔한 목선"] },
-      { "title": "가을 내내 쓰는 프사", "body": "계절이 바뀌어도 촌스럽지 않은 톤 — 프로필도, 피드도 이 한 장이면 돼요.", "images": ["trenchlook_애프터3.png", "trenchlook_애프터4.png"], "imageCaption": "남녀 모두, 같은 거리 무드로" }
+      {
+        "title": "포즈가 아니라 순간",
+        "body": "걷다가 문득 돌아본 그 찰나로 잡아요. 정면을 보고 서 있는 사진과는 공기가 다릅니다.",
+        "chips": [
+          "🚶 걷는 순간",
+          "🍂 낙엽 거리",
+          "📷 에디토리얼"
+        ]
+      },
+      {
+        "title": "코트 핏이 살아요",
+        "body": "길게 떨어지는 트렌치와 니트, 목선까지 깔끔하게 — 옷이 예뻐 보이는 각도로 잡아드려요.",
+        "chips": [
+          "롱 트렌치",
+          "니트 레이어드",
+          "깔끔한 목선"
+        ]
+      },
+      {
+        "title": "가을 내내 쓰는 프사",
+        "body": "계절이 바뀌어도 촌스럽지 않은 톤 — 프로필도, 피드도 이 한 장이면 돼요.",
+        "images": [
+          "trenchlook_애프터3.png",
+          "trenchlook_애프터4.png"
+        ],
+        "imageCaption": "남녀 모두, 같은 거리 무드로"
+      }
     ],
     "price": {
       "header": "화보 촬영, 안 잡아도 돼요",
       "offline": "거리 스냅 촬영 수만~수십만 원 + 코디 준비 + 날씨·시간대 맞추기",
       "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
     },
-    "guide": ["정면·상반신이 또렷하게 나온 사진을 추천해요", "얼굴을 가리는 머리카락·모자는 피해주세요", "원본 화질이 좋을수록 결과도 좋아요"],
+    "guide": [
+      "정면·상반신이 또렷하게 나온 사진을 추천해요",
+      "얼굴을 가리는 머리카락·모자는 피해주세요",
+      "원본 화질이 좋을수록 결과도 좋아요"
+    ],
     "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
     "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 실제 촬영 장소가 아닌 연출 배경이에요.",
-    "cta": { "copy": "오늘, 거리에서 찍힌 한 컷을 만들어보세요", "button": "트렌치 화보 만들기" }
+    "cta": {
+      "copy": "오늘, 거리에서 찍힌 한 컷을 만들어보세요",
+      "button": "트렌치 화보 만들기"
+    }
   }
 }
