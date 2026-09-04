@@ -3,15 +3,37 @@
   "name": "빈티지 크리스마스 스냅",
   "engine": "pro",
   "inputType": "person",
-  "prompt": { "source": "file", "path": "specs/xmasvintage.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
-    { "file": "xmasvintage_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s, attractive with a warm friendly look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "xmasvintage_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s wearing thin round glasses, pretty with a soft cozy vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "xmasvintage_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his late 20s, good-looking with a clean natural style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+    {
+      "file": "xmasvintage_비포1.png",
+      "pool": "female",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s, attractive with a warm friendly look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "xmasvintage_비포2.png",
+      "pool": "female-glasses",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s wearing thin round glasses, pretty with a soft cozy vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "xmasvintage_비포3.png",
+      "pool": "male",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his late 20s, good-looking with a clean natural style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
   "verdicts": [
     "닮음+글램",
     "얼굴 노랗지 않음(트리광 격리) · 그레인이 얼굴 잡티로 안 보임",
@@ -22,7 +44,12 @@
     "template": "auto",
     "chipFrom": "xmas",
     "tplName": "치어리더",
-    "replace": [["📣", "🎁"]],
+    "replace": [
+      [
+        "📣",
+        "🎁"
+      ]
+    ],
     "emoji": "🎁",
     "color": "#8B2E2E",
     "subtitle": "필름에 담긴 연말 저녁",
@@ -30,13 +57,36 @@
     "audience": "all",
     "duo": null
   },
-  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
   "detail": {
     "layout": "ba",
-    "signature": { "color": "#8B2E2E", "bg": "#FBF6F5", "name": "빈티지 와인" },
+    "signature": {
+      "color": "#8B2E2E",
+      "bg": "#FBF6F5",
+      "name": "빈티지 와인"
+    },
     "hero": {
       "sub": "필름에 담긴 연말 저녁",
-      "tags": ["#빈티지크리스마스", "#필름감성", "#연말스냅"],
+      "tags": [
+        "#빈티지크리스마스",
+        "#필름감성",
+        "#연말스냅"
+      ],
       "image": "xmasvintage_애프터1.png"
     },
     "painHeader": "이런 적 있으세요?",
@@ -47,24 +97,43 @@
     ],
     "solution": "MOSPIC 빈티지 크리스마스 스냅 — 사진 한 장이면, 필름에 담긴 연말 저녁 한 컷 완성",
     "pairs": [
-      { "before": "xmasvintage_비포1.png", "after": "xmasvintage_애프터1.png", "caption": "평범한 실내 셀카가 → 트리 보케 앞 필름 스냅으로" },
-      { "before": "xmasvintage_비포2.png", "after": "xmasvintage_애프터2.png", "caption": "수수한 일상 컷이 → 니트 입은 연말 저녁 한 컷으로" }
+      {
+        "before": "xmasvintage_비포1.png",
+        "after": "xmasvintage_애프터1.png",
+        "caption": "평범한 실내 셀카가 → 트리 보케 앞 필름 스냅으로"
+      },
+      {
+        "before": "xmasvintage_비포2.png",
+        "after": "xmasvintage_애프터2.png",
+        "caption": "수수한 일상 컷이 → 니트 입은 연말 저녁 한 컷으로"
+      }
     ],
     "points": [
       {
         "title": "세트가 아니라 우리 집 거실",
         "body": "트리와 전구는 둥근 보케로 뒤에 흐르고, 니트와 오너먼트, 필름 그레인까지 — 스튜디오가 아니라 진짜 12월 저녁에 찍은 듯한 한 장이 나와요.",
-        "chips": ["🎄 트리 보케", "🧶 니트 룩", "🎞️ 필름 그레인"]
+        "chips": [
+          "🎄 트리 보케",
+          "🧶 니트 룩",
+          "🎞️ 필름 그레인"
+        ]
       },
       {
         "title": "트리 불빛이 얼굴을 물들이지 않아요",
         "body": "전구의 따뜻한 빛은 얼굴까지 노랗게 만들기 쉬워요. 그 빛은 배경에만 두고, 얼굴은 본래 피부톤 그대로 깨끗하고 밝게 살려요.",
-        "chips": ["피부톤 유지", "중성 키라이트", "한눈에 알아봄"]
+        "chips": [
+          "피부톤 유지",
+          "중성 키라이트",
+          "한눈에 알아봄"
+        ]
       },
       {
         "title": "연말 인사 한 장으로",
         "body": "프사로, 연말 인사 카드로, 가족 단톡에 — 올해의 크리스마스를 남기는 한 장이 돼요.",
-        "images": ["xmasvintage_애프터3.png", "xmasvintage_애프터4.png"],
+        "images": [
+          "xmasvintage_애프터3.png",
+          "xmasvintage_애프터4.png"
+        ],
         "imageCaption": "누구를 넣어도 같은 필름 감성으로"
       }
     ],
@@ -80,6 +149,9 @@
     ],
     "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
     "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 실제 촬영 장소가 아닌 연출 배경이에요.",
-    "cta": { "copy": "올해 크리스마스, 필름 한 장으로 남겨보세요", "button": "빈티지 크리스마스 만들기" }
+    "cta": {
+      "copy": "올해 크리스마스, 필름 한 장으로 남겨보세요",
+      "button": "빈티지 크리스마스 만들기"
+    }
   }
 }

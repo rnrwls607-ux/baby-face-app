@@ -1,3 +1,9 @@
+## 2026-09-04 — 신규 컨셉 신설: xmasvintage (빈티지 크리스마스 스냅)
+- [스테이지] new-concept.mjs --stage route · 템플릿 person:pro → cheerglam
+- [프롬프트] specs/xmasvintage.prompt.txt → route 삽입 · md5 f216a451 · 재추출 일치
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-04 — BA 배선: examcheer 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
