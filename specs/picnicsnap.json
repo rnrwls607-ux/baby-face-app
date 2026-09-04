@@ -3,15 +3,37 @@
   "name": "한강 피크닉 스냅",
   "engine": "pro",
   "inputType": "person",
-  "prompt": { "source": "file", "path": "specs/picnicsnap.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
-    { "file": "picnicsnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s, attractive with a bright cheerful look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "picnicsnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin round glasses, pretty with a soft sunny vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "picnicsnap_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his mid-20s, good-looking with a clean fresh style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+    {
+      "file": "picnicsnap_비포1.png",
+      "pool": "female",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s, attractive with a bright cheerful look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "picnicsnap_비포2.png",
+      "pool": "female-glasses",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin round glasses, pretty with a soft sunny vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "picnicsnap_비포3.png",
+      "pool": "male",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his mid-20s, good-looking with a clean fresh style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
   "verdicts": [
     "닮음+글램",
     "맑은 대낮광 · 찡그림·강한 그림자 없음",
@@ -22,7 +44,12 @@
     "template": "auto",
     "chipFrom": "travel",
     "tplName": "치어리더",
-    "replace": [["📣", "🧺"]],
+    "replace": [
+      [
+        "📣",
+        "🧺"
+      ]
+    ],
     "emoji": "🧺",
     "color": "#6BA36B",
     "subtitle": "맑은 날, 잔디 위 한 장",
@@ -30,13 +57,36 @@
     "audience": "all",
     "duo": null
   },
-  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
   "detail": {
     "layout": "ba",
-    "signature": { "color": "#6BA36B", "bg": "#F4FAF4", "name": "피크닉 그린" },
+    "signature": {
+      "color": "#6BA36B",
+      "bg": "#F4FAF4",
+      "name": "피크닉 그린"
+    },
     "hero": {
       "sub": "맑은 날, 잔디 위 한 장",
-      "tags": ["#한강피크닉", "#피크닉스냅", "#나들이인생샷"],
+      "tags": [
+        "#한강피크닉",
+        "#피크닉스냅",
+        "#나들이인생샷"
+      ],
       "image": "picnicsnap_애프터1.png"
     },
     "painHeader": "이런 적 있으세요?",
@@ -47,24 +97,43 @@
     ],
     "solution": "MOSPIC 한강 피크닉 스냅 — 사진 한 장이면, 맑은 날 잔디 위 피크닉 한 컷 완성",
     "pairs": [
-      { "before": "picnicsnap_비포1.png", "after": "picnicsnap_애프터1.png", "caption": "평범한 실내 셀카가 → 강변 잔디 위 피크닉 스냅으로" },
-      { "before": "picnicsnap_비포2.png", "after": "picnicsnap_애프터2.png", "caption": "수수한 일상 컷이 → 맑은 날 돗자리 위 한 컷으로" }
+      {
+        "before": "picnicsnap_비포1.png",
+        "after": "picnicsnap_애프터1.png",
+        "caption": "평범한 실내 셀카가 → 강변 잔디 위 피크닉 스냅으로"
+      },
+      {
+        "before": "picnicsnap_비포2.png",
+        "after": "picnicsnap_애프터2.png",
+        "caption": "수수한 일상 컷이 → 맑은 날 돗자리 위 한 컷으로"
+      }
     ],
     "points": [
       {
         "title": "돗자리 펴고 찍은 것처럼",
         "body": "강변 잔디, 과일 바구니, 옆에 세워둔 자전거 — 챙길 것 하나 없이, 딱 좋은 날 나들이 나간 듯한 한 장이 나와요.",
-        "chips": ["🧺 과일 바구니", "🚲 자전거", "🌿 강변 잔디"]
+        "chips": [
+          "🧺 과일 바구니",
+          "🚲 자전거",
+          "🌿 강변 잔디"
+        ]
       },
       {
         "title": "대낮인데 찡그리지 않아요",
         "body": "한낮 햇빛은 눈을 찡그리게 하고 코 밑에 진한 그림자를 만들어요. 밝고 부드러운 대낮광으로 얼굴은 깨끗하고 환하게 살려요.",
-        "chips": ["부드러운 대낮광", "피부톤 유지", "한눈에 알아봄"]
+        "chips": [
+          "부드러운 대낮광",
+          "피부톤 유지",
+          "한눈에 알아봄"
+        ]
       },
       {
         "title": "나들이 프사, 이걸로",
         "body": "붐비는 주말 한강에 안 나가도, 사람 없는 잔디밭의 맑은 한 장이 나와요.",
-        "images": ["picnicsnap_애프터3.png", "picnicsnap_애프터4.png"],
+        "images": [
+          "picnicsnap_애프터3.png",
+          "picnicsnap_애프터4.png"
+        ],
         "imageCaption": "누구를 넣어도 같은 맑은 날로"
       }
     ],
@@ -80,6 +149,9 @@
     ],
     "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
     "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 실제 촬영 장소가 아닌 연출 배경이에요.",
-    "cta": { "copy": "오늘, 맑은 날 피크닉 한 컷을 만들어보세요", "button": "피크닉 스냅 만들기" }
+    "cta": {
+      "copy": "오늘, 맑은 날 피크닉 한 컷을 만들어보세요",
+      "button": "피크닉 스냅 만들기"
+    }
   }
 }
