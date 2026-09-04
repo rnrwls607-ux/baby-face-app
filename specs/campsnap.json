@@ -3,15 +3,37 @@
   "name": "감성 캠핑 스냅",
   "engine": "pro",
   "inputType": "person",
-  "prompt": { "source": "file", "path": "specs/campsnap.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
-    { "file": "campsnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s, attractive with a relaxed easygoing look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "campsnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin metal-frame glasses, pretty with a calm outdoorsy vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "campsnap_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his early 30s, good-looking with a clean natural style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+    {
+      "file": "campsnap_비포1.png",
+      "pool": "female",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s, attractive with a relaxed easygoing look, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "campsnap_비포2.png",
+      "pool": "female-glasses",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her mid-20s wearing thin metal-frame glasses, pretty with a calm outdoorsy vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "campsnap_비포3.png",
+      "pool": "male",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his early 30s, good-looking with a clean natural style, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
   "verdicts": [
     "닮음+글램",
     "얼굴 주황 아님(모닥불·랜턴광 격리)",
@@ -22,7 +44,12 @@
     "template": "auto",
     "chipFrom": "travel",
     "tplName": "치어리더",
-    "replace": [["📣", "🏕️"]],
+    "replace": [
+      [
+        "📣",
+        "🏕️"
+      ]
+    ],
     "emoji": "🏕️",
     "color": "#4A6B4F",
     "subtitle": "랜턴 불빛 아래, 그 저녁",
@@ -30,13 +57,36 @@
     "audience": "all",
     "duo": null
   },
-  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
   "detail": {
     "layout": "ba",
-    "signature": { "color": "#4A6B4F", "bg": "#F5F8F5", "name": "포레스트 그린" },
+    "signature": {
+      "color": "#4A6B4F",
+      "bg": "#F5F8F5",
+      "name": "포레스트 그린"
+    },
     "hero": {
       "sub": "랜턴 불빛 아래, 그 저녁",
-      "tags": ["#감성캠핑", "#캠핑스냅", "#블루아워"],
+      "tags": [
+        "#감성캠핑",
+        "#캠핑스냅",
+        "#블루아워"
+      ],
       "image": "campsnap_애프터1.png"
     },
     "painHeader": "이런 적 있으세요?",
@@ -47,24 +97,43 @@
     ],
     "solution": "MOSPIC 감성 캠핑 스냅 — 사진 한 장이면, 랜턴 불빛 아래 캠핑 저녁 한 컷 완성",
     "pairs": [
-      { "before": "campsnap_비포1.png", "after": "campsnap_애프터1.png", "caption": "평범한 실내 셀카가 → 랜턴 불빛 아래 캠핑 스냅으로" },
-      { "before": "campsnap_비포2.png", "after": "campsnap_애프터2.png", "caption": "수수한 일상 컷이 → 블루아워 캠핑장의 한 컷으로" }
+      {
+        "before": "campsnap_비포1.png",
+        "after": "campsnap_애프터1.png",
+        "caption": "평범한 실내 셀카가 → 랜턴 불빛 아래 캠핑 스냅으로"
+      },
+      {
+        "before": "campsnap_비포2.png",
+        "after": "campsnap_애프터2.png",
+        "caption": "수수한 일상 컷이 → 블루아워 캠핑장의 한 컷으로"
+      }
     ],
     "points": [
       {
         "title": "블루아워 캠핑장 한 컷",
         "body": "짙푸른 하늘, 소나무 숲, 랜턴과 모닥불의 따뜻한 보케 — 플란넬 셔츠에 캠핑 의자까지, 진짜 캠핑 저녁의 공기가 담겨요.",
-        "chips": ["🏕️ 텐트·랜턴", "🔥 모닥불 보케", "🌲 소나무 숲"]
+        "chips": [
+          "🏕️ 텐트·랜턴",
+          "🔥 모닥불 보케",
+          "🌲 소나무 숲"
+        ]
       },
       {
         "title": "얼굴이 주황으로 안 물들어요",
         "body": "모닥불 빛은 얼굴을 온통 주황색으로 만들기 쉬워요. 그 빛은 배경에만 두고, 얼굴은 본래 피부톤 그대로 깨끗하고 밝게 살려요.",
-        "chips": ["피부톤 유지", "중성 키라이트", "한눈에 알아봄"]
+        "chips": [
+          "피부톤 유지",
+          "중성 키라이트",
+          "한눈에 알아봄"
+        ]
       },
       {
         "title": "캠핑 안 가도 캠핑 프사",
         "body": "장비 없이, 예약 없이 — 이번 주말 캠핑장에 다녀온 듯한 한 장이 나와요.",
-        "images": ["campsnap_애프터3.png", "campsnap_애프터4.png"],
+        "images": [
+          "campsnap_애프터3.png",
+          "campsnap_애프터4.png"
+        ],
         "imageCaption": "누구를 넣어도 같은 저녁 무드로"
       }
     ],
@@ -80,6 +149,9 @@
     ],
     "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
     "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 실제 촬영 장소가 아닌 연출 배경이에요.",
-    "cta": { "copy": "오늘, 랜턴 불빛 아래 한 컷을 만들어보세요", "button": "캠핑 스냅 만들기" }
+    "cta": {
+      "copy": "오늘, 랜턴 불빛 아래 한 컷을 만들어보세요",
+      "button": "캠핑 스냅 만들기"
+    }
   }
 }
