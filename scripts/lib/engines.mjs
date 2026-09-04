@@ -16,6 +16,14 @@ export const STUDIO = {
   flash: "Nano Banana 2",
 };
 
+// ★복붙 메모장({키}_프롬프트.txt)에는 괄호 없는 짧은 이름만 쓴다 — 그 파일은 설명이 아니라
+//   "열어서 아래를 긁어 붙이는" 용도라 군더더기가 없어야 한다.
+export const STUDIO_SHORT = {
+  pro: "Gemini 3 Pro Image",
+  gpt: "웹 ChatGPT",
+  flash: "Nano Banana 2",
+};
+
 const WHY = {
   person: {
     pro: "얼굴이 결과의 전부인 컨셉 — 장면을 새로 짜면서 얼굴을 살리는 건 Pro가 제일 낫다",

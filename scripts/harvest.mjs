@@ -39,7 +39,7 @@ import crypto from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import * as pool from "./lib/pool.mjs";
-import { engineRanking, STUDIO } from "./lib/engines.mjs";
+import { engineRanking, STUDIO, STUDIO_SHORT } from "./lib/engines.mjs";
 
 // ★경로에 공백이 있으면(이 PC: "Hello G.BOX") import.meta.url이 %20으로 인코딩된다.
 //   fileURLToPath로 반드시 디코딩할 것 — 안 하면 mkdir·readFileSync가 통째로 죽는다.
@@ -387,6 +387,9 @@ async function runManual() {
   const clPath = path.join(outDir, `${spec.key}_수확체크리스트.md`);
   fs.writeFileSync(clPath, md, "utf8");
   console.log(`\n  체크리스트: ${path.relative(ROOT, clPath).split(path.sep).join("/")} (${md.split("\n").length}줄)`);
+  const memoPath = path.join(outDir, `${spec.key}_프롬프트.txt`);
+  fs.writeFileSync(memoPath, buildPromptMemo(), "utf8");
+  console.log(`  복붙 메모장: ${path.relative(ROOT, memoPath).split(path.sep).join("/")}`);
 
   // ③ 애프터 감지
   const missing = [];
@@ -418,6 +421,32 @@ async function runManual() {
   console.log(`     |---|${(spec.verdicts || []).map(() => "---").join("|")}|`);
   for (let n = 1; n <= spec.afters.count; n++) console.log(`     | 애프터${n} |${(spec.verdicts || []).map(() => "  ").join("|")}|`);
   console.log("");
+}
+
+// 복붙 전용 메모장 — {키}_프롬프트.txt
+// ★이 파일에는 설명·표·md 기호·판정 포인트를 넣지 않는다. MJ가 윈도우 메모장으로 열어
+//   구분선 아래를 그대로 긁어 스튜디오에 붙이는 용도라, 군더더기가 한 줄이라도 있으면
+//   잘못 복사된다. 순위·이유는 체크리스트에 있으니 여기엔 스튜디오 이름만.
+// ★인코딩 UTF-8(BOM 없음) · 줄끝 CRLF — 윈도우 메모장이 그대로 읽게.
+function buildPromptMemo() {
+  const RULE = "────────────────────────";
+  const L = [];
+  L.push(`${spec.name || spec.key} (${spec.key})`);
+  L.push("");
+  for (const r of engineRanking(spec)) L.push(`${r.rank}순위: ${STUDIO_SHORT[r.engine] || r.engine}`);
+  L.push("");
+  // duo는 성별 조합별 프롬프트를 구분선으로 나눠 순서대로 — 단일 컨셉은 프롬프트 1개
+  for (const [i, pr] of prompts.entries()) {
+    L.push(RULE);
+    if (prompts.length > 1) L.push(`[${pr.label}]`);
+    L.push("");
+    L.push(pr.text.trim());
+    if (i < prompts.length - 1) L.push("");
+  }
+  L.push("");
+  // ★프롬프트 본문 안의 \n도 전부 CRLF로 — 헤더만 CRLF고 본문은 LF로 섞이면 메모장에서
+  //   한 줄로 붙어 보인다(첫 생성에서 실제로 그렇게 나왔다).
+  return L.join("\n").replace(/\r?\n/g, "\r\n");
 }
 
 function buildChecklist(picked) {
