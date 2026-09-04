@@ -3,28 +3,92 @@
   "name": "수능 응원 스냅",
   "engine": "pro",
   "inputType": "person",
-  "prompt": { "source": "file", "path": "specs/examcheer.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
-    { "file": "examcheer_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late teens, bright and healthy-looking, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "examcheer_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late teens wearing plain black-frame glasses, a calm studious vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
-    { "file": "examcheer_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his late teens, clean-cut and friendly-looking, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+    {
+      "file": "examcheer_비포1.png",
+      "pool": "female",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her late teens, bright and healthy-looking, medium-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "examcheer_비포2.png",
+      "pool": "female-glasses",
+      "prompt": "A casual smartphone selfie of a fictional Korean woman in her late teens wearing plain black-frame glasses, a calm studious vibe, long dark hair, plain everyday top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, unremarkable background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    },
+    {
+      "file": "examcheer_비포3.png",
+      "pool": "male",
+      "prompt": "A casual smartphone selfie of a fictional Korean man in his late teens, clean-cut and friendly-looking, short dark hair, plain t-shirt, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday plain background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
+    }
   ],
-  "afters": { "count": 4, "map": [1, 2, 3, 1] },
-  "verdicts": ["닮음+글램", "★글자·숫자·부적 0", "남성 룩", "든든한 표정 · 꽃다발 자연스러움"],
+  "afters": {
+    "count": 4,
+    "map": [
+      1,
+      2,
+      3,
+      1
+    ]
+  },
+  "verdicts": [
+    "닮음+글램",
+    "★글자·숫자·부적 0",
+    "남성 룩",
+    "든든한 표정 · 꽃다발 자연스러움"
+  ],
   "route": {
-    "template": "auto", "chipFrom": "snowsnap", "tplName": "치어리더", "replace": [["📣", "🌸"]],
-    "emoji": "🌸", "color": "#D94F4F",
+    "template": "auto",
+    "chipFrom": "snowsnap",
+    "tplName": "치어리더",
+    "replace": [
+      [
+        "📣",
+        "🌸"
+      ]
+    ],
+    "emoji": "🌸",
+    "color": "#D94F4F",
     "subtitle": "잘 될 거야, 라는 한 장",
     "description": "꽃다발과 리본이 있는 따뜻한 스튜디오에서 찍은 응원 스냅으로 만들어드려요. 든든하고 환한 표정으로, 마음을 전하는 한 장.",
-    "audience": "all", "duo": null
+    "audience": "all",
+    "duo": null
   },
-  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "ba": {
+    "pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        3
+      ]
+    ]
+  },
   "detail": {
     "layout": "ba",
-    "signature": { "color": "#D94F4F", "bg": "#FFF9F8", "name": "체어링 레드" },
-    "hero": { "sub": "잘 될 거야, 라는 한 장", "tags": ["#수능응원", "#합격기원", "#응원스냅"], "image": "examcheer_애프터1.png" },
+    "signature": {
+      "color": "#D94F4F",
+      "bg": "#FFF9F8",
+      "name": "체어링 레드"
+    },
+    "hero": {
+      "sub": "잘 될 거야, 라는 한 장",
+      "tags": [
+        "#수능응원",
+        "#합격기원",
+        "#응원스냅"
+      ],
+      "image": "examcheer_애프터1.png"
+    },
     "painHeader": "이런 적 있으세요?",
     "pain": [
       "응원하고 싶은데 뭘 보내야 할지 모르겠어요 🌸",
@@ -33,22 +97,61 @@
     ],
     "solution": "MOSPIC 수능 응원 스냅 — 사진 한 장이면, 마음을 담은 응원 한 컷 완성",
     "pairs": [
-      { "before": "examcheer_비포1.png", "after": "examcheer_애프터1.png", "caption": "평범한 셀카가 → 꽃다발 든 응원 한 컷으로" },
-      { "before": "examcheer_비포2.png", "after": "examcheer_애프터2.png", "caption": "수수한 일상 컷이 → 든든하게 웃는 응원 스냅으로" }
+      {
+        "before": "examcheer_비포1.png",
+        "after": "examcheer_애프터1.png",
+        "caption": "평범한 셀카가 → 꽃다발 든 응원 한 컷으로"
+      },
+      {
+        "before": "examcheer_비포2.png",
+        "after": "examcheer_애프터2.png",
+        "caption": "수수한 일상 컷이 → 든든하게 웃는 응원 스냅으로"
+      }
     ],
     "points": [
-      { "title": "따뜻한 스튜디오 한 컷", "body": "부드러운 조명, 계절 꽃다발, 리본까지 — 사진관에 간 것처럼 정돈된 한 장이 나와요.", "chips": ["🌸 계절 꽃다발", "🎀 리본 소품", "💡 따뜻한 조명"] },
-      { "title": "표정이 달라져요", "body": "긴장한 얼굴이 아니라, 든든하고 환한 표정으로. 보는 사람이 힘을 받는 얼굴로 만들어요.", "chips": ["환한 표정", "피부톤 유지", "한눈에 알아봄"] },
-      { "title": "보내기 좋은 한 장", "body": "카톡으로, 프사로, 인쇄해서 책상에 — 말 대신 건네는 응원이 돼요.", "images": ["examcheer_애프터3.png", "examcheer_애프터4.png"], "imageCaption": "누구에게 보내도 같은 마음으로" }
+      {
+        "title": "따뜻한 스튜디오 한 컷",
+        "body": "부드러운 조명, 계절 꽃다발, 리본까지 — 사진관에 간 것처럼 정돈된 한 장이 나와요.",
+        "chips": [
+          "🌸 계절 꽃다발",
+          "🎀 리본 소품",
+          "💡 따뜻한 조명"
+        ]
+      },
+      {
+        "title": "표정이 달라져요",
+        "body": "긴장한 얼굴이 아니라, 든든하고 환한 표정으로. 보는 사람이 힘을 받는 얼굴로 만들어요.",
+        "chips": [
+          "환한 표정",
+          "피부톤 유지",
+          "한눈에 알아봄"
+        ]
+      },
+      {
+        "title": "보내기 좋은 한 장",
+        "body": "카톡으로, 프사로, 인쇄해서 책상에 — 말 대신 건네는 응원이 돼요.",
+        "images": [
+          "examcheer_애프터3.png",
+          "examcheer_애프터4.png"
+        ],
+        "imageCaption": "누구에게 보내도 같은 마음으로"
+      }
     ],
     "price": {
       "header": "사진관에 갈 시간, 없잖아요",
       "offline": "사진관 응원 촬영 수만 원~ + 예약·이동 + 꽃다발 따로 준비",
       "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
     },
-    "guide": ["정면·상반신이 또렷하게 나온 사진을 추천해요", "얼굴을 가리는 머리카락·모자는 피해주세요", "원본 화질이 좋을수록 결과도 좋아요"],
+    "guide": [
+      "정면·상반신이 또렷하게 나온 사진을 추천해요",
+      "얼굴을 가리는 머리카락·모자는 피해주세요",
+      "원본 화질이 좋을수록 결과도 좋아요"
+    ],
     "privacy": "업로드한 사진은 결과 생성에만 사용되며 안전하게 관리돼요.",
     "aiNotice": "본 결과물은 AI로 생성된 이미지입니다. 응원의 마음을 담은 연출 이미지이며, 합격을 보장하지 않아요.",
-    "cta": { "copy": "오늘, 마음을 담은 응원 한 장을 보내보세요", "button": "응원 스냅 만들기" }
+    "cta": {
+      "copy": "오늘, 마음을 담은 응원 한 장을 보내보세요",
+      "button": "응원 스냅 만들기"
+    }
   }
 }
