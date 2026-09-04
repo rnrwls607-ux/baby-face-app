@@ -1508,6 +1508,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🎁", accent: "#8B2E2E" },
     ],
     start: "xmasvintage",
+    detailImage: "/details/xmasvintage.webp",
     inputRule: "solo_face",
   },
   halloween: {
