@@ -8,16 +8,6 @@
 - [라이브 전수 스캔 — 수정 안 함] 티어 선언 18종 중 VM 추출 15종: PASS 13 / ★drift 2 — monoactor(v3: 헤어 줄·SELF-CHECK 헤어 문항을 흑백용으로 재작성, Light가 45도 조각광이라 뷰티 절 2형 모두 불일치) · airportsnap(10%인데 RETOUCH INTENSITY·timid 항목 보유 = v1.5 하이브리드, three-quarter 프레이밍, "Face clearly slimmer" 문항 없음). 추출 불가 3 — campusgrad·dresswedding·travel(구형 route, 최상위 await): 스캔 밖
 - [C] 6종 표준 블록 drift 0 → 수술 없음. Light 줄 문형 분기만 A 보고로 종료, MJ 판단 대기
 
-## 2026-09-05 — 외모 드리프트 감사 + 코어 잠금 시스템 (glam-core · glam-check)
-- [감사 A] VM 재추출로 snowsnap(원형 575ae443) ↔ autumnsnap·trenchlook·examcheer·xmasvintage·campsnap·picnicsnap 줄 단위 diff. 표준 블록 drift 6종 모두 0줄(xmasvintage는 Output 컨셉명이 길어 줄바꿈만 재배치, 정규화 일치). 엔진 gemini-3-pro-image · maxDuration 240 전부 동일
-- [Light 줄] 6종 전부 "bright, CLEAN, NEUTRAL-toned … crisp rim light, clearly BEAUTIFYING, idol-grade luminous, every feature crisp" + 따뜻한 광 BACKGROUND 격리(뒤에 덧붙임). 원형 snowsnap은 "the face glowing warm and fresh" 구가 더 있고 격리 처방이 겨울 cool tone용. MJ가 등록 지시한 뷰티 절("…a bright soft key light … clean rim light … glowing noticeably brighter and prettier…")은 cinesnap·schoolsnap(v2)·personalcolor(v3) 문형 — snowsnap 계열 8종과 문형이 둘로 갈려 있다(🎯 통합 여부 MJ 결정)
-- [정본] scripts/lib/glam-core/{v1,v2,v3}-core.txt — digicam(de16c73d)·cinesnap(a3842468)·snowsnap(575ae443) route 추출본에서 슬롯({{컨셉명}}·{{헤어꼬리}}·{{SCENE}}·{{POSE}}·{{*}})만 마커로 치환(스크립트 생성, 손으로 옮긴 글자 0). md5는 README. 실측: v3 SELF-CHECK 공통 5문항·AVOID 공통 9항(지시의 10항은 장면 항목 포함 셈)
-- [검사기] scripts/lib/glam-check.mjs glamCheck(text,{glam,inputType}) — (a) 공백 정규화 후 마커 사이 구간을 순서대로 부분 문자열 대조(구간 안 삽입은 실패, 마커 자리만 허용) (b) Light 뷰티 절: v3=MJ 등록본 또는 snowsnap 변형, v2=MJ 등록본, v1·duo=토큰형; 격리 처방이 절보다 앞이면 "대체"로 실패 (c) 모순 3축 (d) 금지어·백틱·보간. 실패 시 근처 문장 단위 diff 출력
-- [배선] harvest(수동·API 모두, 파일 쓰기 전 fail) + new-concept route(쓰기 전 fail + "glam-check" 게이트 줄 + WORKLOG [외모] 줄). spec "glam" 1~5 필수(harvest 필수 칸·new-concept 범위 검사). 체크리스트에 "외모 n단계 · glam-check PASS" 자동 표기. 플레이북 §2·§3·§5(5단계표) 갱신. 기존 spec 11개에 glam 기입(v3 6종=4, schoolsnap·profileduo=3, droneview×2·gravityad=1)
-- [실측] 양성: xmasvintage 수동 harvest PASS(22구간) · glamtest 가짜 spec route dry-run PASS. 음성: v3 프롬프트에 glam 3 → harvest·route 모두 ★중단, 산출 0. duo(profileduo)는 Light 전문 대조가 부록 B 문형과 안 맞아 토큰형으로 낮춤
-- [라이브 전수 스캔 — 수정 안 함] 티어 선언 18종 중 VM 추출 15종: PASS 13(v3 9·v2 2·v1 digicam·… ) / ★drift 2 — monoactor(v3: 헤어 줄·SELF-CHECK 헤어 문항을 흑백용으로 재작성, Light가 45도 조각광이라 뷰티 절 2형 모두 불일치) · airportsnap(10%인데 RETOUCH INTENSITY·timid 항목 보유 = v1.5 하이브리드, three-quarter 프레이밍, "Face clearly slimmer" 문항 없음). 추출 불가 3 — campusgrad·dresswedding·travel(구형 route, 최상위 await): 스캔 밖
-- [C] 6종 표준 블록 drift 0 → 수술 없음. Light 줄 문형 분기만 A 보고로 종료, MJ 판단 대기
-
 ## 2026-09-04 — BA 배선: picnicsnap 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
