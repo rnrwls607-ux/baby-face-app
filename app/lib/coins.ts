@@ -8,6 +8,7 @@ import { getUserId, getAnyUserId } from "./auth";
 // ★비용의 진실원 — concepts.ts는 import가 0개인 순수 데이터 모듈이라 순환 참조가 없다.
 import { CONCEPTS, LIVE_COIN_CONCEPTS } from "./concepts";
 import { WELCOME_COINS } from "./coin-constants";
+import { logError } from "./errlog";
 // 히스토리 확정 저장 — save 라우트와 같은 규격을 쓰기 위한 공용 모듈
 import { makeThumbnail, saveHistoryItem } from "./historyStore";
 
@@ -297,6 +298,7 @@ export function withCoin(conceptKey: string, cost: number, handler: RouteHandler
     } catch (e: unknown) {
       const err = e as { message?: string };
       console.error(`[coins] ${conceptKey} handler 오류:`, err?.message);
+      await logError({ uid, tag: "coins", route: `/api/${conceptKey}`, status: 500, message: err?.message || "handler 오류" });
       return NextResponse.json({ error: err?.message || "오류가 발생했습니다." }, { status: 500 });
     } finally {
       await redis.del(INFLIGHT_KEY(uid));

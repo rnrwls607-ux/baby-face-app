@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ensureWelcome, WELCOME_COINS } from "../../../../lib/coins";
 import { signIdentity } from "../../../../lib/auth";
+import { logError } from "../../../../lib/errlog";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -69,10 +70,13 @@ export async function GET(request: NextRequest) {
     // ★지급 실패가 로그인을 막으면 안 된다 — 삼켜서 로그인만은 성사시킨다
     //   (다음 /api/coins·유료 생성 때 ensureWelcome이 다시 시도한다).
     let welcomed = false;
+    let welcomeFailed = false;
     try {
       welcomed = await ensureWelcome(user.id);
     } catch (e) {
+      welcomeFailed = true;
       console.error("[kakao] 웰컴 코인 지급 실패(로그인은 계속):", (e as { message?: string })?.message);
+      await logError({ uid: user.id, tag: "welcome", route: "/api/auth/kakao/callback", message: (e as { message?: string })?.message || "ensureWelcome 실패" });
     }
 
     // ★서명 — AUTH_COOKIE_SECRET이 없으면 로그인을 성립시키지 않는다(잠기는 방향).
@@ -85,6 +89,8 @@ export async function GET(request: NextRequest) {
 
     const dest = new URL("/", request.url);
     if (welcomed) dest.searchParams.set("welcome", String(WELCOME_COINS));
+    // ★지급이 실패해도 로그인 쿠키는 그대로 굽는다(현재 동작 유지) — 사유만 알린다.
+    if (welcomeFailed) dest.searchParams.set("error", "welcome_failed");
     const response = NextResponse.redirect(dest);
 
     // 🩺 진단(2026-08-29) — 쿠키가 실제로 서명돼 구워졌는지. uid만 찍는다(서명·payload 금지).
@@ -101,6 +107,7 @@ export async function GET(request: NextRequest) {
     return response;
   } catch (err) {
     console.error("카카오 로그인 처리 중 오류:", err);
+    await logError({ tag: "auth", route: "/api/auth/kakao/callback", message: (err as { message?: string })?.message || String(err) });
     return NextResponse.redirect(new URL("/?error=server_error", request.url));
   }
 }

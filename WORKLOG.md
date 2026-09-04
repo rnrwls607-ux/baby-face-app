@@ -2843,3 +2843,28 @@ TEST-PHOTOS.md — 36개 테스트 사진 가이드
 - [fixture 분리] insta-kit --fixture 출력을 insta/out/_fixture/{slug}/로 뺐다. 09-03에
   fixture가 발행 대기 중인 ep03 실물 카드를 회색 자리표시로 덮어 재생성해야 했다.
   실행 후 실물 폴더의 파일 수·mtime 불변을 검사해 로그로 남기고, 바뀌면 게이트 FAIL
+
+## 2026-09-04 — 신뢰성 구축: health·errlog·한국어 에러 화면·?error= 표시·Action
+
+- [/api/health] 모듈을 import만 하지 않고 ★실제로 태운다 — sharp는 8×8 PNG를 인코딩해
+  libvips까지 로드(로컬 실측 "png 90B · sharp 0.34.5 · libvips 8.17.3"), redis는 ping 1회,
+  blob은 list 1건, env는 있음/없음만(값 노출 0), 쿠키 서명 키는 길이만. 개별 try/catch+5초 컷이라
+  검사 하나가 터져도 health가 500이 되지 않는다. 전부 ok면 200, 하나라도 실패면 503
+- [★env 필수/선택 분리 — 판단한 것] 13개를 전부 필수로 두면 IAP 미개통(RC_*)·심사용
+  (REVIEW_LOGIN_TOKEN)처럼 "지금 없는 게 정상"인 키 때문에 프로덕션 health가 상시 503이 되고
+  스모크가 늘 FAIL이 되어 경보로서 죽는다. 없으면 실제로 기능이 멎는 8개만 필수로 두고
+  나머지 5개는 상태만 보고한다
+- [errlog] 실패 건만 남긴다 — err:{id} 7일 · errlog:recent 500건 · errlog:{uid} 50건.
+  전부 try/catch 격리라 기록 실패가 응답을 막지 않고, 성공 경로에서는 Redis 명령 0.
+  이번 라운드 적용은 withCoin catch·카카오 콜백(웰컴 실패/server_error)·client-error 3곳뿐 —
+  ★생성 라우트 166개 확산은 다음 라운드(withDailyFree도 아직 미적용)
+- [한국어 에러 화면] error.tsx·global-error.tsx·not-found.tsx 신설. 셋 다 없어서 Next 내장
+  영문("A server error occurred. Reload to try again." — node_modules/next/dist/client/
+  components/builtin/global-error.js)이 그대로 사용자에게 떴다. 이제 마운트 시 번호를 받아
+  화면에 띄우고, 운영자는 /admin/errors 에서 같은 번호로 원인을 본다
+- [★?error= 표시] 카카오 콜백은 이미 5종의 사유 코드를 붙이고 있었는데 ★읽는 코드가 리포에
+  한 군데도 없었다(?welcome=만 처리). 로그인 실패가 무음으로 홈에 튕겨 "눌렀는데 그냥 홈이야"만
+  남았다. ?welcome= 옆에 같은 방식으로 6종 매핑 토스트를 붙였다
+- [smoke 5건 + GitHub Action] health를 1번 검사로 추가(실패 시 어느 검사가 false였는지 detail
+  인용). push(main) 시 sleep 90 후 smoke 실행 — 의존성 설치 없이 Node 내장 fetch만 쓴다.
+  ★배포를 되돌리지는 못한다(이미 나간 뒤) — 커밋 작성자에게 메일이 가는 알림 장치다

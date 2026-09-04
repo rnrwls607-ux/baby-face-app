@@ -22,6 +22,9 @@ const INTERVAL_MS = 15000;
 
 // 각 항목: 무엇을 확인하는가 = why
 const CHECKS = [
+  // ★1번이 핵심이다 — /api/health는 sharp를 import만 하지 않고 실제로 8×8 PNG를 인코딩해
+  //   libvips까지 태운다. 나머지 4건은 "모듈이 로드되는가"만 보지만 이건 "동작하는가"를 본다.
+  { path: "/api/health", status: 200, contentType: "application/json", json: true, why: "sharp 실인코딩·redis ping·blob·env 실검사" },
   { path: "/api/usage", status: 200, contentType: "application/json", why: "sharp 무관 라우트 — 앱 자체가 살아 있는지(대조군)" },
   { path: "/api/schoolsnap", status: 405, why: "aiMark→sharp 경유 생성 라우트 모듈 로드" },
   { path: "/api/idstyle", status: 405, why: "sharp 직접 import 라우트 모듈 로드" },
@@ -43,7 +46,22 @@ async function probe(c) {
     const ct = res.headers.get("content-type") || "";
     const okStatus = res.status === c.status;
     const okCt = !c.contentType || ct.includes(c.contentType);
-    return { ...c, got: res.status, ct, ok: okStatus && okCt };
+    // health는 200이어도 안에서 무엇이 false인지 봐야 한다 — 실패한 검사 이름을 그대로 인용한다.
+    let body = null, okBody = true;
+    if (c.json) {
+      try {
+        body = await res.json();
+        okBody = body?.ok === true;
+        if (!okBody) {
+          const bad = Object.entries(body?.checks || {}).filter(([, v]) => !v?.ok)
+            .map(([k, v]) => `${k}: ${v?.detail ?? "실패"}`);
+          return { ...c, got: res.status, ct, ok: false, note: bad.join(" / ") || "ok:false", body };
+        }
+      } catch (e) {
+        return { ...c, got: res.status, ct, ok: false, note: `JSON 파싱 실패: ${String(e.message).slice(0, 80)}` };
+      }
+    }
+    return { ...c, got: res.status, ct, ok: okStatus && okCt && okBody, body };
   } catch (e) {
     return { ...c, got: "네트워크 실패", ct: String(e.message).slice(0, 60), ok: false };
   }
@@ -71,7 +89,9 @@ for (const r of last) {
   const want = `${r.status}${r.contentType ? " " + r.contentType : ""}`;
   const got = `${r.got}${r.ct ? "  " + r.ct : ""}`;
   console.log(`     ${r.ok ? "PASS" : "★FAIL"}  GET ${r.path.padEnd(18)} 기대 ${want.padEnd(24)} 실측 ${got}`);
-  if (!r.ok) console.log(`             ↳ ${r.why}`);
+  if (!r.ok) console.log(`             ↳ ${r.why}${r.note ? " — " + r.note : ""}`);
+  if (r.ok && r.json && r.body) console.log(`             ↳ commit=${r.body.commit} · ${Object.entries(r.body.checks || {}).map(([k, v]) => k + "=" + (v.ok ? "ok" : "FAIL")).join(" · ")}`);
+  if (r.ok && r.json && r.body?.checks?.sharp) console.log(`             ↳ ${r.body.checks.sharp.detail}`);
 }
 
 const allPass = last.every((r) => r.ok);

@@ -726,6 +726,23 @@ export default function Home() {
       window.history.replaceState(null, "", "/");
     }
   }, []);
+  // 로그인 실패 사유 (?error=코드) → 토스트 1회, 주소 정리. ★코드가 화면에 안 뜨면
+  //   사용자는 "눌렀는데 그냥 홈이야"만 겪는다 — 콜백은 이미 5종을 붙이고 있었는데
+  //   읽는 곳이 한 군데도 없었다(2026-09-03 감사에서 발견).
+  useEffect(() => {
+    const code = new URLSearchParams(window.location.search).get("error");
+    if (!code) return;
+    const MSG: Record<string, string> = {
+      kakao_login_failed: "카카오 로그인이 취소되었거나 실패했어요. 다시 시도해주세요.",
+      token_failed: "로그인 처리 중 문제가 생겼어요. 잠시 후 다시 시도해주세요. (코드 T1)",
+      user_info_failed: "카카오 정보를 받지 못했어요. 동의 화면에서 '동의하고 계속하기'를 눌러주세요. (코드 U1)",
+      auth_not_configured: "서버 설정 문제로 지금은 로그인할 수 없어요. 운영자에게 알려주세요. (코드 A1)",
+      server_error: "일시적인 오류예요. 잠시 후 다시 시도해주세요. (코드 S1)",
+      welcome_failed: "로그인은 완료됐어요. 시작 코인 지급이 잠시 지연됐고, 첫 생성 때 자동으로 채워져요.",
+    };
+    toast(MSG[code] || "문제가 생겼어요. 잠시 후 다시 시도해주세요.");
+    window.history.replaceState(null, "", "/");
+  }, []);
   useEffect(() => {
     fetch("/api/auth/me").then(r => r.json()).then(d => { if (d.loggedIn) setUser(d.user); }).catch(() => {}).finally(() => setUserLoading(false));
   }, []);

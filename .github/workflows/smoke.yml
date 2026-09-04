@@ -1,0 +1,28 @@
+# push 후 프로덕션이 실제로 살아났는지 확인한다.
+#
+# ★왜 필요한가: 빌드 통과가 런타임을 보증하지 않는다. sharp 0.35의 libvips가 Vercel
+#   linux-x64에서 dlopen에 실패해 생성·로그인이 23시간 죽었는데 빌드는 매번 통과했다
+#   (2026-09-02~03). 그래서 배포된 뒤 밖에서 실제로 두드려 본다.
+# ★실패해도 배포를 되돌리지는 못한다(이미 나간 뒤다) — GitHub이 커밋 작성자에게
+#   메일을 보내는 "알림" 장치다. 차단이 필요하면 Vercel Deployment Protection이 따로 필요하다.
+name: smoke
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      # Vercel 배포가 시작되고 끝나기를 기다린다. smoke 자체도 --wait 로 폴링하지만,
+      # 배포 전의 구 버전이 통과해버리면 의미가 없으므로 먼저 90초를 비운다.
+      - name: 배포 대기
+        run: sleep 90
+      # 의존성 설치 없음 — smoke.mjs는 Node 내장 fetch만 쓴다(npm ci 불필요).
+      - name: 스모크
+        run: node scripts/smoke.mjs --wait 600
