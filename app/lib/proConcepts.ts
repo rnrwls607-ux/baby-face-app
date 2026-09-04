@@ -15,6 +15,7 @@ export const PRO_CONCEPTS: string[] = [
   "personalcolor", "monoactor", "fortunecard",
   "poolside", "snowsnap", "profileduo",
   "droneview",
+  "autumnsnap",
 ];
 
 export const isProConcept = (key: string): boolean => PRO_CONCEPTS.includes(key);
