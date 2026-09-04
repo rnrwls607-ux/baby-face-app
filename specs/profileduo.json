@@ -3,6 +3,7 @@
   "name": "베프 프로필 스냅",
   "engine": "pro",
   "inputType": "duo",
+  "glam": 3,
   "prompt": { "source": "route" },
   "duo": { "genders": [["female","female"],["male","female"]] },
   "befores": [

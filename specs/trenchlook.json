@@ -3,6 +3,7 @@
   "name": "트렌치코트 가을 화보",
   "engine": "pro",
   "inputType": "person",
+  "glam": 4,
   "prompt": {
     "source": "route"
   },

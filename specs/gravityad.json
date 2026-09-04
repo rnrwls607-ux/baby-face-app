@@ -3,6 +3,7 @@
   "name": "3D 그래비티 광고컷",
   "engine": "gpt",
   "inputType": "product",
+  "glam": 1,
   "prompt": {
     "source": "route"
   },

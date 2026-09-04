@@ -3,6 +3,7 @@
   "name": "수능 응원 스냅",
   "engine": "pro",
   "inputType": "person",
+  "glam": 4,
   "prompt": {
     "source": "route"
   },

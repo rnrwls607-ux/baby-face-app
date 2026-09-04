@@ -40,6 +40,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import * as pool from "./lib/pool.mjs";
 import { engineRanking, STUDIO, STUDIO_SHORT } from "./lib/engines.mjs";
+import { glamCheck, glamLabel } from "./lib/glam-check.mjs";
 
 // ★경로에 공백이 있으면(이 PC: "Hello G.BOX") import.meta.url이 %20으로 인코딩된다.
 //   fileURLToPath로 반드시 디코딩할 것 — 안 하면 mkdir·readFileSync가 통째로 죽는다.
@@ -459,6 +460,7 @@ function buildChecklist(picked) {
   L.push("");
   for (const r of engineRanking(spec)) L.push(`${r.rank}순위 **${r.engine}** (${r.studio}): ${r.why}`);
   L.push(`- 입력 종류: ${spec.inputType}`);
+  L.push(`- ${glamLabel(spec.glam)} · glam-check PASS(코어 정본 문자 일치)`);
   L.push(`- 저장 위치: \`${path.relative(ROOT, outDir).split(path.sep).join("/")}\``);
   L.push(`- 프롬프트 출처: ${spec.prompt?.source === "file" ? spec.prompt.path : `app/api/${spec.key}/route.ts (VM 재추출)`} · md5 \`${md5(prompts[0].text).slice(0, 8)}\``);
   L.push("");
@@ -517,7 +519,7 @@ function buildChecklist(picked) {
 // ── main ────────────────────────────────────────────────────────────────────
 const args = parseArgs(process.argv.slice(2));
 const spec = JSON.parse(rd(path.join(ROOT, args.spec)));
-for (const f of ["key", "engine", "inputType", "befores", "afters"]) {
+for (const f of ["key", "engine", "inputType", "glam", "befores", "afters"]) {
   if (spec[f] === undefined) fail(`spec에 "${f}"가 없다`);
 }
 if (!PRICE[spec.engine]) fail(`모르는 engine: ${spec.engine} (pro|flash|gpt)`);
@@ -526,11 +528,17 @@ loadEnv();
 const outDir = path.join(ROOT, args.out, spec.key);
 const pick = (n) => !args.only || args.only.includes(n);
 
-console.log(`\n■ ${spec.key} — ${spec.name || ""}  [engine=${spec.engine} · inputType=${spec.inputType}]`);
+console.log(`\n■ ${spec.key} — ${spec.name || ""}  [engine=${spec.engine} · inputType=${spec.inputType} · ${glamLabel(spec.glam)}]`);
 console.log(`  산출 위치: ${path.relative(ROOT, outDir).split(path.sep).join("/")}`);
 
 // 1) 프롬프트 확보 — 손으로 옮긴 구간 0
 const prompts = resolvePrompts(spec);
+// ★외모 코어 잠금 — 수동·API 모두, 어떤 파일도 쓰기 전에. 실패면 진행 금지(플레이북 §1-4·§5 5단계표).
+for (const p of prompts) {
+  const gc = glamCheck(p.text, { glam: spec.glam, inputType: spec.inputType });
+  console.log(gc.report());
+  if (!gc.ok) fail(`glam-check 실패(${p.label}) — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것`);
+}
 if (args.manual) { await runManual(); process.exit(0); }
 console.log(`\n  ── 프롬프트 (${spec.prompt?.source === "file" ? "파일" : "route 재추출"})`);
 for (const p of prompts) console.log(`     ${p.label.padEnd(16)} ${String(p.text.length).padStart(5)}자 · md5 ${md5(p.text).slice(0, 8)}`);

@@ -3,6 +3,7 @@
   "name": "드론뷰 여행샷",
   "engine": "pro",
   "inputType": "person",
+  "glam": 1,
   "prompt": {
     "source": "route"
   },

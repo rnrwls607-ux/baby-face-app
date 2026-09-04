@@ -33,6 +33,7 @@
 ## 2. 파이프라인 (spec 2파일 → 출시)
 specs/{키}.json + specs/{키}.prompt.txt 작성
 → node scripts/harvest.mjs --spec specs/{키}.json   ★수동 기본(외부 호출 0): 비포를 풀에서 깔고 체크리스트를 낸다
+   ★실행 전 glam-check(scripts/lib/glam-check.mjs)가 프롬프트를 코어 정본(§5 5단계표)과 문자 대조한다 — 실패면 아무 파일도 안 쓰고 멈춘다. route 스테이지도 같은 검사를 게이트로 가진다.
 → [MJ] 체크리스트대로 애프터 4장 생성 → 지정 파일명으로 저장
    ★체크리스트 맨 위에 엔진 순위 3줄이 실린다(scripts/lib/engines.mjs) — 1순위 스튜디오에서
    먼저 찍어보고 "별로면 2순위"로 내려간다. 판정 근거는 §4 엔진 지도 + 비용(flash<GPT<Pro).
@@ -51,7 +52,7 @@ specs/{키}.json + specs/{키}.prompt.txt 작성
 - 엔진 A/B가 필요하면 {키}-flash.json 사본(engine만 다름) + --out examples/ba/_ab/{키}-flash. 비포는 재사용(현재 --src 없음 → 수동 복사).
 
 ## 3. spec 스키마 — 필수 칸 (하나라도 비면 작성 단계에서 채운다, 실행 후 발견 금지)
-key · name · engine(pro|gpt|flash) · inputType(person|product|food|pet|duo) · prompt{source,path} · befores[3](file, prompt) · afters{count:4, map:[1,2,3,1]} · verdicts[4]
+key · name · engine(pro|gpt|flash) · inputType(person|product|food|pet|duo) · ★glam(외모 1~5단계, §5 5단계표) · prompt{source,path} · befores[3](file, prompt) · afters{count:4, map:[1,2,3,1]} · verdicts[4]
 route: template("auto"|키) · chipFrom(기존 컨셉 키) · emoji · color · subtitle · description · audience · duo · ★tplName(템플릿 한글명, 예 cheerglam="치어리더") · ★replace([["📣","🚁"]] 템플릿 이모지·문구 잔재 전역 치환)
 ba: pairs [[1,1],[2,2],[3,3]] (duo: [[[1,2],1],[[3,4],4]])
 detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3],image} · pain[3] · solution · pairs[2]{before,after,caption} · points[3]{title,body,chips[3],image|images[2],imageCaption} · ★price{header,offline,mospic} · guide[3] · privacy · aiNotice · cta{copy,button}
@@ -66,6 +67,13 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 
 ## 5. 프롬프트 작성 규칙
 - 티어1 조립 순서: 마스터 TIER 1 블록 문자 그대로 → {컨셉명} 채움 → {SCENE} 신작(부록 A: 조명 역전판 Light 줄 필수, 모자 규칙, 글자 봉쇄) → POSE 1~2줄 → FRAMING/CAMERA/SELF-CHECK/AVOID/Output.
+- ★외모 5단계표(spec.glam — 체크리스트·완료 보고에 "외모 {n}단계"로 자동 표기):
+  1 자연 = 보정 없음·톤 변환 계열(flash·사물·음식·펫·드론뷰) — 코어 검사 없음(모순·금지어만)
+  2 = v1 코어(digicam 승인본) · 3 = v2 코어(cinesnap 승인본) · 4 = v3 코어(snowsnap 승인본) · 5 = v3+조명·씬 교체 후보(승인본 없음, 검사는 v3 코어)
+  ★코어 정본 = scripts/lib/glam-core/{v1,v2,v3}-core.txt — route에서 VM으로 뽑은 승인본에서 슬롯만 마커로 바꾼 것(손으로 옮긴 글자 0).
+  가변 슬롯은 {{컨셉명}}·{{헤어꼬리}}·{{SCENE}}·{{POSE}}·{{*}}(장면 전용 SELF-CHECK/AVOID 문항 자리)뿐. 그 외 구간은 공백 정규화 후 순서대로 문자 일치해야 한다.
+  ★Light 줄 뷰티 절은 v3 필수 문자열(glam-check.mjs LIGHT_BEAUTY_V3, 원형 snowsnap 변형 함께 허용). 따뜻한 광 격리 처방(부록 A)은 이 절 뒤에 덧붙이는 형태만 — 대체 금지.
+  정본을 바꾸려면 코어 파일을 고치고 md5를 README에 기록한다(MJ 승인 후). 검사기가 아니라 정본이 진실원이다.
 - ★Pro 글램 사다리(승인 변형, 마스터 부록 D 후보): 
   v1 = 마스터 원판(10%, INTENSITY 없음) — flash·일부 Pro(digicam 승인)
   v2 = + RETOUCH INTENSITY 절(CONTRACT 직후) + SMALL FACE "about 15%" + AIM HIGH 줄 — airportsnap·cinesnap·schoolsnap 승인

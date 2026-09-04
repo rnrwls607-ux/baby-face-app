@@ -29,6 +29,7 @@ import { pickTemplate, checkPromptText, buildRoute, buildPage, writeRoute, write
 import { extractPrompt, evalConst } from "./lib/prompt.mjs";
 import * as G from "./lib/git.mjs";
 import { prepend } from "./lib/worklog.mjs";
+import { glamCheck, glamLabel } from "./lib/glam-check.mjs";
 
 const sharp = need("sharp", "npm i -D sharp");
 
@@ -51,6 +52,7 @@ const args = { spec: null, stage: null, run: false, push: true, commit: true };
 
 const spec = JSON.parse(readText(args.spec));
 const key = spec.key;
+if (!Number.isInteger(spec.glam) || spec.glam < 1 || spec.glam > 5) fail(`spec에 "glam"(외모 1~5단계)이 없거나 범위 밖이다: ${JSON.stringify(spec.glam)}`);
 const specPath = args.spec.split(path.sep).join("/");
 
 // ── 게이트 보고 틀 ───────────────────────────────────────────────────────────
@@ -69,7 +71,7 @@ function build() {
   return { ok: !!line, line: (line || "(Compiled successfully 줄 없음)").trim(), sec: ((Date.now() - t0) / 1000).toFixed(0) };
 }
 
-console.log(`\n■ ${key} — ${spec.name || ""}   [stage=${args.stage} · ${args.run ? "RUN" : "dry-run"}]`);
+console.log(`\n■ ${key} — ${spec.name || ""}   [stage=${args.stage} · ${args.run ? "RUN" : "dry-run"} · ${glamLabel(spec.glam)}]`);
 
 // ════════════════════════════════════════════════════════════════════════════
 // stage: route — 4583041 공정
@@ -94,6 +96,11 @@ async function stageRoute() {
   const promptText = checkPromptText(readText(spec.prompt.path), key);
   const wantMd5 = md5(promptText);
   console.log(`  프롬프트: ${spec.prompt.path} · ${promptText.length}자 · md5 ${wantMd5.slice(0, 8)}`);
+
+  // ★외모 코어 잠금 — 파일을 한 글자도 쓰기 전에. 실패면 진행 금지.
+  const gc = glamCheck(promptText, { glam: spec.glam, inputType: spec.inputType });
+  console.log(gc.report());
+  if (!gc.ok) fail(`glam-check 실패 — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것`);
 
   // 템플릿 원본 md5 — 나중에 무접촉 확인용
   const tplMd5 = {
@@ -163,6 +170,7 @@ async function stageRoute() {
   } catch (e) { gate("프롬프트 재추출 md5", false, `★${String(e.message).slice(0, 90)}`); }
 
   gate("템플릿 무접촉", md5(readText(`app/api/${tpl.tpl}/route.ts`)) === tplMd5.route && md5(readText(`app/${tpl.tpl}/page.tsx`)) === tplMd5.page, tpl.tpl);
+  gate("glam-check", gc.ok, `${glamLabel(spec.glam)}${gc.level ? ` · 코어 ${gc.level} 문자 일치` : " · 코어 검사 없음"}`);
 
   const changed = G.trackedChanges().map((l) => l.slice(3));
   const expect = ["app/lib/concepts.ts", "app/page.tsx", ...(spec.engine === "pro" ? ["app/lib/proConcepts.ts"] : [])];
@@ -192,6 +200,7 @@ async function stageRoute() {
   prepend(`${today()} — 신규 컨셉 신설: ${key} (${spec.name})`, [
     `[스테이지] new-concept.mjs --stage route · 템플릿 ${tpl.combo} → ${tpl.tpl}`,
     `[프롬프트] ${spec.prompt.path} → route 삽입 · md5 ${wantMd5.slice(0, 8)} · 재추출 일치`,
+    `[외모] ${glamLabel(spec.glam)} · glam-check PASS${gc.level ? `(코어 ${gc.level})` : ""}`,
     `[배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)`,
     `[게이트] ${gates.map((g) => g.name).join(" · ")} 전항 PASS`,
   ]);
