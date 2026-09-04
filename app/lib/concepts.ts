@@ -1538,6 +1538,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🧺", accent: "#6BA36B" },
     ],
     start: "picnicsnap",
+    detailImage: "/details/picnicsnap.webp",
     inputRule: "solo_face",
   },
   halloween: {
