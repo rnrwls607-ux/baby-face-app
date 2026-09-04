@@ -10,14 +10,17 @@
   "befores": [
     {
       "file": "droneview_비포1.png",
+      "pool": "custom",
       "prompt": "A realistic tourist photo of a fictional Korean woman in her late 20s standing in front of a famous European landmark (a tall iron lattice tower in a large open plaza), full body visible, photographed by a friend at ground level. She wears a beige trench coat and white sneakers, long dark hair. Ordinary daylight, casual travel-photo framing with the landmark behind her. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
     },
     {
       "file": "droneview_비포2.png",
+      "pool": "custom",
       "prompt": "A realistic tourist photo of a fictional Korean woman in her mid-20s standing on a seaside promenade in a Mediterranean-style town with white buildings and blue sea behind her, full body visible, photographed by a friend at ground level. She wears a light summer dress and a small crossbody bag, medium-length dark hair. Bright daylight, casual travel-photo framing. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
     },
     {
       "file": "droneview_비포3.png",
+      "pool": "custom",
       "prompt": "A realistic tourist photo of a fictional Korean man in his late 20s standing in front of a large traditional Asian temple gate in a wide courtyard, full body visible, photographed by a friend at ground level. He wears a navy jacket, jeans and sneakers, short dark hair. Ordinary daylight, casual travel-photo framing. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark."
     }
   ],

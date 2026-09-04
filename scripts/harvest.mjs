@@ -39,6 +39,7 @@ import crypto from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import * as pool from "./lib/pool.mjs";
+import { engineRanking, STUDIO } from "./lib/engines.mjs";
 
 // ★경로에 공백이 있으면(이 PC: "Hello G.BOX") import.meta.url이 %20으로 인코딩된다.
 //   fileURLToPath로 반드시 디코딩할 것 — 안 하면 mkdir·readFileSync가 통째로 죽는다.
@@ -358,12 +359,6 @@ async function buildSheet(dir, key, rows, label) {
 // 검증 비용 0 경로. 비포는 풀에서 복사하고, 애프터는 MJ가 스튜디오(웹 UI)에서 만든다.
 // 이 스크립트는 ①비포를 깔아주고 ②무엇을 어디서 어떻게 만들지 체크리스트로 적어주고
 // ③파일이 다 들어오면 시트를 만들어 준다. 외부 호출은 한 건도 하지 않는다.
-const STUDIO = {
-  pro: "Gemini 3 Pro Image (스튜디오)",
-  flash: "Nano Banana 2",
-  gpt: "웹 ChatGPT",
-};
-
 async function runManual() {
   fs.mkdirSync(outDir, { recursive: true });
   const st = pool.stats();
@@ -430,6 +425,10 @@ function buildChecklist(picked) {
   L.push(`# ${spec.key} 수확 체크리스트 — ${spec.name || ""}`);
   L.push("");
   L.push(`- 엔진: **${spec.engine}** → 스튜디오 **${STUDIO[spec.engine]}**`);
+  L.push("");
+  L.push("## 엔진 순위 — 1순위부터 찍어보고, 별로면 다음으로");
+  L.push("");
+  for (const r of engineRanking(spec)) L.push(`${r.rank}순위 **${r.engine}** (${r.studio}): ${r.why}`);
   L.push(`- 입력 종류: ${spec.inputType}`);
   L.push(`- 저장 위치: \`${path.relative(ROOT, outDir).split(path.sep).join("/")}\``);
   L.push(`- 프롬프트 출처: ${spec.prompt?.source === "file" ? spec.prompt.path : `app/api/${spec.key}/route.ts (VM 재추출)`} · md5 \`${md5(prompts[0].text).slice(0, 8)}\``);

@@ -1,13 +1,17 @@
-# MOSPIC 컨셉 공장 플레이북 (v1, 2026-09-03)
-이 파일은 컨셉 추가·검증·출시 작업의 두뇌다. 컨셉 관련 요청을 받으면 먼저 이 파일 전문을 읽는다. MJ는 비개발자 솔로 창업자이며, 아래 4관문에서만 판단한다. 그 외 모든 단계는 사람 확인 없이 자율 진행한다.
+# MOSPIC 컨셉 공장 플레이북 (v2, 2026-09-04)
+이 파일은 컨셉 추가·검증·출시 작업의 두뇌다. 컨셉 관련 요청을 받으면 먼저 이 파일 전문을 읽는다. MJ는 비개발자 솔로 창업자이며, 아래 ★2관문에서만 판단한다. 그 외 모든 단계는 사람 확인 없이 자율 진행한다.
 
 ## 0. 역할과 관문
 - Claude Code = 설계자 + 실행자. spec·프롬프트 작성, 수확, 판정 재료 정리, route·출시·BA 커밋 전부.
-- MJ 관문 4개 — 여기서만 멈추고 묻는다:
+- ★MJ 관문 2개 — 여기서만 멈추고 묻는다(v2에서 4개 → 2개로 줄였다):
   G1 채택: 후보 제안 후 "진행/보류/탈락"
   G2 실측 판정: 컨택트 시트(examples/ba/{키}/{키}_시트.png) 경로 + 판정표 제시 → MJ 어휘로 답
-  G3 상세 승인: public/details/{키}.png 축소 미리보기 + 썸네일 후보 → "OK/카피 수정/썸네일 N"
-  G4 실기기: 출시 후 MJ가 앱에서 확인 (안내만)
+- ★G3(상세 승인) 폐지 — G2를 통과하면 상세·썸네일·출시·BA까지 멈추지 않고 자동 진행한다.
+  완료 보고에 상세 축소 미리보기를 첨부하고, MJ가 지적하면 ★그 부분만 재렌더한다.
+  (상세는 spec의 detail 블록에서 나오므로 카피 한 줄만 고쳐 다시 뽑는 비용이 작다.)
+- ★G4(실기기) 폐지 — 라이브 route가 실제로 도는지는 자동 점검으로 대신한다.
+  ※2026-09-04 실사 결과 "코인 차감 없이 안전하게 자동 호출할 방법"이 아직 없다(§9 참고).
+    그때까지는 launch 완료 보고에 딥링크를 실어 MJ가 원할 때 1회 눌러보는 것으로 둔다.
 - MJ 판정 어휘: "좋아/통과/OK"=승인 → 다음 단계 자동 진행 / "괜찮아 좀 부족해"·"외모 더"=한 수 더(§6 처방) / "별론데"=접근 교체 / "버리자"=탈락 확정 / "나중에"=보류(큐 저장, 재론 금지) / "다음꺼"=현재 건 보류하고 방향 전환.
 - 관문 외에는 절대 묻지 않는다. 애매하면 합리적 기본값을 택하고 보고에 "판단한 것" 한 줄로 남긴다.
 
@@ -29,15 +33,17 @@
 ## 2. 파이프라인 (spec 2파일 → 출시)
 specs/{키}.json + specs/{키}.prompt.txt 작성
 → node scripts/harvest.mjs --spec specs/{키}.json   ★수동 기본(외부 호출 0): 비포를 풀에서 깔고 체크리스트를 낸다
-→ [MJ] 체크리스트대로 스튜디오(Pro=Gemini 3 Pro Image · GPT=웹 ChatGPT · flash=Nano Banana 2)에서 애프터 4장 생성 → 지정 파일명으로 저장
+→ [MJ] 체크리스트대로 애프터 4장 생성 → 지정 파일명으로 저장
+   ★체크리스트 맨 위에 엔진 순위 3줄이 실린다(scripts/lib/engines.mjs) — 1순위 스튜디오에서
+   먼저 찍어보고 "별로면 2순위"로 내려간다. 판정 근거는 §4 엔진 지도 + 비용(flash<GPT<Pro).
+   1순위는 언제나 spec의 engine이다 — 순위표가 spec의 결정을 뒤집지 않는다.
 → 같은 명령 재실행 → 파일 감지 → 컨택트 시트 + 판정표 골격
    (API 수확은 옵션: --dry-run 으로 비용 계획 확인 후 --run --max-cost 3000. 비용이 급할 때만)
 → [G2] 시트 경로 + 판정표 제시, 멈춤
 → 통과: node scripts/new-concept.mjs --spec specs/{키}.json --stage route --run   (자동 커밋·푸시, 홈 잠금)
 → node scripts/detail-page.mjs --spec specs/{키}.json --thumb N   (N = 판정표 최고 컷)
-→ [G3] 미리보기 제시, 멈춤
-→ OK: --stage launch --run → --stage ba --run   (각 자동 커밋·푸시)
-→ [G4] 실기기 안내 + 완료 보고
+→ ★멈추지 않는다: --stage launch --run → --stage ba --run   (각 자동 커밋·푸시)
+→ 완료 보고 — 상세 축소 미리보기 + 딥링크 첨부. MJ가 지적하면 그 부분만 재렌더 후 자산 갱신.
 - 한 수 더(G2): §6 처방으로 prompt.txt v+1(문자 수준 삽입, 재포맷 금지) → 기존 애프터를 examples/ba/{키}/_v{n}/로 이동 → harvest --afters --run --force → 재판정. 3회 연속 미달이면 보류 제안.
 - 여러 컨셉 배치: 3~4종 단위. spec 전부 먼저 쓰고 harvest를 연속 실행한 뒤 G2를 한 번에 묻는다(시트 N장 + 판정표 1개).
 - 엔진 A/B가 필요하면 {키}-flash.json 사본(engine만 다름) + --out examples/ba/_ab/{키}-flash. 비포는 재사용(현재 --src 없음 → 수동 복사).
@@ -76,7 +82,15 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
   SELF-CHECK에 "Is the enhancement CLEARLY visible … A timid result is a failure." / AVOID에 "A timid, under-retouched result…" 짝으로 추가.
 - 따뜻한 광(골든아워·촛불·앰버) 장면: Light 줄을 "얼굴엔 bright CLEAN neutral-toned key light, 따뜻한 광은 BACKGROUND로 격하 + ★must NEVER tint the face yellow" 형태로. 겨울·수영장은 "pale/gray·glare-flattened 금지".
 - 2인: 마스터 부록 B(ROLL CALL·per-person·ANTI-CLONE) 문자 그대로. 성별 문구 "Person 1 is a woman."만 파라미터.
-- ★인물 비포는 풀 재사용이 기본이다(examples/ba/_pool, 219장 · POOL.md). 신규 생성은 사물·음식·펫·특수 장면(랜드마크 등)만 — spec의 befores[].pool 에 "custom"을 주면 체크리스트가 "MJ가 ChatGPT에서 생성" 항목으로 뽑아준다. 힌트는 "female"/"male"/"female-glasses"/"male-glasses", 인물인데 힌트가 없으면 기본 [female, female-glasses, male]. 풀은 미사용분을 먼저 배정한다(USED_POOL.txt로 추적).
+- ★비포 조달 규칙(v2에서 확정):
+  · 인물(person·duo) = examples/ba/_pool 219장에서 ★자동 배정. 힌트는 "female"/"male"/
+    "female-glasses"/"male-glasses", 없으면 기본 [female, female-glasses, male].
+    미사용분을 먼저 준다(USED_POOL.txt로 추적) — 컨셉마다 다른 얼굴이 나온다.
+  · 사물·음식·펫·랜드마크 = spec의 befores[].pool 에 "custom" → 체크리스트가
+    ★"MJ가 ChatGPT에서 생성" 항목 + 비포 프롬프트 전문을 실어준다.
+    표준 문형은 아래 줄 그대로: 가상 인물·사물 명시 · 글자 0 · 세로 3:4 · 필터 없음.
+  · ★API 비포 생성(harvest --befores --run)은 MJ가 명시적으로 요청할 때만 쓴다.
+    기본 경로에서는 돈이 나가지 않는다.
 - 비포 프롬프트 표준: "A casual smartphone selfie of a fictional Korean {woman/man} in {her/his} {나이}, {한 줄 인상}, {머리}, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." 사물은 라벨을 추상 도형으로(글자 0). 여성 2·남성 1이 기본, 안경 모델 1은 정체성 단서 판정용으로 권장.
 - 상세 카피 규칙(detail 필드): 서브카피 1줄 / 말풍선 3개(타겟 언어, 이모지 1) / 해결 선언 "MOSPIC {컨셉} — 사진 한 장이면, …" / 대비 캡션 "A가 → B로" / POINT 1 풀세팅·2 "그래도 나는 나"·3 용도 확장(이미지 2장) / 가격 offline은 실제 시세 구체적, mospic은 "합리적인 가격 · 약 1분 · 사진 한 장으로" / 가이드 3 / AI 고지에 컨셉 고유 면책(재미·자체 디자인·실물 아님) / CTA "오늘, …" + "{컨셉} 만들기". 소요시간 "약 1분", "커피 한 잔 값" 금지.
 
@@ -97,11 +111,23 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 - 탈락·보류 목록(재론 금지): oldmoney·marathon·petid·boxtoy 탈락 / chibisticker 보류 / droneview 진행 중.
 
 ## 8. 보고 형식
+- ★이모지 표기 — 모든 보고를 이 표기로 쓴다. MJ가 훑어보고 "내가 할 일"만 골라낼 수 있게 한다.
+  📖 읽기(배경·설명) / ▶ MJ 할 일 / 🎯 MJ 결정 / ⚠️ 중요 / 💡 추천 / 🤖 자동 완료 / 🕒 나중
 - 관문 보고: 시트 경로·판정표(컷별 3~4항목)·비용·"내가 판단한 것" 1줄. 그 외 세부는 WORKLOG.
 - 커밋 보고: 게이트 표 + diff 목록 + 해시. 배치 완결 시 WORKLOG 최상단 총결산(scripts/lib/worklog).
 - 사고는 원인·조치·재발 방지 3줄로 기록. 자기보고 게이트 금지 — 실행 검사만.
 
 ## 9. 백로그 (파이프라인)
+★라이브 점검 자동화 — 2026-09-04 인증 실사 결과 "만들지 않음"으로 결론:
+  · 세션 발급 경로 3개뿐. kakao/callback=OAuth 왕복 필요(스크립트 불가) /
+    dev-login=NODE_ENV production이면 차단 / review-login=가능하나 ★uid가 "review9001" 고정.
+  · 관리자 uid 4920083346으로 세션을 만드는 경로는 ★코드에 없다.
+  · review-login을 쓰면 ①스토어 심사용 백도어 토큰을 영구히 켜둬야 하고(설계 의도는 심사 후 삭제)
+    ②토큰이 로컬 파일로 한 벌 더 복사되며 ③차감 대상이 MJ가 아니라 review9001(웰컴 3코인)이라
+    ★컨셉 2개째부터 402로 막힌다.
+  · 대안(권장): /api/admin/live-check 신설 — adminGate 통과 후 서버 내부에서 generate 함수를
+    직접 호출(withCoin 우회 = 코인 차감 0). MJ가 브라우저에서 버튼 1회. app/ 수정이 필요해
+    이번 범위 밖이라 제안만 남긴다.
 harvest: --src(비포 재사용 경로) · --force 범위를 스테이지별로 · VM 평가기 lib/prompt.mjs로 통합 / 4호 qc 자동 필터(글자·얼굴 유사도·인원수) / 기존 상세 1080 재생성(spec 채우면 detail-page로) / airportsnap 애프터3=썸네일 중복(무해)
 ★재출시(refresh) 3건 — 2026-09-03 droneview v6에서 드러남:
 1. new-concept에 --stage refresh 신설(프롬프트 교체 + 상세·webp·BA 자산 갱신). 지금은 launch·ba가 멱등이라 우회해야 하고, 우회 절차가 문서에만 있다.
