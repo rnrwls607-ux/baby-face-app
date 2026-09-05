@@ -1,0 +1,65 @@
+{
+  "key": "partysnap",
+  "name": "홀리데이 파티 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "glam": 5,
+  "prompt": { "source": "file", "path": "specs/partysnap.prompt.txt" },
+  "befores": [
+    { "file": "partysnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s, friendly and natural, shoulder-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "partysnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s wearing thin-rimmed glasses, calm expression, long black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "partysnap_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his 30s, easygoing expression, short black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "cheerglam",
+    "chipFrom": "xmas",
+    "emoji": "🥂",
+    "color": "#B8892E",
+    "subtitle": "연말 파티, 오늘 밤의 주인공",
+    "description": "글리터 드레스·다크 포멀에 샴페인 조명 보케까지. 셀카 한 장이 호텔 라운지 연말 파티 화보가 됩니다.",
+    "audience": "여성·남성 모두 이용할 수 있어요",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "🥂"], ["치어리더", "홀리데이 파티 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#B8892E", "bg": "#14121A", "name": "홀리데이 파티 스냅" },
+    "hero": {
+      "sub": "올해 마지막 밤, 가장 빛나는 얼굴로",
+      "tags": ["#연말파티", "#글리터드레스", "#샴페인보케"],
+      "image": "partysnap_애프터1.png"
+    },
+    "pain": [
+      "🥂 연말 모임 사진, 조명 때문에 얼굴이 노랗게 나와요",
+      "👗 파티룩은 입고 싶은데 찍어줄 사람이 없어요",
+      "📱 프로필 바꿀 연말 감성 사진이 한 장도 없어요"
+    ],
+    "solution": "MOSPIC 홀리데이 파티 스냅 — 사진 한 장이면, 호텔 라운지 연말 파티의 주인공 화보가 됩니다.",
+    "pairs": [
+      { "before": "partysnap_비포1.png", "after": "partysnap_애프터1.png", "caption": "평범한 실내 셀카가 → 글리터 드레스 파티 화보로" },
+      { "before": "partysnap_비포3.png", "after": "partysnap_애프터3.png", "caption": "대충 찍은 셀카가 → 다크 포멀 라운지 스냅으로" }
+    ],
+    "points": [
+      { "title": "드레스·조명·보케까지 풀세팅", "body": "글리터 드레스 또는 다크 포멀 수트, 샴페인 조명 보케가 깔린 라운지 배경, 스튜디오 뷰티 조명까지 한 번에 세팅됩니다.", "chips": ["글리터 드레스", "다크 포멀", "골드 보케"], "image": "partysnap_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "파티 조명은 배경에만 두고, 얼굴은 깨끗하고 밝은 키라이트로 따로 찍은 것처럼. 친구가 보면 바로 알아보는 내 얼굴, 가장 예쁜 버전으로.", "chips": ["얼굴 신원 유지", "노란 조명 차단", "안경 그대로"], "image": "partysnap_애프터1.png" },
+      { "title": "연말 프로필부터 초대장까지", "body": "인스타 연말 결산, 카톡 프로필, 송년회 초대 이미지까지. 한 장으로 12월 전체를 채워보세요.", "chips": ["연말 프로필", "송년회", "인스타 결산"], "images": ["partysnap_애프터3.png", "partysnap_애프터4.png"], "imageCaption": "같은 사람, 다른 파티룩 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "연말 파티 출장 스냅 1시간 15만~30만 원 + 파티 드레스 대여 5만~10만 원",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 의상·배경은 MOSPIC 자체 디자인이며 실제 파티 장소나 실물 드레스가 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 올해 가장 빛나는 얼굴을 남겨요", "button": "홀리데이 파티 스냅 만들기" }
+  }
+}

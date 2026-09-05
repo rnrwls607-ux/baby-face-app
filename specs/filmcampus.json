@@ -1,0 +1,65 @@
+{
+  "key": "filmcampus",
+  "name": "필름 캠퍼스 스냅",
+  "engine": "flash",
+  "inputType": "person",
+  "glam": 4,
+  "prompt": { "source": "file", "path": "specs/filmcampus.prompt.txt" },
+  "befores": [
+    { "file": "filmcampus_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her early 20s, soft natural expression, long dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "filmcampus_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s wearing thin metal glasses, quiet expression, medium-length black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "filmcampus_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his early 20s, calm expression, short black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "age",
+    "chipFrom": "digicam",
+    "emoji": "🎞️",
+    "color": "#B5714A",
+    "subtitle": "90년대 필름 사진관 감성, 캠퍼스에서",
+    "description": "그레인과 빛바랜 필름 톤은 사진 전체에, 얼굴은 깨끗하게. 90년대 캠퍼스룩으로 찍은 필름 사진관 스냅이 됩니다.",
+    "audience": "여성·남성 모두 이용할 수 있어요",
+    "duo": false,
+    "tplName": "노년·베이비 변환",
+    "replace": [["👵", "🎞️"], ["노년·베이비 변환", "필름 캠퍼스 스냅"], ["노년 변환", "필름 캠퍼스 스냅"], ["베이비 변환", "필름 캠퍼스 스냅"], ["노년의 나", "필름 캠퍼스 스냅"], ["노년 모습 보기", "필름 캠퍼스 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#B5714A", "bg": "#F4EDE3", "name": "필름 캠퍼스 스냅" },
+    "hero": {
+      "sub": "우리 부모님 대학 시절 앨범 속, 그 필름 감성 그대로",
+      "tags": ["#필름사진", "#90년대감성", "#캠퍼스룩"],
+      "image": "filmcampus_애프터1.png"
+    },
+    "pain": [
+      "🎞️ 필름 카메라 감성은 좋은데 카메라도 현상도 너무 번거로워요",
+      "📼 디카·y2k는 많이 봤고, 좀 더 따뜻한 복고 사진이 갖고 싶어요",
+      "🏫 캠퍼스에서 찍은 것 같은 자연스러운 사진 한 장이 없어요"
+    ],
+    "solution": "MOSPIC 필름 캠퍼스 스냅 — 사진 한 장이면, 90년대 필름 사진관에서 뽑은 캠퍼스 스냅이 됩니다.",
+    "pairs": [
+      { "before": "filmcampus_비포1.png", "after": "filmcampus_애프터1.png", "caption": "폰 셀카가 → 빛바랜 필름 톤 캠퍼스 스냅으로" },
+      { "before": "filmcampus_비포3.png", "after": "filmcampus_애프터3.png", "caption": "평범한 셀카가 → 90년대 앨범 속 한 장으로" }
+    ],
+    "points": [
+      { "title": "필름 톤·캠퍼스룩·배경 풀세팅", "body": "35mm 필름 그레인과 살짝 바랜 따뜻한 색감, 90년대 감성 캠퍼스룩, 벽돌 건물과 은행나무 길 배경까지 한 번에 세팅됩니다.", "chips": ["35mm 그레인", "빛바랜 톤", "캠퍼스 배경"], "image": "filmcampus_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "그레인과 바랜 색은 사진 전체 분위기로만. 얼굴은 깨끗하고 밝게, 헤어는 지금의 트렌디한 스타일 그대로 — 옛 사진 같은데 얼굴은 딱 나예요.", "chips": ["얼굴 깨끗 유지", "얼굴 신원 유지", "안경 그대로"], "image": "filmcampus_애프터1.png" },
+      { "title": "프로필부터 감성 피드까지", "body": "카톡 프로필, 인스타 필름 감성 피드, 친구에게 보내는 '우리 대학 시절' 컨셉 사진까지. 계절 상관없이 쓰는 복고 한 장.", "chips": ["감성 프로필", "필름 피드", "친구 공유"], "images": ["filmcampus_애프터3.png", "filmcampus_애프터4.png"], "imageCaption": "같은 사람, 다른 캠퍼스 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "필름 컨셉 사진관 촬영 8만~15만 원 + 필름 현상·스캔 1만 5천~2만 원",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 의상·배경·필름 톤은 MOSPIC 자체 디자인이며 실제 대학이나 실물 필름 사진이 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 앨범 속 한 장 같은 나를 남겨요", "button": "필름 캠퍼스 스냅 만들기" }
+  }
+}

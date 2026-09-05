@@ -1,0 +1,65 @@
+{
+  "key": "skisnap",
+  "name": "스키장 겨울 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "glam": 5,
+  "prompt": { "source": "file", "path": "specs/skisnap.prompt.txt" },
+  "befores": [
+    { "file": "skisnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s, bright natural expression, medium-length dark brown hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "skisnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 30s wearing round glasses, gentle expression, shoulder-length black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
+    { "file": "skisnap_비포3.png", "pool": "male", "prompt": "A casual smartphone selfie of a fictional Korean man in his 20s, relaxed expression, short dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "cheerglam",
+    "chipFrom": "snowsnap",
+    "emoji": "⛷️",
+    "color": "#3B7DD8",
+    "subtitle": "설산 위, 겨울 인생샷",
+    "description": "패딩·스키웨어에 고글은 이마 위로. 눈부신 설산 배경에서도 얼굴은 밝고 선명한 스키장 화보로 바꿔드려요.",
+    "audience": "여성·남성 모두 이용할 수 있어요",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "⛷️"], ["치어리더", "스키장 겨울 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#3B7DD8", "bg": "#EEF4FB", "name": "스키장 겨울 스냅" },
+    "hero": {
+      "sub": "리프트 안 타도, 설산 인생샷은 남길 수 있어요",
+      "tags": ["#스키장스냅", "#설산화보", "#겨울프로필"],
+      "image": "skisnap_애프터1.png"
+    },
+    "pain": [
+      "🎿 스키장 가면 눈 반사 때문에 얼굴이 하얗게 날아가요",
+      "🥶 고글·헬멧 쓰면 누군지도 모르게 나와요",
+      "📸 겨울 시즌 프로필 사진 하나 남기고 싶은데 스키장은 못 가요"
+    ],
+    "solution": "MOSPIC 스키장 겨울 스냅 — 사진 한 장이면, 설산 위 고글 올린 겨울 화보가 됩니다.",
+    "pairs": [
+      { "before": "skisnap_비포1.png", "after": "skisnap_애프터1.png", "caption": "실내 셀카가 → 설산 배경 스키웨어 화보로" },
+      { "before": "skisnap_비포3.png", "after": "skisnap_애프터3.png", "caption": "평범한 셀카가 → 고글 올린 슬로프 스냅으로" }
+    ],
+    "points": [
+      { "title": "스키웨어·고글·설산 풀세팅", "body": "산뜻한 컬러 패딩 또는 스키재킷, 비니 위에 올린 고글, 파란 하늘과 눈부신 설산 배경까지 한 번에 세팅됩니다.", "chips": ["컬러 스키웨어", "비니+고글", "설산 배경"], "image": "skisnap_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "고글은 이마 위에 걸쳐 눈·눈썹은 그대로 보이게, 눈 반사광은 배경에만. 얼굴은 하얗게 날아가지 않고 밝고 또렷하게 — 친구가 바로 알아보는 나로.", "chips": ["얼굴 가림 없음", "창백 방지", "안경 그대로"], "image": "skisnap_애프터1.png" },
+      { "title": "겨울 프로필부터 여행 피드까지", "body": "12월 프로필, 스키 여행 기대 피드, 연말 스토리까지. 눈 오는 계절 한 장으로 겨울 SNS를 채워보세요.", "chips": ["겨울 프로필", "여행 피드", "스토리"], "images": ["skisnap_애프터3.png", "skisnap_애프터4.png"], "imageCaption": "같은 사람, 다른 슬로프 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "스키장 출장 스냅 1시간 10만~20만 원 + 리프트권·스키웨어 렌탈 8만~12만 원",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 스키웨어·고글·배경은 MOSPIC 자체 디자인이며 실제 스키장이나 특정 브랜드 제품이 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 설산 위 겨울 인생샷을 남겨요", "button": "스키장 겨울 스냅 만들기" }
+  }
+}
