@@ -1,3 +1,10 @@
+## 2026-09-05 — 신규 컨셉 신설: partysnap (홀리데이 파티 스냅)
+- [스테이지] new-concept.mjs --stage route · 템플릿 person:pro → cheerglam
+- [프롬프트] specs/partysnap.prompt.txt → route 삽입 · md5 6cc5a689 · 재추출 일치
+- [외모] 외모 5단계(v3+) · glam-check PASS(코어 v3)
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-06 — person:flash 매핑 교체(age→cheerglam) + ENGINE_SUBS
 - [결정·실사] MJ 결정으로 age는 인물 flash 표준에서 뺀다(PROMPT_OLD/PROMPT_BABY 를 mode로 분기하는 2분기 특수형). cheerglam route 실사 결과 모델 선택은 파라미터가 아니라 ★하드코딩이었다 — 8행 const GEMINI_MODEL = "gemini-3-pro-image". 그래서 (c) 경로로 갔다
 - [조치] TEMPLATES person:flash → cheerglam 으로 매핑 변경 + ENGINE_SUBS 신설. spec.engine이 템플릿 native 엔진과 다르면 조립 단계에서 7개 규칙을 적용한다 — 모델명만이 아니라 ★시간 예산까지 함께 옮긴다(maxDuration 240→60, abort 230000→50000, 문구 230초→50초, COIN 주석 모델명). 안 그러면 60초에 죽는 함수가 230초를 기다리는 route가 나온다. 사후 검사로 native 엔진 값이 한 조각이라도 남으면 실패시킨다. cheerglam 원본은 무접촉이고 신설분에만 적용된다

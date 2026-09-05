@@ -21,6 +21,7 @@ export const PRO_CONCEPTS: string[] = [
   "xmasvintage",
   "campsnap",
   "picnicsnap",
+  "partysnap",
 ];
 
 export const isProConcept = (key: string): boolean => PRO_CONCEPTS.includes(key);

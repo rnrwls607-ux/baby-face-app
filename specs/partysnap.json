@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "person",
   "glam": 5,
-  "prompt": { "source": "file", "path": "specs/partysnap.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "partysnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s, friendly and natural, shoulder-length dark hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
     { "file": "partysnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her late 20s wearing thin-rimmed glasses, calm expression, long black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
