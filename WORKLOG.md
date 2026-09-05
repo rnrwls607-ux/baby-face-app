@@ -1,3 +1,9 @@
+## 2026-09-05 — BA 배선: partysnap 3쌍
+- [스테이지] new-concept.mjs --stage ba
+- [자산] 768×960(4:5) webp q85 6장
+- [배선] BA_LIVE 등록(181종) + pairs=[1, 2, 3]
+- [게이트] BA_LIVE 등록 · pairs = 실제 쌍 수 · 자산 실재 · 기존 BA 무접촉 · 변경 파일 = 예상 · 원료 스테이징 0 · 빌드 전항 PASS
+
 ## 2026-09-05 — partysnap 출시: 홈 노출 + 배선
 - [스테이지] new-concept.mjs --stage launch
 - [자산] webp 2장(cards·details, q85) · 카드 1080 상한 · 상세 무축소
