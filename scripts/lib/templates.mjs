@@ -75,9 +75,10 @@ export function checkPromptText(text, key) {
 
 // ── route 생성 ──────────────────────────────────────────────────────────────
 export function buildRoute(key, spec, tpl, promptText) {
+  // ★템플릿 줄끝은 묻지 않는다 — readText가 CRLF를 LF로 정규화해 조립한다(age 템플릿이 CRLF다).
+  //   "관례(LF) 불일치" 거부는 ★신설 파일을 쓰는 단계(writeRoute/writePage)에만 남겼다.
+  //   예전엔 여기서 막아 person×flash(=age 템플릿) 신규가 통째로 조립 불가였다(2026-09-06 filmcampus).
   const src = readText(`app/api/${tpl.tpl}/route.ts`);
-  if (fs.readFileSync(abs(`app/api/${tpl.tpl}/route.ts`)).includes("\r\n"))
-    fail(`템플릿 ${tpl.tpl} route가 CRLF — 관례(LF)와 불일치`);
   let out = src;
 
   if (tpl.promptStyle === "inline") {
@@ -127,9 +128,8 @@ function parameterizeDuo(text, key) {
 
 // ── page 생성 ───────────────────────────────────────────────────────────────
 export function buildPage(key, spec, tpl) {
+  // ★buildRoute와 같은 이유로 템플릿 줄끝을 묻지 않는다(위 주석 참고).
   const src = readText(`app/${tpl.tpl}/page.tsx`);
-  if (fs.readFileSync(abs(`app/${tpl.tpl}/page.tsx`)).includes("\r\n"))
-    fail(`템플릿 ${tpl.tpl} page가 CRLF — 관례(LF)와 불일치`);
   let out = src;
   const r = spec.route || {};
 
@@ -205,6 +205,10 @@ export function applySubs(text, tpl, key) {
     [`/api/${T}`, `/api/${key}`],
     [`/examples/ba/${T}-`, `/examples/ba/${key}-`],
     [`"${T}.png"`, `"${key}.png"`],
+    // ★정적 자산 경로 — 템플릿 페이지가 자기 이미지를 하드코딩한다. 실사로 찾은 두 형태:
+    //   age: /details/age.webp (PreviewCard) · friend: /examples/friend_a.webp 등
+    [`/details/${T}.webp`, `/details/${key}.webp`],
+    [`/examples/${T}_`, `/examples/${key}_`],
     [`[${T}]`, `[${key}]`],
     [`${T} error:`, `${key} error:`],
     [`"${T}"`, `"${key}"`],
@@ -216,12 +220,30 @@ export function applySubs(text, tpl, key) {
 }
 
 // ★어간까지 검사한다 — "cheerglam"뿐 아니라 "Cheerglam"·"CHEERGLAM"도 잔재다.
+//   단 ★단어 경계를 본다. 예전엔 단순 부분문자열이라 3글자 키 "age"가 image·message·Page 안의
+//   "age"를 32건 오탐해 person×flash 신규가 아예 통과할 수 없었다(2026-09-06 filmcampus).
+//   진짜 잔재("/api/age"·"age.webp"·"generateAge"·"AGE_PROMPT")는 그대로 잡힌다.
+// 템플릿 키는 소문자+숫자뿐이다(cheerglam·gyaru·age·friend) — 정규식 특수문자가 없어 이스케이프가 필요없다.
+const KEY_OK = /^[a-z][a-z0-9]*$/;
+export function leftoverProbes(tplKey) {
+  const lower = tplKey.toLowerCase();
+  if (!KEY_OK.test(lower)) fail(`템플릿 키 "${tplKey}" 가 소문자+숫자가 아니다 — 잔재 검사 정규식을 손볼 것`);
+  const pascal = lower[0].toUpperCase() + lower.slice(1);
+  const upper = lower.toUpperCase();
+  return [
+    // 소문자: 앞뒤에 영숫자·_ 가 붙으면 남의 단어다(im[age]·mess[age]·P[age])
+    [lower, new RegExp(`(?<![A-Za-z0-9_])${lower}(?![A-Za-z0-9_])`, "g")],
+    // PascalCase: 뒤가 대문자이거나 토큰 끝일 때만(generateAge·AgePage). Image·Message엔 대문자 A가 없다
+    [pascal, new RegExp(`${pascal}(?![a-z0-9])`, "g")],
+    // UPPERCASE 상수: _ 는 붙어도 잔재다(AGE_PROMPT). 영숫자로 이어지면 남의 단어(IMAGE)
+    [upper, new RegExp(`(?<![A-Za-z0-9])${upper}(?![A-Za-z0-9])`, "g")],
+  ];
+}
 export function assertNoLeftover(text, tplKey, key, what) {
-  const stems = [tplKey, tplKey[0].toUpperCase() + tplKey.slice(1), tplKey.toUpperCase()];
   const hits = [];
-  for (const s of stems) {
-    const n = text.split(s).length - 1;
-    if (n) hits.push(`${s}×${n}`);
+  for (const [label, re] of leftoverProbes(tplKey)) {
+    const n = (text.match(re) || []).length;
+    if (n) hits.push(`${label}×${n}`);
   }
   if (hits.length) fail(`${key} ${what}: 템플릿 키 잔재 ${hits.join(", ")} — 치환 규칙을 보완할 것`);
 }
@@ -241,13 +263,22 @@ export function assertNoPhrases(text, tplKey, key, what) {
 
 export const fnName = (key) => key.replace(/(^|[-_])([a-z])/g, (_, __, c) => c.toUpperCase());
 
+// ★신설 파일은 관례(LF)로만 쓴다 — 줄끝 검사는 이제 여기 한 곳뿐이다.
+//   템플릿이 CRLF든 아니든 readText가 정규화하므로, 여기까지 CRLF가 오면 조립 쪽 회귀다.
+function assertLF(rel, text) {
+  if (text.includes("\r\n")) fail(`${rel}: 신설 파일에 CRLF가 섞였다 — 관례(LF)와 불일치`);
+}
 export function writeRoute(key, text) {
+  const rel = `app/api/${key}/route.ts`;
+  assertLF(rel, text);
   fs.mkdirSync(abs(`app/api/${key}`), { recursive: true });
-  fs.writeFileSync(abs(`app/api/${key}/route.ts`), text, "utf8");
-  return `app/api/${key}/route.ts`;
+  fs.writeFileSync(abs(rel), text, "utf8");
+  return rel;
 }
 export function writePage(key, text) {
+  const rel = `app/${key}/page.tsx`;
+  assertLF(rel, text);
   fs.mkdirSync(abs(`app/${key}`), { recursive: true });
-  fs.writeFileSync(abs(`app/${key}/page.tsx`), text, "utf8");
-  return `app/${key}/page.tsx`;
+  fs.writeFileSync(abs(rel), text, "utf8");
+  return rel;
 }

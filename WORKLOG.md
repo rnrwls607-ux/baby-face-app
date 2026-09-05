@@ -1,3 +1,8 @@
+## 2026-09-06 — age 템플릿 3결함 도구 측 수리 (app/ 무접촉)
+- [원인] person×flash 신규가 age 템플릿에서 통째로 막혀 있었다. ①age의 route·page가 CRLF인데 buildRoute/buildPage가 템플릿 줄끝을 거부했다 ②assertNoLeftover가 단순 부분문자열이라 3글자 키 "age"가 image·message·Page 안의 age를 32건 오탐했다(진짜 잔재는 1건) ③applySubs에 정적 자산 규칙이 없어 /details/age.webp 가 그대로 남았다. 셋 다 도구 쪽 결함이고 age 원본은 정상이다
+- [조치] scripts/lib/templates.mjs 만 고쳤다. ①조립은 readText의 LF 정규화에 맡기고 줄끝 거부는 신설 파일 쓰기(writeRoute/writePage의 assertLF) 한 곳으로 옮겼다 ②잔재 검사를 단어 경계로 — 소문자는 앞뒤 영숫자·_ 배제, PascalCase는 뒤가 소문자·숫자가 아닐 때만, UPPERCASE는 _ 허용(AGE_PROMPT는 잡고 IMAGE는 뺀다). 키가 소문자+숫자가 아니면 즉시 멈추게 KEY_OK 전제를 박았다 ③applySubs에 /details/{T}.webp 와 /examples/{T}_ 두 규칙 추가(실사로 찾은 전부 — age의 PreviewCard, friend의 friend_a/b1/b2)
+- [재발 방지] leftoverProbes를 export해 단위 검증 22건(오탐 13·적발 9)으로 못박았고, buildPage(age→filmcampus) 실조립으로 잔재 0·자산 경로 치환 1곳을 확인했다. cheerglam 파생 partysnap·skisnap은 재검에서 앵커 7건·잔재 0으로 결과 변동 0. ★남은 4번째 결함: age route는 PROMPT_OLD/PROMPT_BABY 두 상수를 mode로 분기하는데 TEMPLATES가 promptStyle:"inline"으로 선언해 프롬프트 구간 앵커가 실패한다 — 분기 붕괴와 mode 배선 제거는 설계 결정이라 MJ 지시 대기
+
 ## 2026-09-06 — v3 6종 refresh 완료: Light 정본 라이브 반영
 - [승인] MJ가 _v2api 애프터를 시트로 판정해 승인(옵션 3). 6종 각 _v2api/{키}_애프터1~4.png 24장을 상위 폴더로 되돌린 뒤 --stage refresh --run 으로 진행. ★API 호출 0
 - [교체] 라이브 route 프롬프트 6종 전부 v2로. autumnsnap d7a10aab→3a7c7593 · trenchlook 804827c3→c4c91eb6 · examcheer 5553c51c→a24c2f4f · xmasvintage f216a451→35910109 · campsnap ec704b7e→0046e9a8 · picnicsnap af753360→64bf02bb. 매 건 VM 재추출 md5 대조 PASS
