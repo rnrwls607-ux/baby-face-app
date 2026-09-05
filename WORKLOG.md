@@ -1,3 +1,12 @@
+## 2026-09-06 — v3 6종 refresh 준비(G2 대기) + refresh 스테이지 · 두 겹 풀 · 플레이북 v3
+- [프롬프트] 5종 Light 뷰티 절을 정본 문형으로 교체(neutral-toned 소문자 + "the face glowing warm and fresh" 복원, 장면 격리 처방은 뒤 유지) — trenchlook c4c91eb6 · examcheer a24c2f4f · xmasvintage 35910109 · campsnap 0046e9a8 · picnicsnap 64bf02bb. autumnsnap은 09-05 판 3a7c7593 그대로. 6종 glam-check PASS
+- [수확] 5종 × 4장 = 20장, Pro ₩300 × 20 = ₩6,000. autumnsnap은 어제 v2 애프터 재사용(₩1,200 절감). 기존 애프터·시트는 examples/ba/{키}/_v1/ 로 보관
+- [대조 시트] examples/ba/{키}/{키}_대조시트_v1v2.png 6장 — 행=같은 비포 4쌍, 열=비포·v1·v2. ⚠️G2 대기: 라이브 route는 아직 v1이다
+- [--stage refresh] 신설. VM으로 뽑은 라이브 프롬프트 문자열을 소스에서 찾아 치환(앵커 대신 문자열 자체가 근거) → 재추출 md5 게이트 → 상세 재렌더 → webp·BA 갱신(바이트 동일분 스킵) → 커밋. duo는 보간식이라 미지원. spec 재직렬화 버그도 문자 치환으로 수리(백로그 1·2번 완료)
+- [두 겹 풀] scripts/lib/pool-kit.txt — kit 36장(219장 지표 계산으로 상위 48 추린 뒤 ★눈으로 확정 + MJ 검증 모델 비포 snowsnap 비포1~3 강제 포함) / test 183장. harvest 기본 test, --kit 이면 kit. 이번 6종 BA·상세는 test 결과 그대로 쓰고 킷 재수확은 🕒 백로그
+- [★사고] USED_POOL.txt가 실제 배정과 어긋나 있었다 — 수동 모드가 건너뛸 때 실물이 아니라 새 픽을 기록해서, 두 번 돌리면 한 칸씩 밀린다. 6종 중 4종이 밀려 있었고(다른 컨셉이 같은 얼굴을 재사용할 뻔) 실물 md5로 되찾아 기록하도록 고친 뒤 4종을 수리했다
+- [플레이북 v3] §0 G2 부활(외모 4~5는 반드시 멈춤 — 글램 저하는 하드 실패로 안 잡힌다, 1~2는 완전 무인) · §5 두 겹 풀·USED_POOL 규칙 · §6 처방이 글램을 죽인 사례와 원인 격리 순서(엔진→비포→프롬프트) · §9 백로그 정리
+
 ## 2026-09-05 — Light 뷰티 절 정본화 + autumnsnap v1↔v2 A/B 준비 (⚠️ MJ 판정 대기)
 - [정본] glam-check v3 Light = snowsnap 원형 전문("the face glowing warm and fresh" 필수 구) · v2 = cinesnap 문형(v3에서 불허). README에 승인 변형 표(monoactor 흑백 · airportsnap v1.5 · 라이브 v3 8종 warm-and-fresh 누락 · personalcolor v2 문형) — 검사 예외 없음, 신규에만 적용
 - [회귀] 정본 변경 후 라이브 스캔: snowsnap·cinesnap·schoolsnap·digicam PASS / trenchlook 등 v3 8종·personalcolor·monoactor은 Light FAIL(의도된 결과 — 재수확 전까지 이 spec들로 harvest 못 돈다)
