@@ -63,6 +63,13 @@ specs/{키}.json + specs/{키}.prompt.txt 작성
 - 한 수 더(G2): §6 처방으로 prompt.txt v+1(문자 수준 삽입, 재포맷 금지) → 기존 애프터를 examples/ba/{키}/_v{n}/로 이동 → harvest --afters --run --force → 재판정. 3회 연속 미달이면 보류 제안.
 - 여러 컨셉 배치: 3~4종 단위. spec 전부 먼저 쓰고 harvest를 연속 실행한 뒤 G2를 한 번에 묻는다(시트 N장 + 판정표 1개).
 - 엔진 A/B가 필요하면 {키}-flash.json 사본(engine만 다름) + --out examples/ba/_ab/{키}-flash. 비포는 재사용(현재 --src 없음 → 수동 복사).
+- ★B 프롬프트 공장 출력 붙여넣기 (2026-09-06): MJ가 B 프롬프트 공장 출력(specs/{키}.json·specs/{키}.prompt.txt
+  라벨이 붙은 코드블록 묶음)을 그대로 붙이면, 별도 헤더나 설명 없이도 그것을 작업 지시로 받아
+  파일 쓰기 → glam-check → 수동 harvest 까지 처리한다.
+  · 한 답변에 여러 컨셉이 있으면 ★전부 순서대로 처리한다. 하나만 골라 묻지 않는다.
+  · 완료 보고는 컨셉별 glam-check 결과와 복붙 메모장({키}_프롬프트.txt) 경로를 ★표로 낸다.
+  · ★프롬프트 재작성 금지 — 받은 문자 그대로 파일에 넣는다. glam-check가 실패하면 고쳐서
+    통과시키지 말고 어디가 코어 정본과 어긋났는지 보고한다(§5 소유권: MJ 수정본이 동결본).
 
 ## 3. spec 스키마 — 필수 칸 (하나라도 비면 작성 단계에서 채운다, 실행 후 발견 금지)
 key · name · engine(pro|gpt|flash) · inputType(person|product|food|pet|duo) · ★glam(외모 1~5단계, §5 5단계표) · prompt{source,path} · befores[3](file, prompt) · afters{count:4, map:[1,2,3,1]} · verdicts[4]
