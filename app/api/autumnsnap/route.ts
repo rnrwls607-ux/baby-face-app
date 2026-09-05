@@ -97,11 +97,11 @@ THE SCENE — golden autumn foliage snap:
   overhead and underfoot, maples turning deep red and amber, a few leaves
   drifting through the air: the season at its most beautiful moment.
 - Light (the face comes FIRST): flawless beauty lighting on the person —
-  a bright, CLEAN, NEUTRAL-toned soft key light with delicate
+  a bright, CLEAN, neutral-toned soft key light with delicate
   catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING,
-  idol-grade luminous, every feature crisp — while the warm late-afternoon
-  autumn sun and the golden bounce off the leaves stay in the BACKGROUND
-  as atmosphere. ★The warm amber of the season must NEVER tint the face
+  idol-grade luminous, the face glowing warm and fresh, every feature
+  crisp — while the warm late-afternoon autumn sun and the golden bounce
+  off the leaves stay in the BACKGROUND as atmosphere. ★The warm amber of the season must NEVER tint the face
   yellow, orange, or sallow — the face keeps its true clean skin tone and
   stays the brightest, freshest element in the frame.
 - Foliage rendering: a few crisp leaves near the person, the rest melting

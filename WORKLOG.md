@@ -1,3 +1,10 @@
+## 2026-09-05 — autumnsnap refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 1
+- [프롬프트] specs/autumnsnap.prompt.txt · md5 d7a10aab → 3a7c7593 · route 문자 치환 1곳 · VM 재추출 일치
+- [외모] 외모 4단계(v3) · glam-check PASS(코어 v3)
+- [자산] 5장 갱신(autumnsnap.webp, autumnsnap.webp, autumnsnap-after-1.webp, autumnsnap-after-2.webp, autumnsnap-after-3.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 교체 md5 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — API 이미지 생성 전면 잠금 + 플레이북 v4 (MJ 검증 복귀)
 - [잠금] harvest --run 은 MOSPIC_ALLOW_API=1 없이는 돌지 않는다 — 없으면 "MJ 승인 없음"을 찍고 수동 모드로 내려앉는다(API 호출 0). ★환경변수는 loadEnv() 보다 먼저 읽는다: .env.local 에 적어두면 잠금이 영구히 풀리기 때문이다
 - [대기·원장] 승인돼 있어도 실행 직전 호출 건수·예상 비용을 다시 찍고 10초 카운트다운(Ctrl+C 창)을 준다. 실제 호출은 examples/ba/_ledger.md 에 일시·컨셉·엔진·호출·실패·비용·누계로 누적한다. 호출 0이면 줄을 만들지 않는다
