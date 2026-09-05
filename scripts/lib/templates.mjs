@@ -18,7 +18,10 @@ const BT = String.fromCharCode(96);
 export const TEMPLATES = {
   "person:pro":   { tpl: "cheerglam", tplFn: "Cheerglam", promptStyle: "inline", guide: "solo_face",      camera: "user",        faceCheck: true,  uploadLabel: "사진" },
   "person:gpt":   { tpl: "gyaru",     tplFn: "Gyaru",     promptStyle: "const",  guide: "solo_face",      camera: "user",        faceCheck: true,  uploadLabel: "사진" },
-  "person:flash": { tpl: "age",       tplFn: "Age",       promptStyle: "inline", guide: "solo_face",      camera: "user",        faceCheck: true,  uploadLabel: "사진" },
+  // ★person:flash 는 예전에 age 템플릿이었다 — age는 PROMPT_OLD/PROMPT_BABY 두 상수를 mode로
+  //   분기하는 특수형이라 단일 프롬프트 신규를 얹을 수 없었다(2026-09-06 filmcampus). 구조가 같은
+  //   cheerglam으로 옮기고, Pro 전용 상수는 아래 ENGINE_SUBS 가 조립할 때 flash 값으로 바꾼다.
+  "person:flash": { tpl: "cheerglam", tplFn: "Cheerglam", promptStyle: "inline", guide: "solo_face",      camera: "user",        faceCheck: true,  uploadLabel: "사진" },
   "product:gpt":  { tpl: "gyaru",     tplFn: "Gyaru",     promptStyle: "const",  guide: "product_obj",    camera: "environment", faceCheck: false, uploadLabel: "제품 사진" },
   "product:pro":  { tpl: "cheerglam", tplFn: "Cheerglam", promptStyle: "inline", guide: "product_obj",    camera: "environment", faceCheck: false, uploadLabel: "제품 사진" },
   "food:gpt":     { tpl: "gyaru",     tplFn: "Gyaru",     promptStyle: "const",  guide: "food_drink",     camera: "environment", faceCheck: false, uploadLabel: "음식 사진" },
@@ -27,6 +30,45 @@ export const TEMPLATES = {
   "pet:pro":      { tpl: "cheerglam", tplFn: "Cheerglam", promptStyle: "inline", guide: "portrait_multi", camera: "environment", faceCheck: false, uploadLabel: "사진" },
   "duo:pro":      { tpl: "friend",    tplFn: "Friend",    promptStyle: "duo",    guide: "family",         camera: null,          faceCheck: false, uploadLabel: null, duo: true },
 };
+
+// ── 엔진 전용 상수 치환 ──────────────────────────────────────────────────────
+// 템플릿 route는 자기 엔진 값을 하드코딩한다(cheerglam:8 `const GEMINI_MODEL = "gemini-3-pro-image"`).
+// spec.engine이 템플릿의 native 엔진과 다르면 조립 단계에서 아래를 통째로 바꾼다 —
+// 모델명뿐 아니라 ★시간 예산(maxDuration·abort 타이머·문구)까지 같이 옮겨야 한다.
+// 안 그러면 60초에 죽는 함수가 230초를 기다리는 route가 나온다.
+export const TEMPLATE_ENGINE = { cheerglam: "pro", gyaru: "gpt", age: "flash", friend: "pro" };
+export const ENGINE_SUBS = {
+  "pro>flash": [
+    ["export const maxDuration = 240; // Pro 추론형 대응 — Fluid Compute 전제",
+     "export const maxDuration = 60; // flash — 짧은 예산(age 라이브 실측값과 동일)"],
+    ["// 글램 라인 1차 — 나노바나나 Pro (Pro 단일입력 route 구조 복제, 크롭 없음 = 원본 비율 유지)",
+     "// flash 라인 — Pro 글램 템플릿 구조 복제 + 엔진 상수만 flash로 치환(크롭 없음 = 원본 비율 유지)"],
+    [`const GEMINI_MODEL = "gemini-3-pro-image";`, `const GEMINI_MODEL = "gemini-3.1-flash-image";`],
+    ["ctrl.abort(), 230000", "ctrl.abort(), 50000"],
+    ["Pro 예산(230초)", "시간 예산(50초)"],
+    ["230초", "50초"],
+    ["· gemini-3-pro-image", "· gemini-3.1-flash-image"],
+  ],
+};
+
+// 조립본에 엔진 치환을 적용한다. 남으면 안 되는 값이 남았는지 끝에서 확인한다.
+export function applyEngineSubs(text, tpl, spec, key, what) {
+  const native = TEMPLATE_ENGINE[tpl.tpl];
+  if (!native) fail(`TEMPLATE_ENGINE에 ${tpl.tpl} 이 없다 — 새 템플릿을 추가했으면 여기도 채울 것`);
+  if (!spec.engine || spec.engine === native) return text;
+  const rules = ENGINE_SUBS[`${native}>${spec.engine}`];
+  if (!rules) fail(`${key}: 엔진 치환 규칙이 없다(${native}>${spec.engine}) — ENGINE_SUBS에 추가할 것`);
+  let out = text;
+  for (const [from, to] of rules) {
+    if (!out.includes(from)) fail(`${key} ${what}: 엔진 치환 앵커가 없다 — "${from.slice(0, 50)}"`);
+    out = out.split(from).join(to);
+  }
+  // ★사후 검사 — 다른 엔진 값이 한 조각도 남으면 안 된다
+  const banned = { pro: ["gemini-3-pro-image", "maxDuration = 240", "230000", "230초"], flash: ["gemini-3.1-flash-image"], gpt: [] }[native] || [];
+  const left = banned.filter((b) => out.includes(b));
+  if (left.length) fail(`${key} ${what}: ${native} 전용 값 잔재 ${left.join(", ")}`);
+  return out;
+}
 
 // ── 템플릿별 "컨셉 고유 한글 문구·이모지" 목록 ────────────────────────────────
 // ★왜 필요한가: 잔재 검사는 키 어간(cheerglam/Cheerglam/CHEERGLAM)만 잡는다. 한글 문구는
@@ -79,7 +121,8 @@ export function buildRoute(key, spec, tpl, promptText) {
   //   "관례(LF) 불일치" 거부는 ★신설 파일을 쓰는 단계(writeRoute/writePage)에만 남겼다.
   //   예전엔 여기서 막아 person×flash(=age 템플릿) 신규가 통째로 조립 불가였다(2026-09-06 filmcampus).
   const src = readText(`app/api/${tpl.tpl}/route.ts`);
-  let out = src;
+  // ★엔진 상수 먼저 — applySubs가 컨셉 키를 바꾸기 전에 원문 앵커로 잡는다
+  let out = applyEngineSubs(src, tpl, spec, key, "route");
 
   if (tpl.promptStyle === "inline") {
     const head = "  const prompt = " + BT;

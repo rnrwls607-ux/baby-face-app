@@ -1,3 +1,10 @@
+## 2026-09-06 — person:flash 매핑 교체(age→cheerglam) + ENGINE_SUBS
+- [결정·실사] MJ 결정으로 age는 인물 flash 표준에서 뺀다(PROMPT_OLD/PROMPT_BABY 를 mode로 분기하는 2분기 특수형). cheerglam route 실사 결과 모델 선택은 파라미터가 아니라 ★하드코딩이었다 — 8행 const GEMINI_MODEL = "gemini-3-pro-image". 그래서 (c) 경로로 갔다
+- [조치] TEMPLATES person:flash → cheerglam 으로 매핑 변경 + ENGINE_SUBS 신설. spec.engine이 템플릿 native 엔진과 다르면 조립 단계에서 7개 규칙을 적용한다 — 모델명만이 아니라 ★시간 예산까지 함께 옮긴다(maxDuration 240→60, abort 230000→50000, 문구 230초→50초, COIN 주석 모델명). 안 그러면 60초에 죽는 함수가 230초를 기다리는 route가 나온다. 사후 검사로 native 엔진 값이 한 조각이라도 남으면 실패시킨다. cheerglam 원본은 무접촉이고 신설분에만 적용된다
+- [증명] filmcampus 조립본 실측: 모델 gemini-3.1-flash-image · maxDuration 60 · abort 50000 · 문구 50초 · COIN 주석 flash · Pro 값 잔재 0. 대상 고지 줄은 audience 불일치로 자동 탈락. 배선 앵커 6건(flash라 PRO_CONCEPTS 없음이 정상)·잔재 0. partysnap·skisnap은 재검에서 route 13503자·page 11193자 / 14389자·11161자로 결과 변동 0
+- [★사고] ENGINE_SUBS의 교체 주석에 "cheerglam"을 적었다가 assertNoLeftover가 cheerglam×1로 잡았다 — 치환 문구에 템플릿 이름을 넣으면 그 자체가 잔재가 된다(route 헤더 주석에서 같은 실수를 한 전례가 있다). 문구에서 이름을 빼 해결
+- [G2 대기] partysnap·skisnap·filmcampus 시트 3장 생성(MJ가 AI Studio에서 만든 애프터 12장, JPEG로 저장돼 있어 PNG 변환·원본은 _src_jpg/ 보존). route 스테이지는 MJ 판정 전까지 돌리지 않는다
+
 ## 2026-09-06 — age 템플릿 3결함 도구 측 수리 (app/ 무접촉)
 - [원인] person×flash 신규가 age 템플릿에서 통째로 막혀 있었다. ①age의 route·page가 CRLF인데 buildRoute/buildPage가 템플릿 줄끝을 거부했다 ②assertNoLeftover가 단순 부분문자열이라 3글자 키 "age"가 image·message·Page 안의 age를 32건 오탐했다(진짜 잔재는 1건) ③applySubs에 정적 자산 규칙이 없어 /details/age.webp 가 그대로 남았다. 셋 다 도구 쪽 결함이고 age 원본은 정상이다
 - [조치] scripts/lib/templates.mjs 만 고쳤다. ①조립은 readText의 LF 정규화에 맡기고 줄끝 거부는 신설 파일 쓰기(writeRoute/writePage의 assertLF) 한 곳으로 옮겼다 ②잔재 검사를 단어 경계로 — 소문자는 앞뒤 영숫자·_ 배제, PascalCase는 뒤가 소문자·숫자가 아닐 때만, UPPERCASE는 _ 허용(AGE_PROMPT는 잡고 IMAGE는 뺀다). 키가 소문자+숫자가 아니면 즉시 멈추게 KEY_OK 전제를 박았다 ③applySubs에 /details/{T}.webp 와 /examples/{T}_ 두 규칙 추가(실사로 찾은 전부 — age의 PreviewCard, friend의 friend_a/b1/b2)
