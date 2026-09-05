@@ -1,3 +1,9 @@
+## 2026-09-05 — skisnap 출시: 홈 노출 + 배선
+- [스테이지] new-concept.mjs --stage launch
+- [자산] webp 2장(cards·details, q85) · 카드 1080 상한 · 상세 무축소
+- [배선] detailImage 등록 + 홈 카드 주석 해제
+- [게이트] 배선 8/8 유지 · 카드 열림 · detailImage · webp 2장 · CONCEPTS 직조회 · 변경 파일 = 예상 · PNG 스테이징 0 · 빌드 전항 PASS
+
 ## 2026-09-05 — 신규 컨셉 신설: skisnap (스키장 겨울 스냅)
 - [스테이지] new-concept.mjs --stage route · 템플릿 person:pro → cheerglam
 - [프롬프트] specs/skisnap.prompt.txt → route 삽입 · md5 5e0d324b · 재추출 일치
