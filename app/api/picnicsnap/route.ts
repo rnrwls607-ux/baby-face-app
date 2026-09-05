@@ -99,14 +99,15 @@ THE SCENE — bright riverside picnic snap:
   distant bridge softly blurred behind: a fresh, easy, joyful daytime
   moment.
 - Light (the face comes FIRST): flawless beauty lighting on the person —
-  a bright, CLEAN, NEUTRAL-toned soft key light with delicate
+  a bright, CLEAN, neutral-toned soft key light with delicate
   catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING,
-  idol-grade luminous, every feature crisp. Clean bright daylight is the
-  DOMINANT light of the whole scene — open, airy, slightly diffused like
-  a bright day under light haze, never harsh: no squinting, no hard
-  nose or brow shadows, no blown highlights on the skin. ★The face
-  keeps its true clean skin tone — never yellow, orange, or sallow —
-  and stays the brightest, freshest element in the frame.
+  idol-grade luminous, the face glowing warm and fresh, every feature
+  crisp. Clean bright daylight is the DOMINANT light of the whole scene
+  — open, airy, slightly diffused like a bright day under light haze,
+  never harsh: no squinting, no hard nose or brow shadows, no blown
+  highlights on the skin. ★The face keeps its true clean skin tone —
+  never yellow, orange, or sallow — and stays the brightest, freshest
+  element in the frame.
 - Props: a simple picnic mat, a wicker basket with whole fresh fruit,
   a plain glass or cup, a bicycle resting nearby — natural and unstaged.
   ★Everything is completely BARE of text — no packaging, no wrappers,

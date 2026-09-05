@@ -1,3 +1,10 @@
+## 2026-09-05 — picnicsnap refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 1
+- [프롬프트] specs/picnicsnap.prompt.txt · md5 af753360 → 64bf02bb · route 문자 치환 1곳 · VM 재추출 일치
+- [외모] 외모 4단계(v3) · glam-check PASS(코어 v3)
+- [자산] 5장 갱신(picnicsnap.webp, picnicsnap.webp, picnicsnap-after-1.webp, picnicsnap-after-2.webp, picnicsnap-after-3.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 교체 md5 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-05 — campsnap refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 1
 - [프롬프트] specs/campsnap.prompt.txt · md5 ec704b7e → 0046e9a8 · route 문자 치환 1곳 · VM 재추출 일치
