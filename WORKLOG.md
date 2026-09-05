@@ -1,3 +1,10 @@
+## 2026-09-05 — trenchlook refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 1
+- [프롬프트] specs/trenchlook.prompt.txt · md5 804827c3 → c4c91eb6 · route 문자 치환 1곳 · VM 재추출 일치
+- [외모] 외모 4단계(v3) · glam-check PASS(코어 v3)
+- [자산] 5장 갱신(trenchlook.webp, trenchlook.webp, trenchlook-after-1.webp, trenchlook-after-2.webp, trenchlook-after-3.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 교체 md5 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-05 — autumnsnap refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 1
 - [프롬프트] specs/autumnsnap.prompt.txt · md5 d7a10aab → 3a7c7593 · route 문자 치환 1곳 · VM 재추출 일치

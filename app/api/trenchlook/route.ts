@@ -98,13 +98,14 @@ THE SCENE — autumn trench-coat street pictorial:
   leaves — caught in the instant they paused and turned: an unposed,
   editorial street moment, confident and effortless, not a studio setup.
 - Light (the face comes FIRST): flawless beauty lighting on the person —
-  a bright, CLEAN, NEUTRAL-toned soft key light with delicate
+  a bright, CLEAN, neutral-toned soft key light with delicate
   catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING,
-  idol-grade luminous, every feature crisp — while the low autumn
-  sunlight and the warm bounce off brick and leaves stay in the
-  BACKGROUND as atmosphere. ★The warm street light must NEVER tint the
-  face yellow, orange, or sallow — the face keeps its true clean skin
-  tone and stays the brightest element in the frame.
+  idol-grade luminous, the face glowing warm and fresh, every feature
+  crisp — while the low autumn sunlight and the warm bounce off brick
+  and leaves stay in the BACKGROUND as atmosphere. ★The warm street
+  light must NEVER tint the face yellow, orange, or sallow — the face
+  keeps its true clean skin tone and stays the brightest element in the
+  frame.
 - Wardrobe: a long trench coat that drapes beautifully, worn open over a
   fine knit, in flattering neutral tones — tailored, expensive-looking
   fabric with a clean collar line. Styled so the face stays fully open
