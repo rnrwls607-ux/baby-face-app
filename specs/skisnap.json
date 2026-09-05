@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "person",
   "glam": 5,
-  "prompt": { "source": "file", "path": "specs/skisnap.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "skisnap_비포1.png", "pool": "female", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s, bright natural expression, medium-length dark brown hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
     { "file": "skisnap_비포2.png", "pool": "female-glasses", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 30s wearing round glasses, gentle expression, shoulder-length black hair, plain casual top, taken indoors with ordinary lighting. Slightly imperfect amateur framing, everyday background. Realistic phone-camera quality, vertical orientation. This is a completely fictional person who does not exist. No text, no watermark." },
