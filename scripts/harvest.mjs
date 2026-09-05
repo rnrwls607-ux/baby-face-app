@@ -361,6 +361,37 @@ async function buildSheet(dir, key, rows, label) {
 // 검증 비용 0 경로. 비포는 풀에서 복사하고, 애프터는 MJ가 스튜디오(웹 UI)에서 만든다.
 // 이 스크립트는 ①비포를 깔아주고 ②무엇을 어디서 어떻게 만들지 체크리스트로 적어주고
 // ③파일이 다 들어오면 시트를 만들어 준다. 외부 호출은 한 건도 하지 않는다.
+// ★API 지출 원장 — 실제로 나간 호출만 누적한다. "얼마 썼는지 모르겠다"가 이번 주의 사고였다.
+//   examples/ 는 gitignore라 이 파일은 이 PC에만 남는다(원장은 로컬 기록으로 충분하다).
+function appendLedger({ key, engine, tried, failed, cost }) {
+  if (!tried) return;
+  const rel = "examples/ba/_ledger.md";
+  const abs = path.join(ROOT, rel);
+  const head = [
+    "# API 지출 원장 (examples/ba/_ledger.md)",
+    "",
+    "harvest --run 이 실제로 호출한 건만 적는다. 단가는 가정단가(PRICE)이고 실청구와 다를 수 있다.",
+    "MOSPIC_ALLOW_API=1 없이는 호출이 없으므로 이 표에 줄이 생기지 않는다.",
+    "",
+    "| 일시 | 컨셉 | 엔진 | 호출 | 실패 | 비용 | 누계 |",
+    "|---|---|---|---:|---:|---:|---:|",
+    "",
+  ].join("\n");
+  let prev = fs.existsSync(abs) ? fs.readFileSync(abs, "utf8") : head;
+  if (!prev.includes("| 일시 |")) prev = head + prev;
+  let total = 0;
+  for (const m of prev.matchAll(/^\|[^|]*\|[^|]*\|[^|]*\|[^|]*\|[^|]*\| *₩([\d,]+) *\|/gm)) {
+    total += Number(m[1].replace(/,/g, ""));
+  }
+  total += cost;
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const when = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const row = `| ${when} | ${key} | ${engine} | ${tried} | ${failed} | ₩${cost.toLocaleString()} | ₩${total.toLocaleString()} |\n`;
+  fs.writeFileSync(abs, prev.replace(/\n*$/, "\n") + row, "utf8");
+  console.log(`     원장: ${rel} — 이번 ₩${cost.toLocaleString()} · 누계 ₩${total.toLocaleString()}`);
+}
+
 // 파일 내용(md5)으로 풀 원본 이름을 되찾는다 — 기록이 실제와 어긋나지 않게 하는 유일한 근거다.
 let _poolHash = null;
 function poolNameOf(absPath) {
@@ -546,6 +577,13 @@ for (const f of ["key", "engine", "inputType", "glam", "befores", "afters"]) {
   if (spec[f] === undefined) fail(`spec에 "${f}"가 없다`);
 }
 if (!PRICE[spec.engine]) fail(`모르는 engine: ${spec.engine} (pro|flash|gpt)`);
+
+// ★API 이미지 생성 잠금 (2026-09-06 MJ 지시)
+//   기본은 "돈이 나가지 않는다". 실행하려면 MJ가 그 자리에서 환경변수를 켜야 한다.
+//   ★loadEnv() 보다 먼저 읽는다 — .env.local 에 적어두면 잠금이 영구히 풀려버리기 때문이다.
+//   (검증 애프터는 MJ가 AI Studio에서 직접 만든다 — 플레이북 v4 §0)
+const API_ALLOWED = process.env.MOSPIC_ALLOW_API === "1";
+
 loadEnv();
 
 const outDir = path.join(ROOT, args.out, spec.key);
@@ -561,6 +599,13 @@ for (const p of prompts) {
   const gc = glamCheck(p.text, { glam: spec.glam, inputType: spec.inputType });
   console.log(gc.report());
   if (!gc.ok) fail(`glam-check 실패(${p.label}) — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것`);
+}
+if (args.run && !API_ALLOWED) {
+  console.log(`\n  ★MJ 승인 없음 — 수동 모드로 진행 (API 호출 0)`);
+  console.log(`     API로 뽑으려면 MJ가 이 명령 앞에 MOSPIC_ALLOW_API=1 을 붙여야 한다.`);
+  console.log(`     (.env.local 에 적는 건 잠금 해제로 치지 않는다 — 그 전에 읽는다)`);
+  args.run = false;
+  args.manual = true;
 }
 if (args.manual) { await runManual(); process.exit(0); }
 console.log(`\n  ── 프롬프트 (${spec.prompt?.source === "file" ? "파일" : "route 재추출"})`);
@@ -612,6 +657,17 @@ if (est > args.maxCost) fail(`예상 비용 ₩${est} > 상한 ₩${args.maxCost
 if (!args.run && !args.sheetOnly) {
   console.log(`\n  [dry-run] 외부 호출 0건. 실행하려면 --run 을 붙일 것.\n`);
   process.exit(0);
+}
+
+// ★실행 직전 마지막 창 — 예상 비용을 다시 찍고 10초 기다린다(오타 한 번에 수천 원이 나간다)
+if (args.run && live.length) {
+  console.log(`\n  ★API 실행 승인됨(MOSPIC_ALLOW_API=1) — 호출 ${live.length}건 · 예상 비용 ₩${est}`);
+  process.stdout.write(`     취소하려면 지금 Ctrl+C — 시작까지 `);
+  for (let i = 10; i > 0; i--) {
+    process.stdout.write(`${i} `);
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  console.log(`시작`);
 }
 
 // 3) 실행
@@ -667,6 +723,8 @@ console.log(`     호출 ${calls}건 · 실비용(가정단가) ₩${live.reduce
 const made = fs.existsSync(outDir) ? fs.readdirSync(outDir).sort() : [];
 for (const f of made) console.log(`     ${f}`);
 if (sheet) console.log(`     시트: ${path.relative(ROOT, sheet).split(path.sep).join("/")}`);
+appendLedger({ key: spec.key, engine: spec.engine, tried: calls, failed: failed.length, cost: live.reduce((s, p) => s + p.cost, 0) });
+
 if (failed.length) {
   console.log(`\n  ★실패 ${failed.length}건`);
   for (const f of failed) console.log(`     ${f.what} — ${f.why}`);

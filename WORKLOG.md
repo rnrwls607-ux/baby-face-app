@@ -1,3 +1,12 @@
+## 2026-09-06 — API 이미지 생성 전면 잠금 + 플레이북 v4 (MJ 검증 복귀)
+- [잠금] harvest --run 은 MOSPIC_ALLOW_API=1 없이는 돌지 않는다 — 없으면 "MJ 승인 없음"을 찍고 수동 모드로 내려앉는다(API 호출 0). ★환경변수는 loadEnv() 보다 먼저 읽는다: .env.local 에 적어두면 잠금이 영구히 풀리기 때문이다
+- [대기·원장] 승인돼 있어도 실행 직전 호출 건수·예상 비용을 다시 찍고 10초 카운트다운(Ctrl+C 창)을 준다. 실제 호출은 examples/ba/_ledger.md 에 일시·컨셉·엔진·호출·실패·비용·누계로 누적한다. 호출 0이면 줄을 만들지 않는다
+- [검증] 잠금 실측: campsnap --run --afters → API 0건, 수동 모드 전환 확인. 원장은 harvest.mjs 소스에서 함수를 그대로 떼어내 임시 폴더에서 3건 기록·누계 ₩2,700 검산(호출 0건은 미기록 확인). ★카운트다운 경로는 돈이 나가므로 실행하지 않았다 — 정적 확인만
+- [플레이북 v4] §0 G2 = MJ가 AI Studio(Gemini AI Pro 구독)에서 직접 생성·판정. Claude Code 자체 판정은 외모 등급과 무관하게 폐지. Claude는 프롬프트·체크리스트·복붙 메모장까지만 만들고, 시트는 MJ가 저장한 애프터를 모아 보여줄 때만 만든다
+- [플레이북 v4] §2 파이프라인은 수동 모드 전용. §5 프롬프트 소유권 — Claude 초안 → MJ 수정 → ★MJ 수정본이 동결본. 외모 절(FACE ORDER·SKIN·BEAUTY·Light)은 MJ 승인 없이 Claude가 변경 금지(glam-check가 기계로 지킨다)
+- [★사고 기록] §9 — 이번 주 이미지 생성 API ₩20,450(MJ 확인 청구 기준). 이 세션 계정 가능분 ₩15,300(가을 3,900 + 겨울 3,600 + autumnsnap v2 1,200 + 격리 실험 600 + refresh 6,000). MJ는 Gemini AI Pro 구독 중이라 AI Studio로 추가 비용 없이 뽑을 수 있었다 — 낼 필요 없는 돈이었다. 교훈: 비용이 드는 행동은 기본이 꺼짐이어야 한다. 상한(--max-cost)은 상한 안이면 조용히 나가므로 사고를 못 막는다
+- [refresh 6종] 라이브 route는 v1 그대로 두고 MJ 판정 대기. 대조 시트 6장은 이미 있어 추가 생성 0건. 판정 후 new-concept --stage refresh --run 으로 교체한다
+
 ## 2026-09-06 — v3 6종 refresh 준비(G2 대기) + refresh 스테이지 · 두 겹 풀 · 플레이북 v3
 - [프롬프트] 5종 Light 뷰티 절을 정본 문형으로 교체(neutral-toned 소문자 + "the face glowing warm and fresh" 복원, 장면 격리 처방은 뒤 유지) — trenchlook c4c91eb6 · examcheer a24c2f4f · xmasvintage 35910109 · campsnap 0046e9a8 · picnicsnap 64bf02bb. autumnsnap은 09-05 판 3a7c7593 그대로. 6종 glam-check PASS
 - [수확] 5종 × 4장 = 20장, Pro ₩300 × 20 = ₩6,000. autumnsnap은 어제 v2 애프터 재사용(₩1,200 절감). 기존 애프터·시트는 examples/ba/{키}/_v1/ 로 보관
