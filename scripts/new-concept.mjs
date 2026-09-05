@@ -19,6 +19,7 @@
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage route --run
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage launch --run --no-push
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage ba --run --no-commit
+//   node scripts/new-concept.mjs --spec specs/{키}.json --stage refresh --run --thumb 1
 
 import fs from "node:fs";
 import path from "node:path";
@@ -26,6 +27,7 @@ import { execFileSync } from "node:child_process";
 import { ROOT, abs, rel, md5, exists, load, readText, fail, need, planner } from "./lib/repo.mjs";
 import { readWiringState, wiringOf, wiredPoints, planWiring, baLiveArray } from "./lib/wiring.mjs";
 import { pickTemplate, checkPromptText, buildRoute, buildPage, writeRoute, writePage } from "./lib/templates.mjs";
+import { execFileSync as execFile } from "node:child_process";
 import { extractPrompt, evalConst } from "./lib/prompt.mjs";
 import * as G from "./lib/git.mjs";
 import { prepend } from "./lib/worklog.mjs";
@@ -34,7 +36,7 @@ import { glamCheck, glamLabel } from "./lib/glam-check.mjs";
 const sharp = need("sharp", "npm i -D sharp");
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
-const args = { spec: null, stage: null, run: false, push: true, commit: true };
+const args = { spec: null, stage: null, run: false, push: true, commit: true, thumb: 1 };
 {
   const a = process.argv.slice(2);
   for (let i = 0; i < a.length; i++) {
@@ -43,11 +45,12 @@ const args = { spec: null, stage: null, run: false, push: true, commit: true };
     else if (a[i] === "--run") args.run = true;
     else if (a[i] === "--dry-run") args.run = false;
     else if (a[i] === "--no-push") args.push = false;
+    else if (a[i] === "--thumb") args.thumb = Number(a[++i]);
     else if (a[i] === "--no-commit") args.commit = false;
     else fail(`모르는 플래그: ${a[i]}`);
   }
   if (!args.spec) fail("--spec specs/{키}.json 이 필요하다");
-  if (!["route", "launch", "ba"].includes(args.stage)) fail("--stage route|launch|ba 중 하나여야 한다");
+  if (!["route", "launch", "ba", "refresh"].includes(args.stage)) fail("--stage route|launch|ba|refresh 중 하나여야 한다");
 }
 
 const spec = JSON.parse(readText(args.spec));
@@ -193,9 +196,7 @@ async function stageRoute() {
   }
 
   // spec.prompt.source → "route" 로 승격 (이제 진실원이 route다)
-  const s2 = JSON.parse(readText(specPath));
-  s2.prompt = { source: "route" };
-  fs.writeFileSync(abs(specPath), JSON.stringify(s2, null, 2) + "\n", "utf8");
+  setSpecPromptToRoute();
 
   prepend(`${today()} — 신규 컨셉 신설: ${key} (${spec.name})`, [
     `[스테이지] new-concept.mjs --stage route · 템플릿 ${tpl.combo} → ${tpl.tpl}`,
@@ -346,8 +347,8 @@ async function stageBa() {
   G.requireClean();
   const made = [];
   for (const j of jobs) {
-    made.push(await makeBefore(j, key));
-    made.push(await makePanel(j.aFile, `public/examples/ba/${key}-after-${j.n}.webp`));
+    made.push((await makeBefore(j, key)).dst);
+    made.push((await makePanel(j.aFile, `public/examples/ba/${key}-after-${j.n}.webp`)).dst);
   }
   console.log(`  자산 ${made.length}장 생성`);
 
@@ -395,6 +396,146 @@ async function stageBa() {
   return true;
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// stage: refresh — 이미 라이브인 컨셉의 프롬프트를 갈고 자산을 다시 만든다
+//
+// 왜 스테이지인가
+//   지금까지 재출시는 "launch·ba가 멱등이라 우회한다"는 절차가 문서에만 있었다(백로그 1번).
+//   droneview v6에서 한 번, autumnsnap Light 정본에서 또 한 번 손으로 밟았다 — 코드로 굳힌다.
+//
+// ★프롬프트 교체는 앵커가 아니라 "현재 프롬프트 문자열 자체"로 찾는다
+//   VM으로 라이브 route에서 실제 문자열을 뽑아, 그 문자열이 소스에 정확히 1회 있을 때만
+//   바꾼다. 템플릿 스타일(inline/const)을 몰라도 되고, 보간이 섞인 route(duo)는 자동으로
+//   걸러진다 — 그런 route는 문자열이 소스에 그대로 없기 때문이다.
+// ════════════════════════════════════════════════════════════════════════════
+async function stageRefresh() {
+  const st = readWiringState();
+  const w = wiringOf(key, st);
+  if (wiredPoints(w) !== 8) fail(`배선이 ${wiredPoints(w)}/8 이다 — 신규 컨셉은 route 스테이지가 먼저다`);
+  if (spec.duo?.genders) fail("duo refresh는 아직 미지원 — 프롬프트가 보간식이라 문자 치환이 안 된다");
+
+  // 1) 새 프롬프트
+  const promptPath = spec.prompt?.path || `specs/${key}.prompt.txt`;
+  if (!exists(promptPath)) fail(`새 프롬프트 파일이 없다: ${promptPath}`);
+  const newText = checkPromptText(readText(promptPath), key);
+  const newMd5 = md5(newText);
+
+  // 2) ★외모 코어 잠금 — 파일을 한 글자도 쓰기 전에
+  const gc = glamCheck(newText, { glam: spec.glam, inputType: spec.inputType });
+  console.log(gc.report());
+  if (!gc.ok) fail("glam-check 실패 — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것");
+
+  // 3) 라이브 프롬프트 VM 추출 → 멱등 판정
+  const oldText = extractPrompt(key)[0].text;
+  const oldMd5 = md5(oldText);
+  console.log(`  프롬프트: ${promptPath} · ${newText.length}자`);
+  console.log(`  라이브 md5 ${oldMd5.slice(0, 8)} → 새 md5 ${newMd5.slice(0, 8)}`);
+  if (oldMd5 === newMd5) {
+    console.log(`\n  [멱등] 라이브가 이미 이 프롬프트다 — 변경 0건.\n`);
+    return true;
+  }
+  const routeRel = `app/api/${key}/route.ts`;
+  const routeSrc = readText(routeRel);
+  const hits = routeSrc.split(oldText).length - 1;
+  if (hits !== 1) fail(`route에 현재 프롬프트가 문자 그대로 ${hits}회다(1회여야 한다) — 보간식 route는 refresh 대상이 아니다`);
+
+  // 4) 자산 계획
+  const baPairs = spec.ba?.pairs || [];
+  console.log(`  자산 갱신 예정: 상세 재렌더(--thumb ${args.thumb}) · webp 2장 · BA ${baPairs.length}쌍(비포 동일분은 스킵)`);
+
+  if (!args.run) {
+    console.log(`\n  [dry-run] route 프롬프트 ${oldText.length}자 → ${newText.length}자 (문자 치환 1곳)`);
+    console.log(`  [dry-run] 외부 변경 0건. 적용하려면 --run.\n`);
+    return true;
+  }
+
+  G.requireClean();
+
+  // 5) route 프롬프트 문자 치환
+  writeRoute(key, routeSrc.replace(oldText, newText));
+  const got = md5(extractPrompt(key)[0].text);
+  gate("프롬프트 교체 md5", got === newMd5, `${got.slice(0, 8)} vs 새 원본 ${newMd5.slice(0, 8)}`);
+  gate("glam-check", gc.ok, `${glamLabel(spec.glam)}${gc.level ? ` · 코어 ${gc.level} 문자 일치` : ""}`);
+
+  // 6) 상세 재렌더 (detail-page.mjs 그대로 쓴다 — 규격 게이트가 그 안에 있다)
+  console.log(`\n  ── 상세 재렌더`);
+  execFile("node", ["scripts/detail-page.mjs", "--spec", specPath, "--thumb", String(args.thumb)],
+    { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "inherit", "inherit"], maxBuffer: 64 * 1024 * 1024 });
+  for (const f of [`public/cards/${key}.png`, `public/details/${key}.png`]) if (!exists(f)) fail(`상세 재렌더 산출이 없다: ${f}`);
+
+  // 7) webp 2장 — 바이트 동일이면 스킵
+  console.log(`\n  ── webp 갱신`);
+  const touched = [];
+  for (const kind of ["cards", "details"]) {
+    const srcP = `public/${kind}/${key}.png`, dst = `public/${kind}/${key}.webp`;
+    const m = await sharp(abs(srcP)).metadata();
+    let img = sharp(abs(srcP), { limitInputPixels: false });
+    if (kind === "cards" && m.width > 1080) img = img.resize(1080);
+    if (m.height > 16383) img = img.resize({ height: 16383, fit: "inside" });
+    const buf = await img.webp({ quality: 85 }).toBuffer();
+    if (exists(dst) && Buffer.compare(fs.readFileSync(abs(dst)), buf) === 0) { console.log(`     = ${dst}  바이트 동일 — 스킵`); continue; }
+    fs.writeFileSync(abs(dst), buf);
+    touched.push(dst);
+    console.log(`     ✔ ${dst} ${(buf.length / 1024).toFixed(0)}KB`);
+  }
+
+  // 8) BA 자산 — 애프터는 새것, 비포는 바이트 동일이면 스킵
+  console.log(`\n  ── BA 자산`);
+  const srcDir = `examples/ba/${key}`;
+  for (const [i, pr] of baPairs.entries()) {
+    const n = i + 1;
+    const [bIdx, aIdx] = pr;
+    const bFiles = (Array.isArray(bIdx) ? bIdx : [bIdx]).map((x) => `${srcDir}/${key}_비포${x}.png`);
+    const aFile = `${srcDir}/${key}_애프터${aIdx}.png`;
+    for (const f of [...bFiles, aFile]) if (!exists(f)) fail(`원료가 없다: ${f}`);
+    const rb = await makeBefore({ n, bFiles, duo: Array.isArray(bIdx) }, key);
+    if (rb.changed) touched.push(rb.dst);
+    const ra = await makePanel(aFile, `public/examples/ba/${key}-after-${n}.webp`);
+    if (ra.changed) touched.push(ra.dst);
+  }
+
+  // 9) spec.prompt → route 로 되돌린다(진실원이 다시 route다)
+  setSpecPromptToRoute();
+
+  // 10) 게이트
+  gate("자산 갱신", touched.length > 0, `${touched.length}장 변경 · 스킵 ${2 + baPairs.length * 2 - touched.length}장`);
+  const changed = G.trackedChanges().map((l) => l.slice(3).replace(/^"|"$/g, ""));
+  const expect = new Set([routeRel, specPath, ...touched]);
+  gate("변경 파일 = 예상", changed.every((f) => expect.has(f)), changed.join(", ") || "(없음)");
+  gate("홈·배선 무접촉", !changed.some((f) => ["app/page.tsx", "app/lib/concepts.ts", "app/lib/proConcepts.ts"].includes(f)), "concepts·page 변경 0");
+  const b = build();
+  gate("빌드", b.ok, `${b.line} (${b.sec}s)`);
+
+  if (!report()) { const r = G.rollback([]); console.log(`\n  ★되돌렸다 — 복구 ${r.restored.length}\n`); process.exit(1); }
+  if (!args.commit) { const r = G.rollback([]); console.log(`\n  [--no-commit] PASS 후 되돌렸다.\n`); return true; }
+
+  prepend(`${today()} — ${key} refresh: 프롬프트 교체 + 자산 갱신`, [
+    `[스테이지] new-concept.mjs --stage refresh --thumb ${args.thumb}`,
+    `[프롬프트] ${promptPath} · md5 ${oldMd5.slice(0, 8)} → ${newMd5.slice(0, 8)} · route 문자 치환 1곳 · VM 재추출 일치`,
+    `[외모] ${glamLabel(spec.glam)} · glam-check PASS${gc.level ? `(코어 ${gc.level})` : ""}`,
+    `[자산] ${touched.length}장 갱신(${touched.map((f) => f.split("/").pop()).join(", ") || "없음"}) · 비포 등 동일분 스킵`,
+    `[게이트] ${gates.map((g) => g.name).join(" · ")} 전항 PASS`,
+  ]);
+  const staged = G.addWithImages([routeRel, specPath, "WORKLOG.md"], touched);
+  console.log(`\n  스테이징 ${staged.length}개`);
+  const hash = G.commit(`refresh: ${key} Light 정본 복원`);
+  console.log(`  커밋 ${hash}`);
+  if (args.push) console.log(`  푸시 ${G.push()}`);
+  return true;
+}
+
+// ★spec의 prompt 블록만 문자로 갈아끼운다.
+//   JSON.stringify로 다시 쓰면 파일 전체가 재포맷된다(droneview에서 +130/-20 diff가 났다).
+function setSpecPromptToRoute() {
+  const raw = fs.readFileSync(abs(specPath), "utf8");
+  const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+  const m = raw.match(/^([ \t]*)"prompt":\s*\{[^{}]*\}(,?)/m);
+  if (!m) fail(`spec의 "prompt" 블록을 못 찾았다: ${specPath}`);
+  const want = `${m[1]}"prompt": {${eol}${m[1]}  "source": "route"${eol}${m[1]}}${m[2]}`;
+  if (m[0] === want) return;
+  fs.writeFileSync(abs(specPath), raw.replace(m[0], want), "utf8");
+}
+
 // ── BA 패널 만들기 ───────────────────────────────────────────────────────────
 const PW = 768, PH = 960;
 // 세로비가 목표(4:5=0.8)보다 15% 넘게 길면 크게 잘라내야 한다 → 크롭 위치를 골라야 한다.
@@ -405,17 +546,25 @@ async function makePanel(srcRel, dstRel) {
   // 사람은 attention이 얼굴로 폭주해 정수리를 자른 전례가 있다 → 많이 잘라야 할 때만 top.
   const person = ["person", "duo"].includes(spec.inputType);
   const pos = NEEDS_CHOICE(m.width, m.height) ? (person ? "top" : "centre") : "attention";
-  await sharp(abs(srcRel)).flatten({ background: "#ffffff" })
+  const buf = await sharp(abs(srcRel)).flatten({ background: "#ffffff" })
     .resize(PW, PH, { fit: "cover", position: pos === "attention" ? sharp.strategy.attention : pos })
-    .webp({ quality: 85 }).toFile(abs(dstRel));
+    .webp({ quality: 85 }).toBuffer();
+  // ★바이트가 같으면 쓰지 않는다 — refresh에서 비포는 그대로라 매번 다시 쓸 이유가 없다.
+  //   (mtime만 바뀌면 git에는 안 잡히지만, "무엇을 건드렸나"를 보고에 정직하게 쓰기 위해서다)
+  if (exists(dstRel) && Buffer.compare(fs.readFileSync(abs(dstRel)), buf) === 0) {
+    console.log(`     = ${dstRel}  바이트 동일 — 스킵`);
+    return { dst: dstRel, changed: false };
+  }
+  fs.writeFileSync(abs(dstRel), buf);
   console.log(`     ✔ ${dstRel}  ${m.width}×${m.height} → ${PW}×${PH}  crop=${pos}`);
-  return dstRel;
+  return { dst: dstRel, changed: true };
 }
 
 // 2인 비포는 좌 380 + 흰 8 + 우 380 = 768×960 합성(라이브 관례 실측치)
 async function makeBefore(j, k) {
   const dst = `public/examples/ba/${k}-before-${j.n}.webp`;
   if (!j.duo) return makePanel(j.bFiles[0], dst);
+  // 2인 합성은 항상 새로 쓴다(합성 결과를 버퍼로 비교할 이유가 아직 없다)
   const HW = 380, DIV = 8;
   const half = (f) => sharp(abs(f)).flatten({ background: "#ffffff" })
     .resize(HW, PH, { fit: "cover", position: sharp.strategy.attention }).png().toBuffer();
@@ -423,7 +572,7 @@ async function makeBefore(j, k) {
     .composite([{ input: await half(j.bFiles[0]), left: 0, top: 0 }, { input: await half(j.bFiles[1]), left: HW + DIV, top: 0 }])
     .webp({ quality: 85 }).toFile(abs(dst));
   console.log(`     ✔ ${dst}  2인 합성 ${HW}+${DIV}+${HW}×${PH}`);
-  return dst;
+  return { dst, changed: true };
 }
 
 // ── 잡동사니 ────────────────────────────────────────────────────────────────
@@ -446,6 +595,6 @@ const diffLines = (a, b) => {
 const today = () => new Date().toISOString().slice(0, 10);
 
 // ── 실행 ────────────────────────────────────────────────────────────────────
-const run = { route: stageRoute, launch: stageLaunch, ba: stageBa }[args.stage];
+const run = { route: stageRoute, launch: stageLaunch, ba: stageBa, refresh: stageRefresh }[args.stage];
 await run();
 if (args.run && args.commit) console.log(`\n■ ${args.stage} 스테이지 완료\n`);
