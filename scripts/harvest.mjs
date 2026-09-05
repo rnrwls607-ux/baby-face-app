@@ -93,6 +93,7 @@ function parseArgs(argv) {
     else if (t === "--run") { a.run = true; a.manual = false; }
     else if (t === "--dry-run") { a.run = false; a.manual = false; }   // API 계획만 출력
     else if (t === "--manual") a.manual = true;
+    else if (t === "--kit") a.kit = true;   // 킷·BA 소재용 비포(kit 겹). 기본은 검증용 test 겹.
     else if (t === "--force") a.force = true;
     else if (t === "--sheet-only") { a.sheetOnly = true; a.manual = false; }
     else if (t === "--only") a.only = argv[++i].split(",").map((x) => Number(x.trim())).filter(Boolean);
@@ -360,23 +361,45 @@ async function buildSheet(dir, key, rows, label) {
 // 검증 비용 0 경로. 비포는 풀에서 복사하고, 애프터는 MJ가 스튜디오(웹 UI)에서 만든다.
 // 이 스크립트는 ①비포를 깔아주고 ②무엇을 어디서 어떻게 만들지 체크리스트로 적어주고
 // ③파일이 다 들어오면 시트를 만들어 준다. 외부 호출은 한 건도 하지 않는다.
+// 파일 내용(md5)으로 풀 원본 이름을 되찾는다 — 기록이 실제와 어긋나지 않게 하는 유일한 근거다.
+let _poolHash = null;
+function poolNameOf(absPath) {
+  if (!fs.existsSync(absPath)) return null;
+  const h = (f) => crypto.createHash("md5").update(fs.readFileSync(f)).digest("hex");
+  if (!_poolHash) {
+    _poolHash = new Map();
+    const dir = path.join(ROOT, pool.POOL_DIR);
+    if (fs.existsSync(dir)) for (const f of fs.readdirSync(dir).filter((x) => x.endsWith(".png"))) _poolHash.set(h(path.join(dir, f)), f);
+  }
+  return _poolHash.get(h(absPath)) || null;
+}
+
 async function runManual() {
   fs.mkdirSync(outDir, { recursive: true });
-  const st = pool.stats();
+  const grade = args.kit ? "kit" : "test";
+  const st = pool.stats(grade);
   console.log(`\n  ── 수동 모드 (외부 호출 0)`);
-  console.log(`     풀: ${st ? `${st.total}장 (female ${st.female.noglasses}+안경 ${st.female.glasses} · male ${st.male.noglasses}+안경 ${st.male.glasses})` : "★없음 — examples/ba/_pool 을 먼저 만들 것"}`);
+  console.log(`     풀[${grade}${args.kit ? " · 킷·BA 소재" : " · 검증"}]: ${st ? `${st.total}장 (female ${st.female.noglasses}+안경 ${st.female.glasses} · male ${st.male.noglasses}+안경 ${st.male.glasses})` : "★없음 — examples/ba/_pool 을 먼저 만들 것"}`);
 
   // ① 비포 — 힌트대로 풀에서 고른다. 사물·음식·펫·특수 장면은 MJ 몫.
   const person = ["person", "duo"].includes(spec.inputType);
   const hints = spec.befores.map((b, i) => b.pool ?? (person ? (pool.DEFAULT_HINTS[i] ?? "female") : "custom"));
-  const picked = pool.pick(hints);
+  const picked = pool.pick(hints, { grade });
   const usedNames = [];
   console.log(`\n  ── 비포`);
   for (const [i, b] of spec.befores.entries()) {
     const dst = path.join(outDir, b.file);
     const p = picked[i];
     if (!p.file) { console.log(`     비포${i + 1}  ${b.file}  ← ★${p.reason} (힌트 ${p.hint})`); continue; }
-    if (fs.existsSync(dst) && !args.force) { console.log(`     비포${i + 1}  ${b.file}  이미 있음 — 건너뜀`); usedNames.push(p.file); continue; }
+    if (fs.existsSync(dst) && !args.force) {
+      // ★건너뛸 때는 "이번에 뽑은 것"이 아니라 "실제로 거기 있는 것"을 기록한다.
+      //   예전엔 새 픽을 적어서, 수동 모드를 두 번 돌리면 USED_POOL이 실제 배정과 어긋났다
+      //   (2026-09-06 실측: 6종 중 4종이 한 칸씩 밀려 있었다 — 다른 컨셉이 같은 얼굴을 재사용할 뻔).
+      const real = poolNameOf(dst);
+      console.log(`     비포${i + 1}  ${b.file}  이미 있음 — 건너뜀${real && real !== p.file ? ` (실제 ${real})` : ""}`);
+      usedNames.push(real || p.file);
+      continue;
+    }
     fs.copyFileSync(path.join(ROOT, pool.POOL_DIR, p.file), dst);
     usedNames.push(p.file);
     console.log(`     비포${i + 1}  ${b.file}  ← 풀 ${p.file}${p.reused ? " (재사용 — 미사용분 소진)" : ""}`);

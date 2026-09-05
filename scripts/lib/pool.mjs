@@ -13,6 +13,32 @@ import { ROOT, abs, exists } from "./repo.mjs";
 
 export const POOL_DIR = "examples/ba/_pool";
 
+// ★두 겹 풀 (2026-09-06)
+//   kit  = 킷·BA 소재용. 얼굴이 크고 밝고 정면인 상위분 + MJ 검증 모델 비포. 명단은 아래 파일.
+//   test = 나머지. 검증 수확(애프터가 잘 나오는지 보는 용도)은 여기서 뽑는다.
+//   왜: 검증과 소재는 요구가 다르다. 역광·전신·야간 컷도 검증에는 쓸모가 있지만
+//       고객이 보는 전후 비교에 실리면 "전"이 안 읽힌다.
+//   ★명단 파일은 scripts/lib 에 둔다 — examples/ 는 통째로 gitignore라 버전 관리가 안 된다.
+export const KIT_FILE = "scripts/lib/pool-kit.txt";
+
+let _kit = null;
+export function kitSet() {
+  if (_kit) return _kit;
+  _kit = new Set();
+  if (!exists(KIT_FILE)) return _kit;
+  for (const line of fs.readFileSync(abs(KIT_FILE), "utf8").split(/\r?\n/)) {
+    const t = line.trim();
+    if (t && !t.startsWith("#")) _kit.add(t);
+  }
+  return _kit;
+}
+// grade: "kit" | "test" | "all"(등급 무시)
+export function inGrade(file, grade) {
+  if (!grade || grade === "all") return true;
+  const k = kitSet().has(file);
+  return grade === "kit" ? k : !k;
+}
+
 // 힌트 문자열 → {gender, glasses}. "custom"은 풀에서 안 뽑는다(MJ가 직접 만든다).
 export function parseHint(h) {
   if (!h || h === "custom") return null;
@@ -25,11 +51,11 @@ export function parseHint(h) {
 // inputType이 person이고 힌트가 없을 때의 기본 3장
 export const DEFAULT_HINTS = ["female", "female-glasses", "male"];
 
-// 풀에서 조건에 맞는 파일 목록 (이름순)
-export function candidates({ gender, glasses }) {
+// 풀에서 조건에 맞는 파일 목록 (이름순). grade로 킷/테스트 겹을 가른다.
+export function candidates({ gender, glasses }, grade = "all") {
   if (!exists(POOL_DIR)) return [];
   return fs.readdirSync(abs(POOL_DIR))
-    .filter((f) => f.endsWith(".png") && f.startsWith(`${gender}_`) && f.endsWith(`_${glasses}.png`))
+    .filter((f) => f.endsWith(".png") && f.startsWith(`${gender}_`) && f.endsWith(`_${glasses}.png`) && inGrade(f, grade))
     .sort();
 }
 
@@ -54,16 +80,16 @@ export function usedSet() {
  * 힌트 목록대로 풀에서 고른다. ★미사용 우선 — 컨셉마다 다른 얼굴이 나오게.
  * 같은 실행 안에서 중복 배정되지 않도록 taken으로 막는다.
  */
-export function pick(hints, { used = usedSet() } = {}) {
+export function pick(hints, { used = usedSet(), grade = "test" } = {}) {
   const taken = new Set();
   return hints.map((h) => {
     const spec = parseHint(h);
     if (!spec) return { hint: h, file: null, reason: "custom — MJ가 직접 생성" };
-    let list = candidates(spec);
+    let list = candidates(spec, grade);
     if (!list.length) {
       // 안경 조건을 못 맞추면 같은 성별의 아무거나로 물러난다(없는 것보단 낫다)
-      list = candidates({ gender: spec.gender, glasses: "noglasses" });
-      if (!list.length) return { hint: h, file: null, reason: `풀에 ${spec.gender} 없음` };
+      list = candidates({ gender: spec.gender, glasses: "noglasses" }, grade);
+      if (!list.length) return { hint: h, file: null, reason: `풀 ${grade} 겹에 ${spec.gender} 없음` };
     }
     const fresh = list.filter((f) => !used.has(f) && !taken.has(f));
     const use = (fresh.length ? fresh : list.filter((f) => !taken.has(f)))[0];
@@ -73,12 +99,13 @@ export function pick(hints, { used = usedSet() } = {}) {
   });
 }
 
-export function stats() {
+export function stats(grade = "all") {
   if (!exists(POOL_DIR)) return null;
-  const all = fs.readdirSync(abs(POOL_DIR)).filter((f) => f.endsWith(".png"));
+  const all = fs.readdirSync(abs(POOL_DIR)).filter((f) => f.endsWith(".png") && inGrade(f, grade));
   const c = (g, gl) => all.filter((f) => f.startsWith(`${g}_`) && f.endsWith(`_${gl}.png`)).length;
   return {
     total: all.length,
+    grade,
     female: { noglasses: c("female", "noglasses"), glasses: c("female", "glasses") },
     male: { noglasses: c("male", "noglasses"), glasses: c("male", "glasses") },
   };

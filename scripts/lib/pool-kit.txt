@@ -1,0 +1,48 @@
+# scripts/lib/pool-kit.txt — 비포 풀 "킷" 등급 명단 (examples/ba/_pool 기준 파일명)
+#
+# 왜 두 겹인가
+#   비포는 두 가지로 쓰인다. ①검증 수확(애프터가 잘 나오는지 보는 용도) ②킷·BA 소재
+#   (고객이 실제로 보는 전후 비교). ②는 얼굴이 크고 밝고 정면이어야 "전후"가 읽힌다.
+#   한 풀에서 아무거나 뽑으면 역광·전신·야간 컷이 상세페이지에 실린다 — 그래서 나눈다.
+#
+# 선별 방법 (2026-09-06)
+#   219장 전수 지표 계산(얼굴자리 평균휘도·라플라시안 선명도·평탄부 고주파=결·하이라이트 클리핑)
+#   → 상위 48 컨택트 시트 → ★눈으로 최종 선별(전신·역광·얼굴 작은 컷 탈락).
+#   + MJ가 AI Studio 검증에 쓴 모델 비포(snowsnap 비포1~3 = female_116·female_117·male_073) 강제 포함.
+#   여기 없는 나머지는 "test" 등급이다. 등급을 옮기려면 이 파일만 고치면 된다.
+female_016_noglasses.png
+female_023_noglasses.png
+female_035_noglasses.png
+female_061_noglasses.png
+female_062_noglasses.png
+female_064_noglasses.png
+female_073_glasses.png
+female_074_noglasses.png
+female_084_glasses.png
+female_087_noglasses.png
+female_098_noglasses.png
+female_105_noglasses.png
+female_114_noglasses.png
+female_116_noglasses.png
+female_117_noglasses.png
+female_123_noglasses.png
+female_124_noglasses.png
+female_125_noglasses.png
+female_135_noglasses.png
+female_136_noglasses.png
+male_016_noglasses.png
+male_034_noglasses.png
+male_036_noglasses.png
+male_039_noglasses.png
+male_040_noglasses.png
+male_046_noglasses.png
+male_048_noglasses.png
+male_051_noglasses.png
+male_055_noglasses.png
+male_057_glasses.png
+male_058_noglasses.png
+male_060_noglasses.png
+male_072_noglasses.png
+male_073_noglasses.png
+male_075_noglasses.png
+male_083_noglasses.png
