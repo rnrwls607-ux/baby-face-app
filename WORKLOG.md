@@ -1,3 +1,12 @@
+## 2026-09-06 — v3 6종 refresh 완료: Light 정본 라이브 반영
+- [승인] MJ가 _v2api 애프터를 시트로 판정해 승인(옵션 3). 6종 각 _v2api/{키}_애프터1~4.png 24장을 상위 폴더로 되돌린 뒤 --stage refresh --run 으로 진행. ★API 호출 0
+- [교체] 라이브 route 프롬프트 6종 전부 v2로. autumnsnap d7a10aab→3a7c7593 · trenchlook 804827c3→c4c91eb6 · examcheer 5553c51c→a24c2f4f · xmasvintage f216a451→35910109 · campsnap ec704b7e→0046e9a8 · picnicsnap af753360→64bf02bb. 매 건 VM 재추출 md5 대조 PASS
+- [자산] 컨셉당 5장 갱신(cards·details webp + BA 애프터 3장) · 3장 스킵(BA 비포 — 바이트 동일). 상세는 1080×10,005~10,299 재렌더, 썸네일은 애프터1
+- [게이트] 컨셉당 상세 5항(가로 1080·글자 하한·히어로 세로·넘침 0·금지어 0) + refresh 6항(프롬프트 교체 md5·glam-check·자산 갱신·변경 파일=예상·홈 배선 무접촉·빌드) 전항 PASS. 홈·concepts.ts 변경 0
+- [커밋] 711b431 autumnsnap · b3faea8 trenchlook · 0d5ec92 examcheer · f35f5c5 xmasvintage · c8b4110 campsnap · 32835a8 picnicsnap — 전부 push
+- [프로덕션] health commit=32835a8 · 스모크 5/5 PASS · 6종 딥링크 page 200 / api 405 / card·detail webp 200
+- [★사고] MJ가 "애프터 다 넣었다"고 했으나 6종 폴더·프로젝트 전체·다운로드·바탕화면·사용자 폴더 어디에도 새 파일이 0건이었다. 임의로 _v2api 이미지를 쓰지 않고 멈추고 물었다 — v4 규칙(애프터는 MJ가 만든다)을 자의로 어기지 않기 위해서다. MJ가 옵션 3(그 이미지 승인)을 지시해 진행했다
+
 ## 2026-09-05 — picnicsnap refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 1
 - [프롬프트] specs/picnicsnap.prompt.txt · md5 af753360 → 64bf02bb · route 문자 치환 1곳 · VM 재추출 일치
