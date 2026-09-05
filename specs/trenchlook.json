@@ -4,9 +4,7 @@
   "engine": "pro",
   "inputType": "person",
   "glam": 4,
-  "prompt": {
-    "source": "route"
-  },
+  "prompt": { "source": "file", "path": "specs/trenchlook.prompt.txt" },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
