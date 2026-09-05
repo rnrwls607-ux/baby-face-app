@@ -99,13 +99,14 @@ THE SCENE — vintage film-look indoor Christmas snap:
   analog-film Christmas moment — NOT a studio set, NOT a posed photo
   booth, but a real evening at home caught on film.
 - Light (the face comes FIRST): flawless beauty lighting on the person —
-  a bright, CLEAN, NEUTRAL-toned soft key light with delicate
+  a bright, CLEAN, neutral-toned soft key light with delicate
   catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING,
-  idol-grade luminous, every feature crisp — while the warm tungsten
-  glow and the amber-gold tree lights stay in the BACKGROUND as
-  atmosphere. ★The warm Christmas light must NEVER tint the face yellow,
-  orange, or sallow — the face keeps its true clean skin tone and stays
-  the brightest, freshest element in the frame.
+  idol-grade luminous, the face glowing warm and fresh, every feature
+  crisp — while the warm tungsten glow and the amber-gold tree lights
+  stay in the BACKGROUND as atmosphere. ★The warm Christmas light must
+  NEVER tint the face yellow, orange, or sallow — the face keeps its
+  true clean skin tone and stays the brightest, freshest element in the
+  frame.
 - Film rendering: the look of a well-exposed 35mm color film — a fine,
   even, uniform analog grain, gentle halation only around the tree
   lights, softly faded shadows, nostalgic warm-and-green color. ★The

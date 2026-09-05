@@ -1,3 +1,10 @@
+## 2026-09-05 — xmasvintage refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 1
+- [프롬프트] specs/xmasvintage.prompt.txt · md5 f216a451 → 35910109 · route 문자 치환 1곳 · VM 재추출 일치
+- [외모] 외모 4단계(v3) · glam-check PASS(코어 v3)
+- [자산] 5장 갱신(xmasvintage.webp, xmasvintage.webp, xmasvintage-after-1.webp, xmasvintage-after-2.webp, xmasvintage-after-3.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 교체 md5 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-05 — examcheer refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 1
 - [프롬프트] specs/examcheer.prompt.txt · md5 5553c51c → a24c2f4f · route 문자 치환 1곳 · VM 재추출 일치

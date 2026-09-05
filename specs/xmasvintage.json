@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "person",
   "glam": 4,
-  "prompt": { "source": "file", "path": "specs/xmasvintage.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "duo": null,
   "beforeSize": "1088x1456",
   "befores": [
