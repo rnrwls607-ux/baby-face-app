@@ -1,4 +1,4 @@
-# MOSPIC 컨셉 공장 플레이북 (v2, 2026-09-04)
+# MOSPIC 컨셉 공장 플레이북 (v3, 2026-09-06)
 이 파일은 컨셉 추가·검증·출시 작업의 두뇌다. 컨셉 관련 요청을 받으면 먼저 이 파일 전문을 읽는다. MJ는 비개발자 솔로 창업자이며, 아래 ★2관문에서만 판단한다. 그 외 모든 단계는 사람 확인 없이 자율 진행한다.
 
 ## 0. 역할과 관문
@@ -6,6 +6,12 @@
 - ★MJ 관문 2개 — 여기서만 멈추고 묻는다(v2에서 4개 → 2개로 줄였다):
   G1 채택: 후보 제안 후 "진행/보류/탈락"
   G2 실측 판정: 컨택트 시트(examples/ba/{키}/{키}_시트.png) 경로 + 판정표 제시 → MJ 어휘로 답
+- ★G2 적용 범위 (v3, 2026-09-06 결정) — spec.glam 등급으로 가른다:
+  · 외모 4~5단계(v3 계열) = ★반드시 G2에서 멈춘다. 얼굴이 상품인 층이라 자체 판정으로 못 넘긴다.
+  · 외모 1~2단계(자연·v1) = 계속 완전 무인. 시트는 완료 보고에 첨부만 한다.
+  · 3단계(v2)는 신규면 G2, refresh면 자체 판정 — 승인본이 이미 있기 때문이다.
+  ※왜 되살렸나: 09-05 autumnsnap 사건. 무인 배치가 Light 절의 필수 구를 흘렸는데도
+    "하드 실패 0"으로 통과시켰다. 글램 저하는 하드 실패로 안 잡힌다 — 사람 눈이 필요하다.
 - ★G3(상세 승인) 폐지 — G2를 통과하면 상세·썸네일·출시·BA까지 멈추지 않고 자동 진행한다.
   완료 보고에 상세 축소 미리보기를 첨부하고, MJ가 지적하면 ★그 부분만 재렌더한다.
   (상세는 spec의 detail 블록에서 나오므로 카피 한 줄만 고쳐 다시 뽑는 비용이 작다.)
@@ -93,9 +99,17 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 - 따뜻한 광(골든아워·촛불·앰버) 장면: Light 줄을 "얼굴엔 bright CLEAN neutral-toned key light, 따뜻한 광은 BACKGROUND로 격하 + ★must NEVER tint the face yellow" 형태로. 겨울·수영장은 "pale/gray·glare-flattened 금지".
 - 2인: 마스터 부록 B(ROLL CALL·per-person·ANTI-CLONE) 문자 그대로. 성별 문구 "Person 1 is a woman."만 파라미터.
 - ★비포 조달 규칙(v2에서 확정):
+  · ★두 겹 풀(2026-09-06): 같은 219장을 등급으로 나눠 쓴다. 명단은 scripts/lib/pool-kit.txt.
+    - kit(36장)  = 킷·BA 소재용. 얼굴 크고 밝고 정면·결 고운 것 + MJ 검증 모델 비포(snowsnap 비포1~3).
+                   harvest --kit 로 뽑는다. 상세페이지·BA에 실리는 "전"은 여기서만 나온다.
+    - test(183장) = 검증 수확 기본값. 역광·전신·야간도 섞여 있는 게 오히려 낫다(약점을 드러낸다).
+    선별은 지표(얼굴자리 휘도·라플라시안 선명도·평탄부 고주파·클리핑)로 좁힌 뒤 ★눈으로 확정했다.
+    등급을 옮기려면 pool-kit.txt 한 줄만 고친다. examples/ 는 통째로 gitignore라 명단은 scripts/lib 에 둔다.
   · 인물(person·duo) = examples/ba/_pool 219장에서 ★자동 배정. 힌트는 "female"/"male"/
     "female-glasses"/"male-glasses", 없으면 기본 [female, female-glasses, male].
     미사용분을 먼저 준다(USED_POOL.txt로 추적) — 컨셉마다 다른 얼굴이 나온다.
+    ★USED_POOL.txt는 "실제로 그 폴더에 있는 파일"을 md5로 되찾아 적는다. 예전엔 새 픽을 적어서
+    수동 모드를 두 번 돌리면 기록이 한 칸씩 밀렸다(09-06 실측: 6종 중 4종). 기록이 아니라 실물이 근거다.
   · 사물·음식·펫·랜드마크 = spec의 befores[].pool 에 "custom" → 체크리스트가
     ★"MJ가 ChatGPT에서 생성" 항목 + 비포 프롬프트 전문을 실어준다.
     표준 문형은 아래 줄 그대로: 가상 인물·사물 명시 · 글자 0 · 세로 3:4 · 필터 없음.
@@ -106,6 +120,14 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 
 ## 6. G2 "한 수 더" 처방표 (마스터 부록 C + 이번 판례)
 - 얼굴 어둡다·밋밋 → 조명 역전판 확인, 따뜻한 광 격리
+- ★처방을 넣을 때 뷰티 절을 갉아먹지 말 것 (09-05~06 autumnsnap 사건, 이번 판례의 핵심)
+  · 무슨 일: 따뜻한 광 격리 처방(노랑 금지)을 쓰면서 Light 절의 "the face glowing warm and fresh"를
+    같이 지웠다. 격리는 성공했는데 얼굴이 밋밋해졌다 — 처방이 글램을 죽였다.
+  · 왜 안 보였나: 자체 판정은 "노랗지 않은가"만 봤다. 기준선(승인본)과 나란히 두지 않으면
+    "덜 예쁘다"는 보이지 않는다. 그래서 refresh 판정은 항상 ★v1↔v2 같은 비포 대조 시트로 한다.
+  · 규칙: 처방은 뷰티 절 뒤에 ★덧붙이기만 한다. 절 안의 문구를 빼거나 바꾸면 glam-check가 막는다.
+  · 원인 격리도 순서가 있다: 엔진 설정 → 비포 품질 → 프롬프트. 앞의 둘을 API 2장으로 기각한 뒤
+    프롬프트를 의심했다(09-05 실험1·2). 변수를 하나씩만 바꾼다.
 - 살쪄 보임 → CONTOURS / 늙어 보임 → "subtly YOUNGER" + AVOID aged / 머리색 변함 → "true hair color"
 - 외모 부족(Pro) → v2→v3 사다리 한 칸. v3에서도 부족하면 조명·씬 교체 후보(oldmoney 판례: 그래도 탈락 가능)
 - 글자·간판 유출 → 강화 봉쇄줄 + 해당 소품을 "blank shapes"로 명시
@@ -139,8 +161,12 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
     직접 호출(withCoin 우회 = 코인 차감 0). MJ가 브라우저에서 버튼 1회. app/ 수정이 필요해
     이번 범위 밖이라 제안만 남긴다.
 VM 평가기(lib/prompt.mjs): 요청값(await formData/json)에서 오는 const는 undefined로 묶어 기본 분기를 탄다(09-05, campusgrad·dresswedding·travel 추출 가능) — 분기 컨셉은 기본값 프롬프트만 검사된다. harvest.mjs 안의 사본은 아직 구판(통합 백로그).
+🕒 킷 풀 재수확 — v3 6종의 BA·상세는 test 겹 비포로 만든 것을 그대로 쓰고 있다(09-06 refresh).
+   소재 품질을 올리려면 --kit 으로 비포를 다시 깔고 애프터를 재수확해야 한다(컨셉당 ₩1,200).
 harvest: --src(비포 재사용 경로) · --force 범위를 스테이지별로 · VM 평가기 lib/prompt.mjs로 통합 / 4호 qc 자동 필터(글자·얼굴 유사도·인원수) / 기존 상세 1080 재생성(spec 채우면 detail-page로) / airportsnap 애프터3=썸네일 중복(무해)
-★재출시(refresh) 3건 — 2026-09-03 droneview v6에서 드러남:
-1. new-concept에 --stage refresh 신설(프롬프트 교체 + 상세·webp·BA 자산 갱신). 지금은 launch·ba가 멱등이라 우회해야 하고, 우회 절차가 문서에만 있다.
-2. spec 재직렬화 버그 — route 스테이지가 prompt.source를 고칠 때 JSON.stringify로 파일 전체를 재포맷한다(droneview에서 +130/-20). 문자 치환으로 바꿀 것.
+★재출시(refresh) — 1·2번 완료(2026-09-06):
+1. ✔ --stage refresh 신설. 프롬프트 교체(VM으로 뽑은 현재 문자열을 소스에서 찾아 치환 → 재추출 md5 대조)
+   + 상세 재렌더 + webp·BA 자산 갱신. ★바이트 동일분은 쓰지 않는다(비포는 그대로라 매번 다시 쓸 이유가 없다).
+   duo는 프롬프트가 보간식이라 문자 치환이 안 된다 — 아직 미지원(명시적으로 막아뒀다).
+2. ✔ spec 재직렬화 버그 수리 — prompt 블록만 문자 치환한다(setSpecPromptToRoute).
 3. harvest --prompt-file 오버라이드 — 출시된 컨셉은 spec이 source:"route"라 새 프롬프트 버전을 검증할 수 없다. v6 재수확이 v5로 돌아 ₩1,200을 헛썼다.
