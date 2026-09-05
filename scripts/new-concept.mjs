@@ -69,7 +69,16 @@ function report() {
 
 function build() {
   const t0 = Date.now();
-  const out = execFileSync("npm", ["run", "build"], { cwd: ROOT, encoding: "utf8", maxBuffer: 128 * 1024 * 1024, shell: true });
+  // ★빌드 실패를 던지지 않고 값으로 돌려준다 — 던지면 게이트 보고와 롤백을 못 타고
+  //   작업 트리가 더러운 채로 죽는다(2026-09-06 partysnap: audience 타입 오류로 실측).
+  let out;
+  try {
+    out = execFileSync("npm", ["run", "build"], { cwd: ROOT, encoding: "utf8", maxBuffer: 128 * 1024 * 1024, shell: true });
+  } catch (e) {
+    const log = String(e.stdout || "") + String(e.stderr || "");
+    const err = log.split("\n").find((l) => /Type error|Failed to compile|Failed to type check|Error:/.test(l));
+    return { ok: false, line: (err || "빌드 실패(원인 줄 못 찾음)").trim().slice(0, 160), sec: ((Date.now() - t0) / 1000).toFixed(0) };
+  }
   const line = out.split("\n").find((l) => l.includes("Compiled successfully"));
   return { ok: !!line, line: (line || "(Compiled successfully 줄 없음)").trim(), sec: ((Date.now() - t0) / 1000).toFixed(0) };
 }
