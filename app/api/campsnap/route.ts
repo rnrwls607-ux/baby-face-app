@@ -98,14 +98,14 @@ THE SCENE — cozy blue-hour camping snap:
   small campfire flickering out of focus in the background: a relaxed,
   emotional camping evening, warm and unhurried.
 - Light (the face comes FIRST): flawless beauty lighting on the person —
-  a bright, CLEAN, NEUTRAL-toned soft key light with delicate
+  a bright, CLEAN, neutral-toned soft key light with delicate
   catchlights, gentle fill, and a crisp rim light, clearly BEAUTIFYING,
-  idol-grade luminous, every feature crisp — while the amber lantern
-  glow and the campfire light stay in the BACKGROUND as atmosphere.
-  ★The firelight and lantern must NEVER tint the face orange, yellow,
-  or sallow, and no flickering fire color may fall on the skin — the
-  face keeps its true clean skin tone and stays the brightest element
-  in the frame.
+  idol-grade luminous, the face glowing warm and fresh, every feature
+  crisp — while the amber lantern glow and the campfire light stay in
+  the BACKGROUND as atmosphere. ★The firelight and lantern must NEVER
+  tint the face orange, yellow, or sallow, and no flickering fire color
+  may fall on the skin — the face keeps its true clean skin tone and
+  stays the brightest element in the frame.
 - Props: a warm camping lantern, a folding camp chair, a small enamel
   mug, a tent silhouette and the campfire well behind the person and
   fully out of focus — soft, natural, never staged. All gear is plain:
