@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/carad.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "carad_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional compact SUV in deep navy blue, front three-quarter view, parked in a crowded apartment underground parking garage with concrete pillars, other cars partially visible, harsh fluorescent light and a slightly tilted angle. The car has no brand emblem or lettering anywhere — smooth plain grille and badge-free body; the license plate is a blank white rectangle with no characters. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional car model. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "carad_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional white mid-size sedan, side-front view, parked on a residential street beside a utility pole and a low wall, overcast daylight, some dust on the lower body, slightly crooked framing. No brand emblem or lettering anywhere; the license plate is a blank white rectangle with no characters. Realistic phone-camera quality, vertical 3:4. Completely fictional car model. No text, no letters, no numbers, no logos, no watermark." },
