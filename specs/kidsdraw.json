@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/kidsdraw.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "kidsdraw_비포1.png", "pool": "custom", "prompt": "A smartphone photo of a fictional child's crayon drawing on slightly wrinkled white paper: a smiling purple cat with a very round body, four stick legs of different lengths, a long curly tail, big uneven circle eyes, and orange whiskers, standing on green scribble grass under a yellow sun with rays. Naive, wobbly lines, uneven coloring with white gaps, typical of a 5-year-old. Photographed flat on a wooden table under ordinary indoor light. Vertical 3:4 orientation. No letters, no numbers, no signature, no words anywhere on the paper. No watermark." },
     { "file": "kidsdraw_비포2.png", "pool": "custom", "prompt": "A smartphone photo of a fictional child's marker drawing on white paper: a green dinosaur with a huge head, tiny arms, a rainbow-striped back with triangle spikes, a big toothy grin, and one leg longer than the other, next to a lopsided red house with a blue door and a chimney with a scribble of smoke. Childlike wobbly outlines, colors going outside the lines, typical of a 6-year-old. Photographed flat on a desk with a slight angle, ordinary room light. Vertical 3:4. No letters, no numbers, no signature, no words anywhere. No watermark." },
