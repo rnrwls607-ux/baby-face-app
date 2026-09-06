@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/plantshot.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "plantshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional potted monstera-type plant with six large split leaves (one leaf slightly yellow at the edge) in a plain white plastic pot, standing on a cluttered apartment windowsill beside a remote control, a cable, and a half-drawn curtain, dim indoor light with a blue window cast, slightly tilted. No pot label, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "plantshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small pilea-type plant with about twelve round coin-shaped leaves on thin stems in a terracotta pot, sitting on a messy desk next to a mug and papers (papers blank, no writing), under a warm desk lamp, off-center. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
