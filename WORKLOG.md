@@ -1,3 +1,10 @@
+## 2026-09-06 — partysnap refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 2
+- [프롬프트] 불변 6cc5a689 — route 무접촉, 자산만 갱신(상세 히어로 B 적용)
+- [외모] 외모 5단계(v3+) · glam-check PASS(코어 v3)
+- [자산] 1장 갱신(partysnap.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 불변 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — G2 판정: partysnap·skisnap 통과 / filmcampus 보류
 - [판정] MJ 실측 판정 — partysnap 통과(썸네일 2) · skisnap 통과(썸네일 2) · filmcampus ★보류(재론 금지)
 - [★엔진 정정] filmcampus 애프터 4장은 flash가 아니라 ★Pro로 만든 것이었다. 앞선 판정표에서 "외모 4단계를 지시했는데 flash가 거의 반영하지 않았다 — 엔진 문제로 보인다"고 적은 것은 ★틀렸다. 시트 머리글의 engine=flash 는 spec 선언값이지 실제 생성 엔진이 아니다 — 시트는 무엇으로 만들었는지 알지 못한다. 같은 이유로 "엔진 승급이 판단 포인트"라는 제안도 근거가 없었다. 상승폭이 작았던 원인은 미정으로 남긴다
