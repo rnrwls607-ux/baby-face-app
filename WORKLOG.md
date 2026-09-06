@@ -1,3 +1,11 @@
+## 2026-09-06 — B 배치 3종 출시 완료: productscene·kidsdraw·flatlay (gyaru 템플릿 첫 통과·히어로 B)
+- [G2] MJ 판정 — productscene 통과(썸네일 1) / kidsdraw 통과(썸네일 3) / flatlay 통과(썸네일 2). productscene 애프터4의 소품 3개는 결함 아님(MJ), 그대로 사용
+- [히어로 선별] 3종×애프터 4장 = 12장을 라이브 히어로 B CSS로 1080×1440 렌더해 제품·주인공이 하단 그라데이션·타이틀에 가리는지 판단. productscene 애프터1(크림병)·kidsdraw 애프터1(보라 고양이) 무가림. flatlay 는 4장 전부 하단에 소품이 걸리는 구조(플랫레이 = 화면 전체에 물건 분산) → 가장 덜 가리는 애프터3(노트 2권·머그 온전, 테이프·가위만 그라데이션 아래)으로 spec hero.image 교체(7c02bec)
+- [체인] route→detail→launch→ba ×3 = 93항 PASS · FAIL 0 · 중단 0. ★gyaru 템플릿(product×gpt) 첫 실전 통과 — 배선 8/8 · 프롬프트 재추출 md5 원본 일치(10fd54bd / bdaa31c4 / fb5a1448) · 템플릿 무접촉 · 잔재 0(갸루 문구 route·page 0건) · glam-check 외모 1단계(코어 검사 없음). 커밋 productscene a8d165a·a0550b9·662ae5c / kidsdraw 8f6daf7·b30cdc7·dc0d260 / flatlay 4504417·6cbdf59·e1ab5ed
+- [상세] 히어로 B(1440px) · 글자 하한 32px 미달 0 · 가로 넘침 0. 기준 파티스냅·스키스냅과 5종 나란히 축소 대조 → 히어로·고민·솔루션 띠·BA·포인트 1~3·가격·가이드·CTA 전부 같은 톤·여백·글자 크기, 세로 12,384~12,520px(1% 이내). 재렌더 0
+- [배포] health e1ab5ed · 스모크 PASS · 딥링크 3종 page 200 / api 405 / cards·details·ba webp 200. docs/CONCEPT_LIST.md 자동 갱신 — 총 192종(라이브 184) 96~98행, BA_LIVE 185종
+- [실수·재발방지] 1차 체인이 productscene route 첫 관문 requireClean 에서 멈췄다 — flatlay spec의 hero.image 를 고쳐 놓고 커밋하지 않은 채 돌린 것. spec 선커밋 후 재실행해 통과. 규칙: 체인 직전의 spec 편집은 반드시 먼저 커밋한다(모든 스테이지가 추적 변경 0을 요구)
+
 ## 2026-09-06 — BA 배선: flatlay 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
