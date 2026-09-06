@@ -208,6 +208,5 @@
 | `petid` | 탈락 | pet 컨셉과 겹침 | 없음 |
 | `boxtoy` | 탈락 | 글자 봉쇄 헌법과 충돌 | 없음 |
 | `chibisticker` | 보류 | 다중 셀 일관성 리스크 — 네컷 동면과 연동해 재론 | 없음 |
-| `droneview` | 확인 필요 | ★리포에서는 라이브(카드 열림·BA·상세 있음, 09-02 출시). 플레이북 §7은 "진행 중". 보류로 볼지 MJ 확인 | route·spec·ba·concepts |
 | `filmcampus` | 보류 | 09-06 G2 보류(재론 금지). spec·프롬프트·비포 3·애프터 4 보관, route 미배선 | spec·ba |
 
