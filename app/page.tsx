@@ -460,7 +460,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
       { id: "nailshot", title: "네일아트 상품컷", subtitle: "네일샵 인스타 표준컷", emoji: "💅", accent: "#C96A8A", image: "/cards/nailshot.webp", badge: "NEW", tags: ["상품"], go: "nailshot" },
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
-      // { id: "bouquetshot", title: "꽃다발 상품컷", subtitle: "꽃집 대표컷, 작업대에서 바로", emoji: "💐", accent: "#C4707E", image: "/cards/bouquetshot.webp", badge: "NEW", tags: ["상품"], go: "bouquetshot" },
+      { id: "bouquetshot", title: "꽃다발 상품컷", subtitle: "꽃집 대표컷, 작업대에서 바로", emoji: "💐", accent: "#C4707E", image: "/cards/bouquetshot.webp", badge: "NEW", tags: ["상품"], go: "bouquetshot" },
       { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
