@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "cinesnap" | "schoolsnap" | "gravityad" | "feltdoll" | "personalcolor" | "monoactor" | "fortunecard" | "minichef" | "poolside" | "snowsnap" | "profileduo" | "droneview" | "autumnsnap" | "trenchlook" | "examcheer" | "xmasvintage" | "campsnap" | "picnicsnap" | "partysnap" | "skisnap" | "productscene" | "kidsdraw" | "flatlay" | "ghostfit" | "carad" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "cinesnap" | "schoolsnap" | "gravityad" | "feltdoll" | "personalcolor" | "monoactor" | "fortunecard" | "minichef" | "poolside" | "snowsnap" | "profileduo" | "droneview" | "autumnsnap" | "trenchlook" | "examcheer" | "xmasvintage" | "campsnap" | "picnicsnap" | "partysnap" | "skisnap" | "productscene" | "kidsdraw" | "flatlay" | "ghostfit" | "carad" | "sketch2real" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
@@ -1640,6 +1640,19 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "carad",
     detailImage: "/details/carad.webp",
+  },
+  sketch2real: {
+    key: "sketch2real", audience: "all",
+    coinCost: 3,
+    title: "스케치 실물화",
+    subtitle: "종이 위 아이디어를 실물로",
+    emoji: "✏️",
+    accent: "#5A5A6E",
+    description: "가방·의자·신발·소품 손 스케치를 그 형태 그대로 실물 제품 사진으로. 펀딩·시안·발표용.",
+    examples: [
+      { emoji: "✏️", accent: "#5A5A6E" },
+    ],
+    start: "sketch2real",
   },
   halloween: {
     key: "halloween", audience: "all",
@@ -3408,5 +3421,6 @@ export function conceptForGo(go: string): Concept {
   if (go === "flatlay") return CONCEPTS.flatlay;
   if (go === "ghostfit") return CONCEPTS.ghostfit;
   if (go === "carad") return CONCEPTS.carad;
+  if (go === "sketch2real") return CONCEPTS.sketch2real;
   return CONCEPTS.soon;
 }

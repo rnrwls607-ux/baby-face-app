@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/sketch2real.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "sketch2real_비포1.png", "pool": "custom", "prompt": "A smartphone photo of a fictional designer's hand-drawn pen sketch on white paper of a structured tote bag with a wide top, two short rolled handles, a single front flap pocket, and a small metal ring on one side, drawn with confident black ink lines and light gray marker shading. Photographed flat on a desk under ordinary indoor light, slightly angled. No letters, no numbers, no annotations, no arrows, no words anywhere on the paper. Vertical 3:4. No watermark." },
     { "file": "sketch2real_비포2.png", "pool": "custom", "prompt": "A smartphone photo of a fictional designer's pencil sketch on cream paper of a lounge chair with a curved one-piece bent-wood shell seat, four splayed tapered wooden legs, and a thin round cushion, drawn with clean construction lines and soft hatching. Photographed flat on a table under a desk lamp, slight shadow. No letters, no numbers, no annotations, no arrows, no words anywhere. Vertical 3:4. No watermark." },
