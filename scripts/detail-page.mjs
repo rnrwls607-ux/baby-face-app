@@ -132,6 +132,13 @@ function logoUri() {
   if (!fs.existsSync(p)) { warnings.push("public/logo.png"); return ""; }
   return `data:image/png;base64,${fs.readFileSync(p).toString("base64")}`;
 }
+// 히어로 B가 이미지 위에 얹는 흰 글리프 — logo.png는 알파가 전부 255(흰 배경이 구워져 있다)라
+// CSS 필터로 뒤집으면 흰 막대가 된다. 밝기를 알파로 바꾼 사본을 public/logo-white.png 로 둔다.
+function logoWhiteUri() {
+  const p = path.join(ROOT, "public/logo-white.png");
+  if (!fs.existsSync(p)) { warnings.push("public/logo-white.png"); return ""; }
+  return `data:image/png;base64,${fs.readFileSync(p).toString("base64")}`;
+}
 
 // "A → B" 형태 캡션에서 화살표 뒷부분을 강조색으로
 function splitArrow(s) {
@@ -154,19 +161,21 @@ async function build() {
   const s = [];
   const logo = logoUri();
 
-  // 1. 워드마크
-  s.push(`<div class="wordmark">${logo ? `<img src="${logo}" alt="MOSPIC">` : ""}</div>`);
-
-  // 2. 히어로 — 풀블리드 1080, 세로 940
-  // 히어로 높이는 원본 비율을 따라간다 — 하한 900(킷 규격), 상한 1440(3:4 원본이 딱 맞는 높이).
-  // 고정 940으로 잘랐더니 정수리·병 바닥이 날아갔다(2026-09-02 비교 시트에서 잡음).
+  // 1+2. 히어로 B — 풀블리드 이미지 + 하단 그라데이션 + 좌하단 타이틀 (2026-09-06 MJ 결정, 시안 B)
+  //   상단 워드마크 띠(56+44+40px)를 없애고 이미지 좌상단에 흰 글리프로 얹는다 — 상단 빈 여백이 0이 된다.
+  //   높이는 원본 비율을 따라간다 — 하한 900(킷 규격), 상한 1440(3:4 원본이 딱 맞아 안 잘린다).
+  //   고정 940으로 잘랐더니 정수리·병 바닥이 날아갔다(2026-09-02 비교 시트에서 잡음).
   const heroH = await fitH(d.hero.image, W, 900, 1440);
-  s.push(`<section class="hero">
-  <div class="pad"><p class="hero__sub">${esc(d.hero.sub)}</p></div>
-  <div class="pad"><h1 class="hero__title">${esc(spec.name || key)}</h1></div>
-  ${await img(d.hero.image, W, heroH, "hero__img")}
-  <div class="hero__tags">${(d.hero.tags || []).map((t, i) =>
-    `<span class="tag${i === (d.hero.tags.length - 1) ? " tag--hot" : ""}">${esc(t)}</span>`).join("")}</div>
+  const logoW = logoWhiteUri();
+  s.push(`<section class="hero" style="height:${heroH}px">
+  ${await img(d.hero.image, W, heroH, "hero__bg")}
+  <div class="hero__grad"></div>
+  ${logoW ? `<img class="hero__wm" src="${logoW}" alt="MOSPIC">` : ""}
+  <div class="hero__text">
+    <div class="hero__tags">${(d.hero.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+    <h1 class="hero__title">${esc(spec.name || key)}</h1>
+    <p class="hero__sub">${esc(d.hero.sub)}</p>
+  </div>
 </section>`);
 
   // 3. 고민 공감
@@ -378,7 +387,7 @@ const overflow = await page.evaluate((w) => {
 
 // ★게이트 C — 히어로 높이
 const heroH = await page.evaluate(() => {
-  const el = document.querySelector(".hero__img");
+  const el = document.querySelector(".hero__bg");   // 히어로 B: 풀블리드 배경 이미지
   return el ? Math.round(el.getBoundingClientRect().height) : 0;
 });
 

@@ -64,28 +64,32 @@ img { display: block; max-width: 100%; }
 .wordmark img { height: 44px; width: auto; }
 .wordmark--foot { padding: 72px 0 88px; opacity: .45; }
 
-/* ── 2. 히어로 ───────────────────────────────────────────────────────────── */
-.hero { background: var(--sig-bg); padding-bottom: 0; }
-.hero__sub {
-  text-align: center; font-size: var(--t-hero-sub); font-weight: 700;
-  color: var(--sig); letter-spacing: -.02em; padding-bottom: 24px;
+/* ── 2. 히어로 B — 풀블리드 + 그라데이션 오버레이 (2026-09-06 MJ 결정) ───────────
+   이미지가 히어로 전체를 덮고, 하단 40%에 검정 그라데이션, 좌하단에 태그·타이틀·서브카피.
+   워드마크는 별도 띠 없이 이미지 좌상단(흰 글리프). 글자는 전부 안전 영역(--gutter) 좌측 정렬.
+   글자 하한 32px 게이트: 태그·서브카피 34px, 타이틀 92px. */
+.hero { position: relative; width: var(--w); overflow: hidden; background: #000; }
+.hero__bg { position: absolute; inset: 0; width: var(--w); height: 100%; object-fit: cover; display: block; }
+.hero__grad {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,.18) 45%, rgba(0,0,0,0) 62%);
+}
+.hero__wm { position: absolute; left: var(--gutter); top: 44px; height: 36px; width: auto; opacity: .95; }
+.hero__text { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 72px; }
+.hero__tags { display: flex; flex-wrap: wrap; gap: 12px; }
+.tag {
+  font-size: 34px; font-weight: 700; letter-spacing: -.02em;
+  padding: 12px 26px; border-radius: 999px;
+  border: 2.5px solid rgba(255,255,255,.6); color: #fff; background: rgba(255,255,255,.12);
 }
 .hero__title {
-  text-align: center; font-size: var(--t-hero); font-weight: 800;
-  line-height: 1.18; letter-spacing: -.035em; padding-bottom: 56px;
+  font-size: 92px; font-weight: 800; line-height: 1.1; letter-spacing: -.035em;
+  color: #fff; margin: 26px 0 0; text-shadow: 0 2px 24px rgba(0,0,0,.35);
 }
-/* 풀블리드 — 정확히 1080, 좌우 여백 없음 */
-.hero__img { width: var(--w); height: auto; display: block; }  /* 높이는 스크립트가 원본 비율로 계산해 넣는다 */
-.hero__tags {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;
-  padding: 48px var(--gutter) 88px; background: var(--sig-bg);
+.hero__sub {
+  font-size: 34px; font-weight: 700; letter-spacing: -.02em;
+  color: var(--sig); margin: 16px 0 0; filter: brightness(1.35);
 }
-.tag {
-  font-size: var(--t-tag); font-weight: 700; letter-spacing: -.02em;
-  padding: 18px 34px; border-radius: 999px;
-  background: #EFEEF6; color: #5B5B6B;
-}
-.tag--hot { background: var(--pink); color: #fff; }
 
 /* ── 3. 고민 공감 ────────────────────────────────────────────────────────── */
 .section { padding-top: 88px; padding-bottom: 88px; }

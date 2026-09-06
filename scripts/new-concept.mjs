@@ -20,6 +20,7 @@
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage launch --run --no-push
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage ba --run --no-commit
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage refresh --run --thumb 1
+//   node scripts/new-concept.mjs --spec specs/{키}.json --stage refresh --run --assets --note "히어로 B"   (프롬프트 그대로, 자산만)
 
 import fs from "node:fs";
 import path from "node:path";
@@ -36,7 +37,7 @@ import { glamCheck, glamLabel } from "./lib/glam-check.mjs";
 const sharp = need("sharp", "npm i -D sharp");
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
-const args = { spec: null, stage: null, run: false, push: true, commit: true, thumb: 1 };
+const args = { spec: null, stage: null, run: false, push: true, commit: true, thumb: 1, assets: false, note: "" };
 {
   const a = process.argv.slice(2);
   for (let i = 0; i < a.length; i++) {
@@ -46,6 +47,8 @@ const args = { spec: null, stage: null, run: false, push: true, commit: true, th
     else if (a[i] === "--dry-run") args.run = false;
     else if (a[i] === "--no-push") args.push = false;
     else if (a[i] === "--thumb") args.thumb = Number(a[++i]);
+    else if (a[i] === "--assets") args.assets = true;   // refresh: 프롬프트는 그대로, 상세·webp·BA 자산만 갱신
+    else if (a[i] === "--note") args.note = a[++i];      // refresh 커밋 메시지 꼬리
     else if (a[i] === "--no-commit") args.commit = false;
     else fail(`모르는 플래그: ${a[i]}`);
   }
@@ -439,10 +442,11 @@ async function stageRefresh() {
   const oldMd5 = md5(oldText);
   console.log(`  프롬프트: ${promptPath} · ${newText.length}자`);
   console.log(`  라이브 md5 ${oldMd5.slice(0, 8)} → 새 md5 ${newMd5.slice(0, 8)}`);
-  if (oldMd5 === newMd5) {
-    console.log(`\n  [멱등] 라이브가 이미 이 프롬프트다 — 변경 0건.\n`);
+  if (oldMd5 === newMd5 && !args.assets) {
+    console.log(`\n  [멱등] 라이브가 이미 이 프롬프트다 — 변경 0건. (자산만 갱신하려면 --assets)\n`);
     return true;
   }
+  if (args.assets && oldMd5 !== newMd5) fail(`--assets 인데 프롬프트가 다르다(${oldMd5.slice(0, 8)} → ${newMd5.slice(0, 8)}) — 프롬프트 교체는 --assets 없이 돌릴 것`);
   const routeRel = `app/api/${key}/route.ts`;
   const routeSrc = readText(routeRel);
   const hits = routeSrc.split(oldText).length - 1;
@@ -453,7 +457,7 @@ async function stageRefresh() {
   console.log(`  자산 갱신 예정: 상세 재렌더(--thumb ${args.thumb}) · webp 2장 · BA ${baPairs.length}쌍(비포 동일분은 스킵)`);
 
   if (!args.run) {
-    console.log(`\n  [dry-run] route 프롬프트 ${oldText.length}자 → ${newText.length}자 (문자 치환 1곳)`);
+    console.log(args.assets ? `\n  [dry-run] 프롬프트 불변(${oldMd5.slice(0, 8)}) — 자산만 갱신` : `\n  [dry-run] route 프롬프트 ${oldText.length}자 → ${newText.length}자 (문자 치환 1곳)`);
     console.log(`  [dry-run] 외부 변경 0건. 적용하려면 --run.\n`);
     return true;
   }
@@ -461,9 +465,13 @@ async function stageRefresh() {
   G.requireClean();
 
   // 5) route 프롬프트 문자 치환
-  writeRoute(key, routeSrc.replace(oldText, newText));
-  const got = md5(extractPrompt(key)[0].text);
-  gate("프롬프트 교체 md5", got === newMd5, `${got.slice(0, 8)} vs 새 원본 ${newMd5.slice(0, 8)}`);
+  if (args.assets) {
+    gate("프롬프트 불변", oldMd5 === newMd5, `${oldMd5.slice(0, 8)} (route 무접촉)`);
+  } else {
+    writeRoute(key, routeSrc.replace(oldText, newText));
+    const got = md5(extractPrompt(key)[0].text);
+    gate("프롬프트 교체 md5", got === newMd5, `${got.slice(0, 8)} vs 새 원본 ${newMd5.slice(0, 8)}`);
+  }
   gate("glam-check", gc.ok, `${glamLabel(spec.glam)}${gc.level ? ` · 코어 ${gc.level} 문자 일치` : ""}`);
 
   // 6) 상세 재렌더 (detail-page.mjs 그대로 쓴다 — 규격 게이트가 그 안에 있다)
@@ -520,14 +528,14 @@ async function stageRefresh() {
 
   prepend(`${today()} — ${key} refresh: 프롬프트 교체 + 자산 갱신`, [
     `[스테이지] new-concept.mjs --stage refresh --thumb ${args.thumb}`,
-    `[프롬프트] ${promptPath} · md5 ${oldMd5.slice(0, 8)} → ${newMd5.slice(0, 8)} · route 문자 치환 1곳 · VM 재추출 일치`,
+    args.assets ? `[프롬프트] 불변 ${oldMd5.slice(0, 8)} — route 무접촉, 자산만 갱신${args.note ? `(${args.note})` : ""}` : `[프롬프트] ${promptPath} · md5 ${oldMd5.slice(0, 8)} → ${newMd5.slice(0, 8)} · route 문자 치환 1곳 · VM 재추출 일치`,
     `[외모] ${glamLabel(spec.glam)} · glam-check PASS${gc.level ? `(코어 ${gc.level})` : ""}`,
     `[자산] ${touched.length}장 갱신(${touched.map((f) => f.split("/").pop()).join(", ") || "없음"}) · 비포 등 동일분 스킵`,
     `[게이트] ${gates.map((g) => g.name).join(" · ")} 전항 PASS`,
   ]);
   const staged = G.addWithImages([routeRel, specPath, "WORKLOG.md"], touched);
   console.log(`\n  스테이징 ${staged.length}개`);
-  const hash = G.commit(`refresh: ${key} Light 정본 복원`);
+  const hash = G.commit(`refresh: ${key} — ${args.note || (args.assets ? "자산 갱신" : "프롬프트 교체")}`);
   console.log(`  커밋 ${hash}`);
   if (args.push) console.log(`  푸시 ${G.push()}`);
   return true;
