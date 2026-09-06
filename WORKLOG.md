@@ -1,3 +1,10 @@
+## 2026-09-06 — 히어로 B 상단 그라데이션(12% · 25%→0) — 순백 배경 워드마크 가독
+- [결정] MJ — 시안 없이 적용. ghostfit(순백 스튜디오 배경)에서 좌상단 흰 워드마크가 보이지 않던 것. scripts/detail-template/style.css .hero__grad 에 두 번째 레이어 linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,0) 12%) 추가, 하단 그라데이션·마크업 무변경. 커밋 777a56e
+- [실측] ghostfit 재렌더 흰 배경 열 밝기 y0=191(=25% 검정) → y172(12%)=254 → 이후 순백. 워드마크는 확대에서 읽히지만 대비는 낮은 편(흰 글리프 vs 191 회색) — 더 진하게 원하면 35~40%가 다음 후보
+- [refresh] ghostfit --stage refresh --assets --thumb 2 → 변경 파일 public/details/ghostfit.webp 1장(카드·BA 7장 바이트 동일 스킵), 프롬프트 불변 441b2564. 커밋 e6f3c0a. 비교 시트: 파티스냅(기존 렌더) | ghostfit 적용 전 | 적용 후
+- [범위] 다른 히어로 B 라이브(partysnap·skisnap·productscene·kidsdraw·flatlay·carad·sketch2real)는 다음 refresh 때 자동 반영 — 이번엔 ghostfit만(MJ 지시)
+- [배포] health commit=e6f3c0a (기대 e6f3c0a, 5회) ghostfit details webp: 200 (919222 bytes, 커밋분 919222) ghostfit page=200 
+
 ## 2026-09-06 — ghostfit refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 2
 - [프롬프트] 불변 441b2564 — route 무접촉, 자산만 갱신(히어로 B 상단 그라데이션 적용)
