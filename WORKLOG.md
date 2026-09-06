@@ -1,3 +1,10 @@
+## 2026-09-06 — flatlay refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 2
+- [프롬프트] 불변 fb5a1448 — route 무접촉, 자산만 갱신(points[2] 캡션 교체, 상세 재렌더)
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [자산] 1장 갱신(flatlay.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 불변 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — kidsdraw refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 3
 - [프롬프트] 불변 bdaa31c4 — route 무접촉, 자산만 갱신(points[2] 캡션 교체, 상세 재렌더)
