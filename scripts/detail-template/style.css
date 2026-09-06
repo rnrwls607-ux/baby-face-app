@@ -65,14 +65,17 @@ img { display: block; max-width: 100%; }
 .wordmark--foot { padding: 72px 0 88px; opacity: .45; }
 
 /* ── 2. 히어로 B — 풀블리드 + 그라데이션 오버레이 (2026-09-06 MJ 결정) ───────────
-   이미지가 히어로 전체를 덮고, 하단 40%에 검정 그라데이션, 좌하단에 태그·타이틀·서브카피.
+   이미지가 히어로 전체를 덮고, 하단 40%에 검정 그라데이션 + 상단 12%에 얕은 다크 띠, 좌하단에 태그·타이틀·서브카피.
    워드마크는 별도 띠 없이 이미지 좌상단(흰 글리프). 글자는 전부 안전 영역(--gutter) 좌측 정렬.
    글자 하한 32px 게이트: 태그·서브카피 34px, 타이틀 92px. */
 .hero { position: relative; width: var(--w); overflow: hidden; background: #000; }
 .hero__bg { position: absolute; inset: 0; width: var(--w); height: 100%; object-fit: cover; display: block; }
 .hero__grad {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,.18) 45%, rgba(0,0,0,0) 62%);
+  /* 상단 12% 얕은 다크 띠(25%→0) — 순백 배경에서도 흰 워드마크가 읽히게 (2026-09-06 MJ 결정, ghostfit에서 발견) */
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,0) 12%),
+    linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 22%, rgba(0,0,0,.18) 45%, rgba(0,0,0,0) 62%);
 }
 .hero__wm { position: absolute; left: var(--gutter); top: 44px; height: 36px; width: auto; opacity: .95; }
 .hero__text { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 72px; }
