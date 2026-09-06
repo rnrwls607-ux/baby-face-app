@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/ghostfit.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "ghostfit_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional women's blouse — pale sage green, short puff sleeves, small covered buttons down the front, slightly wrinkled — hanging on a plain wooden hanger against a beige apartment wall, taken indoors under dim yellowish light at a slight angle. No visible brand tag, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "ghostfit_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional men's oversized sweatshirt — heather gray with a plain navy chest panel shape (no lettering), ribbed cuffs and hem — laid flat but a bit crumpled on a light wooden floor, taken from above indoors in flat ordinary light, slightly crooked. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },

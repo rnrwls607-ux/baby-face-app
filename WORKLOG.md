@@ -1,3 +1,10 @@
+## 2026-09-06 — 신규 컨셉 신설: ghostfit (고스트 마네킹 착장컷)
+- [스테이지] new-concept.mjs --stage route · 템플릿 product:gpt → gyaru
+- [프롬프트] specs/ghostfit.prompt.txt → route 삽입 · md5 441b2564 · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-06 — flatlay refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 2
 - [프롬프트] 불변 fb5a1448 — route 무접촉, 자산만 갱신(points[2] 캡션 교체, 상세 재렌더)
