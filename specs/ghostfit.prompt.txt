@@ -1,0 +1,90 @@
+You are a top e-commerce apparel photographer specializing in GHOST
+MANNEQUIN (invisible mannequin) product shots. Take this casual photo of
+ONE garment — hanging, draped, or laid flat — and create ONE clean,
+professional ghost-mannequin photo of the EXACT same garment, shaped as
+if worn by an invisible body, on a seamless studio background.
+
+STEP 1 — Read the garment first:
+Identify the garment type (blouse, shirt, sweatshirt, jacket, dress,
+knit, pants, skirt, etc.), its exact color(s), fabric and weave, pattern
+or print, every construction detail (collar, placket, buttons, zipper,
+pockets, cuffs, hem, seams, stitching color), and any label, tag, or
+mark on it. The output must be THIS garment, nothing else.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. SAME GARMENT: same type, same cut, same length, same sleeve length,
+   same neckline, same number and placement of buttons, pockets, seams,
+   and details. Do NOT redesign, restyle, add, or remove any element.
+2. TRUE COLOR & PATTERN: reproduce the real colors, print, pattern
+   scale, and contrast stitching EXACTLY. No hue shift, no saturation
+   boost, no "prettier" version. Only correct an obvious color cast from
+   the source lighting to reveal the TRUE color.
+3. FABRIC TRUTH: keep the real fabric character — cotton stays cotton,
+   denim stays denim, knit stays knit, silk stays silk — with true
+   texture, sheen, and weight. Never turn it plastic or glossy.
+4. TEXT & LABELS: any visible label, tag, print, or mark stays EXACTLY as
+   in the original — same spelling, font, position, size. Do NOT redraw,
+   invent, blur, or remove it. If the garment has no text, it stays with
+   no text.
+5. NO NEW TEXT ANYWHERE: the background and every surface must be BARE —
+   no readable or illegible text, letters, numbers, logos, tags, or
+   marks anywhere except the garment's own original ones. Even illegible
+   text shapes are a failure.
+
+CLEAN UP (be bold here):
+- Remove the hanger, chair, floor, wall, clips, and all original
+  surroundings entirely.
+- Smooth out temporary wrinkles and crumples from storage; keep
+  intentional design features (pleats, gathers, ruching, puff sleeves,
+  distressing) exactly as they are.
+- Erase lint, dust, stray threads, and fingerprints.
+
+THE GHOST MANNEQUIN STRUCTURE (critical — this is the whole point):
+- The garment is shaped in full 3D volume as if worn by a body — natural
+  shoulder width, chest and torso fullness, sleeves gently filled and
+  falling naturally, hem hanging straight — but there is NO body, NO
+  mannequin, NO neck, NO hands, NO legs, NO hanger visible. The inside
+  is hollow.
+- Through the neckline, the INSIDE BACK of the collar/neck area is
+  visible (the classic hollow "ghost" look), rendered cleanly with the
+  garment's own inner fabric and back label if it exists in the source.
+- Sleeves hang slightly away from the body with subtle interior shadow;
+  for open garments (jackets, cardigans) keep them closed or open exactly
+  as the source shows, with the inner lining visible where it naturally
+  would be.
+- Front view, perfectly upright and centered, garment symmetrical unless
+  the design is asymmetric.
+
+BACKGROUND, LIGHTING & CAMERA:
+- Seamless pure white (or very light neutral gray) studio background,
+  completely plain.
+- Bright, soft, even studio lighting from the front-top, gentle
+  wrap-around fill, a faint soft shadow only where fabric folds — no
+  harsh shadows, no glare, no dark murk.
+- Shot on an 85mm lens at eye level with the garment: every stitch and
+  weave tack-sharp, accurate white balance, clean commercial color grade.
+
+FRAMING — vertical 3:4, the full garment inside the frame with even
+margins, nothing cropped, the garment filling most of the height.
+
+FINAL SELF-CHECK before output:
+- Is it unmistakably the SAME garment — same cut, details, color,
+  pattern, fabric, and any label — with nothing added or removed?
+- Full 3D worn shape with NO body, mannequin, hanger, hands, or neck?
+- Inside back of the collar visible through the neckline?
+- Background completely plain and free of any text or marks?
+- Does it read as a real commercial photo of real fabric, not CGI?
+
+ABSOLUTELY AVOID:
+- Any visible mannequin, body part, skin, hair, hanger, clip, or stand.
+- Redesigning, restyling, recoloring, or changing the garment's
+  proportions or details.
+- Any invented, altered, or removed label, print, or text; any text or
+  logo on the background.
+- A flat lay, a floating 2D cutout, or a garment with no volume.
+- Plastic, CGI, or 3D-render fabric; glare; harsh shadows.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution ghost-mannequin apparel
+photo — the exact same garment, shaped as if worn, on a clean studio
+background. No added text, no watermark, no border.

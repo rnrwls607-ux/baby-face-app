@@ -1,0 +1,65 @@
+{
+  "key": "ghostfit",
+  "name": "고스트 마네킹 착장컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/ghostfit.prompt.txt" },
+  "befores": [
+    { "file": "ghostfit_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional women's blouse — pale sage green, short puff sleeves, small covered buttons down the front, slightly wrinkled — hanging on a plain wooden hanger against a beige apartment wall, taken indoors under dim yellowish light at a slight angle. No visible brand tag, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "ghostfit_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional men's oversized sweatshirt — heather gray with a plain navy chest panel shape (no lettering), ribbed cuffs and hem — laid flat but a bit crumpled on a light wooden floor, taken from above indoors in flat ordinary light, slightly crooked. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "ghostfit_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional cropped denim jacket — light-wash blue with contrast tan stitching, metal buttons, chest flap pockets — draped over the back of a white plastic chair in a cluttered room, taken indoors under mixed warm light. No visible brand patch or lettering. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "👕",
+    "color": "#4F6D8F",
+    "subtitle": "마네킹 없이, 입은 것처럼",
+    "description": "옷걸이·바닥에 놓인 옷 한 벌을 보이지 않는 마네킹이 입은 입체 착장컷으로. 원단·패턴·라벨은 그대로.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "고스트 마네킹 착장컷 만들기 👕"], ["갸루 스타일링 중이에요", "고스트 마네킹 착장컷 만드는 중이에요"], ["갸루 메이크오버", "고스트 마네킹 착장컷"], ["💗", "👕"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#4F6D8F", "bg": "#EEF2F7", "name": "고스트 마네킹 착장컷" },
+    "hero": {
+      "sub": "옷이 스스로 서 있는 착장컷",
+      "tags": ["#고스트마네킹", "#의류셀러", "#상세컷"],
+      "image": "ghostfit_애프터1.png"
+    },
+    "pain": [
+      "👕 옷을 바닥에 펴 찍으면 핏이 하나도 안 살아요",
+      "🧍 모델·마네킹 촬영은 벌당 몇만 원씩 나가요",
+      "📦 신상 올릴 때마다 착장컷 때문에 등록이 밀려요"
+    ],
+    "solution": "MOSPIC 고스트 마네킹 착장컷 — 사진 한 장이면, 옷걸이에 걸린 옷이 입체 착장컷이 됩니다.",
+    "pairs": [
+      { "before": "ghostfit_비포1.png", "after": "ghostfit_애프터1.png", "caption": "옷걸이에 걸린 블라우스가 → 입은 듯 입체 착장컷으로" },
+      { "before": "ghostfit_비포2.png", "after": "ghostfit_애프터2.png", "caption": "바닥에 펼친 맨투맨이 → 핏이 살아 있는 고스트 컷으로" }
+    ],
+    "points": [
+      { "title": "입체 핏·주름·그림자 풀세팅", "body": "어깨·가슴·소매의 입체감, 안쪽 목 라인이 살짝 보이는 고스트 마네킹 특유의 구조, 흰 배경과 부드러운 그림자까지 스튜디오 표준으로 세팅됩니다.", "chips": ["입체 핏", "안쪽 목 라인", "흰 배경"], "image": "ghostfit_애프터3.png" },
+      { "title": "옷은 그대로", "body": "색·원단 질감·패턴·프린트·단추·스티치·라벨을 원본 그대로 보존합니다. 새 글자를 만들지도, 색을 예쁘게 바꾸지도 않아요.", "chips": ["색 정확", "패턴 보존", "라벨 그대로"], "image": "ghostfit_애프터1.png" },
+      { "title": "스마트스토어·쿠팡·인스타까지", "body": "상품 대표컷, 상세페이지 착장컷, 인스타 신상 피드에 바로. 신상 들어올 때마다 사진 한 장으로 등록하세요.", "chips": ["대표컷", "상세컷", "신상 피드"], "images": ["ghostfit_애프터2.png", "ghostfit_애프터4.png"], "imageCaption": "같은 옷, 두 번 뽑아도 같은 옷" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "고스트 마네킹 스튜디오 촬영 벌당 2만~5만 원 + 마네킹·보정 별도",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "옷 한 벌 전체가 잘리지 않게 찍어주세요 (옷걸이·바닥 어디든 OK)",
+      "앞면이 정면으로 보이게 두면 핏이 정확히 살아나요",
+      "라벨·프린트가 보이는 각도가 좋아요 — 그대로 보존됩니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 착장 형태는 MOSPIC이 만든 연출이며 실제 착용 사진이 아닙니다. 옷의 외관은 원본을 보존하지만, 판매 게시 전 색상·디테일이 실물과 일치하는지 직접 확인해 주세요.",
+    "cta": { "copy": "오늘, 옷을 입은 것처럼 세워보세요", "button": "고스트 마네킹 착장컷 만들기" }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "key": "carad",
+  "name": "자동차 광고컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/carad.prompt.txt" },
+  "befores": [
+    { "file": "carad_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional compact SUV in deep navy blue, front three-quarter view, parked in a crowded apartment underground parking garage with concrete pillars, other cars partially visible, harsh fluorescent light and a slightly tilted angle. The car has no brand emblem or lettering anywhere — smooth plain grille and badge-free body; the license plate is a blank white rectangle with no characters. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional car model. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "carad_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional white mid-size sedan, side-front view, parked on a residential street beside a utility pole and a low wall, overcast daylight, some dust on the lower body, slightly crooked framing. No brand emblem or lettering anywhere; the license plate is a blank white rectangle with no characters. Realistic phone-camera quality, vertical 3:4. Completely fictional car model. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "carad_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional matte dark-gray two-door coupe with black wheels, rear three-quarter view, parked in an outdoor supermarket parking lot with shopping carts and a lamp post nearby, late afternoon sun, slightly off-center. No brand emblem or lettering anywhere; the license plate is a blank white rectangle with no characters. Realistic phone-camera quality, vertical 3:4. Completely fictional car model. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "car",
+    "emoji": "🏎️",
+    "color": "#2E3A4F",
+    "subtitle": "내 차가 카탈로그 표지처럼",
+    "description": "주차장에서 찍은 내 차를 해안도로·산길·스튜디오 배경의 광고 카탈로그 컷으로. 차체·색·휠은 그대로, 번호판은 빈 판.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "자동차 광고컷 만들기 🏎️"], ["갸루 스타일링 중이에요", "자동차 광고컷 만드는 중이에요"], ["갸루 메이크오버", "자동차 광고컷"], ["💗", "🏎️"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#2E3A4F", "bg": "#EDF0F5", "name": "자동차 광고컷" },
+    "hero": {
+      "sub": "내 차, 카탈로그 표지처럼",
+      "tags": ["#자동차광고컷", "#내차자랑", "#딜러컷"],
+      "image": "carad_애프터1.png"
+    },
+    "pain": [
+      "🅿️ 내 차 사진은 항상 지하주차장 형광등 아래예요",
+      "📸 차 화보 촬영은 출사 나가서 반나절, 비용은 수십만 원",
+      "🚗 판매글·동호회에 올릴 멋진 한 장이 없어요"
+    ],
+    "solution": "MOSPIC 자동차 광고컷 — 사진 한 장이면, 주차장 속 내 차가 해안도로 카탈로그 컷이 됩니다.",
+    "pairs": [
+      { "before": "carad_비포1.png", "after": "carad_애프터1.png", "caption": "지하주차장 SUV가 → 산길 카탈로그 컷으로" },
+      { "before": "carad_비포3.png", "after": "carad_애프터3.png", "caption": "마트 주차장 쿠페가 → 노을 해안도로 광고컷으로" }
+    ],
+    "points": [
+      { "title": "배경·빛·반사 풀세팅", "body": "해안도로·산길·야간 스튜디오 중 차에 어울리는 장면을 골라 깔고, 차체 반사와 바닥 그림자까지 광고 카탈로그 문법으로 다시 찍습니다.", "chips": ["해안도로", "산길", "스튜디오"], "image": "carad_애프터2.png" },
+      { "title": "내 차는 그대로", "body": "차종·색·휠·트림·엠블럼을 원본 그대로 보존합니다. 세차만 하고 흠집은 그대로 — 실제 내 차의 광고컷이에요. 번호판은 자동으로 빈 판 처리됩니다.", "chips": ["차체 보존", "휠·색 정확", "번호판 가림"], "image": "carad_애프터1.png" },
+      { "title": "판매글·동호회·프로필까지", "body": "중고차 판매 대표컷, 동호회 인증, SNS 프로필 배경으로. 같은 차로 장면만 바꿔 여러 장 뽑으세요.", "chips": ["판매 대표컷", "동호회", "SNS"], "images": ["carad_애프터3.png", "carad_애프터4.png"], "imageCaption": "같은 차, 다른 장면 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "자동차 출사 촬영 10만~30만 원 + 이동 반나절 + 세차비",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "차 전체가 잘리지 않게 앞 대각선(3/4) 각도로 찍어주세요",
+      "낮에 밝은 곳에서 찍으면 색과 반사가 정확히 살아나요",
+      "번호판은 결과에서 자동으로 빈 판이 됩니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다. 번호판은 결과물에서 제거됩니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·장면은 MOSPIC 자체 연출이며 실제 촬영 장소가 아닙니다. 차량 외관은 원본을 보존하지만, 판매 게시 시 실제 상태(흠집·옵션)는 별도 사진으로 함께 안내해 주세요.",
+    "cta": { "copy": "오늘, 내 차를 카탈로그 표지로 만들어 보세요", "button": "자동차 광고컷 만들기" }
+  }
+}

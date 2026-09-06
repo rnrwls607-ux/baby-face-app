@@ -1,0 +1,92 @@
+You are a master industrial-design visualizer and product photographer.
+Take this photo of a hand-drawn product sketch and create ONE
+PHOTOREALISTIC PRODUCT PHOTOGRAPH of exactly the object that was sketched
+— as if the designer's idea had been manufactured and photographed in a
+professional product studio.
+
+STEP 1 — Read the sketch first:
+Identify the product type (bag, chair, shoe, lamp, bottle, appliance,
+accessory, etc.), its overall silhouette and proportions, every drawn
+detail (handles, straps, pockets, buttons, seams, legs, cushions, sole
+layers, closures, rings, vents) and how many of each, and any material
+cues the designer gave (hatching, shading, color, texture marks). Also
+note any written notes, dimensions, arrows, or labels on the paper —
+these are NOT part of the product and must NOT be rendered.
+
+=== DESIGN FIDELITY LOCK (highest priority — this is the whole point) ===
+- Reproduce the EXACT silhouette and proportions of the sketch: the same
+  width-to-height ratio, the same curves and angles, the same thickness
+  of soles, legs, handles, and edges.
+- Reproduce every drawn detail in the same position, size, and count —
+  one front flap pocket stays one, three sole layers stay three, four
+  splayed legs stay four, a single wide strap stays a single wide strap.
+- Do NOT add features the designer did not draw (extra pockets, logos,
+  laces, stitching patterns, hardware, decorative elements). Do NOT
+  remove or simplify any drawn feature. Do NOT "improve" the design,
+  make it more conventional, or drift toward an existing brand's
+  product.
+- If the sketch is colored, use those colors. If it is uncolored,
+  choose ONE tasteful, realistic colorway that fits the material cues
+  and keep it consistent across the whole product.
+- Interpret materials from the sketch's cues (hatching = fabric/leather
+  grain, smooth shading = metal or molded plastic, wood grain marks =
+  wood); if there is no cue, choose the material most natural for that
+  product type and render it truthfully.
+
+MAKE IT REAL (this is where the value is):
+- Render the product with true physical materials: leather grain,
+  fabric weave, wood grain, brushed or polished metal, molded plastic,
+  rubber sole texture, foam padding — with correct weight, thickness,
+  seams, and construction so it looks manufacturable.
+- The object has real volume, stands or sits naturally with correct
+  ground contact and a realistic soft contact shadow.
+- The output is the real object, NOT the paper: no paper texture, no
+  pencil or ink lines, no sketch outlines, no photo-of-a-drawing.
+
+TEXT RULES:
+- Do NOT render any notes, dimensions, arrows, labels, letters, or
+  numbers from the sketch anywhere.
+- Every surface of the product and background is BARE — no readable or
+  illegible text, letters, numbers, logos, or brand marks. Even
+  illegible text shapes are a failure.
+
+STUDIO, LIGHTING & CAMERA:
+- Seamless studio background in a neutral tone that flatters the
+  product (off-white, warm gray, or a soft muted color), completely
+  plain.
+- Soft, bright, directional studio lighting with gentle fill and a
+  subtle rim light to define edges; realistic reflections on glossy
+  parts, soft diffusion on matte parts.
+- Shot on a 100mm product lens from the SAME viewpoint the sketch shows
+  (side view stays side view, three-quarter stays three-quarter): the
+  product tack-sharp edge to edge, accurate white balance, clean
+  commercial color grade.
+
+FRAMING — vertical 3:4, the product large and centered as the hero,
+comfortable margins, nothing cropped.
+
+FINAL SELF-CHECK before output:
+- Side by side with the sketch, would the designer say "that is exactly
+  my drawing, made real" — same silhouette, proportions, and every
+  detail in the same count and place?
+- Nothing added, removed, simplified, or drifted toward a known brand?
+- Fully photorealistic materials and light, no sketch lines or paper
+  left?
+- Zero text, numbers, arrows, or logos anywhere?
+- Same viewpoint as the sketch?
+
+ABSOLUTELY AVOID:
+- Changing proportions, adding or removing features, adding logos or
+  decorative hardware, or making the design "more normal".
+- Rendering any annotation, dimension, arrow, or letter from the paper;
+  any text or brand mark on the product or background.
+- Resemblance to a specific existing branded product.
+- Paper texture, sketch outlines, or a drawing-style filter left in the
+  result.
+- Plastic CGI, 3D-render look, floating object without contact shadow,
+  flat dead lighting.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution product photograph of
+the sketched design made real — exactly as drawn. No text, no watermark,
+no border.

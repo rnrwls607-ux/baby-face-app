@@ -1,0 +1,65 @@
+{
+  "key": "sketch2real",
+  "name": "스케치 실물화",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/sketch2real.prompt.txt" },
+  "befores": [
+    { "file": "sketch2real_비포1.png", "pool": "custom", "prompt": "A smartphone photo of a fictional designer's hand-drawn pen sketch on white paper of a structured tote bag with a wide top, two short rolled handles, a single front flap pocket, and a small metal ring on one side, drawn with confident black ink lines and light gray marker shading. Photographed flat on a desk under ordinary indoor light, slightly angled. No letters, no numbers, no annotations, no arrows, no words anywhere on the paper. Vertical 3:4. No watermark." },
+    { "file": "sketch2real_비포2.png", "pool": "custom", "prompt": "A smartphone photo of a fictional designer's pencil sketch on cream paper of a lounge chair with a curved one-piece bent-wood shell seat, four splayed tapered wooden legs, and a thin round cushion, drawn with clean construction lines and soft hatching. Photographed flat on a table under a desk lamp, slight shadow. No letters, no numbers, no annotations, no arrows, no words anywhere. Vertical 3:4. No watermark." },
+    { "file": "sketch2real_비포3.png", "pool": "custom", "prompt": "A smartphone photo of a fictional designer's marker sketch on white paper of a chunky sneaker seen from the side: layered thick sole with three wavy sole layers, a rounded toe, a single wide strap across the mid-foot instead of laces, and a padded ankle collar, colored in muted olive and off-white marker with black outlines. Photographed flat on a desk in ordinary daylight. No letters, no numbers, no annotations, no arrows, no words anywhere. Vertical 3:4. No watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "kidsdraw",
+    "emoji": "✏️",
+    "color": "#5A5A6E",
+    "subtitle": "종이 위 아이디어를 실물로",
+    "description": "가방·의자·신발·소품 손 스케치를 그 형태 그대로 실물 제품 사진으로. 펀딩·시안·발표용.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "스케치 실물화 만들기 ✏️"], ["갸루 스타일링 중이에요", "스케치 실물화 만드는 중이에요"], ["갸루 메이크오버", "스케치 실물화"], ["💗", "✏️"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#5A5A6E", "bg": "#F1F1F5", "name": "스케치 실물화" },
+    "hero": {
+      "sub": "스케치가 진짜 제품이 되는 순간",
+      "tags": ["#스케치실물화", "#제품시안", "#펀딩준비"],
+      "image": "sketch2real_애프터1.png"
+    },
+    "pain": [
+      "✏️ 아이디어는 스케치뿐, 실물 느낌을 보여줄 방법이 없어요",
+      "💸 3D 렌더링 외주는 한 장에 수십만 원, 수정마다 또 비용",
+      "🗣️ 투자자·팀원 설득에 '진짜처럼 보이는 한 장'이 필요해요"
+    ],
+    "solution": "MOSPIC 스케치 실물화 — 사진 한 장이면, 종이 위 스케치가 실물 제품 사진이 됩니다.",
+    "pairs": [
+      { "before": "sketch2real_비포1.png", "after": "sketch2real_애프터1.png", "caption": "펜 스케치 토트백이 → 가죽 질감 실물 제품컷으로" },
+      { "before": "sketch2real_비포2.png", "after": "sketch2real_애프터2.png", "caption": "연필 스케치 의자가 → 원목 실물 제품 사진으로" }
+    ],
+    "points": [
+      { "title": "재질·빛·스튜디오 풀세팅", "body": "스케치가 암시하는 재질(가죽·원목·패브릭·메탈)을 진짜 질감으로 입히고, 제품 스튜디오 조명과 배경까지 세팅해 실물 촬영컷처럼 완성합니다.", "chips": ["실물 재질", "스튜디오 조명", "제품컷 구도"], "image": "sketch2real_애프터3.png" },
+      { "title": "디자인은 그대로", "body": "실루엣·비율·디테일 개수·위치를 스케치 그대로 지킵니다. 마음대로 예쁘게 고치거나 다른 디자인을 섞지 않아요 — 당신의 아이디어 그 자체.", "chips": ["실루엣 유지", "디테일 보존", "임의 변경 없음"], "image": "sketch2real_애프터1.png" },
+      { "title": "펀딩·시안·발표까지", "body": "크라우드펀딩 대표 이미지, 제작 업체와의 시안 소통, 팀 발표 자료에 바로. 스케치 한 장으로 여러 각도·색상 시안을 뽑아보세요.", "chips": ["펀딩 이미지", "제작 시안", "발표 자료"], "images": ["sketch2real_애프터2.png", "sketch2real_애프터4.png"], "imageCaption": "같은 스케치, 두 번 뽑아도 같은 디자인" }
+    ],
+    "price": {
+      "header": "직접 만들면 얼마일까요?",
+      "offline": "제품 3D 렌더링 외주 시안 1장 10만~30만 원 + 수정 회당 추가 + 1~2주 대기",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "스케치 전체가 잘리지 않게 위에서 반듯하게 찍어주세요",
+      "치수·메모·화살표는 결과에 나오지 않아요 — 형태만 살립니다",
+      "재질을 정해뒀다면 스케치에 음영·색으로 표현하면 더 정확해요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 스케치를 바탕으로 MOSPIC이 만든 상상 속 실물 이미지이며 실제 제작·판매되는 제품이 아닙니다. 제작 시안·발표 용도로 참고하시고, 실제 제작 사양은 별도로 확정해 주세요.",
+    "cta": { "copy": "오늘, 종이 위 아이디어를 실물로 꺼내 보세요", "button": "스케치 실물화 만들기" }
+  }
+}
