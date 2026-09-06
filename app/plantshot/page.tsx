@@ -118,7 +118,7 @@ export default function PlantshotPage() {
           <>
             {/* 결과 예시 — BA_LIVE면 비포/애프터 라이브, 아니면 기존 PreviewCard (무변화 폴백) */}
             {BA_LIVE.includes("plantshot") ? (
-              <BeforeAfterHero pairs={[1, 2].flatMap(n => [
+              <BeforeAfterHero pairs={[1, 2, 3].flatMap(n => [
                 { before: `/examples/ba/plantshot-before-${n}.webp`, after: `/examples/ba/plantshot-after-${n}.webp` },
                 { before: `/examples/ba/plantshot-before.webp`, after: `/examples/ba/plantshot-after-${n}.webp` },
               ])} />
