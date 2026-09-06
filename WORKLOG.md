@@ -1,3 +1,12 @@
+## 2026-09-06 — B 배치 3종 출시 완료: ghostfit·carad·sketch2real + 라이브 3종 캡션 refresh
+- [G2] MJ 판정 — ghostfit 통과(썸네일 2) / carad 통과(썸네일 1) / sketch2real 통과(썸네일 1). 시트 3장은 MJ가 ChatGPT에서 만든 비포 3·애프터 4(PNG·3:4, 변환 0)로 harvest 재실행해 냈다(API 0)
+- [캡션 수정 6종] detail.points[2].imageCaption — 애프터2·3+애프터4는 서로 다른 품목인데 "같은 X, 두 번 뽑아도"라고 적혀 있던 것(B 출력 공통 결함, 라이브 3종에도 이미 나감). MJ 결정: images 조합은 그대로 두고(다른 품목이 용도 확장에 맞음) 문구만 교체 — productscene·flatlay·ghostfit "품목이 달라도 같은 완성도" / kidsdraw "그림이 달라도 같은 충실도" / sketch2real "스케치가 달라도 같은 재현력" / carad "차가 달라도 같은 광고컷". carad pairs[0] "산길"→"노을 해안도로"(실제 애프터1 장면). 프롬프트 6종 md5 불변. 커밋 124e5e7
+- [refresh 3종] productscene·kidsdraw·flatlay --stage refresh --assets --thumb 원래값 → 변경 파일 각 정확히 1장 public/details/{키}.webp(카드·BA webp 7장은 바이트 동일 스킵), 프롬프트 불변, 홈·배선 무접촉. 커밋 c2c53c9·fc5d1ca·88e937f
+- [히어로 선별] 12장 라이브 CSS 렌더 → ghostfit 애프터1 블라우스는 밑단·하단 단추가 태그 줄·그라데이션 아래 → 크롭 재킷 애프터3으로 교체(8c54c42, 소매 끝만 걸림). carad는 4장 모두 차가 태그 줄 위(프롬프트가 차를 중앙 아래에 두지만 겹치진 않음) 애프터1 유지, sketch2real 토트백 바닥선이 태그 줄에 닿는 정도로 애프터1 유지
+- [체인] 3종 × route→detail→launch→ba = 93항 PASS · FAIL 0. gyaru 템플릿 2차 통과 — 배선 8/8 · md5 재추출 441b2564/a376c49d/f00edbe5 일치 · 잔재 0. 커밋 ghostfit 406f9e0·53edba1·bd6cfc4 / carad 6827d80·d6ec95e·f9ef8f4 / sketch2real d4632f7·5c02e13·b618e08. CONCEPT_LIST 195종(라이브 187) 99~101행, BA_LIVE 188
+- [배포] health b618e08 · 스모크 5/5 PASS · 신규 3종 딥링크 page 200 / api 405 / cards·details·ba webp 200 · refresh 3종 details webp 200(바이트 수가 커밋분과 일치 690494/1285250/697910 = 새 버전 서빙 확인)
+- [후보 기록] 고스트 컷 fit lock 강화 후보(v2) — ghostfit 애프터1·4에서 박시한 원본 블라우스가 허리선 들어간 핏으로 바뀜(MJ: 결함 아님, 기록만). 관찰: 순백 배경 컨셉(ghostfit)은 히어로 B 좌상단 흰 워드마크가 보이지 않는다 — 설계 한계, 결정 필요 시 상단 미세 그라데이션 후보
+
 ## 2026-09-06 — BA 배선: sketch2real 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
