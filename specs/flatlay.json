@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/flatlay.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "flatlay_비포1.png", "pool": "custom", "prompt": "A casual top-down smartphone photo of a fictional set of five small cosmetic items — a lip balm tube, a compact, a small round jar, a slim serum bottle, and a brush — dropped loosely and slightly overlapping on a messy bed sheet, taken indoors under dim yellowish light at a slightly tilted angle. Each item has only plain solid colors and a small abstract shape instead of any lettering. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional products. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "flatlay_비포2.png", "pool": "custom", "prompt": "A casual top-down smartphone photo of a fictional outfit set — a folded beige knit sweater, a pair of light-blue jeans, white canvas sneakers, a brown leather belt, and a small gold-tone watch — piled unevenly on a wooden floor, taken indoors in flat ordinary light with a slightly crooked angle. No visible brand marks or lettering on any item. Realistic phone-camera quality, vertical 3:4. Completely fictional products. No text, no letters, no numbers, no logos, no watermark." },
