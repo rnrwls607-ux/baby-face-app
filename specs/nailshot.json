@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/nailshot.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "nailshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional woman's hand only (no face, no body beyond the wrist and a bit of sleeve) resting on a cluttered nail-salon table with tools and a bottle nearby, showing a fresh gel manicure: milky pink base with thin gold line art on two nails and a tiny pearl on the ring finger, medium almond shape. Slightly uneven cuticle area, ordinary yellowish salon light, a bit crooked. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional person and design. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "nailshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional woman's hand only (no face), fingers loosely curled on a beige sofa cushion, showing short square nails with a glossy deep burgundy gel color and one accent nail in matte black, taken indoors under dim warm light, slightly blurry background clutter. Realistic phone-camera quality, vertical 3:4. Completely fictional person and design. No text, no letters, no numbers, no logos, no watermark." },

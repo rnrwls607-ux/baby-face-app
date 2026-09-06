@@ -1,3 +1,10 @@
+## 2026-09-06 — 신규 컨셉 신설: nailshot (네일아트 상품컷)
+- [스테이지] new-concept.mjs --stage route · 템플릿 product:gpt → gyaru
+- [프롬프트] specs/nailshot.prompt.txt → route 삽입 · md5 7270ea0d · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-06 — 히어로 B 상단 그라데이션(12% · 25%→0) — 순백 배경 워드마크 가독
 - [결정] MJ — 시안 없이 적용. ghostfit(순백 스튜디오 배경)에서 좌상단 흰 워드마크가 보이지 않던 것. scripts/detail-template/style.css .hero__grad 에 두 번째 레이어 linear-gradient(to bottom, rgba(0,0,0,.25) 0%, rgba(0,0,0,0) 12%) 추가, 하단 그라데이션·마크업 무변경. 커밋 777a56e
 - [실측] ghostfit 재렌더 흰 배경 열 밝기 y0=191(=25% 검정) → y172(12%)=254 → 이후 순백. 워드마크는 확대에서 읽히지만 대비는 낮은 편(흰 글리프 vs 191 회색) — 더 진하게 원하면 35~40%가 다음 후보
