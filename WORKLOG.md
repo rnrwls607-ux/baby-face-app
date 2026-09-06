@@ -4,7 +4,7 @@
 - [대조] nailshot 애프터2 매트 블랙 악센트 — 비포2·애프터2 원본 크기 대조: 둘 다 위에서 4번째(약지), 나머지 버건디 동일 → pairs [2,2] 유지
 - [히어로] 사전 렌더 12장(라이브 CSS, 상단 띠 포함) — 3종 모두 애프터1 무가림: nailshot 손톱 5개 태그 줄 위 / bouquetshot 꽃머리 상단 2/3 / plantshot 잎 상단·화분만 태그와 겹침. 교체 0. 밝은 배경 3종에서 상단 띠로 워드마크 가독 확인
 - [체인] 3종 × route→detail→launch→ba = 93항 PASS · FAIL 0. gyaru 템플릿 3차 통과 — md5 재추출 7270ea0d/d9d7d72a/c7d35a65 일치 · 잔재 0. 커밋 nailshot 19c9e26·5a5828d·8632147 / bouquetshot 6fd81de·3ca801c·0c66543 / plantshot 12e0f74·dd6c6d1·0ef43d2. CONCEPT_LIST 198종(라이브 190) 102~104행, BA_LIVE 191
-- [배포] health commit=0ef43d2 (기대 0ef43d2, 10회 폴링)
+- [배포] health 0ef43d2 · 스모크 5/5 PASS · 딥링크 nailshot·bouquetshot·plantshot 각 page 200 / api 405 / cards·details·ba webp 200
      PASS  GET /api/health        기대 200 application/json     실측 200  application/json · ■ 스모크 PASS — 프로덕션 정상 · 딥링크 
 - [v2 후보] nailshot "sleeve/clothing color lock + nail length lock" (애프터4 소매 색·길이 편차) / plantshot "leaf count hard lock(count the leaves, output the same number)" (애프터4 잎 수 편차) — MJ 지시로 기록만, 프롬프트 변경 없음
 
