@@ -1,3 +1,10 @@
+## 2026-09-06 — productscene refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 1
+- [프롬프트] 불변 10fd54bd — route 무접촉, 자산만 갱신(points[2] 캡션 교체, 상세 재렌더)
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [자산] 1장 갱신(productscene.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 불변 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — inbox 처리 경로(scripts/inbox.mjs) 폐기 확정
 - [결정] MJ 확정 — inbox 파일(=== CONCEPT === 블록) 파서 scripts/inbox.mjs 는 재개하지 않는다. 미착수 상태로 폐기하고 B 프롬프트 공장 출력을 채팅에 직접 붙이는 경로(플레이북 §2 붙여넣기 규칙)로 대체. 리포 백로그·플레이북·specs/inbox 에는 흔적이 없어 삭제할 줄 없음(세션 메모에만 있던 항목)
 
