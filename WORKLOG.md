@@ -1,3 +1,10 @@
+## 2026-09-06 — ghostfit refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 2
+- [프롬프트] 불변 441b2564 — route 무접촉, 자산만 갱신(히어로 B 상단 그라데이션 적용)
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [자산] 1장 갱신(ghostfit.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 불변 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — B 배치 3종 출시 완료: ghostfit·carad·sketch2real + 라이브 3종 캡션 refresh
 - [G2] MJ 판정 — ghostfit 통과(썸네일 2) / carad 통과(썸네일 1) / sketch2real 통과(썸네일 1). 시트 3장은 MJ가 ChatGPT에서 만든 비포 3·애프터 4(PNG·3:4, 변환 0)로 harvest 재실행해 냈다(API 0)
 - [캡션 수정 6종] detail.points[2].imageCaption — 애프터2·3+애프터4는 서로 다른 품목인데 "같은 X, 두 번 뽑아도"라고 적혀 있던 것(B 출력 공통 결함, 라이브 3종에도 이미 나감). MJ 결정: images 조합은 그대로 두고(다른 품목이 용도 확장에 맞음) 문구만 교체 — productscene·flatlay·ghostfit "품목이 달라도 같은 완성도" / kidsdraw "그림이 달라도 같은 충실도" / sketch2real "스케치가 달라도 같은 재현력" / carad "차가 달라도 같은 광고컷". carad pairs[0] "산길"→"노을 해안도로"(실제 애프터1 장면). 프롬프트 6종 md5 불변. 커밋 124e5e7
