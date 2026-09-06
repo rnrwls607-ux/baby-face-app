@@ -1,6 +1,6 @@
 # MOSPIC 컨셉 전체 목록
 
-생성일 2026-09-06 · 총 **197종** — 라이브 189 · 숨김 7 · soon 1
+생성일 2026-09-06 · 총 **198종** — 라이브 190 · 숨김 7 · soon 1
 
 > 이 파일은 `node scripts/concept-list.mjs` 가 `app/lib/concepts.ts`(VM 실평가)에서 만든다. 손으로 고치지 말 것 — launch 스테이지가 출시 커밋 때 다시 쓴다.
 > · 엔진: `app/api/{키}/route.ts` 모델 문자열. 자기 route 없는 biz*/id* 변형은 부모 route를 따른다(괄호 표기).
@@ -112,100 +112,101 @@
 | 101 | `sketch2real` | 스케치 실물화 | gpt | product | 라이브 | 상품 |
 | 102 | `nailshot` | 네일아트 상품컷 | gpt | product | 라이브 | 상품 |
 | 103 | `bouquetshot` | 꽃다발 상품컷 | gpt | product | 라이브 | 상품 |
-| 104 | `halloween` | 할로윈 변신 | flash | person | 라이브 | 시즌 |
-| 105 | `goods` | 굿즈 미리보기 | flash | product | 숨김 (카드 주석 잠금) | 재미 |
-| 106 | `bizprofile` | 명함·링크드인 프로필 | flash | person | 숨김 (카드 주석 잠금) | 비즈니스 |
-| 107 | `hairstyle` | 헤어 체인지 | flash | person | 라이브 | 헤어 |
-| 108 | `illust` | AI 일러스트 | flash | person | 라이브 | 일러스트 |
-| 109 | `idskyblue` | 하늘빛 블루 셔츠 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 110 | `biznavy` | 네이비 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 111 | `bizmnavy` | 남성 네이비 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 112 | `bizmcharcoal` | 남성 차콜 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 113 | `bizmblack` | 남성 블랙 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 114 | `bizmlightgray` | 남성 라이트그레이 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 115 | `bizmvest` | 남성 쓰리피스 (조끼) | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 116 | `bizmbeige` | 남성 베이지 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 117 | `bizmblazer` | 남성 네이비 블레이저 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 118 | `bizmturtle` | 남성 블레이저 터틀넥 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 119 | `bizmdb` | 남성 더블브레스티드 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 120 | `bizmknittie` | 남성 니트타이 재킷 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 121 | `bizblack` | 블랙 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 122 | `bizwhite` | 화이트 셔츠 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 123 | `bizribbon` | 리본 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 124 | `bizbeige` | 베이지 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 125 | `bizlavender` | 라벤더 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 126 | `bizgray` | 그레이 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 127 | `bizknit` | 니트 가디건 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 128 | `bizchiffon` | 쉬폰 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 129 | `bizpinkjacket` | 핑크 트위드 재킷 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 130 | `bizcreamdress` | 크림 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 131 | `biznavyblouse` | 네이비 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 132 | `bizskyblouse` | 스카이블루 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 133 | `bizpinktweed` | 핑크 트위드 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 134 | `bizshirring` | 셔링 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 135 | `bizviolet` | 바이올렛 스커트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 136 | `bizblueskirt` | 블루 스커트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 137 | `bizburgundy` | 버건디 슬랙스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 138 | `bizkhaki` | 카키 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 139 | `bizblackdress` | 블랙 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 140 | `bizbluegray` | 블루&그레이 미니원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 141 | `bizpinstripe` | 핀스트라이프 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 142 | `bizcheck` | 체크 블레이저 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 143 | `bizknitdress` | 카멜 니트 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
-| 144 | `figure` | 미니어처 피규어 | flash | person | 라이브 | 피규어 |
-| 145 | `age` | 노년·베이비 변환 | flash | person | 라이브 | 재미 |
-| 146 | `menu` | 메뉴판 비주얼 | flash | food | 라이브 | 사장님 |
-| 147 | `nukki` | 배경 제거 | replicate | product | 라이브 | 디자인 |
-| 148 | `upscale` | 고화질 변환 | replicate | other | 라이브 | 고화질 |
-| 149 | `fashion` | 패션 룩북 | flash | person | 라이브 | 패션 |
-| 150 | `idol` | 아이돌 프로필 | flash | person | 라이브 | 인생샷 |
-| 151 | `xmas` | 크리스마스 화보 | flash | person | 라이브 | 시즌 |
-| 152 | `graduation` | AI 졸업사진 | flash | person | 라이브 | 졸업 |
-| 153 | `wedding` | 웨딩 화보 | flash | duo | 라이브 | 비즈니스 |
-| 154 | `petstudio` | 펫 스튜디오 화보 | flash | pet | 라이브 | 반려동물 |
-| 155 | `petreceipt` | 펫 관상 영수증 | pro | pet | 라이브 | 반려동물 |
-| 156 | `era` | 시대·복장 변신 | flash | person | 라이브 | 재미 |
-| 157 | `petcostume` | 펫 코스튬 | flash | pet | 라이브 | 반려동물 |
-| 158 | `couple` | 커플 스튜디오 화보 | pro | duo | 라이브 | 커플 |
-| 159 | `hanbokcouple` | 웨딩 한복 커플 | pro | duo | 라이브 | 커플 |
-| 160 | `friend` | 우정 스냅 | pro | duo | 라이브 | 우정 |
-| 161 | `family` | 가족 스튜디오 화보 | flash | duo | 숨김 (카드 주석 잠금) | 가족 |
-| 162 | `familyhanbok` | 명절 한복 2인 | pro | duo | 라이브 | 가족 |
-| 163 | `familypet` | 반려가족 사진 | pro | duo | 라이브 | 가족 |
-| 164 | `fourcut` | 인생네컷 | flash | person | 숨김 (카드 주석 잠금) | 네컷 |
-| 165 | `fourcutillust` | 인생네컷 (일러스트) | flash | person | 숨김 (카드 주석 잠금) | 네컷 |
-| 166 | `fourcutcouple` | 커플 네컷 | pro | duo | 숨김 (카드 주석 잠금) | 네컷 |
-| 167 | `idblack` | 블랙 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 168 | `idnavy` | 네이비 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 169 | `idcharcoal` | 차콜그레이 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 170 | `idwhiteshirt` | 화이트셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 171 | `idbeige` | 베이지 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 172 | `idblacktie` | 블랙정장+넥타이 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 173 | `idblouse` | 아이보리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 174 | `idknit` | 니트 가디건 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 175 | `idturtleneck` | 터틀넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 176 | `idglasses` | 정장+안경 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 177 | `idoffshoulder` | 단발 오프숄더 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 178 | `idupdo` | 올림머리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 179 | `idlonghair` | 긴머리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 180 | `idtweed` | 반묶음 트위드 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 181 | `idwavebob` | 물결 단발 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 182 | `idponytail` | 로우 포니테일 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 183 | `idgarma` | 가르마컷 블랙정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 184 | `iddropcut` | 드랍컷 블루셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 185 | `idperm` | 페릭컷 화이트티 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 186 | `idpomade` | 포마드 레트로정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 187 | `idwarmbob` | 웜브라운 단발 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 188 | `idhime` | 밀크브라운 히메컷 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 189 | `idashwave` | 애쉬 웨이브 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 190 | `idlowbun` | 로우번 터틀넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 191 | `idburgundy` | 버건디 오프숄더 프로필 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 192 | `iddandy` | 댄디 베스트 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 193 | `iddownperm` | 다운펌 화이트셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 194 | `idnavysuit` | 가르마 네이비수트 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 195 | `idbeigeblazer` | 소프트펌 베이지 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 196 | `idhenley` | 투블럭 헨리넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
-| 197 | `soon` | 곧 만나요 | - | other | soon | - |
+| 104 | `plantshot` | 반려식물 화보 | gpt | product | 라이브 | 상품 |
+| 105 | `halloween` | 할로윈 변신 | flash | person | 라이브 | 시즌 |
+| 106 | `goods` | 굿즈 미리보기 | flash | product | 숨김 (카드 주석 잠금) | 재미 |
+| 107 | `bizprofile` | 명함·링크드인 프로필 | flash | person | 숨김 (카드 주석 잠금) | 비즈니스 |
+| 108 | `hairstyle` | 헤어 체인지 | flash | person | 라이브 | 헤어 |
+| 109 | `illust` | AI 일러스트 | flash | person | 라이브 | 일러스트 |
+| 110 | `idskyblue` | 하늘빛 블루 셔츠 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 111 | `biznavy` | 네이비 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 112 | `bizmnavy` | 남성 네이비 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 113 | `bizmcharcoal` | 남성 차콜 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 114 | `bizmblack` | 남성 블랙 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 115 | `bizmlightgray` | 남성 라이트그레이 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 116 | `bizmvest` | 남성 쓰리피스 (조끼) | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 117 | `bizmbeige` | 남성 베이지 정장 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 118 | `bizmblazer` | 남성 네이비 블레이저 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 119 | `bizmturtle` | 남성 블레이저 터틀넥 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 120 | `bizmdb` | 남성 더블브레스티드 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 121 | `bizmknittie` | 남성 니트타이 재킷 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 122 | `bizblack` | 블랙 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 123 | `bizwhite` | 화이트 셔츠 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 124 | `bizribbon` | 리본 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 125 | `bizbeige` | 베이지 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 126 | `bizlavender` | 라벤더 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 127 | `bizgray` | 그레이 정장 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 128 | `bizknit` | 니트 가디건 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 129 | `bizchiffon` | 쉬폰 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 130 | `bizpinkjacket` | 핑크 트위드 재킷 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 131 | `bizcreamdress` | 크림 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 132 | `biznavyblouse` | 네이비 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 133 | `bizskyblouse` | 스카이블루 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 134 | `bizpinktweed` | 핑크 트위드 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 135 | `bizshirring` | 셔링 블라우스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 136 | `bizviolet` | 바이올렛 스커트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 137 | `bizblueskirt` | 블루 스커트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 138 | `bizburgundy` | 버건디 슬랙스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 139 | `bizkhaki` | 카키 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 140 | `bizblackdress` | 블랙 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 141 | `bizbluegray` | 블루&그레이 미니원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 142 | `bizpinstripe` | 핀스트라이프 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 143 | `bizcheck` | 체크 블레이저 수트 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 144 | `bizknitdress` | 카멜 니트 원피스 프로필 | flash (bizprofile) | person | 라이브 | 비즈니스 |
+| 145 | `figure` | 미니어처 피규어 | flash | person | 라이브 | 피규어 |
+| 146 | `age` | 노년·베이비 변환 | flash | person | 라이브 | 재미 |
+| 147 | `menu` | 메뉴판 비주얼 | flash | food | 라이브 | 사장님 |
+| 148 | `nukki` | 배경 제거 | replicate | product | 라이브 | 디자인 |
+| 149 | `upscale` | 고화질 변환 | replicate | other | 라이브 | 고화질 |
+| 150 | `fashion` | 패션 룩북 | flash | person | 라이브 | 패션 |
+| 151 | `idol` | 아이돌 프로필 | flash | person | 라이브 | 인생샷 |
+| 152 | `xmas` | 크리스마스 화보 | flash | person | 라이브 | 시즌 |
+| 153 | `graduation` | AI 졸업사진 | flash | person | 라이브 | 졸업 |
+| 154 | `wedding` | 웨딩 화보 | flash | duo | 라이브 | 비즈니스 |
+| 155 | `petstudio` | 펫 스튜디오 화보 | flash | pet | 라이브 | 반려동물 |
+| 156 | `petreceipt` | 펫 관상 영수증 | pro | pet | 라이브 | 반려동물 |
+| 157 | `era` | 시대·복장 변신 | flash | person | 라이브 | 재미 |
+| 158 | `petcostume` | 펫 코스튬 | flash | pet | 라이브 | 반려동물 |
+| 159 | `couple` | 커플 스튜디오 화보 | pro | duo | 라이브 | 커플 |
+| 160 | `hanbokcouple` | 웨딩 한복 커플 | pro | duo | 라이브 | 커플 |
+| 161 | `friend` | 우정 스냅 | pro | duo | 라이브 | 우정 |
+| 162 | `family` | 가족 스튜디오 화보 | flash | duo | 숨김 (카드 주석 잠금) | 가족 |
+| 163 | `familyhanbok` | 명절 한복 2인 | pro | duo | 라이브 | 가족 |
+| 164 | `familypet` | 반려가족 사진 | pro | duo | 라이브 | 가족 |
+| 165 | `fourcut` | 인생네컷 | flash | person | 숨김 (카드 주석 잠금) | 네컷 |
+| 166 | `fourcutillust` | 인생네컷 (일러스트) | flash | person | 숨김 (카드 주석 잠금) | 네컷 |
+| 167 | `fourcutcouple` | 커플 네컷 | pro | duo | 숨김 (카드 주석 잠금) | 네컷 |
+| 168 | `idblack` | 블랙 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 169 | `idnavy` | 네이비 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 170 | `idcharcoal` | 차콜그레이 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 171 | `idwhiteshirt` | 화이트셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 172 | `idbeige` | 베이지 정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 173 | `idblacktie` | 블랙정장+넥타이 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 174 | `idblouse` | 아이보리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 175 | `idknit` | 니트 가디건 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 176 | `idturtleneck` | 터틀넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 177 | `idglasses` | 정장+안경 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 178 | `idoffshoulder` | 단발 오프숄더 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 179 | `idupdo` | 올림머리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 180 | `idlonghair` | 긴머리 블라우스 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 181 | `idtweed` | 반묶음 트위드 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 182 | `idwavebob` | 물결 단발 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 183 | `idponytail` | 로우 포니테일 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 184 | `idgarma` | 가르마컷 블랙정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 185 | `iddropcut` | 드랍컷 블루셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 186 | `idperm` | 페릭컷 화이트티 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 187 | `idpomade` | 포마드 레트로정장 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 188 | `idwarmbob` | 웜브라운 단발 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 189 | `idhime` | 밀크브라운 히메컷 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 190 | `idashwave` | 애쉬 웨이브 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 191 | `idlowbun` | 로우번 터틀넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 192 | `idburgundy` | 버건디 오프숄더 프로필 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 193 | `iddandy` | 댄디 베스트 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 194 | `iddownperm` | 다운펌 화이트셔츠 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 195 | `idnavysuit` | 가르마 네이비수트 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 196 | `idbeigeblazer` | 소프트펌 베이지 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 197 | `idhenley` | 투블럭 헨리넥 증명사진 | gpt (idstyle) | person | 라이브 | 증명사진 |
+| 198 | `soon` | 곧 만나요 | - | other | soon | - |
 
 ## ★ 탈락·보류 (재론 금지 — 플레이북 §7)
 
