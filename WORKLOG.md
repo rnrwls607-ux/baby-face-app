@@ -1,3 +1,6 @@
+## 2026-09-06 — inbox 처리 경로(scripts/inbox.mjs) 폐기 확정
+- [결정] MJ 확정 — inbox 파일(=== CONCEPT === 블록) 파서 scripts/inbox.mjs 는 재개하지 않는다. 미착수 상태로 폐기하고 B 프롬프트 공장 출력을 채팅에 직접 붙이는 경로(플레이북 §2 붙여넣기 규칙)로 대체. 리포 백로그·플레이북·specs/inbox 에는 흔적이 없어 삭제할 줄 없음(세션 메모에만 있던 항목)
+
 ## 2026-09-06 — B 배치 3종 출시 완료: productscene·kidsdraw·flatlay (gyaru 템플릿 첫 통과·히어로 B)
 - [G2] MJ 판정 — productscene 통과(썸네일 1) / kidsdraw 통과(썸네일 3) / flatlay 통과(썸네일 2). productscene 애프터4의 소품 3개는 결함 아님(MJ), 그대로 사용
 - [히어로 선별] 3종×애프터 4장 = 12장을 라이브 히어로 B CSS로 1080×1440 렌더해 제품·주인공이 하단 그라데이션·타이틀에 가리는지 판단. productscene 애프터1(크림병)·kidsdraw 애프터1(보라 고양이) 무가림. flatlay 는 4장 전부 하단에 소품이 걸리는 구조(플랫레이 = 화면 전체에 물건 분산) → 가장 덜 가리는 애프터3(노트 2권·머그 온전, 테이프·가위만 그라데이션 아래)으로 spec hero.image 교체(7c02bec)
