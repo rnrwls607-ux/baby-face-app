@@ -1,0 +1,65 @@
+{
+  "key": "plantshot",
+  "name": "반려식물 화보",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/plantshot.prompt.txt" },
+  "befores": [
+    { "file": "plantshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional potted monstera-type plant with six large split leaves (one leaf slightly yellow at the edge) in a plain white plastic pot, standing on a cluttered apartment windowsill beside a remote control, a cable, and a half-drawn curtain, dim indoor light with a blue window cast, slightly tilted. No pot label, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "plantshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small pilea-type plant with about twelve round coin-shaped leaves on thin stems in a terracotta pot, sitting on a messy desk next to a mug and papers (papers blank, no writing), under a warm desk lamp, off-center. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "plantshot_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional tall snake plant with nine upright striped green-and-yellow leaves of different heights in a gray ceramic pot, standing on the floor in a hallway corner beside shoes and a bag, flat ordinary ceiling light, slightly crooked. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "🪴",
+    "color": "#4E7D4F",
+    "subtitle": "우리 집 식물, 화보로",
+    "description": "창가 화분을 식집사 감성 화보로. 잎 모양·개수·무늬·화분은 그대로, 빛·배경·구도만 스튜디오급.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "반려식물 화보 만들기 🪴"], ["갸루 스타일링 중이에요", "반려식물 화보 만드는 중이에요"], ["갸루 메이크오버", "반려식물 화보"], ["💗", "🪴"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#4E7D4F", "bg": "#EEF4EC", "name": "반려식물 화보" },
+    "hero": {
+      "sub": "우리 집 식물의 인생샷",
+      "tags": ["#식집사", "#반려식물", "#플랜테리어"],
+      "image": "plantshot_애프터1.png"
+    },
+    "pain": [
+      "🪴 애지중지 키운 식물인데 사진은 늘 창틀 잡동사니와 함께예요",
+      "🌤️ 실내 조명이라 잎 색이 칙칙하게 나와요",
+      "📱 식집사 계정에 올릴 '화보급' 한 장이 없어요"
+    ],
+    "solution": "MOSPIC 반려식물 화보 — 사진 한 장이면, 창가 화분이 식집사 화보가 됩니다.",
+    "pairs": [
+      { "before": "plantshot_비포1.png", "after": "plantshot_애프터1.png", "caption": "창틀 위 화분이 → 잎이 빛나는 식물 화보로" },
+      { "before": "plantshot_비포3.png", "after": "plantshot_애프터3.png", "caption": "복도 구석 화분이 → 플랜테리어 화보로" }
+    ],
+    "points": [
+      { "title": "빛·배경·구도 풀세팅", "body": "잎맥이 살아나는 부드러운 자연광, 식물을 돋보이게 하는 깔끔한 배경, 인테리어 잡지 구도까지 한 번에 세팅됩니다.", "chips": ["자연광", "잎맥 살림", "잡지 구도"], "image": "plantshot_애프터2.png" },
+      { "title": "우리 식물은 그대로", "body": "잎의 개수·모양·무늬·크기, 줄기, 화분까지 원본 그대로. 노란 잎도 그대로예요 — 더 무성하게 만들거나 다른 식물로 바꾸지 않습니다.", "chips": ["잎 개수 유지", "무늬 보존", "화분 그대로"], "image": "plantshot_애프터1.png" },
+      { "title": "식집사 피드·성장 기록·분양까지", "body": "인스타 식집사 피드, 월별 성장 기록, 분양·나눔 글 대표 사진으로. 새 잎 날 때마다 한 장씩 남겨보세요.", "chips": ["식집사 피드", "성장 기록", "분양 사진"], "images": ["plantshot_애프터3.png", "plantshot_애프터4.png"], "imageCaption": "식물이 달라도 같은 완성도" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "식물 화보 촬영용 배경·조명 세트 10만 원~ + 자리 옮기고 세팅하는 시간",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "식물 전체와 화분이 잘리지 않게 세로로 찍어주세요",
+      "낮에 창가에서 찍으면 잎 색이 정확히 살아나요",
+      "잎이 겹치지 않는 각도가 좋아요 — 개수·무늬가 그대로 보존됩니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·조명은 MOSPIC 자체 연출이며 실제 촬영 환경이 아닙니다. 식물은 원본을 보존하지만, 분양·판매 글에 쓸 때는 실제 상태 사진을 함께 올려주세요.",
+    "cta": { "copy": "오늘, 우리 집 식물의 인생샷을 남겨보세요", "button": "반려식물 화보 만들기" }
+  }
+}

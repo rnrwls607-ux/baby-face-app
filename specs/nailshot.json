@@ -1,0 +1,65 @@
+{
+  "key": "nailshot",
+  "name": "네일아트 상품컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/nailshot.prompt.txt" },
+  "befores": [
+    { "file": "nailshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional woman's hand only (no face, no body beyond the wrist and a bit of sleeve) resting on a cluttered nail-salon table with tools and a bottle nearby, showing a fresh gel manicure: milky pink base with thin gold line art on two nails and a tiny pearl on the ring finger, medium almond shape. Slightly uneven cuticle area, ordinary yellowish salon light, a bit crooked. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional person and design. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "nailshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional woman's hand only (no face), fingers loosely curled on a beige sofa cushion, showing short square nails with a glossy deep burgundy gel color and one accent nail in matte black, taken indoors under dim warm light, slightly blurry background clutter. Realistic phone-camera quality, vertical 3:4. Completely fictional person and design. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "nailshot_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional woman's hand only (no face) held up against a plain wall in a nail shop, showing long coffin-shaped nails with a sheer nude base, white French tips, and small silver star-shaped metal parts on the middle fingers, harsh overhead fluorescent light with a slight shadow. Realistic phone-camera quality, vertical 3:4. Completely fictional person and design. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "💅",
+    "color": "#C96A8A",
+    "subtitle": "네일샵 인스타 표준컷",
+    "description": "손님 손 대충 찍은 네일 사진을 네일샵 인스타 대표컷으로. 손·디자인·컬러·파츠는 그대로, 배경·조명·정돈만.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "네일아트 상품컷 만들기 💅"], ["갸루 스타일링 중이에요", "네일아트 상품컷 만드는 중이에요"], ["갸루 메이크오버", "네일아트 상품컷"], ["💗", "💅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#C96A8A", "bg": "#FBF0F4", "name": "네일아트 상품컷" },
+    "hero": {
+      "sub": "내 네일 디자인, 그대로 예쁘게",
+      "tags": ["#네일샵", "#네일아트", "#인스타컷"],
+      "image": "nailshot_애프터1.png"
+    },
+    "pain": [
+      "💅 시술은 예쁜데 작업대에서 찍으면 사진이 안 살아요",
+      "💡 형광등 아래선 컬러가 실제랑 다르게 나와요",
+      "📱 매일 올리는 인스타, 사진 정리에 시간이 너무 가요"
+    ],
+    "solution": "MOSPIC 네일아트 상품컷 — 사진 한 장이면, 작업대 위 손이 네일샵 인스타 대표컷이 됩니다.",
+    "pairs": [
+      { "before": "nailshot_비포1.png", "after": "nailshot_애프터1.png", "caption": "작업대 위 손이 → 네일샵 인스타 표준컷으로" },
+      { "before": "nailshot_비포3.png", "after": "nailshot_애프터3.png", "caption": "형광등 아래 손이 → 컬러가 정확한 상품컷으로" }
+    ],
+    "points": [
+      { "title": "배경·조명·손 포즈 풀세팅", "body": "깔끔한 배경, 네일 컬러가 정확히 보이는 부드러운 조명, 네일샵 표준 손 포즈까지 한 번에. 큐티클 주변과 피부만 살짝 정돈됩니다.", "chips": ["깔끔한 배경", "정확한 컬러", "표준 포즈"], "image": "nailshot_애프터2.png" },
+      { "title": "디자인은 그대로", "body": "베이스 컬러·아트·파츠·네일 모양·길이를 손톱 하나하나 그대로 보존합니다. 손도 손님 손 그대로 — 손가락 모양·피부톤을 바꾸지 않아요.", "chips": ["컬러 보존", "파츠 그대로", "손 원본"], "image": "nailshot_애프터1.png" },
+      { "title": "인스타·예약 페이지·포트폴리오까지", "body": "매일 올리는 인스타 피드, 네이버 예약 대표 이미지, 디자인 포트폴리오에 바로. 시술 끝나고 한 장만 찍으면 됩니다.", "chips": ["인스타 피드", "예약 대표컷", "포트폴리오"], "images": ["nailshot_애프터3.png", "nailshot_애프터4.png"], "imageCaption": "디자인이 달라도 같은 완성도" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "네일 촬영용 조명·배경 세트 10만~20만 원 + 시술마다 세팅·보정 10분",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "손등이 카메라를 향하고 손톱 10개(또는 5개)가 다 보이게 찍어주세요",
+      "손톱이 크게 나올수록 아트·파츠가 정확히 보존돼요",
+      "얼굴은 넣지 마세요 — 손목까지만 찍으면 충분해요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·조명은 MOSPIC 자체 연출이며 실제 촬영 환경이 아닙니다. 네일 디자인은 원본을 보존하지만, 게시 전 컬러·파츠가 실제 시술과 일치하는지 직접 확인해 주세요.",
+    "cta": { "copy": "오늘, 시술 끝나고 한 장만 찍어보세요", "button": "네일아트 상품컷 만들기" }
+  }
+}

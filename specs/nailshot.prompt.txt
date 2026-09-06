@@ -1,0 +1,89 @@
+You are a top nail-salon photographer and retoucher. Take this casual
+photo of a customer's hand showing a finished manicure and create ONE
+clean, professional NAIL-ART PRODUCT PHOTO of the EXACT same hand and
+the EXACT same nail design — the standard hero shot a premium nail
+salon posts on its feed.
+
+STEP 1 — Read the hand and the nails first:
+Note the hand (left or right, skin tone, finger proportions, any rings),
+how many nails are visible, and for EACH nail: the shape (square, round,
+almond, coffin, stiletto), the length, the base color and finish (glossy,
+matte, sheer, glitter, cat-eye, chrome), every art element (lines,
+French tips, ombré, marble, dots, flowers, foil), and every attached
+part (pearls, stones, charms, metal pieces) with its exact position.
+Also note any text, logo, or mark on parts or rings.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. HAND ANATOMY LOCK: the same hand — exactly FIVE fingers, each with the
+   same length, thickness, knuckles, and natural proportions as the
+   source; the same skin tone; the same rings or bracelets if present.
+   Do NOT slim, lengthen, reshape, or beautify the fingers; do NOT add
+   or remove a finger; do NOT change the hand's skin tone. No face, no
+   body — the hand (and wrist) only.
+2. NAIL DESIGN LOCK: each nail keeps its exact shape, length, base color,
+   finish, art, and parts — in the same position on the same finger.
+   Do NOT add, remove, move, recolor, or "improve" any art element or
+   part. Do NOT change the nail shape or make nails longer. Nail count
+   and which finger has which design stay identical.
+3. TRUE COLOR: reproduce the gel colors EXACTLY. Only correct an obvious
+   color cast from the salon lighting (yellow fluorescent) to reveal the
+   TRUE color — never make it brighter, pinker, or more saturated.
+4. TEXT & MARKS: any text, logo, or mark on parts, charms, or rings
+   stays exactly as in the source. Do NOT add any.
+5. NO NEW TEXT ANYWHERE: the background and every surface must be BARE —
+   no readable or illegible text, letters, numbers, logos, or signage
+   anywhere. Even illegible text shapes are a failure.
+
+CLEAN UP (be bold here, nails only where noted):
+- Remove the original surroundings entirely: salon table, tools,
+  bottles, cushions, walls, clutter, other hands.
+- Tidy the skin AROUND the nails: clean cuticle lines, remove stray gel,
+  dust, lint, and smudges on the skin next to the nail — without
+  changing the nail edge or shape.
+- Light natural skin polish on the hand (even tone, remove temporary
+  redness or dry flakes) — keep real skin texture, knuckle lines, and
+  veins; never plastic or waxy.
+
+THE SHOT — nail-salon standard:
+- The hand posed in the classic nail-display pose: fingers gently
+  curled or softly spread so ALL nails face the camera clearly, seen
+  from slightly above, resting on or hovering over the surface.
+- Background: ONE clean surface — soft ivory, pale blush, light gray, or
+  a matte pastel that complements the nail colors; plain, seamless,
+  with at most one tiny plain accent (a small dried flower or a smooth
+  pebble) far from the nails, never touching the hand.
+
+LIGHTING & CAMERA:
+- Soft, bright, diffused beauty light from the front-top with gentle
+  fill — glossy nails show small clean highlights, matte nails stay
+  matte, glitter and chrome sparkle naturally; no harsh glare hiding the
+  design, no dark shadows on the nails.
+- Shot on a 100mm macro lens: every nail tack-sharp, art and parts
+  crisp, the background softly blurred; accurate white balance, clean
+  commercial color grade.
+
+FRAMING — vertical 3:4, the hand large in the upper two-thirds of the
+frame with all nails clearly visible, wrist toward the bottom, nothing
+cropped.
+
+FINAL SELF-CHECK before output:
+- Exactly five fingers, same proportions, same skin tone, same rings?
+- Every nail: same shape, length, color, finish, art, and parts on the
+  same finger as the source — nothing added, removed, or moved?
+- Colors true to the source, not brightened or shifted?
+- Background clean and completely free of text or marks?
+- Real skin texture, no plastic look; no face or body in frame?
+
+ABSOLUTELY AVOID:
+- Any change in finger count, length, shape, or skin tone; a
+  beautified or generic hand.
+- Any added, removed, moved, or recolored nail art, part, tip, or
+  gradient; a different nail shape or length.
+- Any text, letters, numbers, or logos anywhere; a face or body.
+- Salon clutter, tools, bottles, or other hands in frame.
+- Plastic, waxy, CGI skin; blown-out glare on the nails; murky shadows.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution nail-salon hero photo
+— the exact same hand and nail design, professionally shot. No added
+text, no watermark, no border.

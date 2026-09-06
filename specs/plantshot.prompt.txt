@@ -1,0 +1,85 @@
+You are a top botanical and interior photographer. Take this casual
+photo of a potted houseplant and create ONE magazine-quality PLANT
+PORTRAIT of the EXACT same plant in the EXACT same pot — the kind of
+"plant parent" hero shot that stops the scroll.
+
+STEP 1 — Read the plant first:
+Identify the plant type, count the leaves, and note each leaf's shape,
+size, splits or holes, variegation or stripes, color (including any
+yellowing, browning, or damaged edges), the stems and their angles, the
+overall silhouette and height, and the pot (material, color, shape,
+saucer). The output must be THIS individual plant.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. SAME PLANT: the same number of leaves, the same leaf shapes, splits,
+   holes, stripes, and variegation pattern, the same stem arrangement and
+   angles, the same size and silhouette. Do NOT add leaves, remove
+   leaves, make it fuller, taller, or more symmetrical, or swap the
+   species or variety.
+2. HONEST CONDITION: a yellowing leaf, a brown tip, a bent stem, or a
+   small hole stays exactly as it is. Do NOT heal, green up, or
+   "perfect" the plant. Only remove dust on the leaves and dead
+   clippings on the soil.
+3. TRUE COLOR: reproduce the real leaf greens, variegation colors, and
+   pot color EXACTLY. Only correct an obvious color cast from indoor
+   lighting (blue window cast, yellow lamp) to reveal the TRUE colors —
+   never boost saturation.
+4. SAME POT: same material, color, shape, size, and saucer. Do NOT
+   replace it with a prettier pot. Any label, sticker, or lettering on
+   the pot in the source is REMOVED and replaced with plain pot surface.
+   Do NOT add any.
+5. NO NEW TEXT ANYWHERE: the background, pot, and every surface must be
+   BARE — no readable or illegible text, letters, numbers, logos, or
+   signage anywhere. Even illegible text shapes are a failure.
+
+CLEAN UP (be bold here):
+- Remove the original surroundings entirely: windowsill clutter,
+  cables, remotes, mugs, papers, shoes, bags, curtains, and walls.
+- Dust the leaves so they show their real sheen; tidy the soil surface;
+  wipe the pot.
+
+THE SCENE — choose ONE calm setting that suits the plant (plain and
+uncluttered, no other plants):
+- A bright minimal room corner: soft white or warm-beige wall, light
+  wood floor, a hint of a linen curtain edge.
+- A wooden plant stand or side table by a window, warm oak tone, soft
+  wall behind.
+- A clean studio backdrop in a muted tone (sage, sand, terracotta, or
+  warm gray) that complements the leaf color.
+- At most ONE plain accent (a small ceramic vessel, a folded linen)
+  placed far from the plant, never overlapping it.
+
+LIGHTING & CAMERA:
+- Soft, bright, directional natural window light from the side — leaf
+  veins and texture clearly sculpted, gentle backlight glow through
+  thinner leaves where natural, a soft realistic shadow on the wall or
+  floor; no harsh glare, no dark murk.
+- Shot on an 85mm lens at eye level with the plant: leaves tack-sharp,
+  background softly falling away; accurate white balance, clean
+  editorial color grade.
+
+FRAMING — vertical 3:4, the whole plant and pot inside the frame with
+comfortable margins, foliage in the upper two-thirds, pot toward the
+bottom, nothing cropped.
+
+FINAL SELF-CHECK before output:
+- Same leaf count, shapes, splits, and variegation pattern as the
+  source; same stems and silhouette?
+- Every yellow leaf, brown tip, or bent stem still there — nothing
+  healed or added?
+- Colors true, not oversaturated; same pot, no label?
+- Background clean, no other plants, no clutter, no text anywhere?
+- Real leaf texture and light, not CGI?
+
+ABSOLUTELY AVOID:
+- Adding, removing, or reshaping leaves; a fuller, taller, or more
+  symmetrical plant; a different species or variety.
+- Healing damage, greening yellow leaves, or boosting color.
+- A different pot; any label, sticker, text, or logo anywhere.
+- Other plants, clutter, or people in frame.
+- Plastic or CGI foliage; harsh glare; floating pot without a shadow.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution plant portrait — the
+exact same plant and pot, beautifully lit. No text, no watermark, no
+border.

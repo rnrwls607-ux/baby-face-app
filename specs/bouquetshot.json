@@ -1,0 +1,65 @@
+{
+  "key": "bouquetshot",
+  "name": "꽃다발 상품컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/bouquetshot.prompt.txt" },
+  "befores": [
+    { "file": "bouquetshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional hand-tied bouquet standing on a cluttered flower-shop worktable: pale pink garden roses, white ranunculus, a few sprigs of eucalyptus, wrapped in kraft paper with a cream satin ribbon, with scissors, floral tape, and stem clippings around it, ordinary shop fluorescent light, slightly tilted. No shop sign, no card, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional arrangement. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "bouquetshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional bouquet lying on a wooden counter: deep red roses, purple lisianthus, and dried wheat stems, wrapped in matte black paper with a thin gold ribbon, next to a water bucket and a roll of wrapping paper, dim warm light, a bit blurry. No card, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional arrangement. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "bouquetshot_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small bouquet held up against a shop shelf: yellow tulips, white daisies, and green bell-shaped flowers, wrapped in translucent white paper with a pale blue ribbon, held by a hand at the bottom (no face), busy shelves with pots behind, mixed cool light. No card, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional arrangement. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "💐",
+    "color": "#C4707E",
+    "subtitle": "꽃집 대표컷, 작업대에서 바로",
+    "description": "작업대에서 찍은 꽃다발을 꽃집 인스타·예약 대표컷으로. 꽃 종류·개수·포장·리본은 그대로, 배경·빛만 교체.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "꽃다발 상품컷 만들기 💐"], ["갸루 스타일링 중이에요", "꽃다발 상품컷 만드는 중이에요"], ["갸루 메이크오버", "꽃다발 상품컷"], ["💗", "💐"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#C4707E", "bg": "#FBF1F2", "name": "꽃다발 상품컷" },
+    "hero": {
+      "sub": "방금 묶은 꽃다발, 대표컷으로",
+      "tags": ["#꽃집", "#꽃다발", "#예약대표컷"],
+      "image": "bouquetshot_애프터1.png"
+    },
+    "pain": [
+      "💐 꽃은 예쁜데 작업대 배경 때문에 사진이 지저분해요",
+      "🌤️ 가게 형광등 아래선 꽃 색이 죽어요",
+      "📱 주문마다 찍어 올릴 사진, 매번 세팅할 시간이 없어요"
+    ],
+    "solution": "MOSPIC 꽃다발 상품컷 — 사진 한 장이면, 작업대 위 꽃다발이 꽃집 대표컷이 됩니다.",
+    "pairs": [
+      { "before": "bouquetshot_비포1.png", "after": "bouquetshot_애프터1.png", "caption": "작업대 위 꽃다발이 → 꽃집 대표컷으로" },
+      { "before": "bouquetshot_비포2.png", "after": "bouquetshot_애프터2.png", "caption": "어두운 카운터 사진이 → 색이 살아난 상품컷으로" }
+    ],
+    "points": [
+      { "title": "배경·빛·구도 풀세팅", "body": "꽃 색을 살리는 부드러운 자연광, 포장지에 어울리는 깔끔한 배경, 꽃집 표준 구도까지 한 번에 세팅됩니다.", "chips": ["자연광", "깔끔한 배경", "표준 구도"], "image": "bouquetshot_애프터3.png" },
+      { "title": "꽃다발은 그대로", "body": "꽃 종류·송이 수·배치·포장지·리본을 원본 그대로 보존합니다. 시든 잎만 정리하고, 꽃을 더 넣거나 색을 바꾸지 않아요 — 손님이 받는 그 꽃다발 그대로.", "chips": ["송이 수 유지", "포장 보존", "색 정확"], "image": "bouquetshot_애프터1.png" },
+      { "title": "인스타·예약·주문 확인까지", "body": "인스타 피드, 네이버 예약 대표 이미지, 손님에게 보내는 완성 사진까지. 주문마다 묶고 한 장만 찍으세요.", "chips": ["인스타 피드", "예약 대표컷", "완성 사진"], "images": ["bouquetshot_애프터2.png", "bouquetshot_애프터4.png"], "imageCaption": "꽃이 달라도 같은 완성도" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "꽃 촬영용 배경·조명 세트 10만~20만 원 + 주문마다 세팅·보정 10분",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "꽃다발 전체가 잘리지 않게 세로로 찍어주세요",
+      "꽃 얼굴이 카메라를 향한 정면이 좋아요",
+      "카드·메시지는 결과에 나오지 않아요 — 꽃과 포장만 살립니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·조명은 MOSPIC 자체 연출이며 실제 촬영 환경이 아닙니다. 꽃다발은 원본을 보존하지만, 판매 게시 전 꽃 종류·수량이 실제 상품과 일치하는지 직접 확인해 주세요.",
+    "cta": { "copy": "오늘, 묶은 꽃다발을 대표컷으로 남겨보세요", "button": "꽃다발 상품컷 만들기" }
+  }
+}

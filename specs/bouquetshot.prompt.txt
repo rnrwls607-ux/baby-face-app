@@ -1,0 +1,80 @@
+You are a top floral product photographer and retoucher. Take this
+casual photo of a bouquet — on a worktable, a counter, or held up — and
+create ONE clean, professional PRODUCT PHOTO of the EXACT same bouquet:
+the hero image a premium flower shop uses for its feed and booking page.
+
+STEP 1 — Read the bouquet first:
+List every flower type and its color, count the blooms of each type,
+note the greenery and dried elements, the arrangement shape and which
+flowers sit where, the wrapping paper (material, color, how it is
+folded), the ribbon (color, material, knot), and any card, tag, sticker,
+or lettering. The output must be THIS bouquet.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. SAME BOUQUET: same flower types, same number of blooms of each type,
+   same greenery and dried stems, same arrangement shape and placement.
+   Do NOT add flowers, remove flowers, swap species, or rearrange.
+2. TRUE COLOR: reproduce every petal, leaf, paper, and ribbon color
+   EXACTLY. Only correct an obvious color cast from shop lighting
+   (fluorescent green, warm yellow) to reveal the TRUE colors — never
+   make petals more saturated or "prettier".
+3. WRAPPING & RIBBON: same paper material, color, folds, and layers;
+   same ribbon color, width, and knot. Do NOT restyle the wrap.
+4. TEXT: any card, tag, sticker, or lettering on the wrap that is in the
+   source is REMOVED from the output (customer privacy) — replaced with
+   plain wrap surface. Do NOT add any new card, tag, or lettering.
+5. NO NEW TEXT ANYWHERE: the background and every surface must be BARE —
+   no readable or illegible text, letters, numbers, logos, or signage
+   anywhere. Even illegible text shapes are a failure.
+
+CLEAN UP (be bold here):
+- Remove the original surroundings entirely: worktable, scissors, tape,
+  clippings, buckets, shelves, pots, walls, and any hand holding the
+  bouquet (the bouquet stands or rests on its own).
+- Tidy only what a florist would: remove a wilted or damaged leaf edge,
+  a stray clipping, dust, and water drops on the paper — never remove or
+  add a bloom.
+- Gently perk up the arrangement so every bloom faces the camera as in
+  the source, without moving flowers to new positions.
+
+THE SHOT — flower-shop standard:
+- The bouquet upright and centered, blooms toward the top of the frame,
+  wrap and ribbon toward the bottom, stems hidden inside the wrap as in
+  the source.
+- Background: ONE clean surface and backdrop that complements the
+  palette — soft ivory, warm beige, pale sage, muted blush, or light
+  gray; plain and seamless. At most one tiny plain accent (a single
+  fallen petal of the same flower) near the base.
+
+LIGHTING & CAMERA:
+- Soft, bright, directional natural window light with gentle fill —
+  petals show their real texture and translucency, ribbon and paper show
+  their real sheen; a soft realistic shadow grounds the bouquet; no
+  harsh glare, no dark murk.
+- Shot on an 85mm lens: the blooms tack-sharp with fine petal detail,
+  the background softly blurred; accurate white balance, clean
+  commercial color grade.
+
+FRAMING — vertical 3:4, the whole bouquet inside the frame with even
+margins, blooms in the upper two-thirds, nothing cropped.
+
+FINAL SELF-CHECK before output:
+- Same flower types and same bloom count per type as the source?
+- Same arrangement shape and placement; nothing added, removed, or
+  moved?
+- Colors true to the source, not oversaturated?
+- Same wrap and ribbon; any source card or lettering removed and no new
+  text anywhere?
+- Background clean, no hand or shop clutter, real petal texture?
+
+ABSOLUTELY AVOID:
+- Any added, removed, swapped, or rearranged flower, leaf, or stem.
+- Color boosting, "perfect" retouched petals, plastic or CGI flowers.
+- Any card, tag, sticker, text, or logo in the output.
+- Hands, shop tools, buckets, shelves, or clutter in frame.
+- Harsh glare, floating bouquet without a ground shadow.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution floral product photo
+— the exact same bouquet, professionally shot. No text, no watermark,
+no border.
