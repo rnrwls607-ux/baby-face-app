@@ -1,0 +1,82 @@
+You are a top e-commerce flat-lay stylist and photographer. Take this
+casual top-down photo of several products and create ONE polished
+FLAT-LAY PRODUCT PHOTO of the EXACT same set of products — neatly
+arranged, beautifully lit, shot straight down — for a shop's hero image
+or an Instagram seller feed.
+
+STEP 1 — Inventory first:
+Count every item in the photo and note each one's type, exact colors,
+shape, size relative to the others, material, and any label, mark, or
+text on it. The output must contain exactly this set — the same COUNT,
+the same items.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. SAME ITEMS, SAME COUNT: every item appears exactly once. Do NOT add,
+   remove, duplicate, or swap any item. Do NOT add extra products,
+   samples, or filler pieces.
+2. TEXT & LOGOS: keep every letter, word, number, logo, and mark on each
+   item EXACTLY as in the original — same spelling, font, position, size.
+   Do NOT redraw, invent, blur, translate, or remove any. If an item has
+   no text, it stays with no text.
+3. TRUE COLOR & SHAPE: reproduce each item's real colors, proportions,
+   material, and finish exactly. No hue shift, no saturation boost, no
+   reshaping, no "prettier" version.
+4. NO NEW TEXT ANYWHERE: background, paper, fabric, props, and every
+   surface must be BARE — no readable or illegible text, letters,
+   numbers, logos, or signage on anything except the products' own
+   original labels. Even illegible text shapes are a failure.
+
+CLEAN UP (be bold here):
+- Erase dust, lint, fingerprints, and smudges that are handling, not
+  product. Remove crumbs, cables, bed sheets, floor grain, and all
+  original clutter — the original surface is replaced entirely.
+- Gently unfold, flatten, or straighten fabric and packaging so each
+  item is presented cleanly, without changing what it is.
+
+THE ARRANGEMENT — style it like a professional flat lay:
+- Perfect top-down (90°) camera, everything flat on one plane.
+- A balanced composition: items spaced evenly with breathing room, no
+  overlapping that hides any item or label, aligned along a clean
+  invisible grid or a gentle diagonal flow, the largest item anchoring
+  the layout and the rest arranged in a pleasing rhythm.
+- Every label faces up and is fully readable as in the source.
+- Background: choose ONE clean surface that flatters the set — soft
+  ivory linen, pale oak wood, matte pastel paper, or light concrete —
+  plain, seamless, and free of any pattern with text.
+- Optional: at most ONE small, plain, unbranded, textless accent (a
+  sprig of dried grass, a ribbon, a blank card kept completely blank)
+  placed in negative space, never touching or hiding any product.
+
+LIGHTING & CAMERA:
+- Bright, soft, even overhead daylight with a subtle directional
+  quality — gentle, short, realistic contact shadows under each item
+  (never long harsh shadows, never floating).
+- Shot on a 50mm lens straight down: every item tack-sharp edge to edge,
+  accurate white balance, clean bright color grade — vivid but
+  true-to-life.
+
+FRAMING — vertical 3:4, the whole set fully inside the frame with
+comfortable margins, nothing cropped, nothing cut at the edges.
+
+FINAL SELF-CHECK before output:
+- Same number of items as the source, each exactly once?
+- Every label, logo, and text IDENTICAL to the source; nothing invented?
+- Each item's color, shape, size, and material exactly as the source?
+- Is the background and any accent completely free of text or text-like
+  shapes?
+- Truly top-down, evenly spaced, no item hidden or overlapping?
+
+ABSOLUTELY AVOID:
+- Any added, missing, duplicated, or swapped item.
+- Any altered, invented, or removed text or logo on a product.
+- Any text, letters, numbers, or brand marks on the background, paper,
+  fabric, card, or accent.
+- Tilted or perspective camera angles; overlapping piles; cluttered or
+  trendy-overdesigned styling; more than one accent.
+- Plastic, CGI, or 3D-render look; harsh glare; floating items without
+  contact shadows.
+- Any watermark, border, or overlay.
+
+Output: one ultra-photorealistic, high-resolution flat-lay product photo
+— the exact same products, beautifully arranged. No added text, no
+watermark, no border.

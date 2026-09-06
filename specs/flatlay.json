@@ -1,0 +1,65 @@
+{
+  "key": "flatlay",
+  "name": "플랫레이 상품컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/flatlay.prompt.txt" },
+  "befores": [
+    { "file": "flatlay_비포1.png", "pool": "custom", "prompt": "A casual top-down smartphone photo of a fictional set of five small cosmetic items — a lip balm tube, a compact, a small round jar, a slim serum bottle, and a brush — dropped loosely and slightly overlapping on a messy bed sheet, taken indoors under dim yellowish light at a slightly tilted angle. Each item has only plain solid colors and a small abstract shape instead of any lettering. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional products. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "flatlay_비포2.png", "pool": "custom", "prompt": "A casual top-down smartphone photo of a fictional outfit set — a folded beige knit sweater, a pair of light-blue jeans, white canvas sneakers, a brown leather belt, and a small gold-tone watch — piled unevenly on a wooden floor, taken indoors in flat ordinary light with a slightly crooked angle. No visible brand marks or lettering on any item. Realistic phone-camera quality, vertical 3:4. Completely fictional products. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "flatlay_비포3.png", "pool": "custom", "prompt": "A casual top-down smartphone photo of a fictional stationery set — two pastel notebooks with blank covers, three colored pens, a small tape roll, a pair of scissors, and a ceramic mug — scattered on a cluttered desk with a phone cable and crumbs, taken indoors under mixed warm and cool light. Notebook covers are plain solid colors with a tiny abstract shape and no lettering. Realistic phone-camera quality, vertical 3:4. Completely fictional products. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "🧺",
+    "color": "#8C7A6B",
+    "subtitle": "위에서 찍은 정돈된 한 컷",
+    "description": "널브러진 여러 제품을 깔끔하게 배치된 플랫레이 상품컷으로. 각 제품은 그대로, 배치·배경·그림자만 정리.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "플랫레이 상품컷 만들기 🧺"], ["갸루 스타일링 중이에요", "플랫레이 상품컷 만드는 중이에요"], ["💗", "🧺"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#8C7A6B", "bg": "#F6F2EE", "name": "플랫레이 상품컷" },
+    "hero": {
+      "sub": "여러 제품을 한 컷에 예쁘게",
+      "tags": ["#플랫레이", "#인스타셀러", "#대표컷"],
+      "image": "flatlay_애프터1.png"
+    },
+    "pain": [
+      "🧺 제품 여러 개를 한 컷에 예쁘게 놓는 게 제일 어려워요",
+      "📐 위에서 찍으면 항상 삐뚤고 그림자가 지저분해요",
+      "🛍️ 세트 상품 대표컷이 없어서 판매 페이지가 허전해요"
+    ],
+    "solution": "MOSPIC 플랫레이 상품컷 — 사진 한 장이면, 널브러진 제품들이 정돈된 대표컷이 됩니다.",
+    "pairs": [
+      { "before": "flatlay_비포1.png", "after": "flatlay_애프터1.png", "caption": "침대 위 화장품 더미가 → 정돈된 뷰티 플랫레이로" },
+      { "before": "flatlay_비포2.png", "after": "flatlay_애프터2.png", "caption": "바닥에 쌓인 옷가지가 → 룩북 스타일 코디 플랫레이로" }
+    ],
+    "points": [
+      { "title": "배치·배경·빛 풀세팅", "body": "제품 수와 종류를 읽고 균형 잡힌 배치를 잡습니다. 리넨·원목·컬러 페이퍼 배경, 위에서 내려오는 고른 빛, 깔끔한 그림자까지.", "chips": ["균형 배치", "배경 교체", "고른 빛"], "image": "flatlay_애프터3.png" },
+      { "title": "제품은 그대로", "body": "각 제품의 색·형태·라벨·질감을 그대로 둡니다. 개수도 그대로 — 빠지거나 늘어나지 않고, 새 글자도 만들지 않아요.", "chips": ["개수 유지", "라벨 보존", "색 정확"], "image": "flatlay_애프터1.png" },
+      { "title": "세트 대표컷부터 피드까지", "body": "세트 상품 대표컷, 언박싱 피드, 시즌 기획전 배너 소재로. 제품 조합만 바꿔 찍으면 컷이 계속 나와요.", "chips": ["세트 대표컷", "피드", "기획전"], "images": ["flatlay_애프터2.png", "flatlay_애프터4.png"], "imageCaption": "같은 제품, 다른 배치 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "플랫레이 스튜디오 촬영 컷당 5만~10만 원 + 스타일리스트 세팅비",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "제품들을 한 화면에 다 넣고 위에서 찍은 사진 1장을 올려주세요",
+      "제품끼리 너무 겹치지 않게 펼쳐 놓으면 결과가 좋아요",
+      "라벨이 위를 향하게 두면 글자가 그대로 보존돼요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·배치는 MOSPIC 자체 연출이며 실제 촬영이 아닙니다. 제품 외관은 원본을 보존하지만, 판매 게시 전 개수·색상·라벨이 실물과 일치하는지 직접 확인해 주세요.",
+    "cta": { "copy": "오늘, 제품들을 한 컷에 예쁘게 모아보세요", "button": "플랫레이 상품컷 만들기" }
+  }
+}

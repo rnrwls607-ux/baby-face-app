@@ -1,0 +1,65 @@
+{
+  "key": "kidsdraw",
+  "name": "아이 그림 실사화",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/kidsdraw.prompt.txt" },
+  "befores": [
+    { "file": "kidsdraw_비포1.png", "pool": "custom", "prompt": "A smartphone photo of a fictional child's crayon drawing on slightly wrinkled white paper: a smiling purple cat with a very round body, four stick legs of different lengths, a long curly tail, big uneven circle eyes, and orange whiskers, standing on green scribble grass under a yellow sun with rays. Naive, wobbly lines, uneven coloring with white gaps, typical of a 5-year-old. Photographed flat on a wooden table under ordinary indoor light. Vertical 3:4 orientation. No letters, no numbers, no signature, no words anywhere on the paper. No watermark." },
+    { "file": "kidsdraw_비포2.png", "pool": "custom", "prompt": "A smartphone photo of a fictional child's marker drawing on white paper: a green dinosaur with a huge head, tiny arms, a rainbow-striped back with triangle spikes, a big toothy grin, and one leg longer than the other, next to a lopsided red house with a blue door and a chimney with a scribble of smoke. Childlike wobbly outlines, colors going outside the lines, typical of a 6-year-old. Photographed flat on a desk with a slight angle, ordinary room light. Vertical 3:4. No letters, no numbers, no signature, no words anywhere. No watermark." },
+    { "file": "kidsdraw_비포3.png", "pool": "custom", "prompt": "A smartphone photo of a fictional child's colored-pencil drawing on cream paper: a pink and blue robot with a square body, one round eye and one square eye, antenna with a star on top, zigzag arms, and wheels instead of feet, holding a giant orange flower, with a blue scribble sky and three uneven clouds. Naive proportions and shaky lines, typical of a 7-year-old. Photographed flat on a kitchen table under warm indoor light. Vertical 3:4. No letters, no numbers, no signature, no words anywhere. No watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "🖍️",
+    "color": "#E8743B",
+    "subtitle": "우리 아이 그림이 진짜가 됐어요",
+    "description": "아이가 그린 크레파스 그림을 형태·색·엉뚱한 비율 그대로 살린 실사 사진으로. 액자·선물·가족 단톡 자랑용.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "아이 그림 실사화 만들기 🖍️"], ["갸루 스타일링 중이에요", "아이 그림 실사화 만드는 중이에요"], ["💗", "🖍️"], ["제품 사진", "아이 그림"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#E8743B", "bg": "#FFF4EC", "name": "아이 그림 실사화" },
+    "hero": {
+      "sub": "아이 그림이 진짜가 되는 순간",
+      "tags": ["#아이그림", "#실사화", "#육아선물"],
+      "image": "kidsdraw_애프터1.png"
+    },
+    "pain": [
+      "🖍️ 아이 그림, 냉장고에 붙였다가 결국 버리게 돼요",
+      "🎁 조부모님께 특별한 선물을 하고 싶은데 뭐가 없어요",
+      "📱 아이 그림 자랑하고 싶은데 사진은 그냥 종이예요"
+    ],
+    "solution": "MOSPIC 아이 그림 실사화 — 사진 한 장이면, 아이가 그린 그대로 세상에 진짜로 나타납니다.",
+    "pairs": [
+      { "before": "kidsdraw_비포1.png", "after": "kidsdraw_애프터1.png", "caption": "크레파스 보라 고양이가 → 잔디밭에 진짜로 서 있는 사진으로" },
+      { "before": "kidsdraw_비포3.png", "after": "kidsdraw_애프터3.png", "caption": "삐뚤빼뚤 로봇이 → 꽃 든 진짜 로봇으로" }
+    ],
+    "points": [
+      { "title": "그린 그대로, 진짜처럼", "body": "형태·색·비율을 하나도 고치지 않습니다. 다리 길이가 다르면 다른 채로, 눈이 짝짝이면 짝짝이인 채로 — 그 엉뚱함이 감동이니까요.", "chips": ["비율 그대로", "색 그대로", "엉뚱함 유지"], "image": "kidsdraw_애프터2.png" },
+      { "title": "질감은 진짜", "body": "털·비늘·금속·풀·하늘이 실제 사진처럼 살아납니다. 아이가 그린 세상이 카메라로 찍은 것처럼 눈앞에 나타나요.", "chips": ["실사 질감", "진짜 빛", "사진 같은 장면"], "image": "kidsdraw_애프터1.png" },
+      { "title": "액자·선물·자랑까지", "body": "인화해서 액자에, 조부모님 선물로, 가족 단톡과 인스타에. 아이 그림과 나란히 두면 반응이 두 배예요.", "chips": ["액자 인화", "조부모 선물", "가족 단톡"], "images": ["kidsdraw_애프터3.png", "kidsdraw_애프터4.png"], "imageCaption": "같은 그림, 두 번 뽑아도 같은 아이 그림" }
+    ],
+    "price": {
+      "header": "직접 만들면 얼마일까요?",
+      "offline": "아이 그림 실사화 커스텀 일러스트 의뢰 5만~15만 원 + 2~3주 대기",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "그림 전체가 잘리지 않게 위에서 반듯하게 찍어주세요",
+      "밝은 곳에서 그림자 없이 찍으면 색이 정확히 살아나요",
+      "그림에 쓴 이름·글자는 결과에 나오지 않아요 — 그림만 살립니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 아이의 그림을 바탕으로 MOSPIC이 만든 상상 속 실사 장면이며 실제 존재하는 사물·장소가 아닙니다. 재미와 기념 용도로 이용해 주세요.",
+    "cta": { "copy": "오늘, 아이 그림을 진짜로 만들어 주세요", "button": "아이 그림 실사화 만들기" }
+  }
+}

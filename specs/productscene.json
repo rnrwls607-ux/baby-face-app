@@ -1,0 +1,65 @@
+{
+  "key": "productscene",
+  "name": "제품 연출컷",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/productscene.prompt.txt" },
+  "befores": [
+    { "file": "productscene_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional skincare cream jar (frosted glass, pale mint lid) standing on a cluttered desk next to a phone charger and a tissue box, taken indoors under yellowish room light with a slight tilt and mild shadows. The jar has a plain abstract geometric mark on the front instead of any lettering. Realistic phone-camera quality, vertical 3:4 orientation. This is a completely fictional, non-existent brand and product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "productscene_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional pair of beige suede sneakers placed on a wooden floor beside a doorway, slightly off-center, taken indoors in flat ordinary daylight with a plain wall behind. The shoes have no visible brand marks — only a simple abstract stripe shape on the side. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "productscene_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional glass bottle of cold-brew coffee with a matte black cap, standing on a kitchen counter next to a sponge and a dish rack, taken indoors under mixed warm and cool light with a slightly crooked angle. The bottle label is a plain solid-color band with a small abstract circle mark and no lettering. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "product",
+    "emoji": "🪴",
+    "color": "#6B8E5A",
+    "subtitle": "상세페이지 연출컷, 사진 한 장으로",
+    "description": "대충 찍은 제품 사진을 원목 테이블·리넨·창가 빛 위에 놓인 라이프스타일 연출컷으로. 라벨·글자·색·형태는 그대로.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "제품 연출컷 만들기 🪴"], ["갸루 스타일링 중이에요", "제품 연출컷 만드는 중이에요"], ["💗", "🪴"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#6B8E5A", "bg": "#F3F5EF", "name": "제품 연출컷" },
+    "hero": {
+      "sub": "우리 제품이 잡지 속 한 장면으로",
+      "tags": ["#연출컷", "#상세페이지", "#스마트스토어"],
+      "image": "productscene_애프터1.png"
+    },
+    "pain": [
+      "📦 흰 배경 컷만 있으니 상세페이지가 밋밋해요",
+      "📸 스튜디오 연출 촬영은 건당 몇만 원씩 나가요",
+      "🏷️ AI 보정하면 라벨 글자가 뭉개질까 겁나요"
+    ],
+    "solution": "MOSPIC 제품 연출컷 — 사진 한 장이면, 라벨 그대로 잡지 속 라이프스타일 장면이 됩니다.",
+    "pairs": [
+      { "before": "productscene_비포1.png", "after": "productscene_애프터1.png", "caption": "책상 위 대충 찍은 크림이 → 창가 리넨 위 연출컷으로" },
+      { "before": "productscene_비포3.png", "after": "productscene_애프터3.png", "caption": "주방 카운터 음료병이 → 카페 테이블 라이프스타일 컷으로" }
+    ],
+    "points": [
+      { "title": "배경·소품·빛 풀세팅", "body": "원목 테이블, 리넨 천, 창가 자연광, 제품에 어울리는 소품 한두 개까지. 제품 카테고리를 읽고 그에 맞는 장면을 골라 깔아줍니다.", "chips": ["원목·리넨", "창가 자연광", "카테고리 맞춤"], "image": "productscene_애프터2.png" },
+      { "title": "제품은 그대로", "body": "라벨의 글자·로고·색·형태·질감을 픽셀 단위로 보존합니다. 새 글자를 만들지도, 색을 예쁘게 바꾸지도 않아요 — 고객이 받는 그 제품 그대로.", "chips": ["라벨 보존", "정확한 색", "형태 유지"], "image": "productscene_애프터1.png" },
+      { "title": "상세페이지·SNS·광고까지", "body": "스마트스토어 대표컷, 인스타 피드, 배너 광고 소재로 바로. 제품 하나로 여러 장면을 뽑아 시즌마다 갈아끼우세요.", "chips": ["대표컷", "인스타", "광고 소재"], "images": ["productscene_애프터3.png", "productscene_애프터4.png"], "imageCaption": "같은 제품, 다른 장면 두 장" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "제품 연출 촬영 스튜디오 컷당 3만~8만 원 + 소품·세팅비 5만 원~",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "제품 전체가 잘리지 않고 크게 나온 사진 1장을 올려주세요",
+      "라벨·글자가 또렷하게 보이는 각도가 좋아요 — 그대로 보존됩니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 배경·소품은 MOSPIC 자체 연출이며 실제 촬영 장소가 아닙니다. 제품 외관은 원본을 보존하지만, 판매 게시 전 라벨·색상이 실물과 일치하는지 직접 확인해 주세요.",
+    "cta": { "copy": "오늘, 우리 제품을 잡지 속 한 장면으로", "button": "제품 연출컷 만들기" }
+  }
+}
