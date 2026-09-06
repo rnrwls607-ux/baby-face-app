@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/productscene.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "productscene_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional skincare cream jar (frosted glass, pale mint lid) standing on a cluttered desk next to a phone charger and a tissue box, taken indoors under yellowish room light with a slight tilt and mild shadows. The jar has a plain abstract geometric mark on the front instead of any lettering. Realistic phone-camera quality, vertical 3:4 orientation. This is a completely fictional, non-existent brand and product. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "productscene_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional pair of beige suede sneakers placed on a wooden floor beside a doorway, slightly off-center, taken indoors in flat ordinary daylight with a plain wall behind. The shoes have no visible brand marks — only a simple abstract stripe shape on the side. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },

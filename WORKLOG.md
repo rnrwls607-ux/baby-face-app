@@ -1,3 +1,10 @@
+## 2026-09-06 — 신규 컨셉 신설: productscene (제품 연출컷)
+- [스테이지] new-concept.mjs --stage route · 템플릿 product:gpt → gyaru
+- [프롬프트] specs/productscene.prompt.txt → route 삽입 · md5 10fd54bd · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-06 — 컨셉 전체 목록 문서화 (docs/CONCEPT_LIST.md) + launch 자동 갱신
 - [생성기] scripts/concept-list.mjs — app/lib/concepts.ts 의 CONCEPTS 를 VM으로 실평가해 189종을 표 1개로. 키·한글명·엔진·inputType·상태·시즌/분류. --check 는 쓰지 않고 최신 여부만(exit 1=갱신 필요)
 - [도출 규칙] 엔진 = route 모델 문자열(biz*/id* 변형은 부모 bizprofile/idstyle, baby는 공용 generate, nukki·upscale은 Replicate). inputType 은 저장 칸이 없어 specs > inputRule > 명시 예외(복원·부동산·인테리어·공장·중고차·고화질=other, 홈카페·미니셰프=food, baby=duo) > GO 분류(family=duo, 그 외=person). 상태 = 홈 카드 열림/주석/없음. 문서 머리에 규칙을 적어 감사 가능하게 했다
