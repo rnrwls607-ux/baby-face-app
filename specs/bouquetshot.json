@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/bouquetshot.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "bouquetshot_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional hand-tied bouquet standing on a cluttered flower-shop worktable: pale pink garden roses, white ranunculus, a few sprigs of eucalyptus, wrapped in kraft paper with a cream satin ribbon, with scissors, floral tape, and stem clippings around it, ordinary shop fluorescent light, slightly tilted. No shop sign, no card, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional arrangement. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "bouquetshot_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional bouquet lying on a wooden counter: deep red roses, purple lisianthus, and dried wheat stems, wrapped in matte black paper with a thin gold ribbon, next to a water bucket and a roll of wrapping paper, dim warm light, a bit blurry. No card, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional arrangement. No text, no letters, no numbers, no logos, no watermark." },
