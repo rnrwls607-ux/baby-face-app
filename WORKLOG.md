@@ -1,3 +1,10 @@
+## 2026-09-06 — skisnap refresh: 프롬프트 교체 + 자산 갱신
+- [스테이지] new-concept.mjs --stage refresh --thumb 2
+- [프롬프트] 불변 5e0d324b — route 무접촉, 자산만 갱신(상세 히어로 B 적용)
+- [외모] 외모 5단계(v3+) · glam-check PASS(코어 v3)
+- [자산] 1장 갱신(skisnap.webp) · 비포 등 동일분 스킵
+- [게이트] 프롬프트 불변 · glam-check · 자산 갱신 · 변경 파일 = 예상 · 홈·배선 무접촉 · 빌드 전항 PASS
+
 ## 2026-09-06 — partysnap refresh: 프롬프트 교체 + 자산 갱신
 - [스테이지] new-concept.mjs --stage refresh --thumb 2
 - [프롬프트] 불변 6cc5a689 — route 무접촉, 자산만 갱신(상세 히어로 B 적용)
