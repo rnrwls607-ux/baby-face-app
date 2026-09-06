@@ -1,3 +1,10 @@
+## 2026-09-06 — 컨셉 전체 목록 문서화 (docs/CONCEPT_LIST.md) + launch 자동 갱신
+- [생성기] scripts/concept-list.mjs — app/lib/concepts.ts 의 CONCEPTS 를 VM으로 실평가해 189종을 표 1개로. 키·한글명·엔진·inputType·상태·시즌/분류. --check 는 쓰지 않고 최신 여부만(exit 1=갱신 필요)
+- [도출 규칙] 엔진 = route 모델 문자열(biz*/id* 변형은 부모 bizprofile/idstyle, baby는 공용 generate, nukki·upscale은 Replicate). inputType 은 저장 칸이 없어 specs > inputRule > 명시 예외(복원·부동산·인테리어·공장·중고차·고화질=other, 홈카페·미니셰프=food, baby=duo) > GO 분류(family=duo, 그 외=person). 상태 = 홈 카드 열림/주석/없음. 문서 머리에 규칙을 적어 감사 가능하게 했다
+- [실측] 189종 = 라이브 181 · 숨김 7(goods·bizprofile·family·fourcut·fourcutillust·fourcutcouple 카드 잠금 + lifeshot 카드 없음) · soon 1. 엔진 pro 44 · flash 42+34+1 · gpt 29+31 · pro+flash 3 · pro+gpt 2 · replicate 2. inputType person 150 · duo 14 · pet 11 · other 7 · product 4 · food 4
+- [탈락·보류 별표] oldmoney·marathon·petid·boxtoy 탈락 / chibisticker 보류 / filmcampus 보류(09-06) / ★droneview 는 지시 목록에 있었지만 리포에서는 09-02 출시된 라이브(카드 열림·BA·상세)이고 플레이북 §7도 "진행 중"이라 "확인 필요"로 적었다 — 보류로 볼지 MJ 결정
+- [자동 갱신] new-concept launch 가 배선 적용 직후 concept-list.mjs 를 돌려 출시 커밋에 docs/CONCEPT_LIST.md 를 싣는다. 게이트 "컨셉 목록 갱신"(해당 키 행이 라이브로 실렸는지) 추가, "변경 파일 = 예상" 허용 목록에 문서 포함. 플레이북 §2 launch 줄에 룰 1줄
+
 ## 2026-09-06 — 상세 히어로 B 적용 (풀블리드 + 그라데이션 오버레이)
 - [배경] partysnap·skisnap 상세 히어로가 서브카피 1줄만 작은 글씨로 가운데 떠 있고 상단 여백(워드마크 띠 56+44+40px)이 과했다. partysnap은 어두운 시그니처 배경에 타이틀이 짙은 금색이라 거의 안 보였다
 - [시안] A(좌측 큰 타이틀+이미지 69%) · B(풀블리드+그라데이션, 인스타 커버 문법) · C(A+비포→애프터 인셋) 3안을 실제 데이터·이미지로 1080×1400 렌더해 현재(참고)와 함께 1장 대조 시트(2030×1546)로 냈다. ★MJ 결정: B, 두 종 다

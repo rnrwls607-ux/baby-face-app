@@ -18,6 +18,7 @@
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage route
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage route --run
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage launch --run --no-push
+//     (launch는 출시 커밋에 docs/CONCEPT_LIST.md 자동 갱신분을 함께 싣는다 — scripts/concept-list.mjs)
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage ba --run --no-commit
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage refresh --run --thumb 1
 //   node scripts/new-concept.mjs --spec specs/{키}.json --stage refresh --run --assets --note "히어로 B"   (프롬프트 그대로, 자산만)
@@ -283,6 +284,9 @@ async function stageLaunch() {
   if (lockNote) p.plan(st2.home, "잠금 주석 제거", lockNote, "");
   p.apply();
 
+  // ★컨셉 목록 문서 자동 갱신 — 카드가 열린 뒤 상태를 읽어야 "라이브"로 잡힌다(플레이북 §2)
+  execFile("node", ["scripts/concept-list.mjs"], { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "inherit", "inherit"] });
+
   const st3 = readWiringState();
   const w3 = wiringOf(key, st3);
   gate("배선 8/8 유지", wiredPoints(w3) === 8, `${wiredPoints(w3)}/8`);
@@ -292,8 +296,10 @@ async function stageLaunch() {
   let CONCEPTS = null;
   try { CONCEPTS = evalConst(st3.con.t, "CONCEPTS"); } catch { /* 아래 FAIL */ }
   gate("CONCEPTS 직조회", CONCEPTS?.[key]?.detailImage === `/details/${key}.webp`, CONCEPTS?.[key]?.detailImage || "★없음");
+  const listRow = (readText("docs/CONCEPT_LIST.md").split("\n").find((l) => l.includes(`| ` + "`" + key + "`" + " |")) || "");
+  gate("컨셉 목록 갱신", /\| 라이브/.test(listRow), listRow ? listRow.slice(0, 80) : "★docs/CONCEPT_LIST.md 에 행 없음");
   const changed = G.trackedChanges().map((l) => l.slice(3));
-  gate("변경 파일 = 예상", changed.every((f) => ["app/lib/concepts.ts", "app/page.tsx"].includes(f)), changed.join(", "));
+  gate("변경 파일 = 예상", changed.every((f) => ["app/lib/concepts.ts", "app/page.tsx", "docs/CONCEPT_LIST.md"].includes(f)), changed.join(", "));
   gate("PNG 스테이징 0", !G.status().some((l) => !l.startsWith("??") && /\.png$/i.test(l)), "0건");
   const b = build();
   gate("빌드", b.ok, `${b.line} (${b.sec}s)`);
@@ -305,9 +311,10 @@ async function stageLaunch() {
     `[스테이지] new-concept.mjs --stage launch`,
     `[자산] webp 2장(cards·details, q85) · 카드 1080 상한 · 상세 무축소`,
     `[배선] detailImage 등록 + 홈 카드 주석 해제`,
+    `[목록] docs/CONCEPT_LIST.md 자동 갱신(scripts/concept-list.mjs)`,
     `[게이트] ${gates.map((g) => g.name).join(" · ")} 전항 PASS`,
   ]);
-  const staged = G.addWithImages(["app/lib/concepts.ts", "app/page.tsx", "WORKLOG.md"], made);
+  const staged = G.addWithImages(["app/lib/concepts.ts", "app/page.tsx", "docs/CONCEPT_LIST.md", "WORKLOG.md"], made);
   console.log(`\n  스테이징 ${staged.length}개`);
   const hash = G.commit(`feat: ${key} 출시 — 홈 노출+배선`);
   console.log(`  커밋 ${hash}`);

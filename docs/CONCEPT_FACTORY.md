@@ -59,6 +59,7 @@ specs/{키}.json + specs/{키}.prompt.txt 작성
 → 통과: node scripts/new-concept.mjs --spec specs/{키}.json --stage route --run   (자동 커밋·푸시, 홈 잠금)
 → node scripts/detail-page.mjs --spec specs/{키}.json --thumb N   (N = 판정표 최고 컷)
 → ★멈추지 않는다: --stage launch --run → --stage ba --run   (각 자동 커밋·푸시)
+   ★launch는 출시 커밋에 docs/CONCEPT_LIST.md 를 자동 갱신해 싣는다(scripts/concept-list.mjs, 게이트 "컨셉 목록 갱신"). 목록은 손으로 고치지 않는다 — 진실원은 concepts.ts다.
 → 완료 보고 — 상세 축소 미리보기 + 딥링크 첨부. MJ가 지적하면 그 부분만 재렌더 후 자산 갱신.
 - 한 수 더(G2): §6 처방으로 prompt.txt v+1(문자 수준 삽입, 재포맷 금지) → 기존 애프터를 examples/ba/{키}/_v{n}/로 이동 → harvest --afters --run --force → 재판정. 3회 연속 미달이면 보류 제안.
 - 여러 컨셉 배치: 3~4종 단위. spec 전부 먼저 쓰고 harvest를 연속 실행한 뒤 G2를 한 번에 묻는다(시트 N장 + 판정표 1개).
