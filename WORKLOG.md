@@ -1,3 +1,13 @@
+## 2026-09-06 — B 배치 3종 출시 완료: nailshot·bouquetshot·plantshot (gyaru 3차 통과·히어로 B 상단 띠 첫 적용)
+- [G2] MJ 판정 — nailshot 통과(썸네일 1) / bouquetshot 통과(썸네일 1) / plantshot 통과(썸네일 1). 비포 3·애프터 4 전부 MJ ChatGPT 생성(PNG·3:4, 변환 0, API 0)
+- [spec 수정, 프롬프트 무접촉] nailshot points[2].images → 애프터2·3 (애프터4는 소매 색 진회색→크림·펼친 포즈·네일 길이 편차라 상세 제외) / plantshot points[2].images → 애프터2·3 (애프터4는 잎 수 편차). BA pairs는 두 종 모두 3쌍 유지. 커밋 fa24b6d
+- [대조] nailshot 애프터2 매트 블랙 악센트 — 비포2·애프터2 원본 크기 대조: 둘 다 위에서 4번째(약지), 나머지 버건디 동일 → pairs [2,2] 유지
+- [히어로] 사전 렌더 12장(라이브 CSS, 상단 띠 포함) — 3종 모두 애프터1 무가림: nailshot 손톱 5개 태그 줄 위 / bouquetshot 꽃머리 상단 2/3 / plantshot 잎 상단·화분만 태그와 겹침. 교체 0. 밝은 배경 3종에서 상단 띠로 워드마크 가독 확인
+- [체인] 3종 × route→detail→launch→ba = 93항 PASS · FAIL 0. gyaru 템플릿 3차 통과 — md5 재추출 7270ea0d/d9d7d72a/c7d35a65 일치 · 잔재 0. 커밋 nailshot 19c9e26·5a5828d·8632147 / bouquetshot 6fd81de·3ca801c·0c66543 / plantshot 12e0f74·dd6c6d1·0ef43d2. CONCEPT_LIST 198종(라이브 190) 102~104행, BA_LIVE 191
+- [배포] health commit=0ef43d2 (기대 0ef43d2, 10회 폴링)
+     PASS  GET /api/health        기대 200 application/json     실측 200  application/json · ■ 스모크 PASS — 프로덕션 정상 · 딥링크 
+- [v2 후보] nailshot "sleeve/clothing color lock + nail length lock" (애프터4 소매 색·길이 편차) / plantshot "leaf count hard lock(count the leaves, output the same number)" (애프터4 잎 수 편차) — MJ 지시로 기록만, 프롬프트 변경 없음
+
 ## 2026-09-06 — BA 배선: plantshot 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
