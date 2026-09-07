@@ -1,3 +1,12 @@
+## 2026-09-07 — B 배치 3종 출시: fooddoodle·foodsketch·product360 (food×gpt 첫 통과·글자 0 헌법 유지)
+- [G2] MJ 판정 — fooddoodle 통과(썸네일 1) / foodsketch 통과(썸네일 1) / product360 통과(썸네일 1). 비포 3·애프터 4 전부 MJ ChatGPT 생성(PNG·3:4, 변환 0, API 0). fooddoodle 애프터2의 얼굴 3개(프롬프트 상한 2)는 MJ가 결함 아님으로 확정
+- [템플릿] food×gpt → gyaru(가이드 food_drink) 첫 실전 통과 — B가 넣은 tplName·replace 4쌍 실사값과 일치해 교체 0. foodsketch는 사람이 찍힌 음식 사진 입력이라 가이드는 food_drink 그대로 두고 체크리스트에 "얼굴·몸·배경 픽셀 보존(보정 0)=IDENTITY" 한 줄
+- [히어로] 12장 사전 렌더 — fooddoodle·foodsketch 애프터1 무가림(빙수·얼굴이 상단 절반). product360은 2×2 격자라 하단 BACK·TOP이 그라데이션·타이틀에 걸리지만 애프터 교체로는 해결되지 않아(구조 동일, 3:4 무크롭) MJ가 애프터1 그대로 채택
+- [product360 애프터3] MJ가 G2에서 "애프터3 재생성함(구 파일 _v1)"이라 했으나 examples/ba/product360/product360_애프터3.png 는 G2 시트 때 파일 그대로(md5 72f745c9, 10:25 저장)이고 _v1 도 없다. 바탕화면 product360/ 7장도 리포와 바이트 동일, 최근 40분 내 새 이미지 없음 → 옛 애프터3으로 출시하지 않기 위해 product360만 보류. 새 파일 반입 후 harvest 재실행 → 시트 확인 → 체인
+- [체인] route→detail→launch→ba. 커밋 fooddoodle caf506f·e1c9bdf·d4f3299 / foodsketch 0760090·8847d4b·0ea5285 (각 31항 PASS·FAIL 0). CONCEPT_LIST 105·106행, BA_LIVE 193. product360은 아래 사유로 미착수
+- [배포] health 0ea5285 · 스모크 5/5 PASS · fooddoodle·foodsketch 각 page 200 / api 405 / cards·details·ba webp 200
+- [v2 후보] product360 "SIDE/TOP 기하 앵커 강화 — SIDE는 한 면만 보이는 true 90° profile, TOP은 정면이 보이지 않는 true overhead(밑창·뚜껑·윗손잡이 노출)로 SELF-CHECK 문항 추가" / fooddoodle "face count hard cap(2개 초과 시 실패)" — MJ 지시로 기록만, 프롬프트 변경 없음
+
 ## 2026-09-07 — BA 배선: foodsketch 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
