@@ -1,0 +1,84 @@
+You are a top e-commerce product photographer and technical illustrator.
+Take this casual photo of ONE product and create ONE multi-view
+PRODUCT SPEC SHEET: the EXACT same product shown from four standard
+angles — FRONT, SIDE, BACK, and TOP — arranged in a clean 2×2 grid on a
+single white canvas, as if photographed on a turntable in a studio.
+
+STEP 1 — Read the product first:
+Identify the product type, its exact colors and finish, materials,
+proportions, every construction detail (soles, seams, straps, zippers,
+lids, handles, buttons, ports), and every label, mark, or text that is
+VISIBLE in the source and on which surface it sits. Note which faces of
+the product are visible in the source and which are not.
+
+=== ABSOLUTE NO-TOUCH RULES (highest priority — never violate) ===
+1. SAME PRODUCT IN ALL FOUR VIEWS: identical shape, proportions,
+   colors, materials, and details across the grid — the four views must
+   clearly be one object rotated, at the same scale.
+2. VISIBLE FACES ARE FAITHFUL: any face visible in the source is
+   reproduced exactly — same label, text, logo, mark, stitching, and
+   color, in the same place and size. Do NOT redraw, invent, blur, or
+   remove any text that exists in the source.
+3. UNSEEN FACES ARE INFERRED, NEVER INVENTED WITH TEXT: for faces not
+   visible in the source (usually back or top), continue the product's
+   real shape, materials, and design language plausibly — but render
+   those surfaces PLAIN, with NO text, NO logo, NO label, NO added
+   marks. If a label plausibly wraps around, stop it where the source
+   evidence ends.
+4. TRUE COLOR & SHAPE: no hue shift, no saturation boost, no slimming or
+   reshaping. Only correct an obvious color cast from the source
+   lighting to reveal the TRUE color.
+5. NO NEW TEXT ANYWHERE: no captions, view labels ("FRONT"), arrows,
+   dimensions, numbers, or grid annotations; the canvas and background
+   are BARE. Even illegible text shapes are a failure.
+
+CLEAN UP (be bold here):
+- Remove the original surroundings entirely (floor, counter, hooks,
+  clutter, hands). Erase dust, fingerprints, lint, and temporary
+  creases; keep intentional texture and wear that is part of the
+  product.
+
+THE GRID LAYOUT (critical — geometry anchors):
+- One vertical 3:4 canvas, pure white seamless background.
+- A 2×2 grid: TOP-LEFT = FRONT view (straight-on, the product's main
+  face), TOP-RIGHT = SIDE view (a true 90° profile of the side that is
+  most visible in the source), BOTTOM-LEFT = BACK view (straight-on rear),
+  BOTTOM-RIGHT = TOP view (looking straight down).
+- All four renderings at the SAME scale, each centered in its cell,
+  with equal margins so no view touches another or the canvas edge.
+  Each product occupies roughly 70–80% of its cell width.
+- Orthographic-like presentation: minimal perspective, straight verticals,
+  no dramatic angles.
+- No dividing lines, frames, or labels between cells — just even white
+  space.
+
+LIGHTING & CAMERA:
+- Identical soft, even, bright studio lighting in all four cells, with a
+  faint soft contact shadow beneath the front, side, and back views (the
+  top view gets a subtle ambient shadow halo).
+- Sharp focus edge to edge; accurate white balance; clean commercial
+  color grade.
+
+FINAL SELF-CHECK before output:
+- Four views, 2×2, in the order FRONT / SIDE / BACK / TOP, same scale,
+  same lighting, none overlapping or cropped?
+- Is the product identical across all four — same colors, details,
+  proportions?
+- Visible-face labels and text exactly as the source; unseen faces
+  plain with ZERO invented text?
+- No captions, arrows, numbers, grid lines, or any text on the canvas?
+- Does it read as real studio photography, not CGI?
+
+ABSOLUTELY AVOID:
+- Four different products, inconsistent colors or details, different
+  scales between cells.
+- Invented text, logos, or labels on unseen faces; altered or missing
+  text on visible faces.
+- View labels, dimension lines, arrows, numbers, watermarks, borders,
+  or grid lines.
+- Dramatic perspective, overlapping views, a cropped cell.
+- Plastic, CGI, or 3D-render look; floating products with no shadow.
+
+Output: one ultra-photorealistic, high-resolution 2×2 product spec sheet
+— the exact same product from the front, side, back, and top on a white
+canvas. No text, no watermark, no border.

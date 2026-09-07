@@ -1,0 +1,65 @@
+{
+  "key": "fooddoodle",
+  "name": "음식 캐릭터 낙서",
+  "engine": "gpt",
+  "inputType": "food",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/fooddoodle.prompt.txt" },
+  "befores": [
+    { "file": "fooddoodle_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional mango shaved-ice dessert in a tall glass bowl topped with a scoop of vanilla ice cream and mango cubes, on a cafe table by a window with a river view, ordinary daylight, slightly tilted, a spoon and a crumpled napkin beside it. No menu, no sign, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional cafe. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "fooddoodle_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional plate of tteokbokki (rice cakes in red sauce) with fish cake and a boiled egg, next to a paper cup of soda, on a plastic table in a small snack shop, warm indoor light, slightly off-center. No menu board, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional shop. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "fooddoodle_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional cafe order: a latte with leaf-shaped latte art in a white cup and a slice of strawberry cake on a small plate, on a wooden table, shot from a high angle in soft window light, a phone edge visible at the frame corner. No cup logo, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional cafe. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "food",
+    "emoji": "🍰",
+    "color": "#F28C6B",
+    "subtitle": "음식이 살아 움직이는 피드",
+    "description": "음식 사진 속 디저트·메뉴에 귀여운 얼굴과 팔다리를 붙이고 하트·별 손낙서로 꾸며드려요. 사진은 그대로, 낙서만 추가.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "음식 캐릭터 낙서 만들기 🍰"], ["갸루 스타일링 중이에요", "음식 캐릭터 낙서 만드는 중이에요"], ["갸루 메이크오버", "음식 캐릭터 낙서"], ["💗", "🍰"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#F28C6B", "bg": "#FFF3EE", "name": "음식 캐릭터 낙서" },
+    "hero": {
+      "sub": "오늘 먹은 걸 캐릭터로",
+      "tags": ["#음식낙서", "#카페스타그램", "#먹스타"],
+      "image": "fooddoodle_애프터1.png"
+    },
+    "pain": [
+      "🍰 카페 사진, 남들이랑 똑같아서 올리기 심심해요",
+      "✏️ 낙서 앱으로 하나하나 그리기엔 손이 너무 가요",
+      "📱 얼굴 안 나오는 피드용 사진이 필요해요"
+    ],
+    "solution": "MOSPIC 음식 캐릭터 낙서 — 사진 한 장이면, 오늘 먹은 디저트가 살아 움직이는 캐릭터가 됩니다.",
+    "pairs": [
+      { "before": "fooddoodle_비포1.png", "after": "fooddoodle_애프터1.png", "caption": "평범한 빙수 사진이 → 웃는 얼굴 달린 캐릭터 낙서로" },
+      { "before": "fooddoodle_비포2.png", "after": "fooddoodle_애프터2.png", "caption": "분식집 떡볶이가 → 팔다리 달린 귀여운 한 컷으로" }
+    ],
+    "points": [
+      { "title": "얼굴·팔다리·낙서 풀세팅", "body": "메인 음식에 눈·입·볼터치와 작은 팔다리를 붙이고, 주변에 하트·별·반짝이·화살표 손낙서를 흰색과 파스텔로 얹습니다. 음식마다 표정이 달라요.", "chips": ["웃는 얼굴", "팔다리", "손낙서"], "image": "fooddoodle_애프터3.png" },
+      { "title": "사진은 그대로", "body": "음식·그릇·테이블·배경은 원본 사진 그대로 둡니다. 음식 양이나 색을 바꾸지 않고, 낙서만 위에 얹은 느낌 — 실제 그 카페에서 찍은 사진이에요.", "chips": ["원본 유지", "음식 그대로", "낙서만 추가"], "image": "fooddoodle_애프터1.png" },
+      { "title": "피드·스토리·카페 계정까지", "body": "먹스타 피드, 스토리, 카페 사장님 계정의 신메뉴 소개 이미지까지. 얼굴 안 나와도 반응 좋은 한 장.", "chips": ["먹스타", "스토리", "신메뉴 소개"], "images": ["fooddoodle_애프터2.png", "fooddoodle_애프터3.png"], "imageCaption": "음식이 달라도 같은 귀여움" }
+    ],
+    "price": {
+      "header": "직접 만들면 얼마일까요?",
+      "offline": "일러스트 데코 외주 장당 1만~3만 원 + 낙서 앱으로 직접 그리면 30분",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "음식이 크고 또렷하게 나온 사진 1장을 올려주세요",
+      "메인 음식 1~2개가 있는 사진이 표정이 잘 살아요",
+      "글자·문구는 결과에 들어가지 않아요 — 얼굴과 낙서만 얹습니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 캐릭터 얼굴과 낙서는 MOSPIC 자체 디자인이며 실제 메뉴·매장과 무관합니다. 재미와 SNS 용도로 이용해 주세요.",
+    "cta": { "copy": "오늘 먹은 걸 캐릭터로 만들어 보세요", "button": "음식 캐릭터 낙서 만들기" }
+  }
+}

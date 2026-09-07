@@ -1,0 +1,65 @@
+{
+  "key": "product360",
+  "name": "제품 4뷰 시트",
+  "engine": "gpt",
+  "inputType": "product",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/product360.prompt.txt" },
+  "befores": [
+    { "file": "product360_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional chunky white-and-sage running sneaker with a thick layered sole, seen from the front three-quarter angle, on a wooden floor beside a shoe rack, ordinary indoor light, slightly tilted. No visible brand marks — only a plain abstract stripe shape on the side. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "product360_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional insulated tumbler in matte navy with a silver lid and a small handle, standing on a kitchen counter next to a kettle, warm indoor light, a bit off-center. The tumbler has a single abstract circle mark and no lettering. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "product360_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small olive-green canvas backpack with brown leather straps and one front zip pocket, hanging on a door hook, seen from the front, flat daylight, background clutter. No visible brand patch or lettering. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "productscene",
+    "emoji": "🔄",
+    "color": "#3F5E8C",
+    "subtitle": "앞·옆·뒤·위, 한 장에",
+    "description": "제품 사진 1장을 앞·옆·뒤·위 4면 뷰 시트로. 상세페이지 스펙컷·제작 의뢰용. 라벨·색·형태는 그대로, 안 보이는 면은 글자 없이.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "제품 4뷰 시트 만들기 🔄"], ["갸루 스타일링 중이에요", "제품 4뷰 시트 만드는 중이에요"], ["갸루 메이크오버", "제품 4뷰 시트"], ["💗", "🔄"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#3F5E8C", "bg": "#EEF2F8", "name": "제품 4뷰 시트" },
+    "hero": {
+      "sub": "한 장 찍고, 네 면을 얻다",
+      "tags": ["#제품스펙컷", "#4면뷰", "#상세페이지"],
+      "image": "product360_애프터1.png"
+    },
+    "pain": [
+      "🔄 제품 옆면·뒷면·윗면을 일일이 돌려 찍기 번거로워요",
+      "📐 각도가 매번 달라서 상세페이지에 나란히 놓으면 어색해요",
+      "🏭 제작 업체에 보여줄 도면 느낌의 스펙컷이 없어요"
+    ],
+    "solution": "MOSPIC 제품 4뷰 시트 — 사진 한 장이면, 앞·옆·뒤·위 네 면이 한 장의 스펙 시트가 됩니다.",
+    "pairs": [
+      { "before": "product360_비포1.png", "after": "product360_애프터1.png", "caption": "바닥에 놓인 운동화 한 컷이 → 앞·옆·뒤·위 4뷰 시트로" },
+      { "before": "product360_비포2.png", "after": "product360_애프터2.png", "caption": "주방 카운터 텀블러가 → 균일한 4면 스펙컷으로" }
+    ],
+    "points": [
+      { "title": "4면 격자·조명·정렬 풀세팅", "body": "정면·측면·후면·상면을 같은 크기·같은 조명·같은 여백으로 2×2 격자에 정렬합니다. 흰 배경, 부드러운 그림자, 상세페이지에 바로 넣는 규격.", "chips": ["2×2 격자", "동일 스케일", "흰 배경"], "image": "product360_애프터3.png" },
+      { "title": "제품은 그대로", "body": "보이는 면의 라벨·글자·색·형태는 원본 그대로. 사진에 없던 면은 형태와 재질만 추론하고 글자는 만들지 않아요 — 없는 라벨을 지어내지 않습니다.", "chips": ["라벨 보존", "색 정확", "지어내기 없음"], "image": "product360_애프터1.png" },
+      { "title": "상세페이지·제작 의뢰·펀딩까지", "body": "스마트스토어 스펙 섹션, 공장·제작사 의뢰 자료, 펀딩 페이지 제품 사양 이미지로. 한 장으로 네 면을 설명하세요.", "chips": ["스펙 섹션", "제작 의뢰", "펀딩 페이지"], "images": ["product360_애프터2.png", "product360_애프터3.png"], "imageCaption": "품목이 달라도 같은 규격" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "제품 다각도 촬영 스튜디오 4컷 4만~10만 원 + 턴테이블·정렬 보정",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "제품 전체가 보이는 앞 대각선(3/4) 각도 사진 1장이 가장 좋아요",
+      "라벨·글자가 보이는 면을 찍으면 그 면은 그대로 보존돼요",
+      "사진에 없던 면(뒷면 등)은 형태만 추론되고 글자는 들어가지 않아요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 원본에 보이지 않는 면은 AI가 형태를 추론한 것이라 실제 제품과 다를 수 있습니다. 판매·제작 자료로 쓰기 전 실물과 대조해 주세요.",
+    "cta": { "copy": "오늘, 한 장 찍고 네 면을 받아보세요", "button": "제품 4뷰 시트 만들기" }
+  }
+}

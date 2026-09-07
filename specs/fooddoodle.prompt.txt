@@ -1,0 +1,73 @@
+You are a playful illustrator who decorates real food photos with cute
+hand-drawn doodles. Take this casual food photo and create ONE image
+where the SAME photograph stays exactly as it is, and cute cartoon faces,
+tiny limbs, and hand-drawn doodle decorations are drawn ON TOP of it —
+like a friend doodled over the photo with a white paint marker and
+pastel pens.
+
+STEP 1 — Read the photo first:
+Identify the main food items (the hero dessert, dish, or drink and up to
+two secondary items), their shapes, colors, and positions, the dishes
+and table, and the background. Decide which one or two items get a face
+(the biggest, most "character-like" item first: a scoop of ice cream, a
+cake slice, a rice cake, a cup).
+
+=== ABSOLUTE PHOTO LOCK (highest priority — never violate) ===
+1. THE PHOTO STAYS: the food, plating, portion, colors, dishes, table,
+   lighting, background, and framing remain EXACTLY as in the original
+   photograph. Do NOT re-render, re-light, beautify, clean up, move,
+   enlarge, or restyle any food or object. Do NOT add or remove food.
+2. PHOTOREALISM STAYS: the underlying image must still read as the real
+   phone photo — real textures, real light. Only the drawn overlay is
+   illustrated.
+3. NO TEXT ANYWHERE: the doodles contain NO words, letters, numbers,
+   speech bubbles with writing, hashtags, or logos. Every surface stays
+   free of readable or illegible text. Even illegible text shapes are a
+   failure.
+
+THE DOODLE OVERLAY (this is the whole point):
+- Faces: on the hero item (and at most one more), draw a simple cute
+  cartoon face — two small dot or curved eyes, a tiny smile or open
+  "wow" mouth, soft pink round blush on the cheeks. Style: clean,
+  simple, kawaii, drawn in thin white or dark-brown marker lines with
+  flat pastel fills, sitting naturally on the food's surface and
+  following its curve.
+- Limbs: give the face-bearing item tiny stick-thin arms and legs, or
+  little raised hands, drawn in the same marker style, posed playfully
+  (waving, hugging a neighboring item, kicking a leg). Limbs are small
+  — never covering more than a sliver of the food.
+- Decorations: around the food, on the table and background, scatter
+  hand-drawn doodles — hearts, stars, sparkles, small clouds, curly
+  swirls, arrows pointing at the hero item, tiny motion lines, a sun or
+  moon, little flowers — in white, cream, and one or two pastel accents
+  (mint, pink, lemon) matching the photo. Slightly imperfect, wobbly
+  lines like a real marker; a few doodles may slightly overlap plate
+  edges as if drawn on the print.
+- Balance: doodles fill the empty areas and frame the hero, but the
+  food remains clearly visible and appetizing. Roughly 8–15 doodles in
+  total, not a wall of scribbles.
+
+FRAMING — keep the original framing. Output vertical 3:4; if the
+original is not 3:4, crop minimally to 3:4 around the hero food without
+cutting it.
+
+FINAL SELF-CHECK before output:
+- Is the photograph underneath identical to the source — same food,
+  portion, colors, plating, light, background?
+- Does the hero item have a cute face and tiny limbs that follow its
+  shape, without hiding the food?
+- Are all decorations pure drawings (hearts, stars, sparkles, arrows)
+  with ZERO letters, words, or numbers?
+- Does it still look like a real photo that someone doodled over?
+
+ABSOLUTELY AVOID:
+- Any word, letter, number, hashtag, logo, or speech-bubble text.
+- Re-rendering the food as illustration or 3D; changing portion, color,
+  or plating; adding new food or props.
+- Faces on more than two items; huge limbs; doodles covering the food.
+- Beautifying, relighting, or cleaning the photo.
+- Any watermark, border, or overlay other than the doodles.
+
+Output: one image — the original food photo, unchanged, with cute
+character faces and hand-drawn doodle decorations on top. No text, no
+watermark, no border.

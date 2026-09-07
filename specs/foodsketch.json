@@ -1,0 +1,65 @@
+{
+  "key": "foodsketch",
+  "name": "음식만 스케치",
+  "engine": "gpt",
+  "inputType": "food",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/foodsketch.prompt.txt" },
+  "befores": [
+    { "file": "foodsketch_비포1.png", "pool": "custom", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s wearing sunglasses, holding up a piece of sushi with chopsticks next to her face, in a bright sushi restaurant, natural relaxed expression, ordinary indoor light. No menu, no sign, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. This is a completely fictional person who does not exist. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "foodsketch_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional cafe table from a seated diner's view: a bowl of ramen with an egg and green onions, a glass of iced tea, and the diner's hand holding chopsticks (no face), wooden table, warm indoor light, slightly tilted. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "foodsketch_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of two fictional Korean friends in their 20s (a woman and a man) sitting at an outdoor cafe table, each holding a colorful fruit smoothie in a tall glass toward the camera, smiling, daylight, street background. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. These are completely fictional people who do not exist. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "food",
+    "emoji": "🍣",
+    "color": "#6C8E4E",
+    "subtitle": "사진은 실사, 음식만 그림으로",
+    "description": "사진 속 음식·음료·식기만 색연필 스케치로 바꿔드려요. 사람과 배경은 실사 그대로 — 얼굴 보정 없음.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "갸루 메이크오버",
+    "replace": [["갸루로 변신하기 💗", "음식만 스케치 만들기 🍣"], ["갸루 스타일링 중이에요", "음식만 스케치 만드는 중이에요"], ["갸루 메이크오버", "음식만 스케치"], ["💗", "🍣"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#6C8E4E", "bg": "#F2F5EC", "name": "음식만 스케치" },
+    "hero": {
+      "sub": "나는 실사, 음식만 그림",
+      "tags": ["#부분변환", "#음식스케치", "#먹스타"],
+      "image": "foodsketch_애프터1.png"
+    },
+    "pain": [
+      "🍣 음식 사진 감성은 살리고 싶은데 내 얼굴까지 그림 되는 건 싫어요",
+      "🎨 부분만 그림으로 바꾸는 건 포토샵으로 한참 걸려요",
+      "📱 남들과 다른 먹스타 한 장이 없어요"
+    ],
+    "solution": "MOSPIC 음식만 스케치 — 사진 한 장이면, 나는 그대로 두고 음식만 색연필 그림이 됩니다.",
+    "pairs": [
+      { "before": "foodsketch_비포1.png", "after": "foodsketch_애프터1.png", "caption": "초밥 든 셀카가 → 초밥만 색연필로 그려진 한 컷으로" },
+      { "before": "foodsketch_비포2.png", "after": "foodsketch_애프터2.png", "caption": "라멘 테이블 사진이 → 그릇과 면만 스케치된 컷으로" }
+    ],
+    "points": [
+      { "title": "음식·음료·식기만 그림으로", "body": "사진 속 음식과 음료, 그릇·젓가락·컵까지 삐뚤한 선과 거친 색연필 터치의 스케치로 바뀝니다. 경계는 자연스럽게 섞여서 진짜 그림을 사진에 오려 붙인 느낌.", "chips": ["색연필 터치", "식기까지", "자연스러운 경계"], "image": "foodsketch_애프터3.png" },
+      { "title": "나는 그대로", "body": "얼굴·몸·옷·배경은 원본 픽셀 그대로입니다. 보정도, 미화도 없어요 — 실사 속에서 음식만 그림이 되는 반전이 이 컨셉의 재미.", "chips": ["얼굴 보정 없음", "배경 실사", "원본 유지"], "image": "foodsketch_애프터1.png" },
+      { "title": "먹스타·데이트·여행 피드까지", "body": "먹스타 피드, 커플 데이트 사진, 여행지 맛집 인증까지. 얼굴이 들어가도 부담 없이, 음식이 주인공이 되는 한 장.", "chips": ["먹스타", "데이트", "맛집 인증"], "images": ["foodsketch_애프터2.png", "foodsketch_애프터3.png"], "imageCaption": "메뉴가 달라도 같은 반전" }
+    ],
+    "price": {
+      "header": "직접 만들면 얼마일까요?",
+      "offline": "포토샵 부분 합성 외주 장당 2만~5만 원 + 직접 하면 1시간",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "음식이 또렷하게 보이는 사진 1장을 올려주세요 (사람이 있어도 OK)",
+      "음식과 사람이 너무 겹치지 않으면 경계가 깔끔해요",
+      "얼굴은 보정 없이 원본 그대로 나옵니다"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 음식 부분의 스케치는 MOSPIC 자체 스타일이며, 사람과 배경은 원본을 유지합니다. 재미와 SNS 용도로 이용해 주세요.",
+    "cta": { "copy": "오늘, 음식만 그림으로 바꿔보세요", "button": "음식만 스케치 만들기" }
+  }
+}

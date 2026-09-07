@@ -1,0 +1,72 @@
+You are a mixed-media illustrator who combines real photographs with
+hand-drawn colored-pencil sketches. Take this casual photo that contains
+food and create ONE image where ONLY the food, drinks, and tableware are
+converted into a charming colored-pencil sketch — while every person and
+the entire background remain the untouched original photograph.
+
+STEP 1 — Read the photo first:
+Identify (a) every food item, drink, and piece of tableware (plates,
+bowls, cups, glasses, chopsticks, cutlery, napkins that touch the food)
+and (b) everything else: people, hands, clothing, table surface, walls,
+windows, street, decor. Set (a) is the ONLY thing that changes.
+
+=== ABSOLUTE PHOTO LOCK for everything that is NOT food (highest priority) ===
+1. PEOPLE ARE UNTOUCHED: every face, body, hand, hairstyle, expression,
+   skin, glasses, and clothing stays pixel-identical to the source. Do
+   NOT retouch, beautify, slim, relight, sharpen, or restyle anyone. A
+   hand holding food stays a real photographed hand.
+2. BACKGROUND IS UNTOUCHED: table surface, restaurant, cafe, street,
+   windows, lighting, colors, and framing stay exactly as photographed.
+3. NOTHING ADDED OR REMOVED: same number of items, same positions, same
+   portions. Do NOT add new food, props, or people.
+4. NO TEXT ANYWHERE: no words, letters, numbers, logos, or signage in
+   the sketch or anywhere else. If a menu, label, or sign exists in the
+   source, render it as plain blank surface. Even illegible text shapes
+   are a failure.
+
+THE SKETCH CONVERSION (food, drinks, tableware only):
+- Convert each food item, drink, and piece of tableware into a
+  hand-drawn colored-pencil illustration IN PLACE — same position, same
+  size, same shape, same colors — as if the food were drawn on paper and
+  perfectly cut out and pasted into the photo.
+- Style: slightly wobbly dark-brown or graphite outline, visible
+  diagonal colored-pencil strokes with paper-grain texture, a few
+  white gaps where the pencil skipped, gentle hatching for shadows,
+  cheerful but accurate colors. Charming and confident, not childish,
+  not a digital filter.
+- Keep the food recognizable: sushi stays sushi with its rice and fish,
+  ramen keeps its egg and green onions, a latte keeps its foam art.
+- Edges: the boundary between the sketched food and the real photo is
+  clean and deliberate — the sketch sits flat on the photo with a very
+  subtle paper-cutout edge, while chopsticks or a straw entering a
+  hand transition cleanly from sketch (the utensil) to photo (the hand)
+  at the point of contact.
+- The sketched items keep a light, believable shadow on the real
+  surface so they still feel grounded in the scene.
+
+FRAMING — keep the original framing. Output vertical 3:4; if the
+original is not 3:4, crop minimally to 3:4 without cutting people or
+the food.
+
+FINAL SELF-CHECK before output:
+- Are all people, hands, clothing, and the background pixel-identical
+  to the source — zero retouching, zero relighting?
+- Is EVERY food item, drink, and piece of tableware sketched, and
+  NOTHING else?
+- Same positions, sizes, portions, and colors as the source food?
+- Clean sketch-to-photo boundaries, especially where hands touch
+  utensils or cups?
+- Zero text, letters, numbers, or logos anywhere?
+
+ABSOLUTELY AVOID:
+- Any change to a person: no beautifying, slimming, smoothing,
+  relighting, or restyling; no altered face or hand.
+- Sketching the background, table, walls, or people; leaving any food
+  or tableware un-sketched.
+- Adding, removing, or moving items; changing portion or colors.
+- A cheap photo filter look on the food; flat digital outlines.
+- Any text, watermark, border, or paper frame.
+
+Output: one image — the original photo with people and background
+untouched, and only the food, drinks, and tableware turned into a
+colored-pencil sketch. No text, no watermark, no border.
