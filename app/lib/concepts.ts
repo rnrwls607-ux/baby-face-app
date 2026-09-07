@@ -1751,6 +1751,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "💐", accent: "#D97A8C" },
     ],
     start: "petbouquet",
+    detailImage: "/details/petbouquet.webp",
   },
   halloween: {
     key: "halloween", audience: "all",
