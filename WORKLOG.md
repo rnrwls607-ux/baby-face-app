@@ -1,3 +1,10 @@
+## 2026-09-07 — 신규 컨셉 신설: fooddoodle (음식 캐릭터 낙서)
+- [스테이지] new-concept.mjs --stage route · 템플릿 food:gpt → gyaru
+- [프롬프트] specs/fooddoodle.prompt.txt → route 삽입 · md5 872eb4da · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-06 — B 배치 3종 출시 완료: nailshot·bouquetshot·plantshot (gyaru 3차 통과·히어로 B 상단 띠 첫 적용)
 - [G2] MJ 판정 — nailshot 통과(썸네일 1) / bouquetshot 통과(썸네일 1) / plantshot 통과(썸네일 1). 비포 3·애프터 4 전부 MJ ChatGPT 생성(PNG·3:4, 변환 0, API 0)
 - [spec 수정, 프롬프트 무접촉] nailshot points[2].images → 애프터2·3 (애프터4는 소매 색 진회색→크림·펼친 포즈·네일 길이 편차라 상세 제외) / plantshot points[2].images → 애프터2·3 (애프터4는 잎 수 편차). BA pairs는 두 종 모두 3쌍 유지. 커밋 fa24b6d

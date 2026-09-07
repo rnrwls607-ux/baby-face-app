@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "food",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/fooddoodle.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "fooddoodle_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional mango shaved-ice dessert in a tall glass bowl topped with a scoop of vanilla ice cream and mango cubes, on a cafe table by a window with a river view, ordinary daylight, slightly tilted, a spoon and a crumpled napkin beside it. No menu, no sign, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional cafe. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "fooddoodle_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional plate of tteokbokki (rice cakes in red sauce) with fish cake and a boiled egg, next to a paper cup of soda, on a plastic table in a small snack shop, warm indoor light, slightly off-center. No menu board, no lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional shop. No text, no letters, no numbers, no logos, no watermark." },
