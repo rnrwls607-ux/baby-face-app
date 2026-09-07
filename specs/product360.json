@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "product",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/product360.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "product360_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional chunky white-and-sage running sneaker with a thick layered sole, seen from the front three-quarter angle, on a wooden floor beside a shoe rack, ordinary indoor light, slightly tilted. No visible brand marks — only a plain abstract stripe shape on the side. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "product360_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional insulated tumbler in matte navy with a silver lid and a small handle, standing on a kitchen counter next to a kettle, warm indoor light, a bit off-center. The tumbler has a single abstract circle mark and no lettering. Realistic phone-camera quality, vertical 3:4. Completely fictional product. No text, no letters, no numbers, no logos, no watermark." },

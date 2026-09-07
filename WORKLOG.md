@@ -1,3 +1,10 @@
+## 2026-09-07 — 신규 컨셉 신설: product360 (제품 4뷰 시트)
+- [스테이지] new-concept.mjs --stage route · 템플릿 product:gpt → gyaru
+- [프롬프트] specs/product360.prompt.txt → route 삽입 · md5 27bbc52f · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-07 — B 배치 3종 출시: fooddoodle·foodsketch·product360 (food×gpt 첫 통과·글자 0 헌법 유지)
 - [G2] MJ 판정 — fooddoodle 통과(썸네일 1) / foodsketch 통과(썸네일 1) / product360 통과(썸네일 1). 비포 3·애프터 4 전부 MJ ChatGPT 생성(PNG·3:4, 변환 0, API 0). fooddoodle 애프터2의 얼굴 3개(프롬프트 상한 2)는 MJ가 결함 아님으로 확정
 - [템플릿] food×gpt → gyaru(가이드 food_drink) 첫 실전 통과 — B가 넣은 tplName·replace 4쌍 실사값과 일치해 교체 0. foodsketch는 사람이 찍힌 음식 사진 입력이라 가이드는 food_drink 그대로 두고 체크리스트에 "얼굴·몸·배경 픽셀 보존(보정 0)=IDENTITY" 한 줄
