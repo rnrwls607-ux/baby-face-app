@@ -4,7 +4,9 @@
   "engine": "gpt",
   "inputType": "food",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/foodsketch.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "foodsketch_비포1.png", "pool": "custom", "prompt": "A casual smartphone selfie of a fictional Korean woman in her 20s wearing sunglasses, holding up a piece of sushi with chopsticks next to her face, in a bright sushi restaurant, natural relaxed expression, ordinary indoor light. No menu, no sign, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. This is a completely fictional person who does not exist. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "foodsketch_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional cafe table from a seated diner's view: a bowl of ramen with an egg and green onions, a glass of iced tea, and the diner's hand holding chopsticks (no face), wooden table, warm indoor light, slightly tilted. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional scene. No text, no letters, no numbers, no logos, no watermark." },
