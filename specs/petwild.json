@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "pet",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/petwild.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "petwild_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small white Maltese dog lying on a gray rug in an apartment living room, looking up at the camera, slightly blurry, warm evening indoor light, a slipper and a toy nearby. No lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "petwild_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional gray-and-white tuxedo cat sitting on a wooden floor beside a scratching post, yellow eyes, looking at the camera, indoor light with a slight yellow cast. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
