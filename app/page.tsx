@@ -472,7 +472,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
       { id: "foodsketch", title: "음식만 스케치", subtitle: "사진은 실사, 음식만 그림으로", emoji: "🍣", accent: "#6C8E4E", image: "/cards/foodsketch.webp", badge: "NEW", tags: ["음식"], go: "foodsketch" },
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
-      // { id: "product360", title: "제품 4뷰 시트", subtitle: "앞·옆·뒤·위, 한 장에", emoji: "🔄", accent: "#3F5E8C", image: "/cards/product360.webp", badge: "NEW", tags: ["상품"], go: "product360" },
+      { id: "product360", title: "제품 4뷰 시트", subtitle: "앞·옆·뒤·위, 한 장에", emoji: "🔄", accent: "#3F5E8C", image: "/cards/product360.webp", badge: "NEW", tags: ["상품"], go: "product360" },
       { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },

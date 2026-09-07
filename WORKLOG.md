@@ -1,3 +1,10 @@
+## 2026-09-07 — product360 출시: 홈 노출 + 배선
+- [스테이지] new-concept.mjs --stage launch
+- [자산] webp 2장(cards·details, q85) · 카드 1080 상한 · 상세 무축소
+- [배선] detailImage 등록 + 홈 카드 주석 해제
+- [목록] docs/CONCEPT_LIST.md 자동 갱신(scripts/concept-list.mjs)
+- [게이트] 배선 8/8 유지 · 카드 열림 · detailImage · webp 2장 · CONCEPTS 직조회 · 컨셉 목록 갱신 · 변경 파일 = 예상 · PNG 스테이징 0 · 빌드 전항 PASS
+
 ## 2026-09-07 — 신규 컨셉 신설: product360 (제품 4뷰 시트)
 - [스테이지] new-concept.mjs --stage route · 템플릿 product:gpt → gyaru
 - [프롬프트] specs/product360.prompt.txt → route 삽입 · md5 27bbc52f · 재추출 일치
