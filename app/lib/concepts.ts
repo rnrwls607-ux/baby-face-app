@@ -1723,6 +1723,7 @@ export const CONCEPTS: Record<string, Concept> = {
       { emoji: "🍣", accent: "#6C8E4E" },
     ],
     start: "foodsketch",
+    detailImage: "/details/foodsketch.webp",
   },
   halloween: {
     key: "halloween", audience: "all",
