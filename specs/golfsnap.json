@@ -1,0 +1,65 @@
+{
+  "key": "golfsnap",
+  "name": "골프 필드 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "glam": 5,
+  "prompt": { "source": "file", "path": "specs/golfsnap.prompt.txt" },
+  "befores": [
+    { "file": "golfsnap_비포1.png", "pool": "kit-female", "prompt": "kit pool auto" },
+    { "file": "golfsnap_비포2.png", "pool": "kit-female-glasses", "prompt": "kit pool auto" },
+    { "file": "golfsnap_비포3.png", "pool": "kit-male", "prompt": "kit pool auto" }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "cheerglam",
+    "chipFrom": "poolside",
+    "emoji": "⛳",
+    "color": "#3E8A5A",
+    "subtitle": "그린 위, 골린이 인증샷",
+    "description": "셀카 한 장을 푸른 필드 위 골프웨어 스냅으로. 바이저·캡은 이마 위로, 로고 없는 트렌디 골프룩, 얼굴은 가장 화사하게.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "⛳"], ["치어리더", "골프 필드 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#3E8A5A", "bg": "#EDF5EE", "name": "골프 필드 스냅" },
+    "hero": {
+      "sub": "그린 위, 오늘의 골린이",
+      "tags": ["#골프스냅", "#골린이", "#필드인증샷"],
+      "image": "golfsnap_애프터1.png"
+    },
+    "pain": [
+      "⛳ 라운딩 가면 정신없어서 제대로 된 사진이 없어요",
+      "🧢 캡 그림자 때문에 얼굴이 늘 어둡게 나와요",
+      "📱 골프 인스타 계정 만들었는데 올릴 사진이 없어요"
+    ],
+    "solution": "MOSPIC 골프 필드 스냅 — 사진 한 장이면, 라운딩 안 가도 그린 위 골린이 인증샷이 됩니다.",
+    "pairs": [
+      { "before": "golfsnap_비포1.png", "after": "golfsnap_애프터1.png", "caption": "평범한 셀카가 → 필드 위 골프웨어 스냅으로" },
+      { "before": "golfsnap_비포3.png", "after": "golfsnap_애프터3.png", "caption": "실내 셀카가 → 티박스 위 인증샷으로" }
+    ],
+    "points": [
+      { "title": "골프웨어·필드·햇살 풀세팅", "body": "트렌디한 골프웨어(로고 없이), 바이저 또는 캡, 푸른 페어웨이와 파란 하늘, 골프백·클럽 소품까지 한 번에 세팅됩니다.", "chips": ["트렌디 골프룩", "페어웨이", "클럽 소품"], "image": "golfsnap_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "캡은 이마 위로 올려 눈·눈썹은 그대로, 그린 반사광은 배경에만. 얼굴은 어둡지 않게 밝고 또렷하게 — 친구가 바로 알아보는 나로.", "chips": ["얼굴 가림 없음", "그림자 차단", "안경 그대로"], "image": "golfsnap_애프터1.png" },
+      { "title": "골프 계정·모임·프로필까지", "body": "골프 인스타 첫 게시물, 라운딩 모임 단톡, 프로필 사진까지. 시즌마다 필드만 바꿔 한 장씩.", "chips": ["골프 계정", "모임 단톡", "프로필"], "images": ["golfsnap_애프터2.png", "golfsnap_애프터3.png"], "imageCaption": "사람이 달라도 같은 필드 무드" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "라운딩 그린피 15만~25만 원 + 골프웨어 20만 원~ + 찍어줄 사람",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 골프웨어·필드·소품은 MOSPIC 자체 디자인이며 실제 골프장이나 특정 브랜드 제품이 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 그린 위 인증샷을 남겨보세요", "button": "골프 필드 스냅 만들기" }
+  }
+}

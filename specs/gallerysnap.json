@@ -1,0 +1,65 @@
+{
+  "key": "gallerysnap",
+  "name": "전시회 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "glam": 5,
+  "prompt": { "source": "file", "path": "specs/gallerysnap.prompt.txt" },
+  "befores": [
+    { "file": "gallerysnap_비포1.png", "pool": "kit-female", "prompt": "kit pool auto" },
+    { "file": "gallerysnap_비포2.png", "pool": "kit-female-glasses", "prompt": "kit pool auto" },
+    { "file": "gallerysnap_비포3.png", "pool": "kit-male", "prompt": "kit pool auto" }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "cheerglam",
+    "chipFrom": "monoactor",
+    "emoji": "🖼️",
+    "color": "#5C5F7A",
+    "subtitle": "하얀 벽 앞, 작품 같은 나",
+    "description": "셀카 한 장을 미술관 흰 벽과 추상 작품 앞에서 찍은 전시회 스냅으로. 미니멀 룩, 갤러리 조명, 얼굴은 가장 화사하게.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "🖼️"], ["치어리더", "전시회 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#5C5F7A", "bg": "#F1F1F5", "name": "전시회 스냅" },
+    "hero": {
+      "sub": "하얀 벽 앞, 작품 같은 나",
+      "tags": ["#전시회스냅", "#갤러리룩", "#미술관"],
+      "image": "gallerysnap_애프터1.png"
+    },
+    "pain": [
+      "🖼️ 전시회 갔는데 사진 촬영 금지라 남은 게 없어요",
+      "👥 인기 전시는 사람이 너무 많아 흰 벽 앞은 꿈이에요",
+      "📱 감성 있는 프로필, 딱 한 장이 필요해요"
+    ],
+    "solution": "MOSPIC 전시회 스냅 — 사진 한 장이면, 사람 없는 미술관 흰 벽 앞 전시회 스냅이 됩니다.",
+    "pairs": [
+      { "before": "gallerysnap_비포1.png", "after": "gallerysnap_애프터1.png", "caption": "평범한 셀카가 → 갤러리 흰 벽 앞 스냅으로" },
+      { "before": "gallerysnap_비포3.png", "after": "gallerysnap_애프터3.png", "caption": "실내 셀카가 → 작품 앞 미니멀 룩 스냅으로" }
+    ],
+    "points": [
+      { "title": "갤러리·작품·조명 풀세팅", "body": "미술관 흰 벽과 추상 작품(MOSPIC 자체 디자인), 미니멀 룩, 부드러운 갤러리 조명까지 한 번에 세팅됩니다. 사람 없는 전시장.", "chips": ["흰 벽", "추상 작품", "미니멀 룩"], "image": "gallerysnap_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "흰 벽 반사광은 배경에만, 얼굴은 깨끗하고 입체감 있는 키라이트로. 친구가 보면 바로 알아보는 내 얼굴, 가장 세련된 버전으로.", "chips": ["얼굴 신원 유지", "창백 방지", "안경 그대로"], "image": "gallerysnap_애프터1.png" },
+      { "title": "프로필·피드·명함까지", "body": "인스타 프로필, 감성 피드, 링크드인·명함용 캐주얼 프로필까지. 계절 상관없이 쓰는 세련된 한 장.", "chips": ["프로필", "감성 피드", "캐주얼 프로필"], "images": ["gallerysnap_애프터2.png", "gallerysnap_애프터3.png"], "imageCaption": "사람이 달라도 같은 무드" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "전시 입장권 2만 원 + 사진 촬영 가능 전시 찾기 + 사람 빠질 때까지 대기",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 전시장·작품은 MOSPIC 자체 디자인이며 실제 미술관이나 실존 작가의 작품이 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 작품 앞의 나를 남겨보세요", "button": "전시회 스냅 만들기" }
+  }
+}

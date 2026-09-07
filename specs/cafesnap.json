@@ -1,0 +1,65 @@
+{
+  "key": "cafesnap",
+  "name": "감성 카페 스냅",
+  "engine": "pro",
+  "inputType": "person",
+  "glam": 5,
+  "prompt": { "source": "file", "path": "specs/cafesnap.prompt.txt" },
+  "befores": [
+    { "file": "cafesnap_비포1.png", "pool": "kit-female", "prompt": "kit pool auto" },
+    { "file": "cafesnap_비포2.png", "pool": "kit-female-glasses", "prompt": "kit pool auto" },
+    { "file": "cafesnap_비포3.png", "pool": "kit-male", "prompt": "kit pool auto" }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "cheerglam",
+    "chipFrom": "picnicsnap",
+    "emoji": "☕",
+    "color": "#9C6B4A",
+    "subtitle": "창가 자연광, 오늘의 카페 스냅",
+    "description": "셀카 한 장을 창가 자연광 카페에서 찍은 감성 스냅으로. 니트·셔츠 데일리룩과 라떼 한 잔, 얼굴은 가장 화사한 버전으로.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "☕"], ["치어리더", "감성 카페 스냅"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#9C6B4A", "bg": "#F7F1EA", "name": "감성 카페 스냅" },
+    "hero": {
+      "sub": "창가 자리, 오늘의 나",
+      "tags": ["#카페스냅", "#창가자연광", "#데일리프사"],
+      "image": "cafesnap_애프터1.png"
+    },
+    "pain": [
+      "☕ 카페 갔는데 찍어줄 사람이 없어서 라떼 사진만 남아요",
+      "🌤️ 창가 자리는 항상 남이 앉아 있고, 내 셀카는 형광등 아래예요",
+      "📱 부담 없는 데일리 프사 한 장이 늘 없어요"
+    ],
+    "solution": "MOSPIC 감성 카페 스냅 — 사진 한 장이면, 창가 자연광 카페에서 찍은 오늘의 스냅이 됩니다.",
+    "pairs": [
+      { "before": "cafesnap_비포1.png", "after": "cafesnap_애프터1.png", "caption": "평범한 셀카가 → 창가 자연광 카페 스냅으로" },
+      { "before": "cafesnap_비포3.png", "after": "cafesnap_애프터3.png", "caption": "실내 셀카가 → 라떼 한 잔 든 감성 스냅으로" }
+    ],
+    "points": [
+      { "title": "카페·의상·자연광 풀세팅", "body": "원목 테이블 창가 자리, 니트·셔츠·가디건 데일리룩, 라떼 한 잔과 부드러운 창가 빛까지 한 번에 세팅됩니다.", "chips": ["창가 자리", "데일리룩", "라떼 한 잔"], "image": "cafesnap_애프터2.png" },
+      { "title": "그래도 나는 나", "body": "따뜻한 카페 조명은 배경에만 두고, 얼굴은 깨끗하고 밝은 키라이트로. 친구가 보면 바로 알아보는 내 얼굴, 가장 화사한 버전으로.", "chips": ["얼굴 신원 유지", "노란 조명 차단", "안경 그대로"], "image": "cafesnap_애프터1.png" },
+      { "title": "프사·피드·프로필까지", "body": "카톡 프사, 인스타 일상 피드, 소개팅·모임 프로필까지. 계절 상관없이 언제든 쓰는 기본 한 장.", "chips": ["카톡 프사", "일상 피드", "모임 프로필"], "images": ["cafesnap_애프터2.png", "cafesnap_애프터3.png"], "imageCaption": "사람이 달라도 같은 무드" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "카페 스냅 출장 촬영 1시간 8만~15만 원 + 창가 자리 대기",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "정면 얼굴이 크게 나온 밝은 셀카 1장을 올려주세요",
+      "안경을 쓰셨다면 그대로 찍힌 사진이 좋아요 — 결과에도 같은 안경이 나옵니다",
+      "결과는 약 1분 후 4장 중 고를 수 있어요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 카페·의상·배경은 MOSPIC 자체 연출이며 실제 장소가 아닙니다. 재미와 프로필 용도로만 이용해 주세요.",
+    "cta": { "copy": "오늘, 창가 자리의 나를 남겨보세요", "button": "감성 카페 스냅 만들기" }
+  }
+}

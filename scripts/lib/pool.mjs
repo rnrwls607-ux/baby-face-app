@@ -42,7 +42,9 @@ export function inGrade(file, grade) {
 // 힌트 문자열 → {gender, glasses}. "custom"은 풀에서 안 뽑는다(MJ가 직접 만든다).
 export function parseHint(h) {
   if (!h || h === "custom") return null;
-  const s = String(h).toLowerCase();
+  // ★"kit-"·"test-" 접두는 겹 지정 표시(B 출력 규약, 2026-09-07) — 벗기고 성별·안경만 읽는다.
+  //   안 벗기면 "kit-male"이 startsWith("male")에 걸리지 않아 여성으로 배정된다.
+  const s = String(h).toLowerCase().replace(/^(kit|test)-/, "");
   const gender = s.startsWith("male") ? "male" : "female";
   const glasses = s.includes("glass") ? "glasses" : "noglasses";
   return { gender, glasses };
