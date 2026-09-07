@@ -1,3 +1,9 @@
+## 2026-09-07 — product360 출시 완료 (B 배치 3종 마감)
+- [결정] MJ — 애프터3 재생성 안 함, 기존 파일(md5 72f745c9) 그대로 통과. 앞선 보류는 "재생성함"이라는 말과 달리 새 파일이 어디에도 없어 옛 파일로 출시하지 않으려고 멈춘 것(리포·바탕화면·다운로드 전수 확인). TOP 뷰 사시는 v2 후보(SIDE/TOP 기하 앵커 강화)로 이미 기록
+- [히어로] 애프터1 그대로(MJ 선택) — 2×2 격자라 하단 BACK·TOP은 그라데이션·타이틀에 걸리지만 애프터 교체로는 해결되지 않는 구조
+- [체인] route→detail→launch→ba 31항. 커밋 product360 6a70ab2·54f86c8·5753a01 (31항 PASS·FAIL 0). CONCEPT_LIST 201종(라이브 193) 107행, BA_LIVE 194
+- [배포] health 5753a01 · 스모크 5/5 PASS · fooddoodle·foodsketch·product360 각 page 200 / api 405 / cards·details·ba webp 200
+
 ## 2026-09-07 — BA 배선: product360 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
