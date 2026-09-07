@@ -1,0 +1,83 @@
+You are a top outdoor pet photographer. Take the pet in this photo and
+create ONE photorealistic "life-shot" portrait of the SAME pet sitting in
+the middle of a vast flower field, looking straight at the camera — the
+kind of shot owners drive hours for and rarely get.
+
+STEP 1 — Read the pet first:
+Identify the species (dog or cat), breed or breed mix, body size, exact
+coat color(s) and pattern, every unique marking, eye color, ear shape and
+set, nose color, fur length and texture. If the source is blurry or
+dark, reconstruct the pet faithfully from the visible cues — never
+substitute a generic breed face.
+
+=== PET IDENTITY LOCK (highest priority — never violate) ===
+- COAT COLOR LOCK: the coat color stays EXACTLY as the source — apricot
+  stays apricot, orange tabby stays orange tabby, black-and-white stays
+  black-and-white; pattern and every marking stay in the same place at
+  the same size. Never recolor or tint the fur with the flower colors,
+  sky, or sunlight.
+- Same breed look, same head shape, same muzzle, same ear shape and set,
+  same eye color, same nose, same fur texture, same body size. The owner
+  must instantly recognize their own pet.
+- Do NOT turn it into a different animal or individual, and do NOT make
+  it a "cuter" generic version. Natural anatomy: correct paws, ears,
+  tail, no extra limbs, no distortion.
+- Exactly ONE pet. No other animals, no people, no hands, no leash held
+  by anyone. Remove any harness or collar from the source, or keep it
+  plain with no tag.
+
+THE FLOWER FIELD — choose ONE that flatters this pet's coat:
+- White, cream, or light coat: a wide field of pink muhly grass (soft
+  pink clouds), OR a purple lavender field in rows, OR blue hydrangea.
+- Black or dark coat: a bright yellow canola (rapeseed) field, OR pink
+  muhly grass, OR white cosmos.
+- Brown, apricot, orange, or tabby coat: a purple lavender field, OR
+  blue hydrangea, OR pink and white cosmos.
+- Black-and-white or multi-color coat: a single-color field (yellow
+  canola or pink muhly) so the pet's pattern stays the hero.
+The field stretches to the horizon under a clear blue sky with a few
+soft clouds; the flowers are in full bloom at real scale; a narrow gap
+in the flowers gives the pet a natural spot to sit, with blooms in the
+foreground softly framing the lower edge of the frame.
+
+LIGHT & CAMERA:
+- Soft, bright natural daylight (mid-morning or late afternoon), the
+  sun slightly behind and to the side of the pet so the fur edges glow
+  with a gentle rim light, while the face is evenly lit with clear
+  catchlights in the eyes — never a dark or shadowed face, never a
+  blown-out white coat. The light never shifts the coat color.
+- Shot on an 85mm lens at f/2 from the pet's eye level, camera low
+  among the flowers: the pet's face and fur tack-sharp, foreground
+  blooms softly blurred, the field and sky melting into creamy bokeh.
+- Clean, bright, true-to-life color; vivid flowers but natural.
+
+POSE — the pet sits upright or lies with its head up, facing the
+camera with a calm, bright, happy expression, ears in their natural
+position, mouth relaxed or gently open.
+
+FRAMING — vertical 3:4, the pet centered, its face in the upper-middle
+of the frame, flowers surrounding it on all sides, nothing cropped.
+
+TEXT — every surface BARE: no signs, no tags with lettering, no text
+anywhere. Even illegible text shapes are a failure.
+
+FINAL SELF-CHECK before output:
+- Next to the source photo, would the owner say "that's my pet" — same
+  coat color, markings, eyes, ears, size?
+- Coat color EXACTLY as the source, not tinted pink, yellow, or purple
+  by the field or the light?
+- Face bright, sharp, and looking at the camera, with catchlights?
+- Exactly one pet, natural anatomy, no people or other animals?
+- Real flowers at real scale, zero text anywhere?
+
+ABSOLUTELY AVOID:
+- Any change to coat color, pattern, markings, breed look, eye color,
+  size, or ear shape.
+- A dark, shadowed, or blown-out face; fur tinted by the flowers.
+- A second animal, people, hands, a held leash, or props.
+- Plastic fur, oversaturated HDR, fake-looking flowers, painted skies.
+- Any sign, tag, text, logo, watermark, or border.
+
+Output: one photorealistic, high-resolution outdoor pet portrait — the
+exact same pet in the middle of a blooming flower field, looking at the
+camera. No text, no watermark, no border.

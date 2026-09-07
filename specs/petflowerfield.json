@@ -1,0 +1,65 @@
+{
+  "key": "petflowerfield",
+  "name": "꽃밭 인생샷(펫)",
+  "engine": "pro",
+  "inputType": "pet",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/petflowerfield.prompt.txt" },
+  "befores": [
+    { "file": "petflowerfield_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional apricot-colored toy poodle mid-walk on a paved apartment complex path, slightly motion-blurred, looking to the side, wearing a plain pink harness with no tag, overcast daylight, parked cars and bushes behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "petflowerfield_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional orange tabby cat with a white muzzle sitting on a bed in a dim bedroom, looking at the camera with amber eyes, warm lamp light, a blanket and pillow behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "petflowerfield_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional black-and-white Border Collie sitting on grass in a city park, tongue out, wearing a plain green collar with no tag, bright afternoon sun with a slight shadow across the face, people-free background with trees. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "petstudio",
+    "emoji": "🌷",
+    "color": "#C86AA0",
+    "subtitle": "꽃밭 한가운데, 카메라 보는 우리 아이",
+    "description": "흔들린 산책 사진도 유채·핑크뮬리·라벤더·수국 밭 한가운데서 정면을 보는 인생샷으로. 강아지·고양이 모두.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "🌷"], ["치어리더", "꽃밭 인생샷(펫)"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#C86AA0", "bg": "#FBEFF6", "name": "꽃밭 인생샷(펫)" },
+    "hero": {
+      "sub": "꽃밭 한가운데, 카메라 보는 우리 아이",
+      "tags": ["#꽃개", "#꽃냥", "#펫인생샷"],
+      "image": "petflowerfield_애프터1.png"
+    },
+    "pain": [
+      "🌷 꽃밭에 데려가도 가만히 있질 않아서 정면 사진이 없어요",
+      "🚗 유채밭·핑크뮬리는 멀고, 시즌은 2주면 끝나요",
+      "📸 산책 사진은 늘 흔들리고 배경은 주차장이에요"
+    ],
+    "solution": "MOSPIC 꽃밭 인생샷 — 사진 한 장이면, 가만히 못 있는 우리 아이도 꽃밭 한가운데서 카메라를 봅니다.",
+    "pairs": [
+      { "before": "petflowerfield_비포1.png", "after": "petflowerfield_애프터1.png", "caption": "흔들린 산책 사진이 → 꽃밭 정면 인생샷으로" },
+      { "before": "petflowerfield_비포2.png", "after": "petflowerfield_애프터2.png", "caption": "어두운 침대 위 고양이가 → 꽃밭 속 화보로" }
+    ],
+    "points": [
+      { "title": "꽃밭·계절·빛 풀세팅", "body": "털색에 어울리는 유채·핑크뮬리·라벤더·수국·코스모스 밭 중 하나를 고르고, 파란 하늘과 부드러운 자연광, 꽃에 둘러싸인 정면 구도까지 세팅합니다.", "chips": ["5가지 꽃밭", "털색 맞춤", "정면 구도"], "image": "petflowerfield_애프터3.png" },
+      { "title": "우리 아이는 그대로", "body": "품종·털색·무늬·눈 색·귀 모양을 원본 그대로. 흔들린 사진에서도 우리 애 얼굴을 살려 또렷하게.", "chips": ["털색 잠금", "무늬 그대로", "얼굴 또렷"], "image": "petflowerfield_애프터1.png" },
+      { "title": "봄·가을 프사부터 액자까지", "body": "봄 유채, 가을 핑크뮬리 — 계절마다 프사 교체, 인화해서 액자, 가족 단톡 자랑까지.", "chips": ["계절 프사", "액자", "단톡"], "images": ["petflowerfield_애프터2.png", "petflowerfield_애프터3.png"], "imageCaption": "아이가 달라도 같은 완성도" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "꽃밭 출장 펫 스냅 10만~20만 원 + 왕복 이동 + 시즌 2주 제한",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "아이 얼굴과 몸이 보이는 사진 1장을 올려주세요 (흔들려도 괜찮아요)",
+      "털색·무늬가 잘 보이는 밝은 사진이면 더 정확해요",
+      "한 마리씩 올려주세요"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 꽃밭·배경은 MOSPIC 자체 연출이며 실제 장소가 아닙니다. 반려동물의 외모는 원본을 보존하지만 미세한 차이가 있을 수 있어요.",
+    "cta": { "copy": "오늘, 우리 아이를 꽃밭으로 데려가 보세요", "button": "꽃밭 인생샷 만들기" }
+  }
+}

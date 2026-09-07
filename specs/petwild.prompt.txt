@@ -1,0 +1,88 @@
+You are a wildlife and pet photographer with a playful eye. Take the pet
+in this photo and create ONE photorealistic scene in which the SAME pet
+is sitting calmly among a group of friendly wild animals in their
+natural habitat — as if the pet had wandered into a nature documentary
+and been welcomed by the locals.
+
+STEP 1 — Read the pet first:
+Identify the species (dog or cat), breed or breed mix, body size, exact
+coat color(s) and pattern, every unique marking, eye color, ear shape
+and set, nose color, fur length and texture, and its typical expression.
+This is one specific individual, not a generic breed example.
+
+=== PET IDENTITY LOCK (highest priority — never violate) ===
+- COAT COLOR LOCK: the coat color stays EXACTLY as the source — white
+  stays pure white, black stays black, gray stays the same gray, golden
+  stays the same golden; pattern and every marking stay in the same
+  place at the same size. Never recolor or tint the fur with the scene
+  lighting, water, grass, or snow.
+- Same breed look, same head shape, same muzzle, same ear shape and set,
+  same eye color, same nose, same fur texture, same real body size
+  relative to the animals around it (a small dog stays small next to a
+  capybara; a large dog stays large next to meerkats).
+- Do NOT turn it into a different animal or individual, and do NOT make
+  it a cartoon or plush. Natural anatomy: correct paws, ears, tail, no
+  extra limbs, no distortion.
+- Exactly ONE pet (this one). No other dogs or cats, no people.
+
+THE SCENE — choose ONE that suits this pet's size and mood (all animals
+are generic real species, never characters or mascots):
+- Capybara hot spring: a steamy natural hot-spring pool with mossy rocks
+  and a few relaxed capybaras soaking; the pet sits at the water's edge
+  or on a warm rock beside them, dry and comfortable.
+- Meerkat lookout: a golden savanna with sandy mounds; a small group of
+  meerkats standing upright on watch, the pet sitting upright among
+  them in the same alert pose.
+- Penguin beach: a cool pebble beach with a few penguins waddling; the
+  pet sits among them looking at the sea, soft overcast light.
+- Sheep hill: a green rolling hill with a small flock of fluffy sheep
+  grazing; the pet sits in the grass among them, sunny day.
+- Panda bamboo grove: a misty bamboo forest with one or two pandas
+  munching bamboo; the pet sits on a mossy log nearby.
+Interaction is gentle and safe: the wild animals are calm, at a natural
+distance, no aggression, no chasing, no feeding.
+
+LIGHT & CAMERA (this is what makes the pet belong there):
+- The pet is lit by the SAME light as the scene — same direction, same
+  color temperature, same softness — with matching contact shadows on
+  the ground, matching ambient reflections, and the same slight haze or
+  mist as the surroundings. The pet's face stays bright and clearly
+  visible with catchlights in the eyes.
+- Shot on a 70mm lens at f/2.8 from the pet's eye level: the pet
+  tack-sharp, the wild animals sharp to softly sharp, the background
+  falling into natural bokeh. Documentary-real color, no filters.
+
+POSE — the pet sits or lies naturally, facing the camera or looking
+curiously at its new friends, calm and happy, ears in their natural
+position.
+
+FRAMING — vertical 3:4, the pet centered and clearly the hero in the
+upper-middle of the frame, the wild animals arranged around and behind
+it, nothing important cropped.
+
+TEXT — every surface BARE: no signs, no collar tags with lettering, no
+text anywhere. Even illegible text shapes are a failure.
+
+FINAL SELF-CHECK before output:
+- Next to the source photo, would the owner say "that's my pet" — same
+  coat color, markings, eyes, ears, size?
+- Coat color EXACTLY as the source, not tinted by steam, snow, grass, or
+  golden light?
+- Same light direction, color, and shadows on the pet as on the wild
+  animals and ground — no cut-and-paste look?
+- Exactly one pet, natural anatomy, real generic wild species, no
+  characters?
+- Zero text anywhere?
+
+ABSOLUTELY AVOID:
+- Any change to coat color, pattern, markings, breed look, eye color,
+  size, or ear shape.
+- Pasted-on look: mismatched light, missing ground shadow, wrong scale.
+- Aggressive or unsafe interactions; the pet in water or in danger.
+- A second dog or cat, people, cartoon or mascot animals, plush look.
+- Plastic fur, oversaturated HDR, harsh flash.
+- Any sign, tag, text, logo, watermark, or border.
+
+Output: one photorealistic, high-resolution wildlife-documentary photo —
+the exact same pet, welcomed among friendly wild animals. No text, no
+watermark, no border.

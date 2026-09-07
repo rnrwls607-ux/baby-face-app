@@ -1,0 +1,65 @@
+{
+  "key": "petbouquet",
+  "name": "꽃다발 속 우리 아이",
+  "engine": "pro",
+  "inputType": "pet",
+  "glam": 1,
+  "prompt": { "source": "file", "path": "specs/petbouquet.prompt.txt" },
+  "befores": [
+    { "file": "petbouquet_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small white Maltese dog sitting on a beige sofa in an ordinary living room, looking slightly off-camera, ears fluffy, a bit of blur, warm indoor light, a remote control and a cushion nearby. No collar tag text, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "petbouquet_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional brown tabby cat with white chest and green eyes sitting on a windowsill, one ear slightly notched, daylight from the window with a blue cast, blinds and a potted plant behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
+    { "file": "petbouquet_비포3.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional black-and-tan miniature dachshund standing on a park path during a walk, wearing a plain red harness with no tag, slightly motion-blurred, looking to the side, overcast daylight, grass and a bench behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." }
+  ],
+  "afters": { "count": 4, "map": [1, 2, 3, 1] },
+  "verdicts": ["", "", "", ""],
+  "route": {
+    "template": "auto",
+    "chipFrom": "petstudio",
+    "emoji": "💐",
+    "color": "#D97A8C",
+    "subtitle": "꽃다발이 되어 돌아온 우리 아이",
+    "description": "거실 사진 한 장으로 꽃다발 포장지 안에 얼굴이 쏙 들어간 화보를. 털색에 어울리는 꽃을 골라드려요. 강아지·고양이 모두.",
+    "audience": "all",
+    "duo": false,
+    "tplName": "치어리더",
+    "replace": [["📣", "💐"], ["치어리더", "꽃다발 속 우리 아이"]]
+  },
+  "ba": { "pairs": [[1, 1], [2, 2], [3, 3]] },
+  "detail": {
+    "layout": "ba",
+    "signature": { "color": "#D97A8C", "bg": "#FDF1F3", "name": "꽃다발 속 우리 아이" },
+    "hero": {
+      "sub": "꽃다발이 되어 돌아온 우리 아이",
+      "tags": ["#펫꽃다발", "#반려견선물", "#냥스타그램"],
+      "image": "petbouquet_애프터1.png"
+    },
+    "pain": [
+      "🐶 우리 애 사진은 늘 소파 위, 배경이 매번 똑같아요",
+      "💐 꽃집 소품 세트 촬영은 예약도 비용도 부담이에요",
+      "🎁 가족 단톡에 보낼 '선물 같은' 한 장이 없어요"
+    ],
+    "solution": "MOSPIC 꽃다발 속 우리 아이 — 사진 한 장이면, 거실의 우리 아이가 꽃다발 속 주인공이 됩니다.",
+    "pairs": [
+      { "before": "petbouquet_비포1.png", "after": "petbouquet_애프터1.png", "caption": "소파 위 사진이 → 꽃다발 속 화보로" },
+      { "before": "petbouquet_비포2.png", "after": "petbouquet_애프터2.png", "caption": "창가 고양이가 → 꽃다발 속 주인공으로" }
+    ],
+    "points": [
+      { "title": "꽃·포장·조명 풀세팅", "body": "털색과 분위기를 읽어 해바라기·튤립·장미·라벤더·안개꽃 중 어울리는 꽃다발을 고르고, 포장지·리본·스튜디오 조명까지 세팅합니다.", "chips": ["털색 맞춤 꽃", "포장·리본", "스튜디오 조명"], "image": "petbouquet_애프터3.png" },
+      { "title": "우리 아이는 그대로", "body": "품종·털색·무늬·눈 색·귀 모양을 원본 그대로 지킵니다. 보호자가 한눈에 '우리 애'라고 알아보는 얼굴로.", "chips": ["털색 잠금", "무늬 그대로", "눈 색 유지"], "image": "petbouquet_애프터1.png" },
+      { "title": "선물·프사·기념일까지", "body": "가족 단톡, 카톡 프사, 입양 기념일·생일 축하 이미지로. 꽃 종류만 바꿔 계절마다 한 장씩.", "chips": ["가족 단톡", "프사", "기념일"], "images": ["petbouquet_애프터2.png", "petbouquet_애프터3.png"], "imageCaption": "아이가 달라도 같은 완성도" }
+    ],
+    "price": {
+      "header": "직접 찍으면 얼마일까요?",
+      "offline": "펫 스튜디오 소품 촬영 10만~20만 원 + 예약·이동 반나절",
+      "mospic": "합리적인 가격 · 약 1분 · 사진 한 장으로"
+    },
+    "guide": [
+      "아이 얼굴이 정면에 가깝게 크게 나온 사진 1장을 올려주세요",
+      "털색·무늬가 잘 보이는 밝은 사진이 좋아요 — 그대로 보존됩니다",
+      "한 마리씩 올려주세요 (여러 마리는 각각 만들어요)"
+    ],
+    "privacy": "업로드한 사진은 생성에만 사용되며 생성 후 서버에 남지 않습니다.",
+    "aiNotice": "AI가 생성한 이미지입니다. 꽃다발·배경은 MOSPIC 자체 연출이며 실제 촬영이 아닙니다. 반려동물의 외모는 원본을 보존하지만 미세한 차이가 있을 수 있어요.",
+    "cta": { "copy": "오늘, 우리 아이를 꽃다발로 받아보세요", "button": "꽃다발 속 우리 아이 만들기" }
+  }
+}
