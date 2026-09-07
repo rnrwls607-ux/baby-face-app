@@ -40,8 +40,8 @@
     ],
     "solution": "MOSPIC 꽃다발 속 우리 아이 — 사진 한 장이면, 거실의 우리 아이가 꽃다발 속 주인공이 됩니다.",
     "pairs": [
-      { "before": "petbouquet_비포1.png", "after": "petbouquet_애프터1.png", "caption": "소파 위 사진이 → 꽃다발 속 화보로" },
-      { "before": "petbouquet_비포2.png", "after": "petbouquet_애프터2.png", "caption": "창가 고양이가 → 꽃다발 속 주인공으로" }
+      { "before": "petbouquet_비포1.png", "after": "petbouquet_애프터1.png", "caption": "거실 러그 위 사진이 → 꽃다발 속 화보로" },
+      { "before": "petbouquet_비포2.png", "after": "petbouquet_애프터2.png", "caption": "마룻바닥 위 고양이가 → 꽃다발 속 주인공으로" }
     ],
     "points": [
       { "title": "꽃·포장·조명 풀세팅", "body": "털색과 분위기를 읽어 해바라기·튤립·장미·라벤더·안개꽃 중 어울리는 꽃다발을 고르고, 포장지·리본·스튜디오 조명까지 세팅합니다.", "chips": ["털색 맞춤 꽃", "포장·리본", "스튜디오 조명"], "image": "petbouquet_애프터3.png" },

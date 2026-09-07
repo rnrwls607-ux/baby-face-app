@@ -41,7 +41,7 @@
     "solution": "MOSPIC 야생 친구 만난 우리 아이 — 사진 한 장이면, 거실의 우리 아이가 야생 친구들 사이에 앉아 있습니다.",
     "pairs": [
       { "before": "petwild_비포1.png", "after": "petwild_애프터1.png", "caption": "거실 러그 위 사진이 → 야생 친구들 사이 한 장으로" },
-      { "before": "petwild_비포3.png", "after": "petwild_애프터3.png", "caption": "산책길 사진이 → 초원 무리 속 주인공으로" }
+      { "before": "petwild_비포3.png", "after": "petwild_애프터3.png", "caption": "침대 위 사진이 → 야생 친구들 사이 주인공으로" }
     ],
     "points": [
       { "title": "장면·친구·빛 풀세팅", "body": "아이 크기와 분위기에 맞춰 카피바라 온천·미어캣 초원·펭귄 해변·양떼 언덕·판다 대나무 숲 중 한 장면을 고르고, 야생 친구들과 같은 빛·같은 땅 위에 서 있게 만듭니다.", "chips": ["5가지 장면", "같은 빛·그림자", "자연스러운 무리"], "image": "petwild_애프터2.png" },
