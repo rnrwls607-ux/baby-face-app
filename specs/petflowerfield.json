@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "pet",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/petflowerfield.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "petflowerfield_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional apricot-colored toy poodle mid-walk on a paved apartment complex path, slightly motion-blurred, looking to the side, wearing a plain pink harness with no tag, overcast daylight, parked cars and bushes behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "petflowerfield_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional orange tabby cat with a white muzzle sitting on a bed in a dim bedroom, looking at the camera with amber eyes, warm lamp light, a blanket and pillow behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },

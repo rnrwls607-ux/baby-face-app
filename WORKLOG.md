@@ -1,3 +1,10 @@
+## 2026-09-07 — 신규 컨셉 신설: petflowerfield (꽃밭 인생샷(펫))
+- [스테이지] new-concept.mjs --stage route · 템플릿 pet:pro → cheerglam
+- [프롬프트] specs/petflowerfield.prompt.txt → route 삽입 · md5 be0fb691 · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-07 — BA 배선: petwild 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장

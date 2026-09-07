@@ -7,7 +7,7 @@ export type Concept = {
   accent: string;
   description: string;
   examples: ConceptExample[];
-  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "cinesnap" | "schoolsnap" | "gravityad" | "feltdoll" | "personalcolor" | "monoactor" | "fortunecard" | "minichef" | "poolside" | "snowsnap" | "profileduo" | "droneview" | "autumnsnap" | "trenchlook" | "examcheer" | "xmasvintage" | "campsnap" | "picnicsnap" | "partysnap" | "skisnap" | "productscene" | "kidsdraw" | "flatlay" | "ghostfit" | "carad" | "sketch2real" | "nailshot" | "bouquetshot" | "plantshot" | "fooddoodle" | "foodsketch" | "product360" | "petbouquet" | "petwild" | "soon";
+  start: "baby" | "voxel" | "food" | "factory" | "pet" | "product" | "restore" | "realestate" | "interior" | "car" | "lifeshot" | "bizprofile" | "hairstyle" | "illust" | "figure" | "age" | "menu" | "fashion" | "idol" | "xmas" | "graduation" | "wedding"  | "petstudio" | "petreceipt" | "era" | "petcostume"  | "couple" | "hanbokcouple" | "friend" | "family" | "familyhanbok" | "familypet" | "fourcut" | "fourcutillust" | "fourcutcouple"  | "nukki" | "upscale" | "idskyblue" | "biznavy" | "bizmnavy" | "bizmcharcoal" | "bizmblack" | "bizmlightgray" | "bizmvest" | "bizmbeige" | "bizmblazer" | "bizmturtle" | "bizmdb" | "bizmknittie" | "bizblack" | "bizwhite" | "bizribbon" | "bizbeige" | "bizlavender" | "bizgray" | "bizknit" | "bizchiffon" | "bizpinkjacket" | "bizcreamdress" | "biznavyblouse" | "bizskyblouse" | "bizpinktweed" | "bizshirring" | "bizviolet" | "bizblueskirt" | "bizburgundy" | "bizkhaki" | "bizblackdress" | "bizbluegray" | "bizpinstripe" | "bizcheck" | "bizknitdress" | "idblack" | "idnavy" | "idcharcoal" | "idwhiteshirt" | "idbeige" | "idblacktie" | "idblouse" | "idknit" | "idturtleneck" | "idglasses" | "idoffshoulder" | "idupdo" | "idlonghair" | "idtweed" | "idwavebob" | "idponytail" | "idgarma" | "iddropcut" | "idperm" | "idpomade" | "idwarmbob" | "idhime" | "idashwave" | "idlowbun" | "idburgundy" | "iddandy" | "iddownperm" | "idnavysuit" | "idbeigeblazer" | "idhenley" | "y2k" | "roman" | "clay" | "luxe" | "homecafe" | "travel" | "halloween" | "goods" | "hanbok" | "retro90" | "hocance" | "redcarpet" | "birthday" | "job" | "sporty" | "flower" | "remindwedding" | "selfwedding" | "duofamily" | "coupletravel" | "petbirthday" | "petmemorial" | "petceo" | "petgraduation" | "petminhwa" | "petroyal" | "pettwo" | "petjob" | "pendrawing" | "oilportrait" | "softanime" | "retroanime" | "popart" | "marble" | "chibifigure" | "clayfigure" | "stitchart" | "pixelart" | "stainedglass" | "neonsign" | "paperart" | "stickerpack" | "toon3d" | "goldenhour" | "fixnight" | "season" | "fixbacklight" | "bgchange" | "fixcrowd" | "beauty" | "anisky" | "brickfigure" | "cheerglam" | "crewglam" | "guestlook" | "anchorglam" | "goddessdress" | "tripface" | "idolglam" | "campusgrad" | "dresswedding" | "gyaru" | "genderswap" | "deskfigure" | "digicam" | "airportsnap" | "cinesnap" | "schoolsnap" | "gravityad" | "feltdoll" | "personalcolor" | "monoactor" | "fortunecard" | "minichef" | "poolside" | "snowsnap" | "profileduo" | "droneview" | "autumnsnap" | "trenchlook" | "examcheer" | "xmasvintage" | "campsnap" | "picnicsnap" | "partysnap" | "skisnap" | "productscene" | "kidsdraw" | "flatlay" | "ghostfit" | "carad" | "sketch2real" | "nailshot" | "bouquetshot" | "plantshot" | "fooddoodle" | "foodsketch" | "product360" | "petbouquet" | "petwild" | "petflowerfield" | "soon";
   tags?: string[];
   coinCost?: number; // 표시 전용 — 요금의 진실원은 서버 withCoin 인자
   audience?: "female" | "male" | "all"; // 성별 대상 도트(사람 사진 필수 컨셉만) — 미지정 = 배지 없음
@@ -1766,6 +1766,19 @@ export const CONCEPTS: Record<string, Concept> = {
     ],
     start: "petwild",
     detailImage: "/details/petwild.webp",
+  },
+  petflowerfield: {
+    key: "petflowerfield", audience: "all",
+    coinCost: 3,
+    title: "꽃밭 인생샷(펫)",
+    subtitle: "꽃밭 한가운데, 카메라 보는 우리 아이",
+    emoji: "🌷",
+    accent: "#C86AA0",
+    description: "흔들린 산책 사진도 유채·핑크뮬리·라벤더·수국 밭 한가운데서 정면을 보는 인생샷으로. 강아지·고양이 모두.",
+    examples: [
+      { emoji: "🌷", accent: "#C86AA0" },
+    ],
+    start: "petflowerfield",
   },
   halloween: {
     key: "halloween", audience: "all",
@@ -3543,5 +3556,6 @@ export function conceptForGo(go: string): Concept {
   if (go === "product360") return CONCEPTS.product360;
   if (go === "petbouquet") return CONCEPTS.petbouquet;
   if (go === "petwild") return CONCEPTS.petwild;
+  if (go === "petflowerfield") return CONCEPTS.petflowerfield;
   return CONCEPTS.soon;
 }
