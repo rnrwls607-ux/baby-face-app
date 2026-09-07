@@ -4,7 +4,9 @@
   "engine": "pro",
   "inputType": "pet",
   "glam": 1,
-  "prompt": { "source": "file", "path": "specs/petbouquet.prompt.txt" },
+  "prompt": {
+    "source": "route"
+  },
   "befores": [
     { "file": "petbouquet_비포1.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional small white Maltese dog sitting on a beige sofa in an ordinary living room, looking slightly off-camera, ears fluffy, a bit of blur, warm indoor light, a remote control and a cushion nearby. No collar tag text, no lettering anywhere. Realistic phone-camera quality, vertical 3:4 orientation. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },
     { "file": "petbouquet_비포2.png", "pool": "custom", "prompt": "A casual smartphone photo of a fictional brown tabby cat with white chest and green eyes sitting on a windowsill, one ear slightly notched, daylight from the window with a blue cast, blinds and a potted plant behind. No lettering anywhere. Realistic phone-camera quality, vertical 3:4. Completely fictional pet. No text, no letters, no numbers, no logos, no watermark." },

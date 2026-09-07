@@ -1,3 +1,10 @@
+## 2026-09-07 — 신규 컨셉 신설: petbouquet (꽃다발 속 우리 아이)
+- [스테이지] new-concept.mjs --stage route · 템플릿 pet:pro → cheerglam
+- [프롬프트] specs/petbouquet.prompt.txt → route 삽입 · md5 06c7832e · 재추출 일치
+- [외모] 외모 1단계(자연) · glam-check PASS
+- [배선] 8/8 · 홈 카드는 ★주석 잠금(자산 준비 후 launch 스테이지가 연다)
+- [게이트] 배선 8/8 · 홈 카드 잠금 · PRO_CONCEPTS 정합 · CONCEPTS 직조회 · 프롬프트 재추출 md5 · 템플릿 무접촉 · glam-check · 변경 파일 = 예상 · 이미지 변경 0 · 빌드 전항 PASS
+
 ## 2026-09-07 — 플레이북 §1-6 글자 예외 신설: spec.textMode "intended" (GPT 한정) + glam-check 글자 규칙
 - [결정] MJ — 글자 금지 헌법에 예외 1개. spec에 textMode:"intended"가 있는 컨셉은 GPT 엔진 한정으로 프롬프트가 지정한 문구 풀 안의 짧은 한글·영문(6자 이내, 브랜드·실명·숫자 격자 금지)을 렌더할 수 있다. 그 외 컨셉은 기존 봉쇄 그대로
 - [glam-check] 실사 결과 glam-check에는 '읽히는 글자' 검사 자체가 없었다(금지어는 무료/0원/공짜뿐, 글자 봉쇄는 프롬프트 문장에만 있었음). 그래서 (e) 글자 규칙을 신설: 기본 컨셉은 글자를 넣으라는 요청 문장(write the word / text that says / 글자를 넣어)을 잡아 FAIL, 부정문(Do NOT add text)은 제외. textMode intended면 요청 검사 대신 4요소 — ①PHRASE POOL 머리말+따옴표 문구(각 6자 이내·숫자 없음) ②선택 규칙 ③"no other text" 봉쇄줄 ④브랜드·실명·숫자 금지줄 — 를 검사. engine≠gpt·textMode 오타는 FAIL
