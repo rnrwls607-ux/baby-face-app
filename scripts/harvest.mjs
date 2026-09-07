@@ -515,6 +515,7 @@ function buildChecklist(picked) {
   for (const r of engineRanking(spec)) L.push(`${r.rank}순위 **${r.engine}** (${r.studio}): ${r.why}`);
   L.push(`- 입력 종류: ${spec.inputType}`);
   L.push(`- ${glamLabel(spec.glam)} · glam-check PASS(코어 정본 문자 일치)`);
+  if (spec.textMode === "intended") L.push(`- ★글자 예외(textMode intended · GPT 한정): 프롬프트의 문구 풀 안 짧은 글자(6자 이내)만 허용 — 판정 때 풀 밖 글자·브랜드·실명·숫자 격자가 보이면 결함`);
   L.push(`- 저장 위치: \`${path.relative(ROOT, outDir).split(path.sep).join("/")}\``);
   L.push(`- 프롬프트 출처: ${spec.prompt?.source === "file" ? spec.prompt.path : `app/api/${spec.key}/route.ts (VM 재추출)`} · md5 \`${md5(prompts[0].text).slice(0, 8)}\``);
   L.push("");
@@ -596,9 +597,9 @@ console.log(`  산출 위치: ${path.relative(ROOT, outDir).split(path.sep).join
 const prompts = resolvePrompts(spec);
 // ★외모 코어 잠금 — 수동·API 모두, 어떤 파일도 쓰기 전에. 실패면 진행 금지(플레이북 §1-4·§5 5단계표).
 for (const p of prompts) {
-  const gc = glamCheck(p.text, { glam: spec.glam, inputType: spec.inputType });
+  const gc = glamCheck(p.text, { glam: spec.glam, inputType: spec.inputType, engine: spec.engine, textMode: spec.textMode });
   console.log(gc.report());
-  if (!gc.ok) fail(`glam-check 실패(${p.label}) — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것`);
+  if (!gc.ok) fail(`glam-check 실패(${p.label}) — 코어 정본(scripts/lib/glam-core) 문자 일치·§1-6 글자 규칙을 확인할 것`);
 }
 if (args.run && !API_ALLOWED) {
   console.log(`\n  ★MJ 승인 없음 — 수동 모드로 진행 (API 호출 0)`);

@@ -114,9 +114,9 @@ async function stageRoute() {
   console.log(`  프롬프트: ${spec.prompt.path} · ${promptText.length}자 · md5 ${wantMd5.slice(0, 8)}`);
 
   // ★외모 코어 잠금 — 파일을 한 글자도 쓰기 전에. 실패면 진행 금지.
-  const gc = glamCheck(promptText, { glam: spec.glam, inputType: spec.inputType });
+  const gc = glamCheck(promptText, { glam: spec.glam, inputType: spec.inputType, engine: spec.engine, textMode: spec.textMode });
   console.log(gc.report());
-  if (!gc.ok) fail(`glam-check 실패 — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것`);
+  if (!gc.ok) fail(`glam-check 실패 — 코어 정본(scripts/lib/glam-core) 문자 일치·§1-6 글자 규칙을 확인할 것`);
 
   // 템플릿 원본 md5 — 나중에 무접촉 확인용
   const tplMd5 = {
@@ -440,9 +440,9 @@ async function stageRefresh() {
   const newMd5 = md5(newText);
 
   // 2) ★외모 코어 잠금 — 파일을 한 글자도 쓰기 전에
-  const gc = glamCheck(newText, { glam: spec.glam, inputType: spec.inputType });
+  const gc = glamCheck(newText, { glam: spec.glam, inputType: spec.inputType, engine: spec.engine, textMode: spec.textMode });
   console.log(gc.report());
-  if (!gc.ok) fail("glam-check 실패 — 코어 정본(scripts/lib/glam-core)과 문자 일치시킬 것");
+  if (!gc.ok) fail("glam-check 실패 — 코어 정본(scripts/lib/glam-core) 문자 일치·§1-6 글자 규칙을 확인할 것");
 
   // 3) 라이브 프롬프트 VM 추출 → 멱등 판정
   const oldText = extractPrompt(key)[0].text;

@@ -33,6 +33,11 @@
 4. 티어1 표준 블록은 MOSPIC_외모마스터_v1.md에서 문자 그대로. 요약·의역 금지. SCENE만 신작.
 5. 모순 스캔 3축 0건 확인 후 발급: 보정금지↔허용 / 점 보존↔소거 / 나이 유지↔젊게.
 6. 금지어·금지물: "무료/0원/공짜", 실명 브랜드·IP·실존 인물·특정 영화/애니, 읽히는 글자(강화 봉쇄 "Every surface BARE… Even illegible text shapes are a failure"), 실존 학교 마크·명찰, 무속·종교 이미지.
+   ★글자 예외(2026-09-07 MJ 결정): spec에 `textMode: "intended"`가 있는 컨셉은 **GPT 엔진 한정**으로, 프롬프트가 지정한
+   문구 풀 안의 짧은 한글·영문(**6자 이내**, 브랜드·실명·숫자 격자 금지)을 렌더할 수 있다. glam-check는 이 플래그일 때만
+   "읽히는 글자 요청" 검사를 건너뛰고, 대신 프롬프트에 ①문구 풀(PHRASE POOL 머리말 + 따옴표 문구) ②선택 규칙(choose one
+   from the pool) ③"no other text" 봉쇄줄 ④브랜드·실명·숫자 금지줄이 있는지 검사한다. 그 외 컨셉은 기존 봉쇄 그대로
+   (글자를 넣으라는 문장이 있으면 harvest·route·refresh가 멈춘다). 예외 컨셉의 G2 판정 항목에는 "풀 밖 글자 0"이 들어간다.
 7. 얼굴 신원: 아는 사람이 한눈에 알아봐야 한다. 점은 지울 수만 있고 새로 못 그린다. 안경 유지·추가 금지·선글라스 금지.
 8. 게이트 전항 통과 시에만 커밋. 하나라도 FAIL → 롤백·보고. "Compiled successfully" 원문 + exit 0.
 8-1. ★package.json·lockfile·next.config·네이티브 모듈이 바뀐 커밋은 push 후 node scripts/smoke.mjs PASS까지 미완료다. "Compiled successfully"는 런타임을 보증하지 않는다 — sharp 0.35의 libvips 8.18이 Vercel linux-x64에서 dlopen 실패해 생성·업스케일·코인·로그인 콜백이 23시간 죽었고 빌드는 매번 통과했다. 스모크의 핵심은 ★GET 405다(생성 라우트에 GET 핸들러가 없으므로 모듈이 정상 로드되면 405, 로드가 깨지면 500 text/html이 온다 — POST는 정상적인 입력 검증 실패와 섞여 신호가 되지 못한다).
@@ -74,6 +79,7 @@ specs/{키}.json + specs/{키}.prompt.txt 작성
 
 ## 3. spec 스키마 — 필수 칸 (하나라도 비면 작성 단계에서 채운다, 실행 후 발견 금지)
 key · name · engine(pro|gpt|flash) · inputType(person|product|food|pet|duo) · ★glam(외모 1~5단계, §5 5단계표) · prompt{source,path} · befores[3](file, prompt) · afters{count:4, map:[1,2,3,1]} · verdicts[4]
+선택: textMode("intended" — §1-6 글자 예외, engine gpt일 때만 유효. 없으면 글자 봉쇄 기본)
 route: template("auto"|키) · chipFrom(기존 컨셉 키) · emoji · color · subtitle · description · audience · duo · ★tplName(템플릿 한글명, 예 cheerglam="치어리더") · ★replace([["📣","🚁"]] 템플릿 이모지·문구 잔재 전역 치환)
 ba: pairs [[1,1],[2,2],[3,3]] (duo: [[[1,2],1],[[3,4],4]])
 detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3],image} · pain[3] · solution · pairs[2]{before,after,caption} · points[3]{title,body,chips[3],image|images[2],imageCaption} · ★price{header,offline,mospic} · guide[3] · privacy · aiNotice · cta{copy,button}
@@ -98,6 +104,13 @@ detail: layout(ba|2to1|transform) · signature{color,bg,name} · hero{sub,tags[3
 - ★외모 5단계표(spec.glam — 체크리스트·완료 보고에 "외모 {n}단계"로 자동 표기):
   1 자연 = 보정 없음·톤 변환 계열(flash·사물·음식·펫·드론뷰) — 코어 검사 없음(모순·금지어만)
   2 = v1 코어(digicam 승인본) · 3 = v2 코어(cinesnap 승인본) · 4 = v3 코어(snowsnap 승인본) · 5 = v3+조명·씬 교체 후보(승인본 없음, 검사는 v3 코어)
+- ★글자 예외 컨셉(spec.textMode "intended", GPT 한정 — §1-6) 프롬프트 4요소. glam-check(scripts/lib/glam-check.mjs intendedTextCheck)가 기계로 잡는다:
+  ① 문구 풀 — `PHRASE POOL:`(또는 TEXT POOL / ALLOWED TEXT / 문구 풀) 머리말 뒤 첫 빈 줄까지, 따옴표로 묶은 문구 목록. 각 6자 이내(공백 제외), 숫자 없음
+  ② 선택 규칙 — "choose exactly ONE phrase from the pool" 꼴(또는 "…중 하나만 골라")
+  ③ 봉쇄줄 — "No other text, letters, or numbers anywhere" 꼴("no other text" 문구 필수)
+  ④ 금지줄 — 브랜드·로고 / 실명 / 숫자·숫자 격자 세 가지를 각각 "no …"로 명시
+  · 이 플래그가 없는 컨셉에서 글자를 넣으라는 문장(write the word / text that says / 글자를 넣어)이 발견되면 glam-check FAIL.
+    부정문("Do NOT add text", "no words")은 요청으로 세지 않는다.
   ★코어 정본 = scripts/lib/glam-core/{v1,v2,v3}-core.txt — route에서 VM으로 뽑은 승인본에서 슬롯만 마커로 바꾼 것(손으로 옮긴 글자 0).
   가변 슬롯은 {{컨셉명}}·{{헤어꼬리}}·{{SCENE}}·{{POSE}}·{{*}}(장면 전용 SELF-CHECK/AVOID 문항 자리)뿐. 그 외 구간은 공백 정규화 후 순서대로 문자 일치해야 한다.
   ★Light 줄 뷰티 절 정본(09-05 MJ 결정): v3 = snowsnap 원형 그대로 — "a bright, CLEAN, neutral-toned soft key light … crisp rim light, clearly BEAUTIFYING, idol-grade luminous, the face glowing warm and fresh, every feature crisp"("the face glowing warm and fresh" 필수 구). v2 = cinesnap 문형("bright soft key … noticeably brighter and prettier"), v3에서 불허. 따뜻한 광 격리 처방(부록 A)은 이 절 뒤에 덧붙이는 형태만 — 대체 금지. 라이브 v3 8종은 이 구가 빠져 있다 → autumnsnap A/B 판정 후 처리(README 승인 변형 표).

@@ -19,6 +19,15 @@
 // 사용
 //   import { glamCheck, GLAM } from "./lib/glam-check.mjs";
 //   const r = glamCheck(promptText, { glam: 4, inputType: "person" });   // r.ok / r.failures[] / r.report()
+//   const r = glamCheck(promptText, { glam: 1, inputType: "food", engine: "gpt", textMode: "intended" });
+//
+// 글자 규칙(플레이북 §1-6, 2026-09-07 예외 신설)
+//   기본: 읽히는 글자를 "요청"하는 문장(write the word / text that says / 글자를 넣어 …)이 있으면 실패.
+//         프롬프트 자체의 봉쇄줄("Even illegible text shapes are a failure")은 그대로 두는 것이 헌법이다.
+//   예외: spec.textMode === "intended" (GPT 엔진 한정) — 글자 요청 검사를 건너뛰고 대신
+//         ①문구 풀(PHRASE POOL 등 머리말 + 따옴표 문구, 각 6자 이내·숫자 없음)
+//         ②선택 규칙(choose one from the pool …)
+//         ③"no other text" 봉쇄줄  ④브랜드·실명·숫자 격자 금지줄  네 가지가 있는지 검사한다.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -62,6 +71,81 @@ const CONTRA = [
 ];
 const BANNED = ["무료", "0원", "공짜"];
 
+// ── 글자 규칙 (플레이북 §1-6) ──────────────────────────────────────────────
+// 기본 컨셉: 글자를 "그려 넣으라"는 요청 문장을 잡는다. 부정문("Do NOT add text", "no words") 앞뒤는 제외.
+const TEXT_NOUN = "(?:words?|texts?|captions?|letters?|lettering|phrases?|slogans?|titles?|typography|writing|wording)";
+const TEXT_REQUEST = [
+  new RegExp(`\\b(?:write|render|display|show|print|add|include|put|place|overlay|draw|paint|stamp)\\s+(?:the\\s+|a\\s+|an\\s+|some\\s+|this\\s+|these\\s+)?${TEXT_NOUN}\\b`, "gi"),
+  new RegExp(`\\b${TEXT_NOUN}\\s+(?:that\\s+)?(?:says?|saying|reading|reads)\\b`, "gi"),
+  /\b(?:with|featuring|showing)\s+the\s+(?:words?|text|caption|phrase|slogan|title)\b/gi,
+  /(?:글자|문구|텍스트|캡션|문장|글씨|단어)(?:를|을|도)?\s*(?:넣|써|적|표시|렌더|삽입|새겨|그려)/g,
+];
+const NEG_BEFORE = /\b(?:no|not|never|without|zero|avoid|don'?t|none|free of|instead of)\b[^.\n;]{0,45}$/i;
+export function textRequests(text) {
+  const hits = [];
+  for (const re of TEXT_REQUEST) {
+    re.lastIndex = 0;
+    let m;
+    while ((m = re.exec(text))) {
+      const before = text.slice(Math.max(0, m.index - 60), m.index);
+      const sameSentence = before.slice(Math.max(before.lastIndexOf("."), before.lastIndexOf("\n"), before.lastIndexOf(";")) + 1);
+      if (NEG_BEFORE.test(sameSentence)) continue;
+      hits.push(m[0].replace(/\s+/g, " "));
+    }
+  }
+  return [...new Set(hits)];
+}
+
+// 예외 컨셉(textMode "intended"): 네 요소가 전부 있어야 한다.
+const POOL_HEAD = /(?:(?:PHRASE|TEXT|WORD|CAPTION)S?\s*POOL|ALLOWED\s+(?:TEXT|PHRASES|WORDS|CAPTIONS)|문구\s*풀)/i;
+const POOL_ITEM = /["“„]([^"”\n]{1,40})["”]/g;
+const SELECT_RULE = [
+  /\b(?:choose|pick|select|use)\b[^.\n]{0,80}\b(?:from|of|in|out of)\b[^.\n]{0,30}\b(?:pool|list|options?|set)\b/i,
+  /(?:중|에서)\s*(?:하나|한\s*개|1개|둘|두\s*개|2개)(?:만|를|을)?\s*(?:골라|선택|사용|써)/,
+];
+const NO_OTHER_TEXT = [
+  /\bno other (?:text|words|letters|lettering|writing|characters)\b/i,
+  /\bnothing else (?:is|may be|gets|should be) (?:written|rendered|lettered)\b/i,
+  /(?:그\s*외|이외|나머지)(?:의)?\s*(?:글자|문구|텍스트)[^.\n]{0,12}(?:없|금지|0)/,
+];
+const POOL_BANS = [
+  [/\b(?:no|not|never|without)\b[^.\n]{0,40}\b(?:brands?|logos?|trademarks?)\b/i, "브랜드·로고 금지줄"],
+  [/\b(?:no|not|never|without)\b[^.\n]{0,40}\b(?:real (?:names?|people|persons?)|actual names?|(?:person|people)'?s? names?|celebrit(?:y|ies))\b/i, "실명 금지줄"],
+  [/\b(?:no|not|never|without)\b[^.\n]{0,40}\b(?:numbers?|digits?|numerals?|number grids?)\b/i, "숫자·숫자 격자 금지줄"],
+];
+export const TEXT_MAX_CHARS = 6;
+export function intendedTextCheck(text, opt = {}) {
+  const failures = [], detail = [];
+  if ((opt.engine || "").toLowerCase() !== "gpt") failures.push(`textMode "intended"는 GPT 엔진 한정 — engine=${opt.engine ?? "(없음)"}`);
+  const hm = text.match(POOL_HEAD);
+  let items = [];
+  if (!hm) {
+    failures.push("글자 예외: 문구 풀 머리말(PHRASE POOL / TEXT POOL / ALLOWED TEXT / 문구 풀) 없음");
+  } else {
+    const start = hm.index + hm[0].length;
+    const rest = text.slice(start);
+    const endRel = rest.search(/\n[ \t]*\n/);
+    const block = endRel < 0 ? rest : rest.slice(0, endRel);
+    let m;
+    POOL_ITEM.lastIndex = 0;
+    while ((m = POOL_ITEM.exec(block))) items.push(m[1].trim());
+    if (!items.length) failures.push("글자 예외: 문구 풀 안에 따옴표로 묶인 문구가 없다(머리말 뒤 첫 빈 줄까지가 풀)");
+    for (const it of items) {
+      const len = [...it.replace(/\s+/g, "")].length;
+      if (len > TEXT_MAX_CHARS) failures.push(`글자 예외: 문구 "${it}" ${len}자 — ${TEXT_MAX_CHARS}자 이내`);
+      if (/\d/.test(it)) failures.push(`글자 예외: 문구 "${it}"에 숫자 — 숫자·숫자 격자 금지`);
+    }
+  }
+  if (!SELECT_RULE.some((re) => re.test(text))) failures.push("글자 예외: 선택 규칙(choose one from the pool … / …중 하나만 골라) 없음");
+  if (!NO_OTHER_TEXT.some((re) => re.test(text))) failures.push('글자 예외: "no other text" 봉쇄줄 없음');
+  for (const [re, label] of POOL_BANS) if (!re.test(text)) failures.push(`글자 예외: ${label} 없음`);
+  if (!failures.length) {
+    const maxLen = Math.max(...items.map((it) => [...it.replace(/\s+/g, "")].length));
+    detail.push(`글자 예외(textMode intended · GPT): 문구 풀 ${items.length}개(최장 ${maxLen}자) · 선택 규칙 · no other text · 브랜드/실명/숫자 금지줄 확인`);
+  }
+  return { failures, detail, items };
+}
+
 const norm = (s) => s.replace(/\r\n/g, "\n").replace(/\s+/g, " ").trim();
 const normCI = (s) => norm(s).toLowerCase();
 
@@ -104,7 +188,7 @@ function nearDiff(expect, text) {
 
 /**
  * @param {string} text  프롬프트 전문
- * @param {{glam:number, inputType?:string, level?:string}} opt  glam 1~5 (또는 level "v1"|"v2"|"v3" 직접)
+ * @param {{glam:number, inputType?:string, level?:string, engine?:string, textMode?:string}} opt  glam 1~5 (또는 level "v1"|"v2"|"v3" 직접) · textMode "intended"면 engine 필수
  * @returns {{ok:boolean, level:string|null, failures:string[], detail:string[], report:()=>string}}
  */
 export function glamCheck(text, opt = {}) {
@@ -175,6 +259,18 @@ export function glamCheck(text, opt = {}) {
   for (const w of BANNED) if (text.includes(w)) failures.push(`금지어 "${w}"`);
   if (text.includes("`")) failures.push("백틱");
   if (text.includes("${")) failures.push("보간 ${");
+
+  // (e) 글자 규칙 (플레이북 §1-6) — 기본은 글자 요청 문장 금지, textMode "intended"(GPT 한정)만 4요소 검사로 대체
+  if (opt.textMode === undefined || opt.textMode === null || opt.textMode === "") {
+    const req = textRequests(text);
+    if (req.length) failures.push(`읽히는 글자 요청 문장: ${req.slice(0, 3).map((h) => `"${h}"`).join(", ")}${req.length > 3 ? ` 외 ${req.length - 3}` : ""} — §1-6 글자 봉쇄(예외는 spec.textMode "intended")`);
+  } else if (opt.textMode === "intended") {
+    const t = intendedTextCheck(text, opt);
+    failures.push(...t.failures);
+    detail.push(...t.detail);
+  } else {
+    failures.push(`spec.textMode 값은 "intended"만 허용: ${JSON.stringify(opt.textMode)}`);
+  }
 
   return done(failures.length === 0, level, failures, detail);
 
