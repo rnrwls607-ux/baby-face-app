@@ -481,7 +481,7 @@ const HOME_SECTIONS: { id: string; heading: string; title: string; layout: strin
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
       { id: "petwild", title: "야생 친구 만난 우리 아이", subtitle: "우리 아이, 야생 친구들 사이로", emoji: "🦦", accent: "#5B8A5A", image: "/cards/petwild.webp", badge: "NEW", tags: ["반려동물"], go: "petwild" },
       // ★상세·썸네일 나올 때까지 잠금 — 자산 준비되면 이 줄의 // 만 지운다
-      // { id: "petflowerfield", title: "꽃밭 인생샷(펫)", subtitle: "꽃밭 한가운데, 카메라 보는 우리 아이", emoji: "🌷", accent: "#C86AA0", image: "/cards/petflowerfield.webp", badge: "NEW", tags: ["반려동물"], go: "petflowerfield" },
+      { id: "petflowerfield", title: "꽃밭 인생샷(펫)", subtitle: "꽃밭 한가운데, 카메라 보는 우리 아이", emoji: "🌷", accent: "#C86AA0", image: "/cards/petflowerfield.webp", badge: "NEW", tags: ["반려동물"], go: "petflowerfield" },
       { id: "genderswap", title: "반대의 나", subtitle: "다르게 태어났다면", emoji: "🔄", accent: "#E7EEF6", image: "/cards/genderswap.webp", badge: "NEW", tags: ["재미"], go: "genderswap" },
       { id: "pet", title: "반려동물 증명사진", subtitle: "정장 입은 우리 아이", emoji: "🐶", accent: "#FFF1E0", badge: "NEW", tags: ["반려동물"], image: "/cards/pet.webp", go: "pet" },
       { id: "restore", title: "옛날 사진 복원", subtitle: "빛바랜 추억을 선명하게", emoji: "🖼️", accent: "#FFEFD6", badge: "NEW", tags: ["복원"], image: "/cards/restore.webp", go: "restore" },
