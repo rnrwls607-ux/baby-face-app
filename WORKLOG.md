@@ -1,3 +1,14 @@
+## 2026-09-07 — B 배치 3종 출시: petbouquet·petwild·petflowerfield (pet×pro=cheerglam 첫 통과·비포 기존 사진 대체)
+- [G2] MJ 판정 — petbouquet 통과(썸네일 1) / petwild 통과(썸네일 1) / petflowerfield 통과(썸네일 1). 애프터 4장은 MJ가 Gemini 3 Pro Image로 생성(JPEG 896×1200 → PNG·중앙 3:4 크롭 894×1192, 원본 JPG는 _src_jpg/ 보관). petwild 카피바라 3/4 편중은 MJ가 결함 아님으로 확정
+- [비포 대체] GPT 생성 불가로 기존 펫 컨셉 비포 재사용(MJ 지시). 40장 시트에서 기준별 선택 — 비포1 흰 비숑 정면(petstudio_before_bichon, 3:4 무크롭) / 비포2 삼색 고양이(petminhwa min_비포_삼색, 1024×1536→중앙 3:4 1023×1364) / 비포3 초코 닥스훈트(petstudio_before_dachs, 3:4). 야외 어두운 털 강아지는 후보 없음. 같은 3장을 세 폴더에 복사(md5 동일), 체크리스트 '비포 N 생성 프롬프트' 절을 '기존 사진 대체: 원본 경로'로 갱신, 원본 무접촉
+- [petwild 비포 소실] 애프터를 넣는 과정에서 petwild 폴더의 비포 3장이 지워져 있었다(체크리스트·메모장은 남음). petbouquet 사본에서 md5 동일하게 복원. 원인은 폴더 교체 저장으로 추정 — 앞으로 harvest 재실행 전 비포·애프터 7장 실재를 먼저 센다(이번에 그 검사로 잡음)
+- [캡션 5건] pairs 캡션이 B의 GPT 비포 장면(소파·창가·산책길·흔들린·침대) 기준이라 대체 비포와 어긋남 → MJ 결정 문구로 교체(거실 러그·마룻바닥·침대, petwild는 장면 단어 없이). 프롬프트 md5 3종 불변. 커밋 5aa2bbb
+- [템플릿] pet:pro → cheerglam(Pro 네이티브) 첫 실전 통과. B가 자리표시로 넣은 tplName·replace를 partysnap 규격(tplName 치어리더 · replace [[📣,이모지],[치어리더,컨셉명]])으로 교체. 선조립 검사기가 buildRoute의 머리 주석(cheerglam 템플릿 복제)을 잔재로 오인한 건 검사기 측 오경보 — 파이프라인 기준(주석 제외)으로 맞춤
+- [히어로] 12장 사전 렌더 — 3종 모두 애프터1 무가림(얼굴 상단, 포장지·바위·꽃밭만 태그 아래). 교체 0
+- [체인] 3종 × route→detail→launch→ba. 커밋 petbouquet 0bd6ba9·8599e17·98cead8 / petwild 249429c·0748dc2·c8e3d00 / petflowerfield b28dc9a·2a20f6d·dda3c26 (각 31항 PASS·FAIL 0). CONCEPT_LIST 204종(라이브 196) 108~110행, BA_LIVE 197
+- [배포] health dda3c26 · 스모크 5/5 PASS · petbouquet·petwild·petflowerfield 각 page 200 / api 405 / cards·details·ba webp 200
+- [v2 후보] petwild "scene rotation hint(펫 크기·털색별 장면 배정 규칙 명시)" — 카피바라 편중 대응, MJ 지시로 기록만
+
 ## 2026-09-07 — BA 배선: petflowerfield 3쌍
 - [스테이지] new-concept.mjs --stage ba
 - [자산] 768×960(4:5) webp q85 6장
